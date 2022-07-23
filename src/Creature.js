@@ -3,7 +3,10 @@ const path = require('path')
 const TreeSync = require('../libs/tree-sync')
 const CONFIG = require('./config')
 const CONSTS = require('./consts')
+const DATA = require('./data')
 const EffectProcessor = require('./EffectProcessor')
+
+console.log(DATA)
 
 // Store
 const STORE_PATH = path.resolve(__dirname, './store/creature')

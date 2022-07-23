@@ -9,6 +9,9 @@ module.exports = function () {
             charisma: 0
         },
         effects: [],
-        classes: []
+        classes: [],
+        gauges: {
+            damage: 0
+        }
     }
 }
