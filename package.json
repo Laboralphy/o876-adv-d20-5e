@@ -1,0 +1,18 @@
+{
+  "name": "o876-adv-d20",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine ./tests/*Test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@laboralphy/store": "^1.0.2"
+  },
+  "devDependencies": {
+    "jasmine": "^4.2.1"
+  }
+}
