@@ -1,5 +1,5 @@
 module.exports = {
-    'attribute-modifier': require('./attribute-modifier'),
+    'ability-bonus': require('./ability-bonus'),
     'condition': require('./condition'),
     'damage': require('./damage'),
     'damage-modifier': require('./damage-modifier'),

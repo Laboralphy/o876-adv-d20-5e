@@ -1,6 +1,6 @@
 module.exports = function () {
     return {
-        attributes: {
+        abilities: {
             strength: 0,
             dexterity: 0,
             constitution: 0,
@@ -8,6 +8,7 @@ module.exports = function () {
             wisdom: 0,
             charisma: 0
         },
-        effects: []
+        effects: [],
+        classes: []
     }
 }

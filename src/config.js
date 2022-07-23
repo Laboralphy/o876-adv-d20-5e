@@ -1,3 +1,3 @@
 module.exports = {
-    ATTRIBUTE_MODIFIER_EFFECT: 'attribute-modifier'
+    ABILITY_MODIFIER_EFFECT: 'ability-bonus'
 }

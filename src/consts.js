@@ -7,12 +7,14 @@ module.exports = {
     MATERIAL_ALUMINUM: 'MATERIAL_ALUMINUM',
     MATERIAL_SILVER: 'MATERIAL_ALUMINUM',
 
-    ATTRIBUTE_STRENGTH: 'strength',
-    ATTRIBUTE_DEXTERITY: 'dexterity',
-    ATTRIBUTE_CONSTITUTION: 'constitution',
-    ATTRIBUTE_INTELLIGENCE: 'intelligence',
-    ATTRIBUTE_WISDOM: 'wisdom',
-    ATTRIBUTE_CHARISMA: 'charisma',
+    ABILITY_STRENGTH: 'strength',
+    ABILITY_DEXTERITY: 'dexterity',
+    ABILITY_CONSTITUTION: 'constitution',
+    ABILITY_INTELLIGENCE: 'intelligence',
+    ABILITY_WISDOM: 'wisdom',
+    ABILITY_CHARISMA: 'charisma',
+
+    CLASS_TOURIST: 'CLASS_TOURIST',
 
     EQUIPMENT_SLOT_HEAD: 'head', // helms, caps
     EQUIPMENT_SLOT_NECK: 'neck', // necklaces, amulets
