@@ -1,13 +1,41 @@
+const CONSTS = require('../../../consts')
+
 module.exports = function () {
     return {
         abilities: {
-            strength: 0,
-            dexterity: 0,
-            constitution: 0,
-            intelligence: 0,
-            wisdom: 0,
-            charisma: 0
+            [CONSTS.ABILITY_STRENGTH]: 0,
+            [CONSTS.ABILITY_DEXTERITY]: 0,
+            [CONSTS.ABILITY_CONSTITUTION]: 0,
+            [CONSTS.ABILITY_INTELLIGENCE]: 0,
+            [CONSTS.ABILITY_WISDOM]: 0,
+            [CONSTS.ABILITY_CHARISMA]: 0
         },
+        equipment: {
+            [CONSTS.EQUIPMENT_SLOT_HEAD]: null,
+            [CONSTS.EQUIPMENT_SLOT_NECK]: null,
+            [CONSTS.EQUIPMENT_SLOT_CHEST]: null,
+            [CONSTS.EQUIPMENT_SLOT_BACK]: null,
+            [CONSTS.EQUIPMENT_SLOT_ARMS]: null,
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: null,
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: null,
+            [CONSTS.EQUIPMENT_SLOT_SHIELD]: null,
+            [CONSTS.EQUIPMENT_SLOT_LEFT_FINGER]: null,
+            [CONSTS.EQUIPMENT_SLOT_RIGHT_FINGER]: null,
+            [CONSTS.EQUIPMENT_SLOT_AMMO]: null,
+            [CONSTS.EQUIPMENT_SLOT_WAIST]: null,
+            [CONSTS.EQUIPMENT_SLOT_FEET]: null,
+            [CONSTS.EQUIPMENT_SLOT_CWEAPON_BITE]: null,
+            [CONSTS.EQUIPMENT_SLOT_CWEAPON_CLAW]: null,
+            [CONSTS.EQUIPMENT_SLOT_CWEAPON_TAIL]: null
+        },
+        alignment: {
+            entropy: 0,
+            morality: 0
+        },
+        specie: CONSTS.SPECIE_HUMANOID,
+        offensiveSlot: '',
+        proficiencies: [],
+        speed: 0,
         effects: [],
         classes: [],
         gauges: {

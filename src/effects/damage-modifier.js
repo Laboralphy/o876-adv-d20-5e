@@ -6,9 +6,9 @@ const createEffect = require('./abstract')
  * @param type {number} type of damage
  * @returns {D20Effect}
  */
-function create (sFormula, type) {
+function create ({ damage, type}) {
     return createEffect('damage-modifier', 0, {
-        formula: sFormula,
+        damage,
         type
     })
 }

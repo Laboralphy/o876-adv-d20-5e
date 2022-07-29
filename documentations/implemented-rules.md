@@ -37,3 +37,33 @@ creature.store.getters.getAbilityMofifierDexterity
 bonus = floor((level - 1) / 4)
 
 Level can never be modified, unlike 3.5 spells (enervation etc..., vampire...)
+
+### Rule : Hitpoints
+
+Pour déterminer le nombre de PV Max on addition les PV Max de
+chaque classe.
+Pour la première classe, le premier niveau est maximisé en PV
+
+Le nombre de PV par niveau pour une classe est
+```
+PV = floor((HD + 1) / 2)
+```
+avec HD = hit dice de la classe
+
+
+
+### Rule : Exhaustion
+
+La condition "exhaustion" possède 6 niveau et apporte des malus cumulable à 
+chaque niveau
+
+| Level | Effect                                         |
+|-------|------------------------------------------------|
+| 1     | Disadvantage on ability checks                 |
+| 2     | Speed halved                                   |
+| 3     | Disadvantage on attack rolls and saving throws |
+| 4     | Hit point maximum halved                       |
+| 5     | Speed reduced to 0                             |
+| 6     | Death                                          |
+
+  

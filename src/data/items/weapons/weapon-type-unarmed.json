@@ -1,0 +1,11 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_UNARMED",
+  "damage": "1d3",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_CRUSHING",
+  "weight": 0,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_FINESSE",
+    "WEAPON_ATTRIBUTE_LIGHT"
+  ]
+}

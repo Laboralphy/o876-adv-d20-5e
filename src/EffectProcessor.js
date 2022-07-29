@@ -68,6 +68,23 @@ class EffectProcessor {
             }
         }
     }
+
+    /**
+     *
+     * @param oEffect
+     * @param target {Creature}
+     * @param duration {number}
+     * @param source {Creature}
+     */
+    applyEffect (oEffect, target, duration, source) {
+        oEffect.source = source ? source.id : target.id
+        oEffect.duration = duration || 0
+        this.runEffect(oEffect, this, source || this)
+        if (duration > 0) {
+            target.store.mutations.addEffect({ effect: oEffect })
+        }
+
+    }
 }
 
 module.exports = EffectProcessor

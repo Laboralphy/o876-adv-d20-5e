@@ -1,0 +1,1 @@
+module.exports = state => Object.keys(state.abilities)

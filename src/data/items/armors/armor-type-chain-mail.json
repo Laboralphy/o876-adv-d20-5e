@@ -1,0 +1,8 @@
+{
+  "proficiency": "PROFICIENCY_ARMOR_HEAVY",
+  "ac": 16,
+  "maxDexterityModifier": 0,
+  "minStrengthRequired": 13,
+  "disadvantageStealth": true,
+  "weight": 55
+}

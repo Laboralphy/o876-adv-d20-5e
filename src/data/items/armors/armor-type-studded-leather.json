@@ -1,0 +1,8 @@
+{
+  "proficiency": "PROFICIENCY_ARMOR_LIGHT",
+  "ac": 12,
+  "maxDexterityModifier": false,
+  "minStrengthRequired": 0,
+  "disadvantageStealth": false,
+  "weight": 10
+}

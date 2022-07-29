@@ -1,11 +1,11 @@
-module.exports = ({ state }, { name }) => {
-    const oClass = state.classes.find(c => c.name === name)
+module.exports = ({ state }, { ref, levels = 1 }) => {
+    const oClass = state.classes.find(c => c.ref === ref)
     if (oClass) {
-        ++oClass.levels
+        oClass.levels += levels
     } else {
         state.classes.push({
-            name,
-            levels: 1
+            ref,
+            levels
         })
     }
 }

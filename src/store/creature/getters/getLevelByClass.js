@@ -5,11 +5,11 @@
  */
 module.exports = state => {
     const oClasses = {}
-    state.classes.forEach(({ name, levels }) => {
-        if (name in oClasses) {
-            throw new Error('duplicated class "' + name + '"')
+    state.classes.forEach(({ ref, levels }) => {
+        if (ref in oClasses) {
+            throw new Error('duplicated class "' + ref + '"')
         } else {
-            oClasses[name] = levels
+            oClasses[ref] = levels
         }
     })
     return oClasses

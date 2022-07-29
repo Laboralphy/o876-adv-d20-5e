@@ -1,6 +1,22 @@
+const DATA = require('../../../data')
+const CONSTS = require('../../../consts')
+
 module.exports = (state, getters) => {
     const oClasses = getters.getLevelByClass
-    for (const [name, levels] of Object.entries(oClasses)) {
-
+    let bFirstLevel = true
+    let nMaxHitPoints = 0
+    const nConModifier = getters.getAbilityModifiers[CONSTS.ABILITY_CONSTITUTION]
+    for (const [ ref, levels ] of Object.entries(oClasses)) {
+        const oClassData = DATA['class-' + ref]
+        const nHD = oClassData.hitDice
+        const nHitPointsPerLevel = Math.floor(nHD / 2) + 1 + nConModifier
+        const nLevel = levels
+        if (bFirstLevel) {
+            nMaxHitPoints += (nLevel - 1) * nHitPointsPerLevel + nHD
+            bFirstLevel = false
+        } else {
+            nMaxHitPoints += nLevel * nHitPointsPerLevel
+        }
     }
+    return nMaxHitPoints
 }
