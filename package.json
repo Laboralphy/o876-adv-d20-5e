@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@laboralphy/store": "^1.0.2"
+    "@laboralphy/store": "^1.0.2",
+    "jsonschema": "^1.4.1"
   },
   "devDependencies": {
     "jasmine": "^4.2.1"
