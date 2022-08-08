@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "required": [
+    "weaponType"
+  ],
+  "properties": {
+    "weaponType": {
+      "type": "string",
+      "pattern": "^weapon-type-"
+    },
+    "attributes": {
+      "$ref": "./def-weapon-attributes"
+    }
+  }
+}

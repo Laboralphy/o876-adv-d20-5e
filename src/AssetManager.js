@@ -1,8 +1,4 @@
-const validate = require('jsonschema').validate;
 const CONSTS = require('./consts')
-const SCHEMAS = {
-    ITEMS: require('./schemas/items.json')
-}
 const TreeSync = require('../libs/tree-sync')
 const path = require('path')
 
@@ -12,13 +8,22 @@ class AssetManager {
             blueprints: {},
             data: {}
         }
+        this._validator = null
+    }
+
+    get validator () {
+        return this._validator
+    }
+
+    set validator (value) {
+        this._validator = value
     }
 
     load () {
         const oBlueprints = TreeSync.recursiveRequire(path.resolve(__dirname, './blueprints'), true)
         const oData = TreeSync.recursiveRequire(path.resolve(__dirname, './data'), true)
         this.addBlueprints(oBlueprints)
-        this._assets.data = oData
+        this.addDataSet(oData)
     }
 
     get blueprints () {
@@ -30,14 +35,8 @@ class AssetManager {
     }
 
     addItemBlueprint (sId, oBlueprint) {
-        const result = validate(oBlueprint, SCHEMAS.ITEMS)
-        if (result.valid) {
-            this._assets.blueprints[sId] = oBlueprint
-            return true
-        } else {
-            console.error(result.errors)
-            throw new Error('ERR_INVALID_BLUEPRINT: ' + sId)
-        }
+        this.validator.validate(oBlueprint, '/blueprint-item')
+        this._assets.blueprints[sId] = oBlueprint
     }
 
     addBlueprint (sId, oBlueprint) {
@@ -51,6 +50,27 @@ class AssetManager {
     addBlueprints (oBlueprints) {
         for (const [sId, oBlueprint] of Object.entries(oBlueprints)) {
             this.addBlueprint(sId, oBlueprint)
+        }
+    }
+
+    addDataItem (sId, oData, sDataType) {
+        this._validator.validate(oData, sDataType)
+        this._assets.data[sId] = oData
+    }
+
+    addDataSet (oData) {
+        const DATA_TYPES = [
+            'class',
+            'weapon-type'
+        ]
+        const getDataType = (sId) => {
+            return DATA_TYPES.find(dt => sId.startsWith(dt + '-'))
+        }
+        for (const [sId, data] of Object.entries(oData)) {
+            const dt = getDataType(sId)
+            if (dt) {
+                this.addDataItem(sId, data, 'data-' + dt)
+            }
         }
     }
 }

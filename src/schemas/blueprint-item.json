@@ -1,0 +1,45 @@
+{
+  "description": "Définition des items",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "./def-item-common-properties"
+    },
+    {
+      "if": {
+        "properties": {
+          "itemType": {
+            "const": "ITEM_TYPE_WEAPON"
+          }
+        }
+      },
+      "then": {
+        "$ref": "./def-item-type-weapon"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "itemType": {
+            "const": "ITEM_TYPE_CREATUREWEAPON"
+          }
+        }
+      },
+      "then": {
+        "$ref": "./def-item-type-creatureweapon"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "itemType": {
+            "const": "ITEM_TYPE_ARMOR"
+          }
+        }
+      },
+      "then": {
+        "$ref": "./def-item-type-armor"
+      }
+    }
+  ]
+}
