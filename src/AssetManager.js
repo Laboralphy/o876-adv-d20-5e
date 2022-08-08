@@ -11,10 +11,16 @@ class AssetManager {
         this._validator = null
     }
 
+    /**
+     * @returns {SchemasValidator}
+     */
     get validator () {
         return this._validator
     }
 
+    /**
+     * @param value {SchemasValidator}
+     */
     set validator (value) {
         this._validator = value
     }
@@ -26,19 +32,35 @@ class AssetManager {
         this.addDataSet(oData)
     }
 
+    /**
+     * @returns {{}}
+     */
     get blueprints () {
         return this._assets.blueprints
     }
 
+    /**
+     * @returns {{}}
+     */
     get data () {
         return this._assets.data
     }
 
+    /**
+     * Ajoute un blueprint d'item
+     * @param sId {string}
+     * @param oBlueprint {object}
+     */
     addItemBlueprint (sId, oBlueprint) {
         this.validator.validate(oBlueprint, '/blueprint-item')
         this._assets.blueprints[sId] = oBlueprint
     }
 
+    /**
+     * Ajoute un blueprint
+     * @param sId {string}
+     * @param oBlueprint {object}
+     */
     addBlueprint (sId, oBlueprint) {
         switch (oBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
@@ -47,13 +69,23 @@ class AssetManager {
         }
     }
 
+    /**
+     * Ajoute une série de blueprint
+     * @param oBlueprints {object}
+     */
     addBlueprints (oBlueprints) {
         for (const [sId, oBlueprint] of Object.entries(oBlueprints)) {
             this.addBlueprint(sId, oBlueprint)
         }
     }
 
-    addDataItem (sId, oData, sDataType) {
+    /**
+     * Ajoute un item de data
+     * @param sId
+     * @param oData
+     * @param sDataType
+     */
+    addData (sId, oData, sDataType) {
         this._validator.validate(oData, sDataType)
         this._assets.data[sId] = oData
     }
@@ -69,7 +101,7 @@ class AssetManager {
         for (const [sId, data] of Object.entries(oData)) {
             const dt = getDataType(sId)
             if (dt) {
-                this.addDataItem(sId, data, 'data-' + dt)
+                this.addData(sId, data, 'data-' + dt)
             }
         }
     }
