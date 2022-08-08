@@ -1,0 +1,9 @@
+{
+  "type": "array",
+  "items": [
+    {
+      "type": "string",
+      "pattern": "^WEAPON_ATTRIBUTE_"
+    }
+  ]
+}
