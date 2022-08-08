@@ -18,10 +18,15 @@ class AssetManager {
         const oBlueprints = TreeSync.recursiveRequire(path.resolve(__dirname, './blueprints'), true)
         const oData = TreeSync.recursiveRequire(path.resolve(__dirname, './data'), true)
         this.addBlueprints(oBlueprints)
+        this._assets.data = oData
     }
 
     get blueprints () {
         return this._assets.blueprints
+    }
+
+    get data () {
+        return this._assets.data
     }
 
     addItemBlueprint (sId, oBlueprint) {

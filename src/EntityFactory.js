@@ -1,8 +1,7 @@
-const BLUEPRINTS = require("./blueprints")
-const DATA = require("./data")
 const CONSTS = require("./consts")
 const deepClone = require('../libs/deep-clone')
 const deepFreeze = require('../libs/deep-freeze')
+const AssetManager = require('./AssetManager')
 
 /**
  * @typedef D20ArmorData {object}
@@ -32,17 +31,34 @@ const deepFreeze = require('../libs/deep-freeze')
  */
 
 class EntityFactory {
+    constructor () {
+        this._am = new AssetManager()
+        this._am.load()
+    }
+
     /**
      * creation d'une armure
      * @param oBlueprint
      * @returns {D20Item}
      */
     createItemArmor (oBlueprint) {
-        const oArmorData = DATA[oBlueprint.armorType]
+        const oArmorData = this._am.data[oBlueprint.armorType]
         return {
             ...oBlueprint,
             ...oArmorData,
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST]
+        }
+    }
+
+    createItemWeapon (oBlueprint) {
+        const oWeaponData = this._am.data[oBlueprint.weaponType]
+        const slot = oWeaponData.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
+            ? CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+            : CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+        return {
+            ...oBlueprint,
+            ...oWeaponData,
+            equipmentSlots: [slot]
         }
     }
 
@@ -57,6 +73,10 @@ class EntityFactory {
                 return this.createItemArmor(oBlueprint)
             }
 
+            case CONSTS.ITEM_TYPE_WEAPON: {
+                return this.createItemWeapon(oBlueprint)
+            }
+
             default: {
                 throw new Error('ERR_ITEM_TYPE_NOT_SUPPORTED')
             }
@@ -64,7 +84,7 @@ class EntityFactory {
     }
 
     createEntity (sResRef) {
-        const oBlueprint = BLUEPRINTS[sResRef]
+        const oBlueprint = this._am.blueprints[sResRef]
         switch (oBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
                 return this.createItem(oBlueprint)
