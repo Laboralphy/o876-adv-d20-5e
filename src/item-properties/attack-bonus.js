@@ -1,6 +1,8 @@
+const CONSTS = require('../consts')
+
 module.exports = function ({ value }) {
     return {
-        property: 'attack-bonus',
+        property: CONSTS.ITEM_PROPERTY_ATTACK_BONUS,
         amp: value
     }
 }

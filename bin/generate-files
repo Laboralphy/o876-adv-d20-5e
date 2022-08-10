@@ -1,0 +1,6 @@
+#!/bin/bash
+
+node ./bin/generate-index ii > ./src/item-properties/index.js
+node ./bin/generate-index ei > ./src/effects/index.js
+node ./bin/generate-index ic > ./src/consts/item-properties.json
+node ./bin/generate-index ec > ./src/consts/effects.json

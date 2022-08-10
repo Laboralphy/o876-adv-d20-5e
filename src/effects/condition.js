@@ -1,11 +1,13 @@
 const createEffect = require('./abstract')
+const CONSTS = require('../consts')
+
 /**
  * This effect add a negative condition to the targeted creature
  * @param condition {string} CONDITION_*
  * @returns {D20Effect}
  */
 function create ({ condition }) {
-    return createEffect('condition', 1, {
+    return createEffect(CONSTS.EFFECT_CONDITION, 1, {
         condition
     })
 }

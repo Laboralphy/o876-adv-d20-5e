@@ -116,7 +116,7 @@ describe('getAC', function () {
             "itemType": "ITEM_TYPE_ARMOR",
             "armorType": "ARMOR_TYPE_LEATHER",
             "properties": [{
-                "property": "ac-bonus",
+                "property": CONSTS.ITEM_PROPERTY_AC_BONUS,
                 "amp": 2
             }],
             "proficiency": "PROFICIENCY_ARMOR_LIGHT",

@@ -1,6 +1,8 @@
+const CONSTS = require('../consts')
+
 module.exports = function ({ ability, value }) {
     return {
-        property: 'ability-bonus',
+        property: CONSTS.ITEM_PROPERTY_ABILITY_BONUS,
         amp: value,
         ability
     }

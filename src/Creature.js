@@ -1,8 +1,8 @@
 const Store = require('@laboralphy/store')
 const path = require('path')
+const CONSTS = require('./consts')
 
 // Store
-const STORE_PATH = path.resolve(__dirname, './store/creature')
 const CreatureStore = require('./store/creature')
 const { assetManager } = require('./assets')
 
@@ -87,7 +87,7 @@ class Creature {
     }
 
     /**
-     * Aggrège les effets spécifié dans la liste, selon un prédicat
+     * Aggrège les effets spécifiés dans la liste, selon un prédicat
      * @param aTags {string[]} liste des effets désiré
      * @param effectFilter {function} prédicat de selection d'effets
      * @param propFilter {function}
@@ -147,13 +147,18 @@ class Creature {
      */
     getAC () {
         const nBaseAC = this.store.getters.getArmorAndShieldClass
-        const nItemACProps = this.aggregateModifiers(['ac-bonus']).sum
+        const nItemACProps = this.aggregateModifiers([
+            CONSTS.EFFECT_AC_BONUS,
+            CONSTS.ITEM_PROPERTY_AC_BONUS
+        ]).sum
         return nBaseAC + nItemACProps
     }
 
     getAttackBonus () {
         return this.store.getters.getSelectedWeaponAttackBonus
     }
+
+
 }
 
 module.exports = Creature

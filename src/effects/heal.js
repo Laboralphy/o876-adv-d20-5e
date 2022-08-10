@@ -1,4 +1,5 @@
 const createEffect = require('./abstract')
+const CONSTS = require('../consts')
 
 /**
  * Remove damage point previously taken
@@ -6,7 +7,7 @@ const createEffect = require('./abstract')
  * @returns {D20Effect}
  */
 function create ({ amount }) {
-    return createEffect('heal', amount)
+    return createEffect(CONSTS.EFFECT_HEAL, amount)
 }
 
 /**

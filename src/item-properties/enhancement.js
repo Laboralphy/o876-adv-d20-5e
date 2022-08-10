@@ -1,6 +1,8 @@
+const CONSTS = require('../consts')
+
 module.exports = function ({ value }) {
     return {
-        property: 'enhancement',
+        property: CONSTS.ITEM_PROPERTY_ENHANCEMENT,
         amp: value
     }
 }
