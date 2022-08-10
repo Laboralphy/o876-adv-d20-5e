@@ -1,3 +1,60 @@
+/**
+ * @typedef D20AbilityNumberRegistry {object}
+ * @property ABILITY_STRENGTH {number}
+ * @property ABILITY_DEXTERITY {number}
+ * @property ABILITY_CONSTITUTION {number}
+ * @property ABILITY_INTELLIGENCE {number}
+ * @property ABILITY_WISDOM {number}
+ * @property ABILITY_CHARISMA {number}
+ */
+
+/**
+ * @typedef D20AbilityBooleanRegistry {object}
+ * @property ABILITY_STRENGTH {boolean}
+ * @property ABILITY_DEXTERITY {boolean}
+ * @property ABILITY_CONSTITUTION {boolean}
+ * @property ABILITY_INTELLIGENCE {boolean}
+ * @property ABILITY_WISDOM {boolean}
+ * @property ABILITY_CHARISMA {boolean}
+ *
+ * @typedef D20SkillBooleanRegistry {object}
+ * @property SKILL_STEALTH {boolean}
+ *
+ * @typedef D20ThreatBooleanRegistry {object}
+ *
+ * @typedef D20AdvantagesOrDisadvantages {object}
+ * @property ROLL_TYPE_ATTACK {abilities: D20Ability}
+ * @property ROLL_TYPE_SAVE {abilities: D20Ability, threats: object}
+ * @property ROLL_TYPE_SKILL {abilities: D20Ability, skills: D20SkillBooleanRegistry}
+ */
+
+/**
+ * @typedef D20ArmorData {object}
+ * @property proficiency {string}
+ * @property ac {number}
+ * @property maxDexterityModifier {false|number}
+ * @property minStrengthRequired {number}
+ * @property disadvantageStealth {boolean}
+ * @property weight {number}
+ * @property equipmentSlots {string}
+ *
+ * @typedef D20WeaponData {object}
+ * @property damage {string}
+ * @property damageType {string}
+ * @property attributes {string[]}
+ * @property proficiency {string}
+ * @property weight {number}
+ * @property equipmentSlots {string}
+ *
+ * @typedef D20Item {object}
+ * @property entityType {string}
+ * @property itemType {string}
+ * @property [armorType] {string}
+ * @property [weaponType] {string}
+ * @property properties {[]}
+ * @property data {D20ArmorData|D20WeaponData}
+ */
+
 module.exports = {
     ...require('./abilities.json'),
     ...require('./against-type.json'),

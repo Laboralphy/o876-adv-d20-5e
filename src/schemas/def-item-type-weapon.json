@@ -7,9 +7,6 @@
     "weaponType": {
       "type": "string",
       "pattern": "^weapon-type-"
-    },
-    "attributes": {
-      "$ref": "./def-weapon-attributes"
     }
   }
 }

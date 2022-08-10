@@ -3,11 +3,10 @@ const Validator = jsonschema.Validator
 const TreeSync = require('../libs/tree-sync')
 const path = require('path')
 
-class SchemasValidator {
+class SchemaValidator {
     constructor () {
         this._schemas = {}
         this._validator = null
-        this.init()
     }
 
     get validator () {
@@ -35,14 +34,19 @@ class SchemasValidator {
     }
 
     validate (oObject, sSchemaId) {
+        if (!(sSchemaId in this._schemas)) {
+            throw new Error('ERR_UNKNOWN_SCHEMA: ' + sSchemaId)
+        }
         const r = this._validator.validate(oObject, this._schemas[sSchemaId])
         if (!r.valid) {
-            console.log(r)
-            console.error(r.errors)
-            throw new Error('ERR_SCHEMAS_VALIDATION')
+            const sErrors = r
+                .errors
+                .map(e => e.stack)
+                .join('\n')
+            throw new Error('ERR_SCHEMA_VALIDATION: ' + sSchemaId + '\n' + sErrors)
         }
         return true
     }
 }
 
-module.exports = SchemasValidator
+module.exports = SchemaValidator

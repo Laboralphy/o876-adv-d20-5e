@@ -2,20 +2,14 @@
   "description": "Définition des données concernant le type d'arme",
   "type": "object",
   "required": [
-    "proficiency"
+    "proficiency",
+    "damage",
+    "versatileDamage",
+    "damageType",
+    "weight",
+    "attributes"
   ],
-  "definitions": {
-    "weaponAttributes": {
-      "$id": "#/definitions/weaponAttributes",
-      "type": "array",
-      "items": [
-        {
-          "type": "string",
-          "pattern": "^WEAPON_ATTRIBUTE_"
-        }
-      ]
-    }
-  },
+  "additionalProperties": false,
   "properties": {
     "proficiency": {
       "type": "string",
@@ -32,10 +26,11 @@
       "pattern": "^DAMAGE_TYPE_"
     },
     "weight": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0
     },
     "attributes": {
-      "$ref": "#/definitions/weaponAttributes"
+      "$ref": "def-weapon-attributes"
     }
   }
 }

@@ -2,67 +2,80 @@
 
 ## Attack
 
-### strength
+### Abilities
+
+#### strength
 - exhaustion level >= 3
 - wearing armor non-proficiency
 
-### dexterity
+#### dexterity
 - exhaustion level >= 3
 - wearing armor non-proficiency
 
-### constitution
+#### constitution
 - exhaustion level >= 3
 
-### intelligence
+#### intelligence
 - exhaustion level >= 3
 
-### wisdom
+#### wisdom
 - exhaustion level >= 3
 
-### charisma
+#### charisma
 - exhaustion level >= 3
 
 ## Save
 
-### strength
+### Abilities
+
+#### strength
 - exhaustion level >= 3
 - wearing armor non-proficiency
 
-### dexterity
+#### dexterity
 - exhaustion level >= 3
 - wearing armor non-proficiency
 
-### constitution
+#### constitution
 - exhaustion level >= 3
 
-### intelligence
+#### intelligence
 - exhaustion level >= 3
 
-### wisdom
+#### wisdom
 - exhaustion level >= 3
 
-### charisma
+#### charisma
 - exhaustion level >= 3
+
+### Specific threat
 
 
 ## Skill
 
-### strength
+### Abilities
+
+#### strength
 - exhaustion level >= 1
 - wearing armor non-proficiency
 
-### dexterity
+#### dexterity
 - exhaustion level >= 1
 - wearing armor non-proficiency
 
-### constitution
+#### constitution
 - exhaustion level >= 1
 
-### intelligence
+#### intelligence
 - exhaustion level >= 1
 
-### wisdom
+#### wisdom
 - exhaustion level >= 1
 
-### charisma
+#### charisma
 - exhaustion level >= 1
+
+### Specific skills
+
+#### stealth
+- wearing non-stealthy armor

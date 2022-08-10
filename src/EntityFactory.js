@@ -1,39 +1,19 @@
 const CONSTS = require("./consts")
-const deepClone = require('../libs/deep-clone')
-const deepFreeze = require('../libs/deep-freeze')
 const AssetManager = require('./AssetManager')
-
-/**
- * @typedef D20ArmorData {object}
- * @property proficiency {string}
- * @property ac {number}
- * @property maxDexterityModifier {false|number}
- * @property minStrengthRequired {number}
- * @property disadvantageStealth {boolean}
- * @property weight {number}
- * @property equipmentSlots {string}
- *
- * @typedef D20WeaponData {object}
- * @property damage {string}
- * @property damageType {string}
- * @property attributes {string[]}
- * @property proficiency {string}
- * @property weight {number}
- * @property equipmentSlots {string}
- *
- * @typedef D20Item {object}
- * @property entityType {string}
- * @property itemType {string}
- * @property [armorType] {string}
- * @property [weaponType] {string}
- * @property properties {[]}
- * @property data {D20ArmorData|D20WeaponData}
- */
 
 class EntityFactory {
     constructor () {
-        this._am = new AssetManager()
-        this._am.load()
+        this._am = null
+    }
+
+    init () {
+        this.initAssetManager()
+    }
+
+    initAssetManager () {
+        const am = new AssetManager()
+        am.init()
+        this._am = am
     }
 
     /**
@@ -85,6 +65,9 @@ class EntityFactory {
 
     createEntity (sResRef) {
         const oBlueprint = this._am.blueprints[sResRef]
+        if (!oBlueprint) {
+            throw new Error('ERR_BLUEPRINT_INVALID: ' + sResRef)
+        }
         switch (oBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
                 return this.createItem(oBlueprint)

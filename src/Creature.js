@@ -1,30 +1,39 @@
 const Store = require('@laboralphy/store')
 const path = require('path')
-const TreeSync = require('../libs/tree-sync')
-const CONFIG = require('./config')
-const CONSTS = require('./consts')
-const DATA = require('./data')
-const EffectProcessor = require('./EffectProcessor')
-const EntityFactory = require('./EntityFactory')
 
 // Store
 const STORE_PATH = path.resolve(__dirname, './store/creature')
-const buildState = require(path.join(STORE_PATH, 'state'))
-const MUTATIONS = TreeSync.recursiveRequire(path.join(STORE_PATH, 'mutations'))
-const GETTERS = TreeSync.recursiveRequire(path.join(STORE_PATH, 'getters'))
+const CreatureStore = require('./store/creature')
+const { assetManager } = require('./assets')
 
 let LAST_ID = 0
 
 class Creature {
     constructor () {
         this._id = ++LAST_ID
-        this._state = buildState()
+        this._state = CreatureStore.buildState()
+        this._dice = null
+        /**
+         * @type {D20CreatureStore}
+         * @private
+         */
         this._store = new Store({
             state: this._state,
-            getters: GETTERS,
-            mutations: MUTATIONS
+            getters: CreatureStore.getters,
+            mutations: CreatureStore.mutations,
+            externals: {
+                data: assetManager.data,
+                blueprints: assetManager.blueprints
+            }
         })
+    }
 
+    get dice () {
+        return this._dice
+    }
+
+    set dice (value) {
+        this._dice = value
     }
 
     get id () {
@@ -36,23 +45,45 @@ class Creature {
     }
 
     /**
+     * @param d {D20AdvantagesOrDisadvantages}
+     * @param [ability] {string}
+     * @param [skill] {string}
+     * @param [threat] {string}
+     * @returns {boolean}
+     * @private
+     */
+    _isAdvOrDisadv (d, { ability = '', skill = '', threat = '' }) {
+        let b = false
+        if (ability !== '') {
+            b = d.abilities[ability]
+        }
+        if (skill !== '') {
+            b = b || d.skills[skill]
+        }
+        if (threat) {
+            b = b || d.threats[threat]
+        }
+        return b
+    }
+
+    /**
      * Renvoie true si la creature est désavantagée pour ce type de jet de dé et pour la caractéristique spécifiée
      * @param sRollType {string} ROLL_TYPE_*
-     * @param sAbility {string} ABILITY_TYPE_*
+     * @param ast {{ability: string, skill: string, threat: string}}
      * @returns {boolean}
      */
-    isDisadvantaged (sRollType, sAbility) {
-        return this.store.getters.getDisadvantages[sRollType][sAbility]
+    isDisadvantaged (sRollType, ast) {
+        return this._isAdvOrDisadv(this.store.getters.getDisadvantages[sRollType], ast)
     }
 
     /**
      * Renvoie true si la creature est avantagée pour ce type de jet de dé et pour la caractéristique spécifiée
      * @param sRollType {string} ROLL_TYPE_*
-     * @param sAbility {string} ABILITY_TYPE_*
+     * @param ast {{ability: string, skill: string, threat: string}}
      * @returns {boolean}
      */
-    isAdvantaged (sRollType, sAbility) {
-        return this.store.getters.getAdvantages[sRollType][sAbility]
+    isAdvantaged (sRollType, ast) {
+        return this._isAdvOrDisadv(this.store.getters.getDisadvantages[sRollType], ast)
     }
 
     /**
