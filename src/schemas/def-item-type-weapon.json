@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "required": [
+    "weaponType"
+  ],
+  "properties": {
+    "weaponType": {
+      "type": "string",
+      "pattern": "^weapon-type-"
+    }
+  }
+}

@@ -24,9 +24,8 @@ module.exports = function () {
             [CONSTS.EQUIPMENT_SLOT_AMMO]: null,
             [CONSTS.EQUIPMENT_SLOT_WAIST]: null,
             [CONSTS.EQUIPMENT_SLOT_FEET]: null,
-            [CONSTS.EQUIPMENT_SLOT_CWEAPON_BITE]: null,
-            [CONSTS.EQUIPMENT_SLOT_CWEAPON_CLAW]: null,
-            [CONSTS.EQUIPMENT_SLOT_CWEAPON_TAIL]: null
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR]: null,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON]: null
         },
         alignment: {
             entropy: 0,

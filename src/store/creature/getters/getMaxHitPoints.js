@@ -1,7 +1,7 @@
-const DATA = require('../../../data')
 const CONSTS = require('../../../consts')
 
-module.exports = (state, getters) => {
+module.exports = (state, getters, externals) => {
+    const DATA = externals.data
     const oClasses = getters.getLevelByClass
     let bFirstLevel = true
     let nMaxHitPoints = 0

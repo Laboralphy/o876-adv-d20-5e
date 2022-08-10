@@ -1,5 +1,10 @@
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
+const { warmup, assetManager } = require('../src/assets')
+
+beforeEach(function () {
+    warmup()
+})
 
 describe('basic instanciation', function () {
     it('should be defined', function () {
