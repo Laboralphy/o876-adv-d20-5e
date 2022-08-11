@@ -1,5 +1,10 @@
 ## Advantages
 
+### Synthetic rules
+- Attack roll advantage against targets who are not aware of your presence
+- Attack roll advantage against targets who can't defend themselves
+- Attack roll advantage against targets who can't move normally
+
 ### Supported rules
 - If you are hiding – “the Dungeon Master might allow you to stay hidden as you approach a creature that is distracted, allowing you to gain advantage on an attack before you are seen.”
 - When a creature can’t see you, you have advantage on attack rolls against it.

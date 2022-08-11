@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine ./tests/*Test.js"
+    "test": "jasmine ./tests/*Test.js",
+    "generate-index": "./bin/generate-files"
   },
   "keywords": [],
   "author": "",

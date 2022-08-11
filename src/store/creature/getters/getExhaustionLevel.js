@@ -1,6 +1,10 @@
 const CONFIG = require('../../../config')
 const CONSTS = require('../../../consts')
 
+/**
+ * @param state {object}
+ * @returns {number}
+ */
 module.exports = state => {
     return state
         .effects
