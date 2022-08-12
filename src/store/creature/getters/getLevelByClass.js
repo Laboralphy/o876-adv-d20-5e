@@ -1,7 +1,7 @@
 /**
  * The character level, obtained by adding all levels in each class
  * @param state
- * @returns {number}
+ * @returns {{[c: string]: number}}
  */
 module.exports = state => {
     const oClasses = {}

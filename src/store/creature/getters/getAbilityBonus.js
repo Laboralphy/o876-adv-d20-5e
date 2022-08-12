@@ -1,12 +1,33 @@
-const CONFIG = require('../../../config')
+const CONSTS = require('../../../consts')
 
-module.exports = state => {
-    const oAbilities = {}
-    for (const sAbility of Object.keys(state.abilities)) {
-        oAbilities[sAbility] = state
-            .effects
-            .filter(eff => eff.tag === CONFIG.EFFECT_ABILITY_BONUS && eff.data.ability === sAbility)
-            .reduce((value, eff) => value + eff.amp, 0)
+/**
+ * Registre associant les caractéristiques et leur bonus
+ * @param state
+ * @param getters
+ * @returns {D20AbilityNumberRegistry}
+ */
+module.exports = (state, getters) => {
+    const r = {
+        [CONSTS.ABILITY_STRENGTH]: 0,
+        [CONSTS.ABILITY_DEXTERITY]: 0,
+        [CONSTS.ABILITY_CONSTITUTION]: 0,
+        [CONSTS.ABILITY_INTELLIGENCE]: 0,
+        [CONSTS.ABILITY_WISDOM]: 0,
+        [CONSTS.ABILITY_CHARISMA]: 0
     }
-    return oAbilities
+    getters
+        .getEffects
+        .forEach(eff => {
+            if (eff.tag === CONSTS.EFFECT_ABILITY_BONUS) {
+                r[eff.data.ability] += eff.amp
+            }
+        })
+    getters
+        .getEquipmentItemProperties
+        .forEach(ip => {
+            if (ip.property === CONSTS.EFFECT_ABILITY_BONUS) {
+                r[ip.ability] += ip.amp
+            }
+        })
+    return r
 }

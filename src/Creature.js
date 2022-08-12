@@ -110,7 +110,7 @@ class Creature {
         const aFilteredItemProperties = this
             .store
             .getters
-            .getDefensiveEquipmentItemProperties
+            .getEquipmentItemProperties
             .filter(ip =>
                 aTagSet.has(ip.property) &&
                 (propFilter ? propFilter(ip) : true)
@@ -153,12 +153,6 @@ class Creature {
         ]).sum
         return nBaseAC + nItemACProps
     }
-
-    getAttackBonus () {
-        return this.store.getters.getSelectedWeaponAttackBonus
-    }
-
-
 }
 
 module.exports = Creature

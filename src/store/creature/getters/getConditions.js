@@ -1,5 +1,11 @@
 const CONSTS = require('../../../consts')
 
+/**
+ * Registre des altérations d'états
+ * @param state
+ * @param getters {D20CreatureStoreGetters}
+ * @returns {D20ConditionBooleanRegistry}
+ */
 module.exports = (state, getters) => {
     const tags = getters
         .getEffects

@@ -1,5 +1,12 @@
 const CONSTS = require('../../../consts')
 
+/**
+ * Nombre maximum de points de vie
+ * @param state
+ * @param getters {D20CreatureStoreGetters}
+ * @param externals {object}
+ * @returns {number}
+ */
 module.exports = (state, getters, externals) => {
     const DATA = externals.data
     const oClasses = getters.getLevelByClass

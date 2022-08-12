@@ -27,7 +27,7 @@ describe('Creature reading ability with effect ability modifier', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
-        c.store.mutations.addEffect({ effect: { tag: 'ability-bonus', duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_STRENGTH }}})
+        c.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ABILITY_BONUS, duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_STRENGTH }}})
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
     })
 
@@ -35,9 +35,9 @@ describe('Creature reading ability with effect ability modifier', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
-        c.store.mutations.addEffect({ effect: { tag: 'ability-bonus', duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_STRENGTH }}})
+        c.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ABILITY_BONUS, duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_STRENGTH }}})
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
-        c.store.mutations.addEffect({ effect: { tag: 'ability-bonus', duration: 10, amp: 3, data: { ability: CONSTS.ABILITY_STRENGTH }}})
+        c.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ABILITY_BONUS, duration: 10, amp: 3, data: { ability: CONSTS.ABILITY_STRENGTH }}})
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(18)
     })
 
@@ -103,7 +103,7 @@ describe('getAC', function () {
             "minStrengthRequired": 0,
             "disadvantageStealth": false,
             "weight": 10,
-            equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST]
+            "equipmentSlots": [CONSTS.EQUIPMENT_SLOT_CHEST]
         }
         c.equipItem(oArmorLeather)
         expect(c.getAC()).toBe(12)
@@ -129,6 +129,155 @@ describe('getAC', function () {
         }
         c.equipItem(oArmorLeather)
         expect(c.getAC()).toBe(14)
+    })
+})
+
+describe('getAttackBonus', function () {
+    it ('level 1 with no weapons', function () {
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        const oUnarmedStrike = {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+            "properties": [],
+            "damage": "1",
+            "damageType": "DAMAGE_TYPE_CRUSHING",
+            "attributes": []
+        }
+        c.store.mutations.equipItem({ item: oUnarmedStrike, slot: CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON })
+        expect(c.store.getters.getLevel).toBe(0)
+        expect(c.store.getters.getProficiencyBonus).toBe(1)
+        c.store.mutations.addClass({ class: CONSTS.CLASS_TOURIST, levels: 1 })
+        expect(c.store.getters.getLevel).toBe(1)
+        expect(c.store.getters.getProficiencyBonus).toBe(2)
+        expect(c.store.getters.isProficientSelectedWeapon).toBeTrue()
+        expect(c.store.getters.getAttackBonus).toBe(2)
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 12 })
+        expect(c.store.getters.getAttackBonus).toBe(3)
+        c.store.mutations.addClass({ class: CONSTS.CLASS_TOURIST, levels: 4 })
+        expect(c.store.getters.getAttackBonus).toBe(4)
+    })
+    it ('switching from weapon melee to ranged', function () {
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        const oSword = {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "weaponType": "WEAPON_TYPE_LONGSWORD",
+            "properties": [],
+            "damage": "1d8",
+            "damageType": "DAMAGE_TYPE_SLASHING",
+            "attributes": []
+        }
+        const oDagger = {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "weaponType": "WEAPON_TYPE_DAGGER",
+            "properties": [],
+            "damage": "1d4",
+            "damageType": "DAMAGE_TYPE_PIERCING",
+            "attributes": ["WEAPON_ATTRIBUTE_FINESSE"]
+        }
+        const oBow = {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "weaponType": "WEAPON_TYPE_SHORTBOW",
+            "properties": [],
+            "damage": "1d6",
+            "damageType": "DAMAGE_TYPE_PIERCING",
+            "attributes": ["WEAPON_ATTRIBUTE_RANGED"]
+        }
+        const oArrow = {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_AMMO",
+            "properties": [],
+            "stack": 10
+        }
+        c.store.mutations.equipItem({ item: oSword, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        c.store.mutations.equipItem({ item: oBow, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
+        c.store.mutations.equipItem({ item: oArrow, slot: CONSTS.EQUIPMENT_SLOT_AMMO })
+        expect(c.store.getters.getSelectedWeapon).toEqual(oSword)
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 14 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 18 })
+        c.store.mutations.addClass({ class: CONSTS.CLASS_TOURIST, levels: 1 })
+        expect(c.store.getters.getAttackBonus).toBe(2)
+        c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
+        expect(c.store.getters.getAttackBonus).toBe(4)
+        c.store.mutations.equipItem({ item: oDagger, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        expect(c.store.getters.getAttackBonus).toBe(4)
+    })
+    it ('switching from magical weapon melee to ranged', function () {
+        const c = new Creature()
+        const oSword = {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "weaponType": "WEAPON_TYPE_LONGSWORD",
+            "proficiency": CONSTS.PROFICIENCY_WEAPON_MARTIAL,
+            "properties": [{
+                property: CONSTS.ITEM_PROPERTY_ATTACK_BONUS,
+                amp: 1
+            }],
+            "damage": "1d8",
+            "damageType": "DAMAGE_TYPE_SLASHING",
+            "attributes": []
+        }
+        // dagger +2
+        const oDagger = {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "proficiency": CONSTS.PROFICIENCY_WEAPON_SIMPLE,
+            "weaponType": "WEAPON_TYPE_DAGGER",
+            "properties": [{
+                property: CONSTS.ITEM_PROPERTY_ENHANCEMENT,
+                amp: 2
+            }],
+            "damage": "1d4",
+            "damageType": "DAMAGE_TYPE_PIERCING",
+            "attributes": ["WEAPON_ATTRIBUTE_FINESSE"]
+        }
+        const oBow = {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "proficiency": CONSTS.PROFICIENCY_WEAPON_MARTIAL,
+            "weaponType": "WEAPON_TYPE_SHORTBOW",
+            "properties": [{
+                property: CONSTS.ITEM_PROPERTY_ATTACK_BONUS,
+                amp: 3
+            }],
+            "damage": "1d6",
+            "damageType": "DAMAGE_TYPE_PIERCING",
+            "attributes": ["WEAPON_ATTRIBUTE_RANGED"]
+        }
+        // Arrow +2
+        const oArrow = {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_AMMO",
+            "properties": [{
+                property: CONSTS.ITEM_PROPERTY_ENHANCEMENT,
+                amp: 2
+            }],
+            "stack": 10
+        }
+        c.store.mutations.equipItem({ item: oSword, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        c.store.mutations.equipItem({ item: oBow, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
+        c.store.mutations.equipItem({ item: oArrow, slot: CONSTS.EQUIPMENT_SLOT_AMMO })
+        c.store.mutations.addProficiency({ proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+        c.store.mutations.addProficiency({ proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 14 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 18 })
+        c.store.mutations.addClass({ class: CONSTS.CLASS_TOURIST, levels: 1 })
+        expect(c.store.getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH]).toBe(2)
+        expect(c.store.getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]).toBe(4)
+        expect(c.store.getters.isProficientSelectedWeapon).toBeTrue()
+        expect(c.store.getters.getProficiencyBonus).toBe(2)
+        // +2 prof, +1 weapon +2 ability
+        expect(c.store.getters.getAttackBonus).toBe(5)
+        c.store.mutations.equipItem({ item: oDagger, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        // +2 prof, +2 weapon +4 ability
+        expect(c.store.getters.getAttackBonus).toBe(8)
+        c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
+        // +2 prof, +3 weapon +2 ammo +4 ability
+        expect(c.store.getters.getAttackBonus).toBe(11)
     })
 })
 

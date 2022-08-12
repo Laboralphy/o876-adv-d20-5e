@@ -26,6 +26,8 @@
  * @property ROLL_TYPE_ATTACK {abilities: D20Ability}
  * @property ROLL_TYPE_SAVE {abilities: D20Ability, threats: object}
  * @property ROLL_TYPE_SKILL {abilities: D20Ability, skills: D20SkillBooleanRegistry}
+ *
+ * @typedef D20ConditionBooleanRegistry {{[p: string]: boolean}}
  */
 
 /**

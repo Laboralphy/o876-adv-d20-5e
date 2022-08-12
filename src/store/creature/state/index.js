@@ -32,7 +32,7 @@ module.exports = function () {
             morality: 0
         },
         specie: CONSTS.SPECIE_HUMANOID,
-        offensiveSlot: '',
+        offensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
         proficiencies: [],
         speed: 0,
         effects: [],

@@ -2,7 +2,8 @@ const CONSTS = require('../../../consts')
 /**
  * Etabli la liste des désavantages
  * @param state
- * @param getters
+ * @param getters {D20CreatureStoreGetters}
+ * @return {D20AdvantagesOrDisadvantages}
  */
 
 module.exports = (state, getters) => ({

@@ -8,4 +8,6 @@ echo "generate ./src/consts/item-properties.json"
 node ./bin/generate-index ic > ./src/consts/item-properties.json
 echo "generate ./src/consts/effects.json"
 node ./bin/generate-index ec > ./src/consts/effects.json
+echo "generate ./src/store/creature/getters-jsdoc.js"
+node ./bin/generate-index g > ./src/store/creature/getters-jsdoc.js
 echo done

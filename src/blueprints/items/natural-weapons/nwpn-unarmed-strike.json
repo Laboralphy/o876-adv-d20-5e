@@ -2,7 +2,7 @@
   "entityType": "ENTITY_TYPE_ITEM",
   "itemType": "ITEM_TYPE_NATURAL_WEAPON",
   "properties": [],
-  "damage": "2d6+10",
-  "damageType": "DAMAGE_TYPE_SLASHING",
+  "damage": "1",
+  "damageType": "DAMAGE_TYPE_CRUSHING",
   "attributes": []
 }

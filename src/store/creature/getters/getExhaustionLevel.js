@@ -2,6 +2,7 @@ const CONFIG = require('../../../config')
 const CONSTS = require('../../../consts')
 
 /**
+ * Niveau de fatigue
  * @param state {object}
  * @returns {number}
  */

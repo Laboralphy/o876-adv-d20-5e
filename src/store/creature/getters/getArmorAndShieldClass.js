@@ -1,5 +1,11 @@
 const CONSTS = require('../../../consts')
 
+/**
+ * Classe d'armure complete de la créature
+ * @param state
+ * @param getters
+ * @returns {number}
+ */
 module.exports = (state, getters) => {
     const nDexterityBonus = getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]
     const oArmor = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_CHEST]

@@ -1,3 +1,9 @@
+/**
+ * Vitesse de la créature
+ * @param state
+ * @param getters
+ * @returns {number}
+ */
 module.exports = (state, getters) => {
     let nSpeed = state.speed
     const nExhaustionLevel = getters.getExhaustionLevel

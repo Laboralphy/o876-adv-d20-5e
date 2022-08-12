@@ -1,7 +1,13 @@
+const CONSTS = require('../../../consts')
+/**
+ * Arme actuellement équipée
+ * @param state
+ * @returns {D20Item}
+ */
 module.exports = state => {
-    const oWeapon = state.equipment[state.offensiveSlot]
+    let oWeapon = state.equipment[state.offensiveSlot]
     if (!oWeapon) {
-        throw new Error('Offensive slot not selected')
+        oWeapon = state.equipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON]
     }
     return oWeapon
 }
