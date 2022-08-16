@@ -9,6 +9,7 @@
  * @property getArmorAndShieldClass {number}
  * @property getAttackBonus {number}
  * @property getConditions {D20ConditionBooleanRegistry}
+ * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffects {[]}
  * @property getEntropyType {string}
@@ -20,6 +21,7 @@
  * @property getLevelByClass {{[c: string]: number}}
  * @property getMaxHitPoints {number}
  * @property getMoralityType {string}
+ * @property getOffensiveEquipmentList {D20Item[]}
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}
  * @property getSelectedWeaponProperties {array}

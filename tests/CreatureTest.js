@@ -271,12 +271,14 @@ describe('getAttackBonus', function () {
         expect(c.store.getters.isProficientSelectedWeapon).toBeTrue()
         expect(c.store.getters.getProficiencyBonus).toBe(2)
         // +2 prof, +1 weapon +2 ability
+        expect(c.store.getters.getOffensiveEquipmentList.length).toBe(1)
         expect(c.store.getters.getAttackBonus).toBe(5)
         c.store.mutations.equipItem({ item: oDagger, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
         // +2 prof, +2 weapon +4 ability
         expect(c.store.getters.getAttackBonus).toBe(8)
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         // +2 prof, +3 weapon +2 ammo +4 ability
+        expect(c.store.getters.getOffensiveEquipmentList.length).toBe(2)
         expect(c.store.getters.getSelectedWeaponProperties.length).toBe(2)
         expect(c.store.getters.getAttackBonus).toBe(11)
     })
@@ -285,4 +287,3 @@ describe('getAttackBonus', function () {
 // Test : appliquer un effet à impact
 // appliquer un effet à durée temporaire
 // creature A applique un effet à créature B
-
