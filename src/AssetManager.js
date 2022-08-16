@@ -27,6 +27,9 @@ class AssetManager {
     }
 
     loadPath (sPath, sType) {
+        if (!TreeSync.exists(sPath)) {
+            return
+        }
         const d = TreeSync.recursiveRequire(sPath, true)
         switch (sType) {
             case 'blueprint': {
@@ -45,10 +48,16 @@ class AssetManager {
         }
     }
 
+    loadModule (sPath) {
+        this.loadPath(path.join(sPath, 'blueprints'), 'blueprint')
+        this.loadPath(path.join(sPath, 'data'), 'data')
+    }
+
     init () {
         this._validator.init()
-        this.loadPath(path.resolve(__dirname, './blueprints'), 'blueprint')
-        this.loadPath(path.resolve(__dirname, './data'), 'data')
+        this.loadModule(path.resolve(__dirname, 'modules', 'base'))
+        this.loadModule(path.resolve(__dirname, 'modules', 'classic'))
+        this.loadModule(path.resolve(__dirname, 'modules', 'modern'))
     }
 
     /**

@@ -1,0 +1,18 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+  "damage": "2d6",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_RADIANT",
+  "weight": 3,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_RANGED",
+    "WEAPON_ATTRIBUTE_AMMUNITION",
+    "WEAPON_ATTRIBUTE_LOADING",
+    "WEAPON_ATTRIBUTE_LIGHT",
+    "WEAPON_ATTRIBUTE_SEMI_AUTOMATIC"
+  ],
+  "ammo": {
+    "type": "AMMO_TYPE_ENERGY_CELL_I",
+    "count": 50
+  }
+}

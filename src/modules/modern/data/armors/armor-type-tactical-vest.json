@@ -1,0 +1,8 @@
+{
+  "proficiency": "PROFICIENCY_ARMOR_MEDIUM",
+  "ac": 16,
+  "maxDexterityModifier": 2,
+  "minStrengthRequired": 13,
+  "disadvantageStealth": true,
+  "weight": 10
+}

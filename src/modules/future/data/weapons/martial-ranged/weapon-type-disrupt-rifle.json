@@ -1,0 +1,17 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "2d8",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_WITHERING",
+  "weight": 6,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_RANGED",
+    "WEAPON_ATTRIBUTE_AMMUNITION",
+    "WEAPON_ATTRIBUTE_LOADING",
+    "WEAPON_ATTRIBUTE_SEMI_AUTOMATIC"
+  ],
+  "ammo": {
+    "type": "AMMO_TYPE_ENERGY_CELL_II",
+    "count": 10
+  }
+}

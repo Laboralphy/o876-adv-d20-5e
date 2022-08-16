@@ -1,0 +1,16 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "1d8",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 2,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_AMMUNITION",
+    "WEAPON_ATTRIBUTE_HEAVY",
+    "WEAPON_ATTRIBUTE_TWO_HANDED"
+  ],
+  "ammo": {
+    "type": "AMMO_TYPE_ARROW",
+    "count": 1
+  }
+}

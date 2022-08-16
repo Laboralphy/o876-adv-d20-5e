@@ -1,0 +1,18 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "2d6",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 7,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_RANGED",
+    "WEAPON_ATTRIBUTE_AMMUNITION",
+    "WEAPON_ATTRIBUTE_LOADING",
+    "WEAPON_ATTRIBUTE_TWO_HANDED",
+    "WEAPON_ATTRIBUTE_SPREAD"
+  ],
+  "ammo": {
+    "type": "AMMO_TYPE_SLUG",
+    "count": 6
+  }
+}

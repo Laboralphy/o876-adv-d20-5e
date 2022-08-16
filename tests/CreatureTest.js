@@ -246,7 +246,7 @@ describe('getAttackBonus', function () {
             }],
             "damage": "1d6",
             "damageType": "DAMAGE_TYPE_PIERCING",
-            "attributes": ["WEAPON_ATTRIBUTE_RANGED"]
+            "attributes": [CONSTS.WEAPON_ATTRIBUTE_RANGED, CONSTS.WEAPON_ATTRIBUTE_AMMUNITION]
         }
         // Arrow +2
         const oArrow = {
@@ -277,6 +277,7 @@ describe('getAttackBonus', function () {
         expect(c.store.getters.getAttackBonus).toBe(8)
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         // +2 prof, +3 weapon +2 ammo +4 ability
+        expect(c.store.getters.getSelectedWeaponProperties.length).toBe(2)
         expect(c.store.getters.getAttackBonus).toBe(11)
     })
 })

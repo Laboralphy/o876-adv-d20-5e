@@ -1,0 +1,18 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "2d8",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 10,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_RANGED",
+    "WEAPON_ATTRIBUTE_AMMUNITION",
+    "WEAPON_ATTRIBUTE_LOADING",
+    "WEAPON_ATTRIBUTE_AUTOMATIC",
+    "WEAPON_ATTRIBUTE_TWO_HANDED"
+  ],
+  "ammo": {
+    "type": "AMMO_TYPE_CARTRIDGE_HIGH_ROF",
+    "count": 30
+  }
+}

@@ -29,6 +29,26 @@
       "type": "number",
       "minimum": 0
     },
+    "ammo": {
+      "oneOf": [
+        {
+          "const": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "pattern": "^AMMO_TYPE_"
+            },
+            "count": {
+              "type": "number",
+              "minimum": "0"
+            }
+          }
+        }
+      ]
+    },
     "attributes": {
       "$ref": "def-weapon-attributes"
     }

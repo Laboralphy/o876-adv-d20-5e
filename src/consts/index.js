@@ -61,8 +61,6 @@ module.exports = {
     ...require('./abilities.json'),
     ...require('./against-type.json'),
     ...require('./alignments.json'),
-    ...require('./ammo-types.json'),
-    ...require('./armor-types.json'),
     ...require('./classes.json'),
     ...require('./damage-types.json'),
     ...require('./effects.json'),
@@ -75,10 +73,8 @@ module.exports = {
     ...require('./item-properties.json'),
     ...require('./proficiencies.json'),
     ...require('./roll-types.json'),
-    ...require('./shield-types.json'),
     ...require('./sizes.json'),
     ...require('./skills.json'),
     ...require('./species.json'),
-    ...require('./weapon-attributes.json'),
-    ...require('./weapon-types.json')
+    ...require('./weapon-attributes.json')
 }

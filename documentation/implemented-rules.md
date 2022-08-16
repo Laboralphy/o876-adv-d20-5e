@@ -67,3 +67,15 @@ chaque niveau
 | 6     | Death                                          |
 
   
+### Rule : Automatic and semiautomatic weapon
+
+Les armes semi-automatiques proposent une attaque à -2, 
+pour un bonus de dégât de +50%, pour le prix de 2 munitions
+
+Les armes automatiques proposent une attaque à -4, pour un bonus de dégâts
+de +100%, pour le prix de 5 munitions.
+
+### Rule : Spread weapon attribute
+
+Les armes spread font des dégâts additionnel +50% à courte portée, et peuvent toucher
+deux adversaires à longue portée sans bonus de dégâts.

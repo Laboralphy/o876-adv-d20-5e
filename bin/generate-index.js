@@ -2,11 +2,19 @@ const TreeSync = require('../libs/tree-sync')
 const fs = require('fs')
 const path = require('path')
 
+function lsr (sPath) {
+    return TreeSync
+        .tree(sPath)
+        .map(f => f.split(path.sep).pop())
+        .filter(f => f !== 'index.js')
+        .map(f => f.replace(/\.js(on|)$/, ''))
+}
+
 function ls (sPath) {
     return TreeSync
         .ls(sPath)
         .filter(f => !f.dir && f.name !== 'index.js')
-        .map(f => f.name.replace(/\.js$/, ''))
+        .map(f => f.name.replace(/\.js(on|)$/, ''))
 }
 
 function camelCase (s) {
@@ -35,7 +43,7 @@ function generateIndex (sPath, sPrefix) {
 }
 
 function generateConsts (sPath, sPrefix) {
-    const aFiles = ls(sPath)
+    const aFiles = lsr(sPath)
     const aConsts = aFiles
         .map(f => ({
             c: sPrefix + camelCase(f),

@@ -22,6 +22,7 @@
  * @property getMoralityType {string}
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}
+ * @property getSelectedWeaponProperties {array}
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property isProficientArmorAndShield {boolean}

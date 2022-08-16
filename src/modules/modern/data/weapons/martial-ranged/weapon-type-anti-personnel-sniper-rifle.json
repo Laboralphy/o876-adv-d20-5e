@@ -1,0 +1,18 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "2d10",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 16,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_RANGED",
+    "WEAPON_ATTRIBUTE_AMMUNITION",
+    "WEAPON_ATTRIBUTE_LOADING",
+    "WEAPON_ATTRIBUTE_SEMI_AUTOMATIC",
+    "WEAPON_ATTRIBUTE_TWO_HANDED"
+  ],
+  "ammo": {
+    "type": "AMMO_TYPE_CARTRIDGE_LONG_RANGE",
+    "count": 5
+  }
+}

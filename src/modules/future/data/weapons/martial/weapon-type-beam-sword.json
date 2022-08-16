@@ -1,0 +1,11 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "2d8",
+  "versatileDamage": "2d12",
+  "damageType": "DAMAGE_TYPE_RADIANT",
+  "weight": 1,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_FINESSE",
+    "WEAPON_ATTRIBUTE_VERSATILE"
+  ]
+}

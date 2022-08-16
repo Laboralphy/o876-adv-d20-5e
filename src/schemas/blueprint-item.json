@@ -21,12 +21,12 @@
       "if": {
         "properties": {
           "itemType": {
-            "const": "ITEM_TYPE_CREATUREWEAPON"
+            "const": "ITEM_TYPE_NATURAL_WEAPON"
           }
         }
       },
       "then": {
-        "$ref": "./def-item-type-creatureweapon"
+        "$ref": "./def-item-type-natural-weapon"
       }
     },
     {

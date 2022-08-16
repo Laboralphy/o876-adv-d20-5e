@@ -5,6 +5,14 @@ const EXTENSION_JS = '.js'
 const EXTENSION_JSON = '.json'
 
 class TreeSync {
+    static exists (sPath) {
+        try {
+            return !!fs.statSync(sPath)
+        } catch (e) {
+            return false
+        }
+    }
+
     static ls (sPath) {
         const list = fs.readdirSync(sPath, {
             withFileTypes: true

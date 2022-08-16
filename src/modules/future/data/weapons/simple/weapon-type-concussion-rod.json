@@ -1,0 +1,8 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+  "damage": "1d8",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_FORCE",
+  "weight": 3,
+  "attributes": []
+}
