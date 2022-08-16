@@ -1,0 +1,11 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "1d8",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_CRUSHING",
+  "weight": 6,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_TWO_HANDED",
+    "WEAPON_ATTRIBUTE_REACH"
+  ]
+}

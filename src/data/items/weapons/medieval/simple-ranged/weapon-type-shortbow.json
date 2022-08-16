@@ -1,0 +1,12 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+  "damage": "1d6",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 2,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_RANGED",
+    "WEAPON_ATTRIBUTE_AMMUNITION",
+    "WEAPON_ATTRIBUTE_TWO_HANDED"
+  ]
+}

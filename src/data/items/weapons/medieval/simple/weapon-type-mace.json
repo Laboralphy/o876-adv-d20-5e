@@ -1,0 +1,9 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+  "damage": "1d6",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_CRUSHING",
+  "weight": 4,
+  "attributes": [
+  ]
+}

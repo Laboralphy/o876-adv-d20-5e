@@ -1,0 +1,11 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "1d8",
+  "versatileDamage": "1d8",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 4,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_THROWN",
+    "WEAPON_ATTRIBUTE_VERSATILE"
+  ]
+}

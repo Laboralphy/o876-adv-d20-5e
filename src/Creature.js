@@ -153,6 +153,10 @@ class Creature {
         ]).sum
         return nBaseAC + nItemACProps
     }
+
+    getAttackBonus () {
+        return this.store.getters.getAttackBonus
+    }
 }
 
 module.exports = Creature

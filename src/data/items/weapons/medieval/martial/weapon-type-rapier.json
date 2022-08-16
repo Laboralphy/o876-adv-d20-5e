@@ -1,0 +1,10 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "1d6",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 2,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_FINESSE"
+  ]
+}

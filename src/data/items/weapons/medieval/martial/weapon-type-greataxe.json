@@ -1,0 +1,11 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "1d12",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_SLASHING",
+  "weight": 7,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_HEAVY",
+    "WEAPON_ATTRIBUTE_TWO_HANDED"
+  ]
+}

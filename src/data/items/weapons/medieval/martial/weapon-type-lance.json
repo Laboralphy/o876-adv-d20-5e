@@ -1,0 +1,12 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "1d12",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 6,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_REACH",
+    "WEAPON_ATTRIBUTE_HEAVY",
+    "WEAPON_ATTRIBUTE_TWO_HANDED"
+  ]
+}

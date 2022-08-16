@@ -1,0 +1,10 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "1d8",
+  "versatileDamage": "1d10",
+  "damageType": "DAMAGE_TYPE_CRUSHING",
+  "weight": 2,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_VERSATILE"
+  ]
+}

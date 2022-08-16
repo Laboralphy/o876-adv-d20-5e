@@ -1,0 +1,11 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+  "damage": "1d8",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_SLASHING",
+  "weight": 2,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_FINESSE",
+    "WEAPON_ATTRIBUTE_LIGHT"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damage": "1d6",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_SLASHING",
+  "weight": 3,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_FINESSE",
+    "WEAPON_ATTRIBUTE_LIGHT"
+  ]
+}

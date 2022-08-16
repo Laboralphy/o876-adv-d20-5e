@@ -1,0 +1,11 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+  "damage": "1d6",
+  "versatileDamage": "1d8",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 3,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_THROWN",
+    "WEAPON_ATTRIBUTE_VERSATILE"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+  "damage": "1d4",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_CRUSHING",
+  "weight": 2,
+  "attributes": [
+    "WEAPON_ATTRIBUTE_LIGHT",
+    "WEAPON_ATTRIBUTE_THROWN"
+  ]
+}
