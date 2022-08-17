@@ -55,6 +55,10 @@ class AssetManager {
 
     init () {
         this._validator.init()
+        const oBaseData = TreeSync.recursiveRequire(path.resolve(__dirname, 'data'), true)
+        for (const [sId, data] of Object.entries(oBaseData)) {
+            this.addData(sId, data)
+        }
         this.loadModule(path.resolve(__dirname, 'modules', 'base'))
         this.loadModule(path.resolve(__dirname, 'modules', 'classic'))
         this.loadModule(path.resolve(__dirname, 'modules', 'modern'))
@@ -125,9 +129,11 @@ class AssetManager {
      * @param oData
      * @param sDataType
      */
-    addData (sId, oData, sDataType) {
+    addData (sId, oData, sDataType = '') {
         try {
-            this._validator.validate(oData, sDataType)
+            if (sDataType !== '') {
+                this._validator.validate(oData, sDataType)
+            }
             this._assets.data[sId] = oData
         } catch (e) {
             if (e.message.startsWith('ERR_SCHEMA_VALIDATION')) {

@@ -5,11 +5,12 @@
  * @property getAbilityList {string[]}
  * @property getAbilityModifiers {D20AbilityNumberRegistry}
  * @property getAbilityValues {D20AbilityNumberRegistry}
+ * @property getAdvantageRules {{ }}
  * @property getAdvantages {D20AdvantagesOrDisadvantages}
  * @property getArmorAndShieldClass {number}
- * @property getAttackBonus {number}
  * @property getConditions {D20ConditionBooleanRegistry}
  * @property getDefensiveEquipmentList {D20Item[]}
+ * @property getDisadvantageRules {*}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffects {[]}
  * @property getEntropyType {string}
@@ -21,6 +22,7 @@
  * @property getLevelByClass {{[c: string]: number}}
  * @property getMaxHitPoints {number}
  * @property getMoralityType {string}
+ * @property getOffensiveAbility {string}
  * @property getOffensiveEquipmentList {D20Item[]}
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}
@@ -29,5 +31,6 @@
  * @property getSpeed {number}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
+ * @property isTargetVisible {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  */

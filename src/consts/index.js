@@ -9,6 +9,11 @@
  */
 
 /**
+ * @typedef D20RuleValue {object}
+ * @property rules {object.<string, boolean>}
+ * @property value {boolean}
+ *
+ *
  * @typedef D20AbilityBooleanRegistry {object}
  * @property ABILITY_STRENGTH {boolean}
  * @property ABILITY_DEXTERITY {boolean}
@@ -17,15 +22,23 @@
  * @property ABILITY_WISDOM {boolean}
  * @property ABILITY_CHARISMA {boolean}
  *
+ * @typedef D20AbilityRuleValueRegistry {object}
+ * @property ABILITY_STRENGTH {D20RuleValue}
+ * @property ABILITY_DEXTERITY {D20RuleValue}
+ * @property ABILITY_CONSTITUTION {D20RuleValue}
+ * @property ABILITY_INTELLIGENCE {D20RuleValue}
+ * @property ABILITY_WISDOM {D20RuleValue}
+ * @property ABILITY_CHARISMA {D20RuleValue}
+ *
  * @typedef D20SkillBooleanRegistry {object}
  * @property SKILL_STEALTH {boolean}
  *
  * @typedef D20ThreatBooleanRegistry {object}
  *
  * @typedef D20AdvantagesOrDisadvantages {object}
- * @property ROLL_TYPE_ATTACK {abilities: D20Ability}
- * @property ROLL_TYPE_SAVE {abilities: D20Ability, threats: object}
- * @property ROLL_TYPE_SKILL {abilities: D20Ability, skills: D20SkillBooleanRegistry}
+ * @property ROLL_TYPE_ATTACK {abilities: D20AbilityRuleValueRegistry}
+ * @property ROLL_TYPE_SAVE {abilities: D20AbilityRuleValueRegistry, threats: D20RuleValue}
+ * @property ROLL_TYPE_SKILL {abilities: D20AbilityRuleValueRegistry, skills: D20RuleValue}
  *
  * @typedef D20ConditionBooleanRegistry {{[p: string]: boolean}}
  */
@@ -62,6 +75,7 @@ module.exports = {
     ...require('./against-type.json'),
     ...require('./alignments.json'),
     ...require('./classes.json'),
+    ...require('./conditions.json'),
     ...require('./damage-types.json'),
     ...require('./effects.json'),
     ...require('./entity-types.json'),

@@ -25,6 +25,9 @@ function getMeleeOffensiveEquipment (state, getters) {
  */
 module.exports = (state, getters) => {
     const oWeapon = getters.getSelectedWeapon
+    if (!oWeapon) {
+        return []
+    }
     const aWeapons = oWeapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
         ? getRangedOffensiveEquipment(state, getters)
         : getMeleeOffensiveEquipment(state, getters)

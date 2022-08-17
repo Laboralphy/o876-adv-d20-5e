@@ -46,22 +46,23 @@ class Creature {
 
     /**
      * @param d {D20AdvantagesOrDisadvantages}
+     * @param sRollType {string}
      * @param [ability] {string}
      * @param [skill] {string}
      * @param [threat] {string}
      * @returns {boolean}
      * @private
      */
-    _isAdvOrDisadv (d, { ability = '', skill = '', threat = '' }) {
+    _isAdvOrDisadv (d, sRollType, { ability = '', skill = '', threat = '' }) {
         let b = false
         if (ability !== '') {
-            b = d.abilities[ability]
+            b = d[sRollType].abilities[ability].value
         }
-        if (skill !== '') {
-            b = b || d.skills[skill]
+        if (skill !== '' && sRollType === CONSTS.ROLL_TYPE_SKILL) {
+            b = b || d.ROLL_TYPE_SKILL.skills[skill].value
         }
-        if (threat) {
-            b = b || d.threats[threat]
+        if (threat !== '' && sRollType === CONSTS.ROLL_TYPE_SAVE) {
+            b = b || d.ROLL_TYPE_SAVE.threats[threat].value
         }
         return b
     }
@@ -73,7 +74,7 @@ class Creature {
      * @returns {boolean}
      */
     isDisadvantaged (sRollType, ast) {
-        return this._isAdvOrDisadv(this.store.getters.getDisadvantages[sRollType], ast)
+        return this._isAdvOrDisadv(this.store.getters.getDisadvantages, sRollType, ast)
     }
 
     /**
@@ -83,7 +84,7 @@ class Creature {
      * @returns {boolean}
      */
     isAdvantaged (sRollType, ast) {
-        return this._isAdvOrDisadv(this.store.getters.getDisadvantages[sRollType], ast)
+        return this._isAdvOrDisadv(this.store.getters.getAdvantages, sRollType, ast)
     }
 
     /**
@@ -154,8 +155,69 @@ class Creature {
         return nBaseAC + nItemACProps
     }
 
+    /**
+     * Calcule le bonus d'attaque
+     * @returns {number}
+     */
     getAttackBonus () {
-        return this.store.getters.getAttackBonus
+        const getters = this.store.getters
+        const bProficient = getters.isProficientSelectedWeapon
+        const nProfBonus = bProficient ? getters.getProficiencyBonus : 0
+        const sOffensiveAbility = getters.getOffensiveAbility
+        const nAbilityBonus = getters.getAbilityModifiers[sOffensiveAbility]
+        return nAbilityBonus + nProfBonus + this.aggregateModifiers([
+            CONSTS.EFFECT_ATTACK_BONUS,
+            CONSTS.ITEM_PROPERTY_ENHANCEMENT,
+            CONSTS.ITEM_PROPERTY_ATTACK_BONUS
+        ]).sum
+    }
+
+    /**
+     * Calcule le bonus de dégât de l'arme actuellement
+     * @return {number}
+     */
+    getDamageBonus () {
+        // Effect & Props damageBonus
+        // Effect enhancement
+        // offensive ability modifier
+        // critical : roll damage twice
+        // Weapon attribute Two handed : +50%
+        // Weapon attribute semi auto : +50%
+        // Weapon attribute auto : +100%
+        const getters = this.store.getters
+        const sOffensiveAbility = getters.getOffensiveAbility
+        const nAbilityBonus = getters.getAbilityModifiers[sOffensiveAbility]
+        return nAbilityBonus + this.aggregateModifiers([
+            CONSTS.EFFECT_DAMAGE_BONUS,
+            CONSTS.ITEM_PROPERTY_DAMAGE_BONUS,
+            CONSTS.ITEM_PROPERTY_ENHANCEMENT
+        ]).sum
+    }
+
+    rollD20 (sRollType, sAbility, { target = null, extra = '' }) {
+        const oAdvantages = this.store.getters.getAdvantages
+        const oDisadvantages = this.store.getters.getDisadvantages
+        let
+            a = oAdvantages[sRollType].abilities[sAbility],
+            d = oDisadvantages[sRollType].abilities[sAbility]
+        if (extra !== '' && sRollType === CONSTS.ROLL_TYPE_SAVE) {
+            a = a || oAdvantages[sRollType].threats[extra]
+            d = d || oDisadvantages[sRollType].threats[extra]
+        }
+        if (extra !== '' && sRollType === CONSTS.ROLL_TYPE_SKILL) {
+            a = a || oAdvantages[sRollType].skills[extra]
+            d = d || oDisadvantages[sRollType].skills[extra]
+        }
+        const r = this._dice.roll(20)
+        if (a && !d) {
+            const r2 = this._dice.roll(20)
+            return Math.max(r, r2)
+        }
+        if (d && !a) {
+            const r2 = this._dice.roll(20)
+            return Math.min(r, r2)
+        }
+        return r
     }
 }
 

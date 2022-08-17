@@ -1,0 +1,37 @@
+{
+  "ROLL_TYPE_ATTACK": {
+    "abilities": {
+      "ABILITY_STRENGTH": ["exhaustionLevel3", "nonProficientArmorShield", "isTargetInvisible"],
+      "ABILITY_DEXTERITY": ["exhaustionLevel3", "nonProficientArmorShield", "isTargetInvisible"],
+      "ABILITY_CONSTITUTION": ["exhaustionLevel3", "isTargetInvisible"],
+      "ABILITY_INTELLIGENCE": ["exhaustionLevel3", "isTargetInvisible"],
+      "ABILITY_WISDOM": ["exhaustionLevel3", "isTargetInvisible"],
+      "ABILITY_CHARISMA": ["exhaustionLevel3", "isTargetInvisible"]
+    }
+  },
+  "ROLL_TYPE_SAVE": {
+    "abilities": {
+      "ABILITY_STRENGTH": ["exhaustionLevel3", "nonProficientArmorShield"],
+      "ABILITY_DEXTERITY": ["exhaustionLevel3", "nonProficientArmorShield"],
+      "ABILITY_CONSTITUTION": ["exhaustionLevel3"],
+      "ABILITY_INTELLIGENCE": ["exhaustionLevel3"],
+      "ABILITY_WISDOM": ["exhaustionLevel3"],
+      "ABILITY_CHARISMA": ["exhaustionLevel3"]
+    },
+    "threats": {
+    }
+  },
+  "ROLL_TYPE_SKILL": {
+    "abilities": {
+      "ABILITY_STRENGTH": ["exhaustionLevel1", "nonProficientArmorShield"],
+      "ABILITY_DEXTERITY": ["exhaustionLevel1", "nonProficientArmorShield"],
+      "ABILITY_CONSTITUTION": ["exhaustionLevel1"],
+      "ABILITY_INTELLIGENCE": ["exhaustionLevel1"],
+      "ABILITY_WISDOM": ["exhaustionLevel1"],
+      "ABILITY_CHARISMA": ["exhaustionLevel1"]
+    },
+    "skills": {
+      "SKILL_STEALTH": ["wearingNonStealthArmor"]
+    }
+  }
+}

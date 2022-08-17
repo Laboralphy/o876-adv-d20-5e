@@ -1,0 +1,37 @@
+{
+  "ROLL_TYPE_ATTACK": {
+    "abilities": {
+      "ABILITY_STRENGTH": [],
+      "ABILITY_DEXTERITY": [],
+      "ABILITY_CONSTITUTION": [],
+      "ABILITY_INTELLIGENCE": [],
+      "ABILITY_WISDOM": [],
+      "ABILITY_CHARISMA": []
+    }
+  },
+  "ROLL_TYPE_SAVE": {
+    "abilities": {
+      "ABILITY_STRENGTH": [],
+      "ABILITY_DEXTERITY": [],
+      "ABILITY_CONSTITUTION": [],
+      "ABILITY_INTELLIGENCE": [],
+      "ABILITY_WISDOM": [],
+      "ABILITY_CHARISMA": []
+    },
+    "threats": {
+    }
+  },
+  "ROLL_TYPE_SKILL": {
+    "abilities": {
+      "ABILITY_STRENGTH": [],
+      "ABILITY_DEXTERITY": [],
+      "ABILITY_CONSTITUTION": [],
+      "ABILITY_INTELLIGENCE": [],
+      "ABILITY_WISDOM": [],
+      "ABILITY_CHARISMA": []
+    },
+    "skills": {
+      "SKILL_STEALTH": []
+    }
+  }
+}

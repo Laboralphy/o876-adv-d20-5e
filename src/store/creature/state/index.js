@@ -39,6 +39,7 @@ module.exports = function () {
         classes: [],
         gauges: {
             damage: 0
-        }
+        },
+        target: null
     }
 }

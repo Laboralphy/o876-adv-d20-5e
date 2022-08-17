@@ -24,9 +24,11 @@
 
 ## Disadvantage
 
-### Supported rules
+### Effective rules
 - If you wear armor that you lack proficiency with, you have disadvantage on any ability check, saving throw, or attack roll that involves Strength or Dexterity.
 - If the Armor table shows “Disadvantage” in the Stealth column, the wearer has disadvantage on Dexterity (Stealth) checks.
+
+### Supported rules
 - Small creatures have disadvantage on attack rolls with heavy weapons.
 - In lightly obscured areas – creatures have disadvantage on Wisdom (Perception) checks that rely on sight.
 - When attacking a target beyond normal range, you have disadvantage on the attack roll.
