@@ -13,6 +13,7 @@ class Creature {
         this._id = ++LAST_ID
         this._state = CreatureStore.buildState()
         this._dice = null
+        this._target = null
         /**
          * @type {D20CreatureStore}
          * @private
@@ -47,6 +48,7 @@ class Creature {
     /**
      * @param d {D20AdvantagesOrDisadvantages}
      * @param sRollType {string}
+     * @param [target] {Creature}
      * @param [ability] {string}
      * @param [skill] {string}
      * @param [threat] {string}

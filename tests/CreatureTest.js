@@ -284,50 +284,6 @@ describe('getAttackBonus', function () {
     })
 })
 
-describe('Combat Advantages & Disadvantages', function () {
-    it('should have no disadvantage', function () {
-        const c = new Creature()
-        expect(c.isDisadvantaged(CONSTS.ROLL_TYPE_ATTACK, { ability: CONSTS.ABILITY_STRENGTH })).toBeFalse()
-    })
-    it('a creature should be invisible', function () {
-        const c1 = new Creature()
-        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
-        expect(c1.store.getters.getEffects.some(eff => eff.tag === CONSTS.EFFECT_INVISIBILITY)).toBeTrue()
-        expect(c1.store.getters.getConditions[CONSTS.CONDITION_INVISIBLE]).toBeTrue()
-    })
-    it('should have attack disadvantage because of invisible target', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
-        c1.store.mutations.setTarget({ target: c2 })
-        console.log('is target visible ?')
-        expect(c1.store.getters.isTargetVisible).toBeTrue()
-        console.log('is condition invisible ?')
-        expect(c2.store.getters.getConditions[CONSTS.CONDITION_INVISIBLE]).toBeFalse()
-        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
-        console.log('is target visible ?')
-        expect(c1.store.getters.isTargetVisible).toBeFalse()
-        console.log('is condition invisible ?')
-        expect(c2.store.getters.getConditions[CONSTS.CONDITION_INVISIBLE]).toBeTrue()
-    })
-    xit('should have attack disadvantage because of invisible target', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
-        //c1.store.mutations.setTarget({ target: c2 })
-        console.log('c2 effects', c2.store.state.effects)
-        console.log('c1 target effects', c1.store.state.target?.effects)
-        console.log('c1 target is visible', c1.store.getters.isTargetVisible)
-        console.log('c2 condition invisible', c2.store.getters.getConditions[CONSTS.CONDITION_INVISIBLE])
-        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
-        console.log(c2.store.state.effects)
-        console.log('c2 effects', c2.store.state.effects)
-        console.log('c1 target effects', c1.store.state.target?.effects)
-        console.log('c1 target is visible', c1.store.getters.isTargetVisible)
-        console.log('c2 condition invisible', c2.store.getters.getConditions[CONSTS.CONDITION_INVISIBLE])
-        console.log('c2 have one effect', c2.store.getters.getEffects)
-        console.log('c2 have one effect', c2.store.state.effects)
-        // expect(c1.store.getters.isTargetVisible).toBeFalse()
-    })
-})
 
 // Test : appliquer un effet à impact
 // appliquer un effet à durée temporaire

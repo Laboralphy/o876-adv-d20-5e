@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@laboralphy/store": "^1.1.0",
+    "@laboralphy/store": "^1.2.0",
     "jsonschema": "^1.4.1"
   },
   "devDependencies": {

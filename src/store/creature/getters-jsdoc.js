@@ -31,6 +31,5 @@
  * @property getSpeed {number}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
- * @property isTargetVisible {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  */
