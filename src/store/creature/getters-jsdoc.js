@@ -29,7 +29,9 @@
  * @property getSelectedWeaponProperties {array}
  * @property getSpecie {string}
  * @property getSpeed {number}
+ * @property getTarget {{ condition: Object.<string, boolean>}}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
+ * @property isTargetVisible {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  */

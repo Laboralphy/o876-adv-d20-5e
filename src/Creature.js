@@ -46,17 +46,22 @@ class Creature {
     }
 
     /**
-     * @param d {D20AdvantagesOrDisadvantages}
-     * @param sRollType {string}
-     * @param [target] {Creature}
-     * @param [ability] {string}
-     * @param [skill] {string}
-     * @param [threat] {string}
+     * Renvoie true si la creature est désavantagée pour ce type de jet de dé et pour la caractéristique spécifiée
+     * @param sRollType {string} ROLL_TYPE_*
+     * @param ast {{target: Creature, ability: string, skill: string, threat: string}}
      * @returns {boolean}
-     * @private
      */
-    _isAdvOrDisadv (d, sRollType, { ability = '', skill = '', threat = '' }) {
+    isDisadvantaged (sRollType, ast) {
         let b = false
+        switch (sRollType) {
+            case CONSTS.ROLL_TYPE_ATTACK: {
+                if (ability === '') {
+                    throw new Error('Adv-or-Disadv: ability not specified')
+                }
+
+                b = d[sRollType].abilities[ability].value
+            }
+        }
         if (ability !== '') {
             b = d[sRollType].abilities[ability].value
         }
@@ -70,23 +75,13 @@ class Creature {
     }
 
     /**
-     * Renvoie true si la creature est désavantagée pour ce type de jet de dé et pour la caractéristique spécifiée
-     * @param sRollType {string} ROLL_TYPE_*
-     * @param ast {{ability: string, skill: string, threat: string}}
-     * @returns {boolean}
-     */
-    isDisadvantaged (sRollType, ast) {
-        return this._isAdvOrDisadv(this.store.getters.getDisadvantages, sRollType, ast)
-    }
-
-    /**
      * Renvoie true si la creature est avantagée pour ce type de jet de dé et pour la caractéristique spécifiée
      * @param sRollType {string} ROLL_TYPE_*
      * @param ast {{ability: string, skill: string, threat: string}}
      * @returns {boolean}
      */
     isAdvantaged (sRollType, ast) {
-        return this._isAdvOrDisadv(this.store.getters.getAdvantages, sRollType, ast)
+        return false
     }
 
     /**

@@ -284,6 +284,47 @@ describe('getAttackBonus', function () {
     })
 })
 
+describe('targetting system', function () {
+    it('renvoie la target', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        expect(c1.store.getters.getTarget).toBeNull()
+        c1.store.mutations.setTarget({ target: c2 })
+        expect(c1.store.getters.getTarget).not.toBeNull()
+    })
+    it('la target est initialement visible', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.store.mutations.setTarget({ target: c2 })
+        expect(c1.store.getters.isTargetVisible).toBeTrue()
+    })
+    it('la target est initialement invisible', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
+        c1.store.mutations.setTarget({ target: c2 })
+        expect(c1.store.getters.isTargetVisible).toBeFalse()
+    })
+    it('la target passe de visible à invisible', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.store.mutations.setTarget({ target: c2 })
+        expect(c1.store.getters.isTargetVisible).toBeTrue()
+        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
+        c1.store.mutations.setTarget({ target: c2 })
+        expect(c1.store.getters.isTargetVisible).toBeFalse()
+    })
+    it('la target passe de visible à invisible mais avec initialement une mise en target', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.store.mutations.setTarget({ target: c2 })
+        expect(c1.store.getters.isTargetVisible).toBeTrue()
+        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
+        c1.store.mutations.setTarget({ target: c2 })
+        expect(c1.store.getters.isTargetVisible).toBeFalse()
+    })
+})
+
 
 // Test : appliquer un effet à impact
 // appliquer un effet à durée temporaire

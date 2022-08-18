@@ -40,6 +40,11 @@ module.exports = function () {
         gauges: {
             damage: 0
         },
-        target: null
+        target: {
+            active: false,
+            conditions: {
+                [CONSTS.CONDITION_INVISIBLE]: false
+            }
+        }
     }
 }

@@ -6,4 +6,5 @@
  * @property equipItem {function({ item: object, slot: string })}
  * @property setAbility {function({ ability: string, value: number })}
  * @property setSelectedWeapon {function({ slot: string })}
+ * @property setTarget {function({ target: Creature })}
  */
