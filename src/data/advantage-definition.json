@@ -1,12 +1,12 @@
 {
   "ROLL_TYPE_ATTACK": {
     "abilities": {
-      "ABILITY_STRENGTH": [],
-      "ABILITY_DEXTERITY": [],
-      "ABILITY_CONSTITUTION": [],
-      "ABILITY_INTELLIGENCE": [],
-      "ABILITY_WISDOM": [],
-      "ABILITY_CHARISMA": []
+      "ABILITY_STRENGTH": ["targetCannotSeeMe"],
+      "ABILITY_DEXTERITY": ["targetCannotSeeMe"],
+      "ABILITY_CONSTITUTION": ["targetCannotSeeMe"],
+      "ABILITY_INTELLIGENCE": ["targetCannotSeeMe"],
+      "ABILITY_WISDOM": ["targetCannotSeeMe"],
+      "ABILITY_CHARISMA": ["targetCannotSeeMe"]
     }
   },
   "ROLL_TYPE_SAVE": {

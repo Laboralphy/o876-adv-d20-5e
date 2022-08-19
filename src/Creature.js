@@ -1,5 +1,4 @@
 const Store = require('@laboralphy/store')
-const path = require('path')
 const CONSTS = require('./consts')
 
 // Store
@@ -13,7 +12,10 @@ class Creature {
         this._id = ++LAST_ID
         this._state = CreatureStore.buildState()
         this._dice = null
-        this._target = null
+        this._target = {
+            handler: null,
+            creature: null
+        }
         /**
          * @type {D20CreatureStore}
          * @private
@@ -43,45 +45,6 @@ class Creature {
 
     get store () {
         return this._store
-    }
-
-    /**
-     * Renvoie true si la creature est désavantagée pour ce type de jet de dé et pour la caractéristique spécifiée
-     * @param sRollType {string} ROLL_TYPE_*
-     * @param ast {{target: Creature, ability: string, skill: string, threat: string}}
-     * @returns {boolean}
-     */
-    isDisadvantaged (sRollType, ast) {
-        let b = false
-        switch (sRollType) {
-            case CONSTS.ROLL_TYPE_ATTACK: {
-                if (ability === '') {
-                    throw new Error('Adv-or-Disadv: ability not specified')
-                }
-
-                b = d[sRollType].abilities[ability].value
-            }
-        }
-        if (ability !== '') {
-            b = d[sRollType].abilities[ability].value
-        }
-        if (skill !== '' && sRollType === CONSTS.ROLL_TYPE_SKILL) {
-            b = b || d.ROLL_TYPE_SKILL.skills[skill].value
-        }
-        if (threat !== '' && sRollType === CONSTS.ROLL_TYPE_SAVE) {
-            b = b || d.ROLL_TYPE_SAVE.threats[threat].value
-        }
-        return b
-    }
-
-    /**
-     * Renvoie true si la creature est avantagée pour ce type de jet de dé et pour la caractéristique spécifiée
-     * @param sRollType {string} ROLL_TYPE_*
-     * @param ast {{ability: string, skill: string, threat: string}}
-     * @returns {boolean}
-     */
-    isAdvantaged (sRollType, ast) {
-        return false
     }
 
     /**
@@ -191,28 +154,82 @@ class Creature {
         ]).sum
     }
 
-    rollD20 (sRollType, sAbility, { target = null, extra = '' }) {
+    clearTarget () {
+        if (this._target.creature && this._target.handler) {
+            this._target.creature.store.events.off('mutation', this._target.handler)
+            this._target.creature = null
+            this._target.handler = null
+            this.store.mutations.clearTarget()
+        }
+    }
+
+    updateTarget (name) {
+        switch (name) {
+            case 'removeEffect':
+            case 'addEffect': {
+                this.store.mutations.updateTargetConditions({ conditions: this._target.creature.store.getters.getConditions })
+                break
+            }
+        }
+    }
+
+    setTarget (oCreature) {
+        if (this._target.creature !== oCreature) {
+            this.clearTarget()
+            this._target.creature = oCreature
+            this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
+            this.store.mutations.updateTargetConditions({ conditions: this._target.creature.store.getters.getConditions })
+            oCreature.store.events.on('mutation', this._target.handler)
+        }
+    }
+
+    getCircumstances (sRollType, sAbility, sExtra) {
         const oAdvantages = this.store.getters.getAdvantages
         const oDisadvantages = this.store.getters.getDisadvantages
+        const ar = oAdvantages[sRollType]
+        const dr = oDisadvantages[sRollType]
+        const ara = ar.abilities[sAbility].value
+        const dra = dr.abilities[sAbility].value
+        const al = ar.abilities[sAbility].rules
+        const dl = dr.abilities[sAbility].rules
         let
-            a = oAdvantages[sRollType].abilities[sAbility],
-            d = oDisadvantages[sRollType].abilities[sAbility]
-        if (extra !== '' && sRollType === CONSTS.ROLL_TYPE_SAVE) {
-            a = a || oAdvantages[sRollType].threats[extra]
-            d = d || oDisadvantages[sRollType].threats[extra]
+            advantage = ara,
+            disadvantage = dra
+        if (sExtra !== '')
+            switch (sRollType) {
+                case CONSTS.ROLL_TYPE_SAVE: {
+                    advantage = advantage || ar.threats[sExtra].value
+                    disadvantage = disadvantage || dr.threats[sExtra].value
+                    al.assign(ar.threats[sExtra].rules)
+                    dl.assign(dr.threats[sExtra].rules)
+                    break
+                }
+                case CONSTS.ROLL_TYPE_SKILL: {
+                    advantage = advantage || ar.skills[sExtra].value
+                    disadvantage = disadvantage || dr.skills[sExtra].value
+                    al.assign(ar.skills[sExtra].rules)
+                    dl.assign(dr.skills[sExtra].rules)
+                    break
+                }
+            }
+        return {
+            advantage,
+            disadvantage,
+            details: {
+                advantages: al,
+                disadvantages: dl,
+            }
         }
-        if (extra !== '' && sRollType === CONSTS.ROLL_TYPE_SKILL) {
-            a = a || oAdvantages[sRollType].skills[extra]
-            d = d || oDisadvantages[sRollType].skills[extra]
-        }
+    }
+
+    rollD20 (sRollType, sAbility, extra) {
+        const { advantage, disadvantage } = this.getCircumstances(sRollType, sAbility, extra)
         const r = this._dice.roll(20)
-        if (a && !d) {
-            const r2 = this._dice.roll(20)
-            return Math.max(r, r2)
+        if (advantage && !disadvantage) {
+            return Math.max(r, this._dice.roll(20))
         }
-        if (d && !a) {
-            const r2 = this._dice.roll(20)
-            return Math.min(r, r2)
+        if (disadvantage && !advantage) {
+            return Math.min(r, this._dice.roll(20))
         }
         return r
     }

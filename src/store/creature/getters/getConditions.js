@@ -7,10 +7,10 @@ const CONSTS = require('../../../consts')
  * @returns {D20ConditionBooleanRegistry}
  */
 module.exports = (state, getters) => {
-    const oTags = new Set(getters
-        .getEffects
-        .map(eff => eff.tag))
-    return {
+    const aEffects = getters.getEffects
+    const aTags = aEffects.map(eff => eff.tag)
+    const oTags = new Set(aTags)
+    const aConditions = {
         [CONSTS.CONDITION_BLINDED]: oTags.has(CONSTS.EFFECT_BLINDNESS),
         [CONSTS.CONDITION_CHARMED]: oTags.has(CONSTS.EFFECT_CHARM),
         [CONSTS.CONDITION_DEAFENED]: oTags.has(CONSTS.EFFECT_DEAFNESS),
@@ -27,4 +27,10 @@ module.exports = (state, getters) => {
         [CONSTS.CONDITION_UNCONSCIOUS]: oTags.has(CONSTS.EFFECT_SLEEP),
         [CONSTS.CONDITION_TRUE_SIGHT]: oTags.has(CONSTS.EFFECT_TRUE_SIGHT)
     }
+    return new Set(
+        Object
+            .entries(aConditions)
+            .filter(([key, value]) => value)
+            .map(([key, value]) => key)
+    )
 }

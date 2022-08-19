@@ -1,15 +1,14 @@
-const CONSTS = require('../../../consts')
 /**
  *
  * @param state
  * @param getters {D20CreatureStoreGetters}
- * @returns {boolean}
+ * @returns {Set}
  */
 module.exports = (state, getters) => {
     const target = getters.getTarget
     if (target) {
-        return !target.conditions[CONSTS.CONDITION_INVISIBLE]
+        return new Set(target.conditions)
     } else {
-        return true
+        return new Set()
     }
 }

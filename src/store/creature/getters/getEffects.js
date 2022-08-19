@@ -3,4 +3,6 @@
  * @param state
  * @returns {[]}
  */
-module.exports = state => state.effects
+module.exports = state => {
+    return state.effects
+}

@@ -1,6 +1,6 @@
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
-const { warmup, assetManager } = require('../src/assets')
+const { warmup } = require('../src/assets')
 
 beforeEach(function () {
     warmup()
@@ -9,7 +9,7 @@ beforeEach(function () {
 describe('basic instanciation', function () {
     it('should be defined', function () {
         expect(() => {
-            const c = new Creature()
+            new Creature()
         }).not.toThrow()
     })
 })
@@ -289,39 +289,83 @@ describe('targetting system', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         expect(c1.store.getters.getTarget).toBeNull()
-        c1.store.mutations.setTarget({ target: c2 })
+        c1.setTarget(c2)
         expect(c1.store.getters.getTarget).not.toBeNull()
     })
     it('la target est initialement visible', function () {
         const c1 = new Creature()
         const c2 = new Creature()
-        c1.store.mutations.setTarget({ target: c2 })
-        expect(c1.store.getters.isTargetVisible).toBeTrue()
+        c1.setTarget(c2)
+        expect(c1.store.getters.canSeeTarget).toBeTrue()
     })
     it('la target est initialement invisible', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
-        c1.store.mutations.setTarget({ target: c2 })
-        expect(c1.store.getters.isTargetVisible).toBeFalse()
+        c1.setTarget(c2)
+        expect(c1.store.getters.canSeeTarget).toBeFalse()
     })
     it('la target passe de visible à invisible', function () {
         const c1 = new Creature()
         const c2 = new Creature()
-        c1.store.mutations.setTarget({ target: c2 })
-        expect(c1.store.getters.isTargetVisible).toBeTrue()
+        c1.setTarget(c2)
+        expect(c1.store.getters.canSeeTarget).toBeTrue()
         c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
-        c1.store.mutations.setTarget({ target: c2 })
-        expect(c1.store.getters.isTargetVisible).toBeFalse()
+        expect(c1.store.getters.canSeeTarget).toBeFalse()
     })
-    it('la target passe de visible à invisible mais avec initialement une mise en target', function () {
+    it('la target passe de visible à invisible puis à re-visible', function () {
         const c1 = new Creature()
         const c2 = new Creature()
-        c1.store.mutations.setTarget({ target: c2 })
-        expect(c1.store.getters.isTargetVisible).toBeTrue()
-        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
-        c1.store.mutations.setTarget({ target: c2 })
-        expect(c1.store.getters.isTargetVisible).toBeFalse()
+        c1.setTarget(c2)
+        expect(c1.store.getters.canSeeTarget).toBeTrue()
+        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+        const eInvis = c2.store.getters.getEffects[0]
+        expect(eInvis.tag).toBe(CONSTS.EFFECT_INVISIBILITY)
+        expect(c1.store.getters.canSeeTarget).toBeFalse()
+        c2.store.mutations.removeEffect({ effect: eInvis })
+        expect(c1.store.getters.canSeeTarget).toBeTrue()
+    })
+})
+
+describe('advantage/disadvantage', function () {
+    it ('should have no advantage/disadvantage', function () {
+        const c = new Creature()
+        expect(c.store.getters.getAdvantages.ROLL_TYPE_ATTACK.abilities.ABILITY_STRENGTH.value).toBeFalse()
+    })
+    it('bug', function() {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.setTarget(c2)
+        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+        expect(c1.store.getters.getEffects[0]).toBeDefined()
+    })
+    it ('should have advantage on attack because invisible', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        const c3 = new Creature()
+        c1.setTarget(c2)
+
+        // pas d'avantage
+        expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.abilities.ABILITY_STRENGTH.value).toBeFalse()
+        // cible visible
+        expect(c2.store.getters.canSeeTarget).toBeTrue()
+        // cible peut me voir
+        expect(c1.store.getters.canTargetSeeMe).toBeTrue()
+        // ajout d'effet invisible
+        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+        // c1 vois toujours c2
+        expect(c1.store.getters.canSeeTarget).toBeTrue()
+        // c1 n'est pas visible par c2
+        expect(c1.store.state.effects.length).toBe(1)
+        expect(c1.store.getters.getEffects.length).toBe(1)
+        expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c1.store.getters.canTargetSeeMe).toBeFalse()
+        expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.abilities.ABILITY_STRENGTH.value).toBeTrue()
+        expect(c1.store.getters.canSeeTarget).toBeTrue()
+        expect(c1.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.abilities.ABILITY_STRENGTH.rules).not.toContain('targetInvisible')
+        expect(c1.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.abilities.ABILITY_STRENGTH.value).toBeFalse()
+        c1.setTarget(c3)
+        expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.abilities.ABILITY_STRENGTH.value).toBeTrue()
     })
 })
 

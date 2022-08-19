@@ -1,12 +1,12 @@
 {
   "ROLL_TYPE_ATTACK": {
     "abilities": {
-      "ABILITY_STRENGTH": ["exhaustionLevel3", "nonProficientArmorShield", "isTargetInvisible"],
-      "ABILITY_DEXTERITY": ["exhaustionLevel3", "nonProficientArmorShield", "isTargetInvisible"],
-      "ABILITY_CONSTITUTION": ["exhaustionLevel3", "isTargetInvisible"],
-      "ABILITY_INTELLIGENCE": ["exhaustionLevel3", "isTargetInvisible"],
-      "ABILITY_WISDOM": ["exhaustionLevel3", "isTargetInvisible"],
-      "ABILITY_CHARISMA": ["exhaustionLevel3", "isTargetInvisible"]
+      "ABILITY_STRENGTH": ["exhaustionLevel3", "nonProficientArmorShield", "targetInvisible"],
+      "ABILITY_DEXTERITY": ["exhaustionLevel3", "nonProficientArmorShield", "targetInvisible"],
+      "ABILITY_CONSTITUTION": ["exhaustionLevel3", "targetInvisible"],
+      "ABILITY_INTELLIGENCE": ["exhaustionLevel3", "targetInvisible"],
+      "ABILITY_WISDOM": ["exhaustionLevel3", "targetInvisible"],
+      "ABILITY_CHARISMA": ["exhaustionLevel3", "targetInvisible"]
     }
   },
   "ROLL_TYPE_SAVE": {

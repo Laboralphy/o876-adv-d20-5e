@@ -9,5 +9,5 @@ module.exports = (state, getters) => ({
     exhaustionLevel1: getters.getExhaustionLevel >= 1,
     nonProficientArmorShield: !getters.isProficientArmorAndShield,
     wearingNonStealthArmor: getters.isWearingStealthDisadvantagedArmor,
-    isTargetInvisible: !getters.isTargetVisible
+    targetInvisible: !getters.canSeeTarget
 })

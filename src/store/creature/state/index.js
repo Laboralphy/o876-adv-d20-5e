@@ -42,9 +42,7 @@ module.exports = function () {
         },
         target: {
             active: false,
-            conditions: {
-                [CONSTS.CONDITION_INVISIBLE]: false
-            }
+            conditions: []
         }
     }
 }

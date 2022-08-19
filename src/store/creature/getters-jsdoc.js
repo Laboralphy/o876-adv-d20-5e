@@ -1,5 +1,7 @@
 /**
  * @typedef D20CreatureStoreGetters {object}
+ * @property canSeeTarget {boolean}
+ * @property canTargetSeeMe {boolean}
  * @property getAbilityBaseValues {D20AbilityNumberRegistry}
  * @property getAbilityBonus {D20AbilityNumberRegistry}
  * @property getAbilityList {string[]}
@@ -30,8 +32,8 @@
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getTarget {{ condition: Object.<string, boolean>}}
+ * @property getTargetConditions {Set}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
- * @property isTargetVisible {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  */
