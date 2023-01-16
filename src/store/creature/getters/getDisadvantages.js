@@ -1,50 +1,96 @@
+const { computeRuleValue } = require('../common/compute-rule-value')
+
 /**
- * Etabli la liste des désavantages
+ * Etabli la liste des désavantages de THIS par rapport à THIS.target
+ * ROLL_TYPE_ATTACK : liste des désavantages de THIS quand il effectue un jet d'attaque sur THIS.target
+ * ROLL_TYPE_SAVE : liste des désavantages de THIS quand il effectue un jet de sauvegarde contre une attaque de THIS.target
+ * ROLL_TYPE_SKILL : liste des désavantages de THIS quand il lance un jet de compétence avec THIS.target pour cible
+ * (dans le cas de compétence d'attaque) ou pour agresseur (dans le cas de compétence de défense)
  * @param state
  * @param getters
  * @return {D20AdvantagesOrDisadvantages}
  */
 module.exports = (state, getters) => {
-    const exhaustionLevel3 = getters.getExhaustionLevel >= 3
-    const exhaustionLevel1 = getters.getExhaustionLevel >= 1
-    const nonProficientArmorShield = !getters.isProficientArmorAndShield
-    const wearingNonStealthArmor = getters.isWearingStealthDisadvantagedArmor
-    const targetInvisible = !getters.canSeeTarget
+    const EXHAUSTION_LEVEL_3 = getters.getExhaustionLevel >= 3
+    const EXHAUSTION_LEVEL_1 = getters.getExhaustionLevel >= 1
+    const NON_PROFICIENT_ARMOR_SHIELD = !getters.isProficientArmorAndShield
+    const WEARING_NON_STEALTH_ARMOR = getters.isWearingStealthDisadvantagedArmor
+    const TARGET_INVISIBLE = !getters.canSeeTarget
     return {
         ROLL_TYPE_ATTACK: {
-            abilities: {
-                ABILITY_STRENGTH: exhaustionLevel3 || nonProficientArmorShield || targetInvisible,
-                    ABILITY_DEXTERITY: exhaustionLevel3 || nonProficientArmorShield || targetInvisible,
-                    ABILITY_CONSTITUTION: exhaustionLevel3 || targetInvisible,
-                    ABILITY_INTELLIGENCE: exhaustionLevel3 || targetInvisible,
-                    ABILITY_WISDOM: exhaustionLevel3 || targetInvisible,
-                    ABILITY_CHARISMA: exhaustionLevel3 || targetInvisible
-            }
+            ABILITY_STRENGTH: computeRuleValue({
+                EXHAUSTION_LEVEL_3,
+                NON_PROFICIENT_ARMOR_SHIELD,
+                TARGET_INVISIBLE
+            }),
+            ABILITY_DEXTERITY: computeRuleValue({
+                EXHAUSTION_LEVEL_3,
+                NON_PROFICIENT_ARMOR_SHIELD,
+                TARGET_INVISIBLE
+            }),
+            ABILITY_CONSTITUTION: computeRuleValue({
+                EXHAUSTION_LEVEL_3,
+                TARGET_INVISIBLE
+            }),
+            ABILITY_INTELLIGENCE: computeRuleValue({
+                EXHAUSTION_LEVEL_3,
+                TARGET_INVISIBLE
+            }),
+            ABILITY_WISDOM: computeRuleValue({
+                EXHAUSTION_LEVEL_3,
+                TARGET_INVISIBLE
+            }),
+            ABILITY_CHARISMA: computeRuleValue({
+                EXHAUSTION_LEVEL_3,
+                TARGET_INVISIBLE
+            })
         },
         ROLL_TYPE_SAVE: {
-            abilities: {
-                ABILITY_STRENGTH: exhaustionLevel3 || nonProficientArmorShield,
-                    ABILITY_DEXTERITY: exhaustionLevel3 || nonProficientArmorShield,
-                    ABILITY_CONSTITUTION: exhaustionLevel3,
-                    ABILITY_INTELLIGENCE: exhaustionLevel3,
-                    ABILITY_WISDOM: exhaustionLevel3,
-                    ABILITY_CHARISMA: exhaustionLevel3
-            },
-            threats: {
-            }
+            ABILITY_STRENGTH: computeRuleValue({
+                EXHAUSTION_LEVEL_3,
+                NON_PROFICIENT_ARMOR_SHIELD
+            }),
+            ABILITY_DEXTERITY: computeRuleValue({
+                EXHAUSTION_LEVEL_3,
+                NON_PROFICIENT_ARMOR_SHIELD
+            }),
+            ABILITY_CONSTITUTION: computeRuleValue({
+                EXHAUSTION_LEVEL_3
+            }),
+            ABILITY_INTELLIGENCE: computeRuleValue({
+                EXHAUSTION_LEVEL_3
+            }),
+            ABILITY_WISDOM: computeRuleValue({
+                EXHAUSTION_LEVEL_3
+            }),
+            ABILITY_CHARISMA: computeRuleValue({
+                EXHAUSTION_LEVEL_3
+            })
         },
         ROLL_TYPE_SKILL: {
-            abilities: {
-                ABILITY_STRENGTH: exhaustionLevel1 || nonProficientArmorShield,
-                    ABILITY_DEXTERITY: exhaustionLevel1 || nonProficientArmorShield,
-                    ABILITY_CONSTITUTION: exhaustionLevel1,
-                    ABILITY_INTELLIGENCE: exhaustionLevel1,
-                    ABILITY_WISDOM: exhaustionLevel1,
-                    ABILITY_CHARISMA: exhaustionLevel1
-            },
-            skills: {
-                SKILL_STEALTH: wearingNonStealthArmor
-            }
+            ABILITY_STRENGTH: computeRuleValue({
+                EXHAUSTION_LEVEL_1,
+                NON_PROFICIENT_ARMOR_SHIELD
+            }),
+            ABILITY_DEXTERITY: computeRuleValue({
+                EXHAUSTION_LEVEL_1,
+                NON_PROFICIENT_ARMOR_SHIELD
+            }),
+            ABILITY_CONSTITUTION: computeRuleValue({
+                EXHAUSTION_LEVEL_1
+            }),
+            ABILITY_INTELLIGENCE: computeRuleValue({
+                EXHAUSTION_LEVEL_1
+            }),
+            ABILITY_WISDOM: computeRuleValue({
+                EXHAUSTION_LEVEL_1
+            }),
+            ABILITY_CHARISMA: computeRuleValue({
+                EXHAUSTION_LEVEL_1
+            }),
+            SKILL_STEALTH: computeRuleValue({
+                WEARING_NON_STEALTH_ARMOR
+            })
         }
     }
 }

@@ -1,17 +1,5 @@
-/**
- * @param data {D20AdvantagesOrDisadvantages}
- * @returns {D20AdvantagesOrDisadvantages}
- */
-function computeValues (data) {
-    for (const [sRollType, d1] of Object.entries(data)) {
-        for (const [sOrigin, d2] of Object.entries(d1)) {
-            for (const [sMetric, d3] of Object.entries(d2)) {
-                d3.value = Object.values(d3.rules).reduce((prev, curr) => prev || curr, false)
-            }
-        }
-    }
-    return data
-}
+const { computeRuleValue } = require('../common/compute-rule-value')
+
 /**
  * Etabli la liste des avantages
  * @param state
@@ -27,113 +15,54 @@ module.exports = (state, getters) => {
     /*
     Définir l'ossature D20AdvantagesOrDisadvantages
      */
-    return computeValues({
+    return {
         ROLL_TYPE_ATTACK: {
-            ABILITY_STRENGTH: {
-                rules: {
-                    TARGET_CANNOT_SEE_ME
-                },
-                value: false
-            },
-            ABILITY_DEXTERITY: {
-                rules: {
-                    TARGET_CANNOT_SEE_ME
-                },
-                value: false
-            },
-            ABILITY_CONSTITUTION: {
-                rules: {
-                    TARGET_CANNOT_SEE_ME
-                },
-                value: false
-            },
-            ABILITY_INTELLIGENCE: {
-                rules: {
-                    TARGET_CANNOT_SEE_ME
-                },
-                value: false
-            },
-            ABILITY_WISDOM: {
-                rules: {
-                    TARGET_CANNOT_SEE_ME
-                },
-                value: false
-            },
-            ABILITY_CHARISMA: {
-                rules: {
-                    TARGET_CANNOT_SEE_ME
-                },
-                value: false
-            }
+            ABILITY_STRENGTH: computeRuleValue({
+                TARGET_CANNOT_SEE_ME
+            }),
+            ABILITY_DEXTERITY: computeRuleValue({
+                TARGET_CANNOT_SEE_ME
+            }),
+            ABILITY_CONSTITUTION: computeRuleValue({
+                TARGET_CANNOT_SEE_ME
+            }),
+            ABILITY_INTELLIGENCE: computeRuleValue({
+                TARGET_CANNOT_SEE_ME
+            }),
+            ABILITY_WISDOM: computeRuleValue({
+                TARGET_CANNOT_SEE_ME
+            }),
+            ABILITY_CHARISMA: computeRuleValue({
+                TARGET_CANNOT_SEE_ME
+            })
         },
         ROLL_TYPE_SAVE: {
-            ABILITY_STRENGTH: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_DEXTERITY: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_CONSTITUTION: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_INTELLIGENCE: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_WISDOM: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_CHARISMA: {
-                rules: {
-                },
-                value: false
-            }
+            ABILITY_STRENGTH: computeRuleValue({
+            }),
+            ABILITY_DEXTERITY: computeRuleValue({
+            }),
+            ABILITY_CONSTITUTION: computeRuleValue({
+            }),
+            ABILITY_INTELLIGENCE: computeRuleValue({
+            }),
+            ABILITY_WISDOM: computeRuleValue({
+            }),
+            ABILITY_CHARISMA: computeRuleValue({
+            })
         },
         ROLL_TYPE_SKILL: {
-            ABILITY_STRENGTH: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_DEXTERITY: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_CONSTITUTION: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_INTELLIGENCE: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_WISDOM: {
-                rules: {
-                },
-                value: false
-            },
-            ABILITY_CHARISMA: {
-                rules: {
-                },
-                value: false
-            },
-            SKILL_STEALTH: {
-                rules: {
-                },
-                value: false
-            }
+            ABILITY_STRENGTH: computeRuleValue({
+            }),
+            ABILITY_DEXTERITY: computeRuleValue({
+            }),
+            ABILITY_CONSTITUTION: computeRuleValue({
+            }),
+            ABILITY_INTELLIGENCE: computeRuleValue({
+            }),
+            ABILITY_WISDOM: computeRuleValue({
+            }),
+            ABILITY_CHARISMA: computeRuleValue({
+            })
         }
-    })
+    }
 }
