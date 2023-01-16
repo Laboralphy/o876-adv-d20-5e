@@ -23,7 +23,7 @@ describe('Creature setting ability and reading ability', function () {
 })
 
 describe('Creature reading ability with effect ability modifier', function () {
-    it('should get 15 strength', function () {
+    it('should get 15 strength when base strength is 10 and ability bonus effect is 5 (on strength)', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
@@ -31,7 +31,15 @@ describe('Creature reading ability with effect ability modifier', function () {
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
     })
 
-    it('should get 18 strength beacause of two ability-bonus', function () {
+    it('should get 10 strength when base strength is 10 and dexterity bonus +5 is applied', function () {
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        // ajouter un ability modifier
+        c.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ABILITY_BONUS, duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_DEXTERITY }}})
+        expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(10)
+    })
+
+    it('should get 18 strength when to str bonus (+5 and +3) are applied', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
@@ -41,7 +49,7 @@ describe('Creature reading ability with effect ability modifier', function () {
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(18)
     })
 
-    it('should have an ability modifier of 3', function () {
+    it('should have an intelligence modifier of 3, -1, -5, -5 when ability is 16, 9, 0, 1', function () {
         const c1 = new Creature()
         c1.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 16 })
         expect(c1.store.getters.getAbilityModifiers[CONSTS.ABILITY_INTELLIGENCE]).toBe(3)
@@ -55,19 +63,30 @@ describe('Creature reading ability with effect ability modifier', function () {
 })
 
 describe('Creature gaining level', function () {
-    it('creature as 1 level of tourist', function () {
+    it('should be tourist level 1 when a level of tourist is added to new creature', function () {
         const c = new Creature()
         c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
         expect(c.store.getters.getLevel).toBe(1)
         expect(c.store.getters.getLevelByClass[CONSTS.CLASS_TOURIST]).toBe(1)
     })
-    it('creature as 3 level of tourist', function () {
+    it('should be tourist lvl 3 and creature lvl 3 when adding 3 levels of tourist to a new creature', function () {
         const c = new Creature()
         c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
         c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
         c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
         expect(c.store.getters.getLevel).toBe(3)
         expect(c.store.getters.getLevelByClass[CONSTS.CLASS_TOURIST]).toBe(3)
+    })
+    it('should be tourist 2, barbarian 3 and creature 5 when adding 2 levels of tourist and 3 of barbarian to a new creature', function () {
+        const c = new Creature()
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
+        expect(c.store.getters.getLevel).toBe(5)
+        expect(c.store.getters.getLevelByClass[CONSTS.CLASS_TOURIST]).toBe(2)
+        expect(c.store.getters.getLevelByClass[CONSTS.CLASS_BARBARIAN]).toBe(2)
     })
 })
 

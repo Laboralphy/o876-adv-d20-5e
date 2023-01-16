@@ -13,32 +13,19 @@
  * @property rules {object.<string, boolean>}
  * @property value {boolean}
  *
- *
- * @typedef D20AbilityBooleanRegistry {object}
- * @property ABILITY_STRENGTH {boolean}
- * @property ABILITY_DEXTERITY {boolean}
- * @property ABILITY_CONSTITUTION {boolean}
- * @property ABILITY_INTELLIGENCE {boolean}
- * @property ABILITY_WISDOM {boolean}
- * @property ABILITY_CHARISMA {boolean}
- *
- * @typedef D20AbilityRuleValueRegistry {object}
+ * @typedef D20RuleValueRegistry {object}
  * @property ABILITY_STRENGTH {D20RuleValue}
  * @property ABILITY_DEXTERITY {D20RuleValue}
  * @property ABILITY_CONSTITUTION {D20RuleValue}
  * @property ABILITY_INTELLIGENCE {D20RuleValue}
  * @property ABILITY_WISDOM {D20RuleValue}
  * @property ABILITY_CHARISMA {D20RuleValue}
- *
- * @typedef D20SkillBooleanRegistry {object}
- * @property SKILL_STEALTH {boolean}
- *
- * @typedef D20ThreatBooleanRegistry {object}
+ * @property SKILL_STEALTH {D20RuleValue}
  *
  * @typedef D20AdvantagesOrDisadvantages {object}
- * @property ROLL_TYPE_ATTACK {abilities: D20AbilityRuleValueRegistry}
- * @property ROLL_TYPE_SAVE {abilities: D20AbilityRuleValueRegistry, threats: D20RuleValue}
- * @property ROLL_TYPE_SKILL {abilities: D20AbilityRuleValueRegistry, skills: D20RuleValue}
+ * @property ROLL_TYPE_ATTACK {D20RuleValueRegistry}
+ * @property ROLL_TYPE_SAVE {D20RuleValueRegistry}
+ * @property ROLL_TYPE_SKILL {D20RuleValueRegistry}
  *
  * @typedef D20ConditionBooleanRegistry {{[p: string]: boolean}}
  */
