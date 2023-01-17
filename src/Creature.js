@@ -16,6 +16,10 @@ class Creature {
             handler: null,
             creature: null
         }
+        this._aggressor = {
+            handler: null,
+            creature: null
+        }
         /**
          * @type {D20CreatureStore}
          * @private
@@ -187,45 +191,13 @@ class Creature {
         return this._target.creature
     }
 
-    getDisadvantages (oAgainst) {
-        /**
-         * Lorsque qu'on veut déterminer les désavantage d'une action de THIS par rapport à oAgainst
-         * et si oAgainst === THIS.getTarget(), alors c'est simple : on utilise le getters getDisadvantage
-         * Car celui ci va se servir des conditions de la cible.
-         * On peut donc calculer les désavantage des jets d'attaque, des jets de sauvegarde et des jets de compétence
-         * directement.
-         *
-         * Si on veut déterminer les désavantages d'une action de THIS par rapport à oAgainst qui ne serai pas
-         * la cible actuelle (oAgainst !== THIS.getTarget()),
-         * par exemple A cible B et B cible C
-         * quels sont les désavantages de B par rapport à A ?
-         * B n'attaque pas A car elle cible C donc par besoin de se soucier des désavantages de jet d'attaque
-         * B pourrait devoir se défendre d'un sort lancé par A ou par C
-         * B pourrait devoir utiliser une compétence d'attaque contre C
-         * B pourrait devoir utiliser une compétence de défense (concentration, acrobatie) contre A ou C
-         *
-         * Si oAgainst === THIS.getTarget()
-         * Alors cela veut dire que le calcule des désavantages se fait par rapport à la cible actuelle
-         * Donc on peut utiliser getDisadvantages
-         *
-         * Si oAgainst !== THIS.getTarget()
-         * Alors cela veut dire que les désavantages doivent être calculés par oAgainst qui aurait pris THIS pour cible
-         *
-         */
-        const oTarget = this.getTarget()
-        if (oAgainst === null || oAgainst === oTarget) {
-            return this._store.getters.getDisadvantages
-        } else {
-            // Il faut que oAgainst ait pour target THIS
-            const oAgainstTarget = oAgainst.getTarget()
-            if (oAgainstTarget === this) {
-
-            } else {
-                // Ben... c'est bizarre ?
-            }
-        }
-    }
-
+    /**
+     *
+     * @param sRollType
+     * @param sAbility
+     * @param sExtra
+     * @returns {{disadvantage: *, advantage: *, details: {advantages: (*|string|CSSRuleList), disadvantages: (*|string|CSSRuleList)}}}
+     */
     getCircumstances (sRollType, sAbility, sExtra) {
         const oAdvantages = this.store.getters.getAdvantages
         const oDisadvantages = this.store.getters.getDisadvantages
@@ -241,17 +213,17 @@ class Creature {
         if (sExtra !== '')
             switch (sRollType) {
                 case CONSTS.ROLL_TYPE_SAVE: {
-                    advantage = advantage || ar.threats[sExtra].value
-                    disadvantage = disadvantage || dr.threats[sExtra].value
-                    al.assign(ar.threats[sExtra].rules)
-                    dl.assign(dr.threats[sExtra].rules)
+                    advantage = advantage || ar[sExtra].value
+                    disadvantage = disadvantage || dr[sExtra].value
+                    al.assign(ar[sExtra].rules)
+                    dl.assign(dr[sExtra].rules)
                     break
                 }
                 case CONSTS.ROLL_TYPE_SKILL: {
-                    advantage = advantage || ar.skills[sExtra].value
-                    disadvantage = disadvantage || dr.skills[sExtra].value
-                    al.assign(ar.skills[sExtra].rules)
-                    dl.assign(dr.skills[sExtra].rules)
+                    advantage = advantage || ar[sExtra].value
+                    disadvantage = disadvantage || dr[sExtra].value
+                    al.assign(ar[sExtra].rules)
+                    dl.assign(dr[sExtra].rules)
                     break
                 }
             }

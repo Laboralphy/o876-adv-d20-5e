@@ -1,7 +1,7 @@
 const { computeRuleValue } = require('../common/compute-rule-value')
 
 /**
- * Etabli la liste des avantages
+ * Etabli la liste des avantages de THIS par rapport à sa cible THIS.target
  * @param state
  * @param getters {D20CreatureStoreGetters}
  * @return {D20AdvantagesOrDisadvantages}
