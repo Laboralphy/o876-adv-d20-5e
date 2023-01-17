@@ -7,6 +7,12 @@ const CONSTS = require('../../../consts')
  * @returns {D20ConditionBooleanRegistry}
  */
 module.exports = (state, getters) => {
+    return new Set(Object
+        .entries(getters.getConditionSources)
+        .filter(([key, value]) => value.length > 0)
+        .map(([key, value]) => key)
+    )
+    /*
     const aEffects = getters.getEffects
     const aTags = aEffects.map(eff => eff.tag)
     const oTags = new Set(aTags)
@@ -33,4 +39,5 @@ module.exports = (state, getters) => {
             .filter(([key, value]) => value)
             .map(([key, value]) => key)
     )
+    */
 }

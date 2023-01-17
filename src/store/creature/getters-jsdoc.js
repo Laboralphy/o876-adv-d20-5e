@@ -7,12 +7,14 @@
  * @property getAbilityList {string[]}
  * @property getAbilityModifiers {D20AbilityNumberRegistry}
  * @property getAbilityValues {D20AbilityNumberRegistry}
- * @property getAdvantageRules {{ }}
  * @property getAdvantages {D20AdvantagesOrDisadvantages}
+ * @property getAggressor {{ condition: Object.<string, boolean>}}
+ * @property getAggressorConditionSources {{}}
+ * @property getAggressorConditions {Set}
  * @property getArmorAndShieldClass {number}
+ * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {D20ConditionBooleanRegistry}
  * @property getDefensiveEquipmentList {D20Item[]}
- * @property getDisadvantageRules {*}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffects {[]}
  * @property getEntropyType {string}
@@ -20,6 +22,7 @@
  * @property getEquipmentList {D20Item[]}
  * @property getEquippedItems {{[slot: string]: D20Item}}
  * @property getExhaustionLevel {number}
+ * @property getId {number}
  * @property getLevel {number}
  * @property getLevelByClass {{[c: string]: number}}
  * @property getMaxHitPoints {number}
@@ -32,6 +35,7 @@
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getTarget {{ condition: Object.<string, boolean>}}
+ * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}

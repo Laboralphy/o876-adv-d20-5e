@@ -6,8 +6,8 @@
  */
 module.exports = ({ state }, { id = undefined, conditions }) => {
     if (id) {
-        state.target.id = id
+        state.aggressor.id = id
     }
-    state.target.active = true
-    state.target.conditions = conditions
+    state.aggressor.active = true
+    state.aggressor.conditions = conditions
 }

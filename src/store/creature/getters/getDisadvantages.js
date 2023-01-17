@@ -15,34 +15,34 @@ module.exports = (state, getters) => {
     const EXHAUSTION_LEVEL_1 = getters.getExhaustionLevel >= 1
     const NON_PROFICIENT_ARMOR_SHIELD = !getters.isProficientArmorAndShield
     const WEARING_NON_STEALTH_ARMOR = getters.isWearingStealthDisadvantagedArmor
-    const TARGET_INVISIBLE = !getters.canSeeTarget
+    const NOT_HIDDEN_AND_TARGET_INVISIBLE = !getters.canSeeTarget
     return {
         ROLL_TYPE_ATTACK: {
             ABILITY_STRENGTH: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
                 NON_PROFICIENT_ARMOR_SHIELD,
-                TARGET_INVISIBLE
+                NOT_HIDDEN_AND_TARGET_INVISIBLE
             }),
             ABILITY_DEXTERITY: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
                 NON_PROFICIENT_ARMOR_SHIELD,
-                TARGET_INVISIBLE
+                NOT_HIDDEN_AND_TARGET_INVISIBLE
             }),
             ABILITY_CONSTITUTION: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                TARGET_INVISIBLE
+                NOT_HIDDEN_AND_TARGET_INVISIBLE
             }),
             ABILITY_INTELLIGENCE: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                TARGET_INVISIBLE
+                NOT_HIDDEN_AND_TARGET_INVISIBLE
             }),
             ABILITY_WISDOM: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                TARGET_INVISIBLE
+                NOT_HIDDEN_AND_TARGET_INVISIBLE
             }),
             ABILITY_CHARISMA: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                TARGET_INVISIBLE
+                NOT_HIDDEN_AND_TARGET_INVISIBLE
             })
         },
         ROLL_TYPE_SAVE: {

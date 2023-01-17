@@ -363,32 +363,75 @@ describe('getEffects', function () {
 })
 
 describe('getAdvantages/getDisadvantages', function () {
+    it('should ')
     it ('should have no advantage/disadvantage WHEN  creature is fresh new', function () {
         const c = new Creature()
         expect(c.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
     })
-    it ('should have advantage on attack ONLY WHEN  invisible and target can not see me', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
-        c1.setTarget(c2)
-        // pas d'avantage sur les jets d'attaque en force
-        expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
-        // cible visible
-        expect(c2.store.getters.canSeeTarget).toBeTrue()
-        // cible peut me voir
-        expect(c1.store.getters.canTargetSeeMe).toBeTrue()
-        // ajout d'effet invisible sur c1
-        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
-        // c1 vois toujours c2
-        expect(c1.store.getters.canSeeTarget).toBeTrue()
-        // c1 n'est pas visible par c2
-        expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-        expect(c1.store.getters.canTargetSeeMe).toBeFalse()
-        // c1 a donc bien un avantage d'attaque en force sur c2
-        expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
-        expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_CANNOT_SEE_ME')).toBeTrue()
+    describe('WHEN me is invisible', function () {
+        it('should be an advantage on attack rolls when target cannot see attacker', function () {
+            const c1 = new Creature()
+            const c2 = new Creature()
+            c1.setTarget(c2)
+            c2.setTarget(c1)
+            // pas d'avantage sur les jets d'attaque en force
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            // cible visible
+            expect(c2.store.getters.canSeeTarget).toBeTrue()
+            // cible peut me voir
+            expect(c1.store.getters.canTargetSeeMe).toBeTrue()
+            // ajout d'effet invisible sur c1
+            c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            // c1 vois toujours c2
+            expect(c1.store.getters.canSeeTarget).toBeTrue()
+            // c1 n'est pas visible par c2
+            expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+            expect(c1.store.getters.canTargetSeeMe).toBeFalse()
+            // c1 a donc bien un avantage d'attaque en force sur c2
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('HIDDEN_AND_TARGET_VISIBLE')).toBeTrue()
+        })
+        it('should not be an advantage on attack rolls when target has true sight', function () {
+            const c1 = new Creature()
+            const c2 = new Creature()
+            c1.setTarget(c2)
+            // pas d'avantage sur les jets d'attaque en force
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            // cible visible
+            expect(c2.store.getters.canSeeTarget).toBeTrue()
+            // cible peut me voir
+            expect(c1.store.getters.canTargetSeeMe).toBeTrue()
+            // ajout d'effet invisible sur c1
+            c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_TRUE_SIGHT, amp: 1, duration: 10 } })
+            // c1 vois toujours c2
+            expect(c1.store.getters.canSeeTarget).toBeTrue()
+            expect(c2.store.getters.canSeeTarget).toBeTrue()
+            // c1 n'est pas visible par c2
+            expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+            expect(c1.store.getters.canTargetSeeMe).toBeTrue()
+            // c1 et c2 se voient
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_CANNOT_SEE_ME')).toBeFalse()
+        })
+        it('should not be an advantage on attack rolls when target also invisible', function () {
+            const c1 = new Creature()
+            const c2 = new Creature()
+            c1.setTarget(c2)
+            c2.setTarget(c1)
+            // pas d'avantage sur les jets d'attaque en force
+            c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            // c1 vois toujours c2
+            expect(c1.store.getters.canSeeTarget).toBeFalse()
+            expect(c2.store.getters.canSeeTarget).toBeFalse()
+            // c1 n'est pas visible par c2
+            // c1 et c2 ne se voient pas
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            expect(c2.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+        })
     })
-    it ('have disadvantage', function () {
+    it ('should have disadvantage on attack when target is invisible and target can see me', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         c1.setTarget(c2)
@@ -405,9 +448,10 @@ describe('getAdvantages/getDisadvantages', function () {
         expect(c2.store.getters.canSeeTarget).toBeFalse()
         // c2 a donc bien un désavantage d'attaque en tout
         expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
-        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_INVISIBLE')).toBeTrue()
+        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('NOT_HIDDEN_AND_TARGET_INVISIBLE')).toBeTrue()
     })
 })
+
 
 // Test : appliquer un effet à impact
 // appliquer un effet à durée temporaire

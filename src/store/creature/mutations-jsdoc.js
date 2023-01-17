@@ -8,5 +8,7 @@
  * @property setAbility {function({ ability: string, value: number })}
  * @property setSelectedWeapon {function({ slot: string })}
  * @property clearTarget {function}
- * @property updateTargetConditions {function({ target: Creature })}
- */
+ * @property clearAggressor {function}
+ * @property updateTargetConditions {function({ [id]: number, conditions: Set|[] })}
+ * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[] })}
+ * */

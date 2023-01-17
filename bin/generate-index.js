@@ -91,26 +91,31 @@ function generateGetterReturnType (sPath) {
 
 function main (sType) {
     switch (sType) {
+        // item property index
         case 'ii': {
             console.log(generateIndex('./src/item-properties', 'ITEM_PROPERTY_'))
             break
         }
 
+        // effect index
         case 'ei': {
             console.log(generateIndex('./src/effects', 'EFFECT_'))
             break
         }
 
+        // item property consts
         case 'ic': {
             console.log(generateConsts('./src/item-properties', 'ITEM_PROPERTY_'))
             break
         }
 
+        // effect consts
         case 'ec': {
             console.log(generateConsts('./src/effects', 'EFFECT_'))
             break
         }
 
+        // getters
         case 'g': {
             console.log(generateGetterReturnType('./src/store/creature/getters'))
             break

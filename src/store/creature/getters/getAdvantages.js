@@ -1,4 +1,5 @@
 const { computeRuleValue } = require('../common/compute-rule-value')
+const CONDITIONS = require("../../../consts/conditions.json");
 
 /**
  * Etabli la liste des avantages de THIS par rapport à sa cible THIS.target
@@ -7,33 +8,42 @@ const { computeRuleValue } = require('../common/compute-rule-value')
  * @return {D20AdvantagesOrDisadvantages}
  */
 module.exports = (state, getters) => {
+    const targetConditions = getters.getTargetConditions
+    const myConditions = getters.getConditions
     /*
     Commencer par définir les règles.
     Ces règles permettront au système d'afficher pour quelles raisons on bénéficie ou pas d'un avantage
      */
-    const TARGET_CANNOT_SEE_ME = !getters.canTargetSeeMe
+
+    // La cible est charmée (mais on ne sait pas par qui, malheureusement)
+    const TARGET_CHARMED = targetConditions.has(CONDITIONS.CONDITION_CHARMED)
+    // La cible doit être un ennemi favori du joueur
+    const FAVORED_ENEMY = false
+
+
+    const HIDDEN_AND_TARGET_VISIBLE = !getters.canTargetSeeMe && getters.canSeeTarget
     /*
     Définir l'ossature D20AdvantagesOrDisadvantages
      */
     return {
         ROLL_TYPE_ATTACK: {
             ABILITY_STRENGTH: computeRuleValue({
-                TARGET_CANNOT_SEE_ME
+                HIDDEN_AND_TARGET_VISIBLE
             }),
             ABILITY_DEXTERITY: computeRuleValue({
-                TARGET_CANNOT_SEE_ME
+                HIDDEN_AND_TARGET_VISIBLE
             }),
             ABILITY_CONSTITUTION: computeRuleValue({
-                TARGET_CANNOT_SEE_ME
+                HIDDEN_AND_TARGET_VISIBLE
             }),
             ABILITY_INTELLIGENCE: computeRuleValue({
-                TARGET_CANNOT_SEE_ME
+                HIDDEN_AND_TARGET_VISIBLE
             }),
             ABILITY_WISDOM: computeRuleValue({
-                TARGET_CANNOT_SEE_ME
+                HIDDEN_AND_TARGET_VISIBLE
             }),
             ABILITY_CHARISMA: computeRuleValue({
-                TARGET_CANNOT_SEE_ME
+                HIDDEN_AND_TARGET_VISIBLE
             })
         },
         ROLL_TYPE_SAVE: {

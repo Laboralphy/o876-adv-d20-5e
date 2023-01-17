@@ -182,13 +182,60 @@ class Creature {
             this.clearTarget()
             this._target.creature = oCreature
             this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
-            this.store.mutations.updateTargetConditions({ conditions: this._target.creature.store.getters.getConditions })
+            this.store.mutations.updateTargetConditions({ id: oCreature.id, conditions: this._target.creature.store.getters.getConditions })
             oCreature.store.events.on('mutation', this._target.handler)
         }
     }
 
     getTarget () {
         return this._target.creature
+    }
+
+
+    clearAggressor () {
+        if (this._aggressor.creature && this._aggressor.handler) {
+            this._aggressor.creature.store.events.off('mutation', this._aggressor.handler)
+            this._aggressor.creature = null
+            this._aggressor.handler = null
+            this.store.mutations.clearAggressor()
+        }
+    }
+
+    updateAggressor (name) {
+        switch (name) {
+            case 'removeEffect':
+            case 'addEffect': {
+                this.store.mutations.updateAggressorConditions({ conditions: this._aggressor.creature.store.getters.getConditions })
+                break
+            }
+        }
+    }
+
+    setAggressor (oCreature) {
+        if (this._aggressor.creature !== oCreature) {
+            this.clearAggressor()
+            this._aggressor.creature = oCreature
+            this._aggressor.handler = ({ name, payload }) => this.updateAggressor(name, payload)
+            this.store.mutations.updateAggressorConditions({ id: oCreature.id, conditions: this._aggressor.creature.store.getters.getConditions })
+            oCreature.store.events.on('mutation', this._aggressor.handler)
+        }
+    }
+
+    getAggressor () {
+        return this._aggressor.creature
+    }
+
+    /**
+     * Défini la manière dont la créature réagit à la destruction technique d'une autre créature
+     * Il s'agit de couper tout lien vers cette créature
+     */
+    notifyCreatureDestroyed (oCreature) {
+        if (this.getTarget() === oCreature) {
+            this.clearTarget()
+        }
+        if (this.getAggressor() === oCreature) {
+            this.clearAggressor()
+        }
     }
 
     /**
@@ -210,7 +257,7 @@ class Creature {
         let
             advantage = ara,
             disadvantage = dra
-        if (sExtra !== '')
+        if (sExtra !== '') {
             switch (sRollType) {
                 case CONSTS.ROLL_TYPE_SAVE: {
                     advantage = advantage || ar[sExtra].value
@@ -227,6 +274,7 @@ class Creature {
                     break
                 }
             }
+        }
         return {
             advantage,
             disadvantage,
