@@ -7,7 +7,7 @@
 module.exports = (state, getters) => {
     return new Set(Object
         .entries(getters.getAggressorConditionSources)
-        .filter(([key, value]) => value.length > 0)
+        .filter(([key, value]) => value.size > 0)
         .map(([key, value]) => key)
     )
 }

@@ -319,34 +319,34 @@ describe('getTarget', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         c1.setTarget(c2)
-        expect(c1.store.getters.canSeeTarget).toBeTrue()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
     })
     it('la target est initialement invisible', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
         c1.setTarget(c2)
-        expect(c1.store.getters.canSeeTarget).toBeFalse()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
     })
     it('should not see the target WHEN selecting an invisible target', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         c1.setTarget(c2)
-        expect(c1.store.getters.canSeeTarget).toBeTrue()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
         c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
-        expect(c1.store.getters.canSeeTarget).toBeFalse()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
     })
     it('should update canSeeTarget WHEN invisible effect is added/remove on target', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         c1.setTarget(c2)
-        expect(c1.store.getters.canSeeTarget).toBeTrue()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
         c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
         const eInvis = c2.store.getters.getEffects[0]
         expect(eInvis.tag).toBe(CONSTS.EFFECT_INVISIBILITY)
-        expect(c1.store.getters.canSeeTarget).toBeFalse()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
         c2.store.mutations.removeEffect({ effect: eInvis })
-        expect(c1.store.getters.canSeeTarget).toBeTrue()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
     })
 })
 
@@ -370,7 +370,7 @@ describe('getAdvantages/getDisadvantages', function () {
         c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10, source: c1.id } })
         expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c1.store.getters.getTargetConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-        expect(c2.store.getters.getConditionSources[CONSTS.CONDITION_INVISIBLE]).toEqual([c1.id])
+        expect(c2.store.getters.getConditionSources[CONSTS.CONDITION_INVISIBLE]).toEqual(new Set([c1.id]))
     })
     it ('should have no advantage/disadvantage WHEN  creature is fresh new', function () {
         const c = new Creature()
@@ -385,19 +385,19 @@ describe('getAdvantages/getDisadvantages', function () {
             // pas d'avantage sur les jets d'attaque en force
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
             // cible visible
-            expect(c2.store.getters.canSeeTarget).toBeTrue()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
             // cible peut me voir
-            expect(c1.store.getters.canTargetSeeMe).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
             // ajout d'effet invisible sur c1
             c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
             // c1 vois toujours c2
-            expect(c1.store.getters.canSeeTarget).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
             // c1 n'est pas visible par c2
             expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-            expect(c1.store.getters.canTargetSeeMe).toBeFalse()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalse()
             // c1 a donc bien un avantage d'attaque en force sur c2
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('HIDDEN_AND_TARGET_VISIBLE')).toBeTrue()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeTrue()
         })
         it('should not be an advantage on attack rolls when target has true sight', function () {
             const c1 = new Creature()
@@ -406,18 +406,18 @@ describe('getAdvantages/getDisadvantages', function () {
             // pas d'avantage sur les jets d'attaque en force
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
             // cible visible
-            expect(c2.store.getters.canSeeTarget).toBeTrue()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
             // cible peut me voir
-            expect(c1.store.getters.canTargetSeeMe).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
             // ajout d'effet invisible sur c1
             c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
             c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_TRUE_SIGHT, amp: 1, duration: 10 } })
             // c1 vois toujours c2
-            expect(c1.store.getters.canSeeTarget).toBeTrue()
-            expect(c2.store.getters.canSeeTarget).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
             // c1 n'est pas visible par c2
             expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-            expect(c1.store.getters.canTargetSeeMe).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
             // c1 et c2 se voient
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_CANNOT_SEE_ME')).toBeFalse()
@@ -431,8 +431,8 @@ describe('getAdvantages/getDisadvantages', function () {
             c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
             c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
             // c1 vois toujours c2
-            expect(c1.store.getters.canSeeTarget).toBeFalse()
-            expect(c2.store.getters.canSeeTarget).toBeFalse()
+            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
             // c1 n'est pas visible par c2
             // c1 et c2 ne se voient pas
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
@@ -448,18 +448,17 @@ describe('getAdvantages/getDisadvantages', function () {
         // ajout d'effet invisible sur c1
         c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
         // c1 vois toujours c2
-        expect(c1.store.getters.canSeeTarget).toBeTrue()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
         // c1 n'est pas visible par c2
         expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         // c2 ne vois plus c1
-        expect(c1.store.getters.canTargetSeeMe).toBeFalse()
-        expect(c2.store.getters.canSeeTarget).toBeFalse()
+        expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalse()
+        expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
         // c2 a donc bien un désavantage d'attaque en tout
         expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
         expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('NOT_HIDDEN_AND_TARGET_INVISIBLE')).toBeTrue()
     })
 })
-
 
 // Test : appliquer un effet à impact
 // appliquer un effet à durée temporaire

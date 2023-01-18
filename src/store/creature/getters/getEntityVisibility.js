@@ -27,12 +27,12 @@ module.exports = (state, getters) => {
     const c = getters.getConditions
     return {
         detectable: {
-            target: canSee(c, tc),
-            aggressor: canSee(c, tc)
+            target: canSee(c, tc),          // true : you can see your target ; false : you cannot see your target
+            aggressor: canSee(c, tc)        // true : you can see your aggressor ; false : you cannot see your aggressor
         },
         detectedBy: {
-            target: canSee(tc, c),
-            aggressor: canSee(ac, c)
+            target: canSee(tc, c),          // true : your target can see you ; false : your target cannot see you
+            aggressor: canSee(ac, c)        // true : your aggressor can see you , false : your aggressor cannot see you
         }
     }
 }

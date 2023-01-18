@@ -266,7 +266,7 @@ class Creature {
                     dl.assign(dr[sExtra].rules)
                     break
                 }
-                case CONSTS.ROLL_TYPE_SKILL: {
+                case CONSTS.ROLL_TYPE_CHECK: {
                     advantage = advantage || ar[sExtra].value
                     disadvantage = disadvantage || dr[sExtra].value
                     al.assign(ar[sExtra].rules)

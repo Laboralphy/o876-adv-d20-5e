@@ -25,7 +25,7 @@
  * @typedef D20AdvantagesOrDisadvantages {object}
  * @property ROLL_TYPE_ATTACK {D20RuleValueRegistry}
  * @property ROLL_TYPE_SAVE {D20RuleValueRegistry}
- * @property ROLL_TYPE_SKILL {D20RuleValueRegistry}
+ * @property ROLL_TYPE_CHECK {D20RuleValueRegistry}
  *
  * @typedef D20ConditionBooleanRegistry {{[p: string]: boolean}}
  */

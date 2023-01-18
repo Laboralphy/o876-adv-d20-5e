@@ -7,7 +7,7 @@
  * @property getAbilityList {string[]}
  * @property getAbilityModifiers {D20AbilityNumberRegistry}
  * @property getAbilityValues {D20AbilityNumberRegistry}
- * @property getAdvantages {D20AdvantagesOrDisadvantages}
+ * @property getAdvantages {*}
  * @property getAggressor {{ condition: Object.<string, boolean>}}
  * @property getAggressorConditionSources {{}}
  * @property getAggressorConditions {Set}
@@ -17,6 +17,7 @@
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffects {[]}
+ * @property getEntityVisibility {D20EntityVisibilityResult}
  * @property getEntropyType {string}
  * @property getEquipmentItemProperties {[]}
  * @property getEquipmentList {D20Item[]}
