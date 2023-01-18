@@ -363,7 +363,15 @@ describe('getEffects', function () {
 })
 
 describe('getAdvantages/getDisadvantages', function () {
-    it('should ')
+    it('should have a condition initiated by c2 WHEN c2 applies an effect on c1', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.setTarget(c2)
+        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10, source: c1.id } })
+        expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c1.store.getters.getTargetConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c2.store.getters.getConditionSources[CONSTS.CONDITION_INVISIBLE]).toEqual([c1.id])
+    })
     it ('should have no advantage/disadvantage WHEN  creature is fresh new', function () {
         const c = new Creature()
         expect(c.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()

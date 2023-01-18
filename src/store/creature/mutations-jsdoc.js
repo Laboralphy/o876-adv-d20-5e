@@ -1,8 +1,8 @@
 /**
  * @typedef D20CreatureStoreMutations {object}
  * @property addClass {function({ ref: string, levels: number })}
- * @property addEffect {function({ effect: object })}
- * @property removeEffect {function({ effect: object })}
+ * @property addEffect {function({ effect: D20Effect })}
+ * @property removeEffect {function({ effect: D20Effect })}
  * @property addProficiency {function({ proficiency: string })}
  * @property equipItem {function({ item: object, slot: string })}
  * @property setAbility {function({ ability: string, value: number })}

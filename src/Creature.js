@@ -171,7 +171,7 @@ class Creature {
         switch (name) {
             case 'removeEffect':
             case 'addEffect': {
-                this.store.mutations.updateTargetConditions({ conditions: this._target.creature.store.getters.getConditions })
+                this.store.mutations.updateTargetConditions({ conditions: this._target.creature.store.getters.getConditionSources })
                 break
             }
         }
@@ -182,7 +182,7 @@ class Creature {
             this.clearTarget()
             this._target.creature = oCreature
             this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
-            this.store.mutations.updateTargetConditions({ id: oCreature.id, conditions: this._target.creature.store.getters.getConditions })
+            this.store.mutations.updateTargetConditions({ id: oCreature.id, conditions: this._target.creature.store.getters.getConditionSources })
             oCreature.store.events.on('mutation', this._target.handler)
         }
     }
@@ -205,7 +205,7 @@ class Creature {
         switch (name) {
             case 'removeEffect':
             case 'addEffect': {
-                this.store.mutations.updateAggressorConditions({ conditions: this._aggressor.creature.store.getters.getConditions })
+                this.store.mutations.updateAggressorConditions({ conditions: this._aggressor.creature.store.getters.getConditionSources })
                 break
             }
         }
@@ -216,7 +216,7 @@ class Creature {
             this.clearAggressor()
             this._aggressor.creature = oCreature
             this._aggressor.handler = ({ name, payload }) => this.updateAggressor(name, payload)
-            this.store.mutations.updateAggressorConditions({ id: oCreature.id, conditions: this._aggressor.creature.store.getters.getConditions })
+            this.store.mutations.updateAggressorConditions({ id: oCreature.id, conditions: this._aggressor.creature.store.getters.getConditionSources })
             oCreature.store.events.on('mutation', this._aggressor.handler)
         }
     }
