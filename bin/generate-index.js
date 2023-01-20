@@ -24,7 +24,8 @@ function camelCase (s) {
 }
 
 function renderExport (s) {
-    return `const CONSTS = require('../consts')
+    return `/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY */
+const CONSTS = require('../consts')
 module.exports = ${s}
 `
 }
