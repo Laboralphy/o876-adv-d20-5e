@@ -1,6 +1,7 @@
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
 const { warmup } = require('../src/assets')
+const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
 
 beforeEach(function () {
     warmup()
@@ -359,6 +360,82 @@ describe('getEffects', function () {
         const c1 = new Creature()
         c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
         expect(c1.store.getters.getEffects[0]).toBeDefined()
+    })
+})
+
+describe('dis and adv', function () {
+    it('should not return anything when creature has no effect', function () {
+        const c1 = new Creature()
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({})
+    })
+    it('should return ADV1 when creature has one advantage effect with ADV1 label', function () {
+        const c1 = new Creature()
+        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ADVANTAGE, label: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }})
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
+            ROLL_TYPE_ATTACK: {
+                ABILITY_INTELLIGENCE: ['ADV1']
+            }
+        })
+    })
+    it('should return many ADV1 (on each ability) when creature has one advantage effect with ADV1 label and multiple ability', function () {
+        const c1 = new Creature()
+        c1.store.mutations.addEffect({ effect: {
+            tag: CONSTS.EFFECT_ADVANTAGE,
+            label: 'ADV1',
+            rollTypes: [CONSTS.ROLL_TYPE_ATTACK],
+            abilities: [
+                CONSTS.ABILITY_STRENGTH,
+                CONSTS.ABILITY_DEXTERITY,
+                CONSTS.ABILITY_CONSTITUTION,
+                CONSTS.ABILITY_INTELLIGENCE,
+                CONSTS.ABILITY_WISDOM,
+                CONSTS.ABILITY_CHARISMA
+            ]
+        }})
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
+            ROLL_TYPE_ATTACK: {
+                ABILITY_STRENGTH: ['ADV1'],
+                ABILITY_DEXTERITY: ['ADV1'],
+                ABILITY_CONSTITUTION: ['ADV1'],
+                ABILITY_INTELLIGENCE: ['ADV1'],
+                ABILITY_WISDOM: ['ADV1'],
+                ABILITY_CHARISMA: ['ADV1']
+            }
+        })
+    })
+    it('should return a structure compatible with advantages', function () {
+        const data = {
+            ROLL_TYPE_ATTACK: {
+                ABILITY_STRENGTH: ['ADV1'],
+                ABILITY_DEXTERITY: ['ADV1'],
+                ABILITY_CONSTITUTION: ['ADV1'],
+                ABILITY_INTELLIGENCE: ['ADV1'],
+                ABILITY_WISDOM: ['ADV1'],
+                ABILITY_CHARISMA: ['ADV1']
+            }
+        }
+        expect(getThoseProvidedByEffects(
+            data,
+            CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH)
+        ).toEqual({
+            ADV1: true
+        })
+        expect(getThoseProvidedByEffects(
+            data,
+            CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
+        ).toEqual({
+            ADV1: true
+        })
+        expect(getThoseProvidedByEffects(
+            data,
+            CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_WISDOM)
+        ).toEqual({
+            ADV1: true
+        })
+        expect(getThoseProvidedByEffects(
+            data,
+            CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_WISDOM)
+        ).toEqual({})
     })
 })
 
