@@ -1,4 +1,5 @@
 {
+  "weaponType": "WEAPON_TYPE_GREATSWORD",
   "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
   "damage": "2d6",
   "versatileDamage": "",

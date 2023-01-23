@@ -1,4 +1,5 @@
 {
+  "weaponType": "WEAPON_TYPE_FLAIL",
   "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
   "damage": "1d8",
   "versatileDamage": "",

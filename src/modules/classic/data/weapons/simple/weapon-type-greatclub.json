@@ -1,4 +1,5 @@
 {
+  "weaponType": "WEAPON_TYPE_GREATCLUB",
   "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
   "damage": "1d8",
   "versatileDamage": "",

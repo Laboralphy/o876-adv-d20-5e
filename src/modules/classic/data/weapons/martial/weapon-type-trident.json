@@ -1,4 +1,5 @@
 {
+  "weaponType": "WEAPON_TYPE_TRIDENT",
   "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
   "damage": "1d8",
   "versatileDamage": "1d8",
