@@ -11,7 +11,8 @@ module.exports = (state, getters) => {
     return oWeapon
         ? (
             state.proficiencies.includes(oWeapon.proficiency) ||
-            state.proficiencies.includes(oWeapon.) ||
+            state.proficiencies.includes(oWeapon.weaponType) ||
             oWeapon.itemType === CONSTS.ITEM_TYPE_NATURAL_WEAPON
-        ) : true
+        )
+        : true
 }
