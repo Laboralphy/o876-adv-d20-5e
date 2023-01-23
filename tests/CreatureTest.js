@@ -1,29 +1,30 @@
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
-const { warmup, assetManager } = require('../src/assets')
+const { warmup } = require('../src/assets')
+const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
 
 beforeEach(function () {
     warmup()
 })
 
 describe('basic instanciation', function () {
-    it('should be defined', function () {
+    it('should not throw error WHEN instanciated', function () {
         expect(() => {
-            const c = new Creature()
+            new Creature()
         }).not.toThrow()
     })
 })
 
-describe('Creature setting ability and reading ability', function () {
-    it('should get 10 strength', function () {
+describe('setAbility', function () {
+    it('should get 10 strength WHEN setting 10', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(10)
     })
 })
 
-describe('Creature reading ability with effect ability modifier', function () {
-    it('should get 15 strength', function () {
+describe('addEffect', function () {
+    it('should get 15 strength WHEN base strength is 10 and ability bonus effect is 5 (on strength)', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
@@ -31,7 +32,15 @@ describe('Creature reading ability with effect ability modifier', function () {
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
     })
 
-    it('should get 18 strength beacause of two ability-bonus', function () {
+    it('should get 10 strength WHEN base strength is 10 and dexterity bonus +5 is applied', function () {
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        // ajouter un ability modifier
+        c.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ABILITY_BONUS, duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_DEXTERITY }}})
+        expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(10)
+    })
+
+    it('should get 18 strength WHEN to str bonus (+5 and +3) are applied', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
@@ -41,7 +50,7 @@ describe('Creature reading ability with effect ability modifier', function () {
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(18)
     })
 
-    it('should have an ability modifier of 3', function () {
+    it('should have an intelligence modifier of 3, -1, -5, -5 WHEN ability is 16, 9, 0, 1', function () {
         const c1 = new Creature()
         c1.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 16 })
         expect(c1.store.getters.getAbilityModifiers[CONSTS.ABILITY_INTELLIGENCE]).toBe(3)
@@ -54,14 +63,18 @@ describe('Creature reading ability with effect ability modifier', function () {
     })
 })
 
-describe('Creature gaining level', function () {
-    it('creature as 1 level of tourist', function () {
+describe('addClass', function () {
+    it('should be level 0 WHEN not adding classes', function () {
+        const c = new Creature()
+        expect(c.store.getters.getLevel).toBe(0)
+    })
+    it('should be tourist level 1 WHEN a level of tourist is added to new creature', function () {
         const c = new Creature()
         c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
         expect(c.store.getters.getLevel).toBe(1)
         expect(c.store.getters.getLevelByClass[CONSTS.CLASS_TOURIST]).toBe(1)
     })
-    it('creature as 3 level of tourist', function () {
+    it('should be tourist lvl 3 and creature lvl 3 WHEN adding 3 levels of tourist to a new creature', function () {
         const c = new Creature()
         c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
         c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
@@ -69,9 +82,20 @@ describe('Creature gaining level', function () {
         expect(c.store.getters.getLevel).toBe(3)
         expect(c.store.getters.getLevelByClass[CONSTS.CLASS_TOURIST]).toBe(3)
     })
+    it('should be tourist 2, barbarian 3 and creature 5 WHEN adding 2 levels of tourist and 3 of barbarian to a new creature', function () {
+        const c = new Creature()
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
+        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
+        expect(c.store.getters.getLevel).toBe(5)
+        expect(c.store.getters.getLevelByClass[CONSTS.CLASS_TOURIST]).toBe(2)
+        expect(c.store.getters.getLevelByClass[CONSTS.CLASS_BARBARIAN]).toBe(3)
+    })
 })
 
-describe('Creature max hit points', function () {
+describe('getMaxHitPoints', function () {
     it('should have 12 hp on first level of barbarian', function () {
         const c = new Creature()
         c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
@@ -89,7 +113,7 @@ describe('Creature max hit points', function () {
 })
 
 describe('getAC', function () {
-    it('should have AC 12 with armor', function () {
+    it('should have AC 12 WHEN wearing a class 12 armor', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 12 })
         const oArmorLeather = {
@@ -108,7 +132,7 @@ describe('getAC', function () {
         c.equipItem(oArmorLeather)
         expect(c.getAC()).toBe(12)
     })
-    it('should have AC 14 with magical armor', function () {
+    it('should have AC 14 WHEN wearing magical (+2) armor', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 12 })
         const oArmorLeather = {
@@ -133,7 +157,7 @@ describe('getAC', function () {
 })
 
 describe('getAttackBonus', function () {
-    it ('level 1 with no weapons', function () {
+    it('should have a higher attack bonus WHEN gaining a level and/or adding a bonus effect on primary stat', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         const oUnarmedStrike = {
@@ -157,7 +181,7 @@ describe('getAttackBonus', function () {
         c.store.mutations.addClass({ class: CONSTS.CLASS_TOURIST, levels: 4 })
         expect(c.getAttackBonus()).toBe(4)
     })
-    it ('switching from weapon melee to ranged', function () {
+    it ('should update attack bonus WHEN switching from weapon melee to ranged', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         const oSword = {
@@ -206,7 +230,7 @@ describe('getAttackBonus', function () {
         c.store.mutations.equipItem({ item: oDagger, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
         expect(c.getAttackBonus()).toBe(4)
     })
-    it ('switching from magical weapon melee to ranged', function () {
+    it ('should update attack bonus WHEN switching from magical weapon melee to ranged', function () {
         const c = new Creature()
         const oSword = {
             "entityType": "ENTITY_TYPE_ITEM",
@@ -284,6 +308,234 @@ describe('getAttackBonus', function () {
     })
 })
 
+describe('getTarget', function () {
+    it('should not be null WHEN setting a target', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        expect(c1.store.getters.getTarget).toBeNull()
+        c1.setTarget(c2)
+        expect(c1.store.getters.getTarget).not.toBeNull()
+    })
+    it('should see the target WHEN selecting a visible target', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.setTarget(c2)
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+    })
+    it('la target est initialement invisible', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
+        c1.setTarget(c2)
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+    })
+    it('should not see the target WHEN selecting an invisible target', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.setTarget(c2)
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+    })
+    it('should update canSeeTarget WHEN invisible effect is added/remove on target', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.setTarget(c2)
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+        const eInvis = c2.store.getters.getEffects[0]
+        expect(eInvis.tag).toBe(CONSTS.EFFECT_INVISIBILITY)
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+        c2.store.mutations.removeEffect({ effect: eInvis })
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+    })
+})
+
+describe('getEffects', function () {
+    it('should have no effect WHEN creature is fresh new', function() {
+        const c1 = new Creature()
+        expect(c1.store.getters.getEffects).toEqual([])
+    })
+    it('should have an effect WHEN adding an invisible effect', function() {
+        const c1 = new Creature()
+        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+        expect(c1.store.getters.getEffects[0]).toBeDefined()
+    })
+})
+
+describe('dis and adv', function () {
+    it('should not return anything when creature has no effect', function () {
+        const c1 = new Creature()
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({})
+    })
+    it('should return ADV1 when creature has one advantage effect with ADV1 label', function () {
+        const c1 = new Creature()
+        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ADVANTAGE, label: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }})
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
+            ROLL_TYPE_ATTACK: {
+                ABILITY_INTELLIGENCE: ['ADV1']
+            }
+        })
+    })
+    it('should return many ADV1 (on each ability) when creature has one advantage effect with ADV1 label and multiple ability', function () {
+        const c1 = new Creature()
+        c1.store.mutations.addEffect({ effect: {
+            tag: CONSTS.EFFECT_ADVANTAGE,
+            label: 'ADV1',
+            rollTypes: [CONSTS.ROLL_TYPE_ATTACK],
+            abilities: [
+                CONSTS.ABILITY_STRENGTH,
+                CONSTS.ABILITY_DEXTERITY,
+                CONSTS.ABILITY_CONSTITUTION,
+                CONSTS.ABILITY_INTELLIGENCE,
+                CONSTS.ABILITY_WISDOM,
+                CONSTS.ABILITY_CHARISMA
+            ]
+        }})
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
+            ROLL_TYPE_ATTACK: {
+                ABILITY_STRENGTH: ['ADV1'],
+                ABILITY_DEXTERITY: ['ADV1'],
+                ABILITY_CONSTITUTION: ['ADV1'],
+                ABILITY_INTELLIGENCE: ['ADV1'],
+                ABILITY_WISDOM: ['ADV1'],
+                ABILITY_CHARISMA: ['ADV1']
+            }
+        })
+    })
+    it('should return a structure compatible with advantages', function () {
+        const data = {
+            ROLL_TYPE_ATTACK: {
+                ABILITY_STRENGTH: ['ADV1'],
+                ABILITY_DEXTERITY: ['ADV1'],
+                ABILITY_CONSTITUTION: ['ADV1'],
+                ABILITY_INTELLIGENCE: ['ADV1'],
+                ABILITY_WISDOM: ['ADV1'],
+                ABILITY_CHARISMA: ['ADV1']
+            }
+        }
+        expect(getThoseProvidedByEffects(
+            data,
+            CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH)
+        ).toEqual({
+            ADV1: true
+        })
+        expect(getThoseProvidedByEffects(
+            data,
+            CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
+        ).toEqual({
+            ADV1: true
+        })
+        expect(getThoseProvidedByEffects(
+            data,
+            CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_WISDOM)
+        ).toEqual({
+            ADV1: true
+        })
+        expect(getThoseProvidedByEffects(
+            data,
+            CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_WISDOM)
+        ).toEqual({})
+    })
+})
+
+describe('getAdvantages/getDisadvantages', function () {
+    it('should have a condition initiated by c2 WHEN c2 applies an effect on c1', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.setTarget(c2)
+        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10, source: c1.id } })
+        expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c1.store.getters.getTargetConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c2.store.getters.getConditionSources[CONSTS.CONDITION_INVISIBLE]).toEqual(new Set([c1.id]))
+    })
+    it ('should have no advantage/disadvantage WHEN  creature is fresh new', function () {
+        const c = new Creature()
+        expect(c.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+    })
+    describe('WHEN me is invisible', function () {
+        it('should be an advantage on attack rolls when target cannot see attacker', function () {
+            const c1 = new Creature()
+            const c2 = new Creature()
+            c1.setTarget(c2)
+            c2.setTarget(c1)
+            // pas d'avantage sur les jets d'attaque en force
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            // cible visible
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            // cible peut me voir
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
+            // ajout d'effet invisible sur c1
+            c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            // c1 vois toujours c2
+            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            // c1 n'est pas visible par c2
+            expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalse()
+            // c1 a donc bien un avantage d'attaque en force sur c2
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeTrue()
+        })
+        it('should not be an advantage on attack rolls when target has true sight', function () {
+            const c1 = new Creature()
+            const c2 = new Creature()
+            c1.setTarget(c2)
+            // pas d'avantage sur les jets d'attaque en force
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            // cible visible
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            // cible peut me voir
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
+            // ajout d'effet invisible sur c1
+            c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_TRUE_SIGHT, amp: 1, duration: 10 } })
+            // c1 vois toujours c2
+            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            // c1 n'est pas visible par c2
+            expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
+            // c1 et c2 se voient
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_CANNOT_SEE_ME')).toBeFalse()
+        })
+        it('should not be an advantage on attack rolls when target also invisible', function () {
+            const c1 = new Creature()
+            const c2 = new Creature()
+            c1.setTarget(c2)
+            c2.setTarget(c1)
+            // pas d'avantage sur les jets d'attaque en force
+            c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            // c1 vois toujours c2
+            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+            // c1 n'est pas visible par c2
+            // c1 et c2 ne se voient pas
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            expect(c2.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+        })
+    })
+    it ('should have disadvantage on attack when target is invisible and target can see me', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.setTarget(c2)
+        c2.setTarget(c1)
+
+        // ajout d'effet invisible sur c1
+        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+        // c1 vois toujours c2
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+        // c1 n'est pas visible par c2
+        expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        // c2 ne vois plus c1
+        expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalse()
+        expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+        // c2 a donc bien un désavantage d'attaque en tout
+        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
+        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('NOT_HIDDEN_AND_TARGET_INVISIBLE')).toBeTrue()
+    })
+})
 
 // Test : appliquer un effet à impact
 // appliquer un effet à durée temporaire

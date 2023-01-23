@@ -1,17 +1,17 @@
 {
-  "name": "o876-adv-d20",
+  "name": "o876-adv-rules-0x14",
   "version": "1.0.0",
-  "description": "",
+  "description": "A set of rules loosely based on various RPGs.",
   "main": "index.js",
   "scripts": {
     "test": "jasmine ./tests/*Test.js",
     "generate-index": "./bin/generate-files"
   },
-  "keywords": [],
+  "keywords": ["rules", "rpg", "adventure", "role-playing-game", "dungeons and dragons"],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@laboralphy/store": "^1.2.0",
+    "@laboralphy/store": "^1.2.2",
     "jsonschema": "^1.4.1"
   },
   "devDependencies": {
