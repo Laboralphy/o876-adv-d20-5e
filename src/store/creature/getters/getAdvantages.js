@@ -1,5 +1,4 @@
 const { computeRuleValue } = require('../common/compute-rule-value')
-const CONDITIONS = require("../../../consts/conditions.json");
 const CONSTS = require("../../../consts");
 const {getDisAndAdvEffectRegistry, getThoseProvidedByEffects} = require("../common/get-disandadv-effect-registry");
 
