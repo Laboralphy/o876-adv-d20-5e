@@ -10,8 +10,8 @@ module.exports = (state, getters) => {
     const oWeapon = getters.getSelectedWeapon
     return oWeapon
         ? (
-            state.proficiencies.includes(oWeapon.proficiency) ||
-            state.proficiencies.includes(oWeapon.weaponType) ||
+            getters.getProficiencies.includes(oWeapon.proficiency) ||
+            getters.getProficiencies.includes(oWeapon.weaponType) ||
             oWeapon.itemType === CONSTS.ITEM_TYPE_NATURAL_WEAPON
         )
         : true

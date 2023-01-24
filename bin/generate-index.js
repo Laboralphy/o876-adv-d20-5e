@@ -90,6 +90,25 @@ function generateGetterReturnType (sPath) {
     return aProperties.join('\n')
 }
 
+/**
+ * Vérifie qu'un fichier de constante et un fichier de data soit bien synchro
+ */
+function checkConstAndData (sConstFile, sDataFile) {
+    const oConsts = JSON.parse(fs.readFileSync(sConstFile).toString())
+    const oData = JSON.parse(fs.readFileSync(sDataFile).toString())
+    // toutes les const sont dans data ?
+    Object.keys(oConsts).forEach(c => {
+        if (!(c in oData)) {
+            console.log(c, 'is in constant file but not in data file !')
+        }
+    })
+    Object.keys(oData).forEach(c => {
+        if (!(c in oConsts)) {
+            console.log(c, 'is in data file but not in constant file !')
+        }
+    })
+}
+
 function main (sType) {
     switch (sType) {
         // item property index
@@ -122,8 +141,18 @@ function main (sType) {
             break
         }
 
+        // Check skills
+        case 'cs': {
+            console.group('checking skills')
+            checkConstAndData('./src/consts/skills.json', './src/data/skills.json')
+            checkConstAndData('./src/consts/skills.json', './src/data/skills.json')
+            console.groupEnd()
+            break
+        }
+
         default: {
-            console.log('available options: ii, ei, ic, ec')
+            console.log('available options: ii, ei, ic, ec, g, cs')
+            break
         }
     }
 }

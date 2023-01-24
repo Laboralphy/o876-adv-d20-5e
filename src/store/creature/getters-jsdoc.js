@@ -28,6 +28,7 @@
  * @property getMoralityType {string}
  * @property getOffensiveAbility {string}
  * @property getOffensiveEquipmentList {D20Item[]}
+ * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}
  * @property getSelectedWeaponProperties {array}
