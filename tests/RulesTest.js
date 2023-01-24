@@ -8,3 +8,18 @@ describe('instanciation', function () {
         }).not.toThrow()
     })
 })
+
+describe('createEntity', function () {
+    it('should produce a weapon with a type of "weapon-type-dagger" when creating an entity using a weapon blueprint based on dagger', function () {
+        const r = new Rules()
+        r.init()
+        const w = r.createEntity('wpn-dagger')
+        expect(w.weaponType).toBe('weapon-type-dagger')
+    })
+    it('should produce an armor with a type of "armor-type-leather" when creating an entity using an armor blueprint based on leather armor', function () {
+        const r = new Rules()
+        r.init()
+        const w = r.createEntity('arm-leather')
+        expect(w.armorType).toBe('armor-type-leather')
+    })
+})

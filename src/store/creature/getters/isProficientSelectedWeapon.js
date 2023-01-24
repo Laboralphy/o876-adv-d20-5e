@@ -9,6 +9,10 @@ const CONSTS = require('../../../consts')
 module.exports = (state, getters) => {
     const oWeapon = getters.getSelectedWeapon
     return oWeapon
-        ? state.proficiencies.includes(oWeapon.proficiency) || oWeapon.itemType === CONSTS.ITEM_TYPE_NATURAL_WEAPON
+        ? (
+            getters.getProficiencies.includes(oWeapon.proficiency) ||
+            getters.getProficiencies.includes(oWeapon.weaponType) ||
+            oWeapon.itemType === CONSTS.ITEM_TYPE_NATURAL_WEAPON
+        )
         : true
 }

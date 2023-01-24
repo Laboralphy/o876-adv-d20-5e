@@ -12,6 +12,7 @@ module.exports = {
   [CONSTS.EFFECT_DISADVANTAGE]: require('./disadvantage'),
   [CONSTS.EFFECT_DUMMY]: require('./dummy'),
   [CONSTS.EFFECT_EXHAUSTION]: require('./exhaustion'),
+  [CONSTS.EFFECT_GROUP]: require('./group'),
   [CONSTS.EFFECT_HEAL]: require('./heal'),
   [CONSTS.EFFECT_INVISIBILITY]: require('./invisibility'),
   [CONSTS.EFFECT_TRUE_SIGHT]: require('./true-sight')

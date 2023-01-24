@@ -11,7 +11,7 @@
  * @property getAggressorConditions {Set}
  * @property getArmorAndShieldClass {number}
  * @property getConditionSources {D20ConditionBooleanRegistry}
- * @property getConditions {D20ConditionBooleanRegistry}
+ * @property getConditions {Set<string>}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffects {[]}
@@ -28,6 +28,7 @@
  * @property getMoralityType {string}
  * @property getOffensiveAbility {string}
  * @property getOffensiveEquipmentList {D20Item[]}
+ * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}
  * @property getSelectedWeaponProperties {array}

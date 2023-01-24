@@ -15,7 +15,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^PROFICIENCY_"
+        "pattern": "^(PROFICIENCY_|weapon-type-|armor-type-|SKILL_)"
       }
     }
   }
