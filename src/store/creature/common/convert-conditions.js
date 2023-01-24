@@ -7,7 +7,6 @@ function convertConditionsToArray (conditions) {
         if (oSourceSet instanceof Set) {
             oNewConditions[sCondition] = [...oSourceSet]
         } else {
-            console.error(oSourceSet)
             throw new TypeError('The condition "' + sCondition + '" source set is not a Set !')
         }
     }

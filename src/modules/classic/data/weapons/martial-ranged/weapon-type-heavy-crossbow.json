@@ -1,5 +1,4 @@
 {
-  "weaponType": "WEAPON_TYPE_HEAVY_CROSSBOW",
   "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
   "damage": "1d10",
   "versatileDamage": "",

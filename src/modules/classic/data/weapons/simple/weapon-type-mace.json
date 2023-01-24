@@ -1,5 +1,4 @@
 {
-  "weaponType": "WEAPON_TYPE_MACE",
   "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
   "damage": "1d6",
   "versatileDamage": "",

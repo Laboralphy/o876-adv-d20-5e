@@ -1,5 +1,4 @@
 {
-  "weaponType": "WEAPON_TYPE_LONGBOW",
   "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
   "damage": "1d8",
   "versatileDamage": "",

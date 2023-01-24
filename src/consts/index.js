@@ -61,7 +61,6 @@ module.exports = {
     ...require('./abilities.json'),
     ...require('./against-type.json'),
     ...require('./alignments.json'),
-    ...require('./classes.json'),
     ...require('./conditions.json'),
     ...require('./damage-types.json'),
     ...require('./effects.json'),

@@ -1,5 +1,4 @@
 {
-  "weaponType": "WEAPON_TYPE_QUATERSTAFF",
   "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
   "damage": "1d6",
   "versatileDamage": "1d8",

@@ -1,4 +1,5 @@
 const Creature = require('../src/Creature')
+const EffectProcessor = require('../src/EffectProcessor')
 const CONSTS = require('../src/consts')
 const { warmup } = require('../src/assets')
 const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
@@ -70,41 +71,41 @@ describe('addClass', function () {
     })
     it('should be tourist level 1 WHEN a level of tourist is added to new creature', function () {
         const c = new Creature()
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
+        c.store.mutations.addClass({ ref: 'tourist' })
         expect(c.store.getters.getLevel).toBe(1)
-        expect(c.store.getters.getLevelByClass[CONSTS.CLASS_TOURIST]).toBe(1)
+        expect(c.store.getters.getLevelByClass['tourist']).toBe(1)
     })
     it('should be tourist lvl 3 and creature lvl 3 WHEN adding 3 levels of tourist to a new creature', function () {
         const c = new Creature()
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
+        c.store.mutations.addClass({ ref: 'tourist' })
+        c.store.mutations.addClass({ ref: 'tourist' })
+        c.store.mutations.addClass({ ref: 'tourist' })
         expect(c.store.getters.getLevel).toBe(3)
-        expect(c.store.getters.getLevelByClass[CONSTS.CLASS_TOURIST]).toBe(3)
+        expect(c.store.getters.getLevelByClass['tourist']).toBe(3)
     })
     it('should be tourist 2, barbarian 3 and creature 5 WHEN adding 2 levels of tourist and 3 of barbarian to a new creature', function () {
         const c = new Creature()
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_TOURIST })
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
+        c.store.mutations.addClass({ ref: 'tourist' })
+        c.store.mutations.addClass({ ref: 'barbarian' })
+        c.store.mutations.addClass({ ref: 'barbarian' })
+        c.store.mutations.addClass({ ref: 'tourist' })
+        c.store.mutations.addClass({ ref: 'barbarian' })
         expect(c.store.getters.getLevel).toBe(5)
-        expect(c.store.getters.getLevelByClass[CONSTS.CLASS_TOURIST]).toBe(2)
-        expect(c.store.getters.getLevelByClass[CONSTS.CLASS_BARBARIAN]).toBe(3)
+        expect(c.store.getters.getLevelByClass['tourist']).toBe(2)
+        expect(c.store.getters.getLevelByClass['barbarian']).toBe(3)
     })
 })
 
 describe('getMaxHitPoints', function () {
     it('should have 12 hp on first level of barbarian', function () {
         const c = new Creature()
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN })
+        c.store.mutations.addClass({ ref: 'barbarian' })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
         expect(c.store.getters.getMaxHitPoints).toBe(12)
     })
     it('should have 19 hp on second level of barbarian', function () {
         const c = new Creature()
-        c.store.mutations.addClass({ ref: CONSTS.CLASS_BARBARIAN, levels: 2 })
+        c.store.mutations.addClass({ ref: 'barbarian', levels: 2 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_CONSTITUTION]).toBe(10)
         expect(c.store.getters.getAbilityModifiers[CONSTS.ABILITY_CONSTITUTION]).toBe(0)
@@ -171,14 +172,14 @@ describe('getAttackBonus', function () {
         c.store.mutations.equipItem({ item: oUnarmedStrike, slot: CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON })
         expect(c.store.getters.getLevel).toBe(0)
         expect(c.store.getters.getProficiencyBonus).toBe(1)
-        c.store.mutations.addClass({ class: CONSTS.CLASS_TOURIST, levels: 1 })
+        c.store.mutations.addClass({ ref: 'tourist', levels: 1 })
         expect(c.store.getters.getLevel).toBe(1)
         expect(c.store.getters.getProficiencyBonus).toBe(2)
         expect(c.store.getters.isProficientSelectedWeapon).toBeTrue()
         expect(c.getAttackBonus()).toBe(2)
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 12 })
         expect(c.getAttackBonus()).toBe(3)
-        c.store.mutations.addClass({ class: CONSTS.CLASS_TOURIST, levels: 4 })
+        c.store.mutations.addClass({ ref: 'tourist', levels: 4 })
         expect(c.getAttackBonus()).toBe(4)
     })
     it ('should update attack bonus WHEN switching from weapon melee to ranged', function () {
@@ -223,7 +224,7 @@ describe('getAttackBonus', function () {
         expect(c.store.getters.getSelectedWeapon).toEqual(oSword)
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 14 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 18 })
-        c.store.mutations.addClass({ class: CONSTS.CLASS_TOURIST, levels: 1 })
+        c.store.mutations.addClass({ ref: 'tourist', levels: 1 })
         expect(c.getAttackBonus()).toBe(2)
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         expect(c.getAttackBonus()).toBe(4)
@@ -289,7 +290,7 @@ describe('getAttackBonus', function () {
         c.store.mutations.addProficiency({ proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 14 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 18 })
-        c.store.mutations.addClass({ class: CONSTS.CLASS_TOURIST, levels: 1 })
+        c.store.mutations.addClass({ ref: 'tourist', levels: 1 })
         expect(c.store.getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH]).toBe(2)
         expect(c.store.getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]).toBe(4)
         expect(c.store.getters.isProficientSelectedWeapon).toBeTrue()
@@ -540,3 +541,54 @@ describe('getAdvantages/getDisadvantages', function () {
 // Test : appliquer un effet à impact
 // appliquer un effet à durée temporaire
 // creature A applique un effet à créature B
+
+describe('groupEffect', function () {
+    it('should create 3 effects when applying a group of two effects', function () {
+        const c = new Creature()
+        const ep = new EffectProcessor()
+        ep.applyEffect(ep.createEffect(CONSTS.EFFECT_GROUP, {
+            effects: [
+                ep.createEffect(CONSTS.EFFECT_INVISIBILITY),
+                ep.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
+            ]
+        }), c, 10)
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
+        ep.processCreatureEffects(c)
+        ep.processCreatureEffects(c)
+        ep.processCreatureEffects(c)
+        ep.processCreatureEffects(c)
+        ep.processCreatureEffects(c)
+        ep.processCreatureEffects(c)
+        ep.processCreatureEffects(c)
+        ep.processCreatureEffects(c)
+        ep.processCreatureEffects(c)
+        expect(c.store.getters.getEffects.length).toBe(3)
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
+        ep.processCreatureEffects(c)
+        expect(c.store.getters.getEffects.length).toBe(0)
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeFalse()
+    })
+    fit('should dispel all effects when dispellint at group effect', function () {
+        const c = new Creature()
+        const ep = new EffectProcessor()
+        const eGroup = ep.createEffect(CONSTS.EFFECT_GROUP, {
+            label: 'TEST_GROUP',
+            effects: [
+                ep.createEffect(CONSTS.EFFECT_INVISIBILITY),
+                ep.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
+            ]
+        })
+        ep.applyEffect(eGroup, c, 10)
+        ep.processCreatureEffects(c)
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
+        const effFound = c.store.getters.getEffects.find(eff => eff.tag === CONSTS.EFFECT_GROUP && eff.data.label === 'TEST_GROUP')
+        effFound.duration = 0
+        ep.processCreatureEffects(c)
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
+        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeFalse()
+    })
+})

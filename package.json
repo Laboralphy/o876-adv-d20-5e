@@ -7,12 +7,19 @@
     "test": "jasmine ./tests/*Test.js",
     "generate-index": "./bin/generate-files"
   },
-  "keywords": ["rules", "rpg", "adventure", "role-playing-game", "dungeons and dragons"],
+  "keywords": [
+    "rules",
+    "rpg",
+    "adventure",
+    "role-playing-game",
+    "dungeons and dragons"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@laboralphy/store": "^1.2.2",
-    "jsonschema": "^1.4.1"
+    "jsonschema": "^1.4.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "jasmine": "^4.2.1"

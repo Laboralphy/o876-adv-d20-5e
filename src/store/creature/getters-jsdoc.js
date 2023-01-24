@@ -11,7 +11,7 @@
  * @property getAggressorConditions {Set}
  * @property getArmorAndShieldClass {number}
  * @property getConditionSources {D20ConditionBooleanRegistry}
- * @property getConditions {D20ConditionBooleanRegistry}
+ * @property getConditions {Set<string>}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffects {[]}

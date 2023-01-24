@@ -1,5 +1,4 @@
 {
-  "weaponType": "WEAPON_TYPE_DAGGER",
   "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
   "damage": "1d4",
   "versatileDamage": "",

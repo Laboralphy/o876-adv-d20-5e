@@ -1,5 +1,4 @@
 {
-  "weaponType": "WEAPON_TYPE_MAUL",
   "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
   "damage": "2d6",
   "versatileDamage": "",
