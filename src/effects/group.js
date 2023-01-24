@@ -7,7 +7,7 @@ const CONSTS = require('../consts')
  * @param effects {D20Effect[]}
  * @returns {D20Effect}
  */
-function create ({ label = '', effects= [] }) {
+function create ({ label = '', effects = [] }) {
     return createEffect(CONSTS.EFFECT_GROUP, 1, { label, effects, applied: false })
 }
 
@@ -22,16 +22,22 @@ function mutate ({ effect, target, source }, oEffectProcessor) {
     if (!effect.data.applied) {
         effect.data.applied = true
         const duration = effect.duration
-        effect.data.effects.forEach(eff => {
-            oEffectProcessor.applyEffect(eff, target, duration, source)
-        })
+        effect
+            .data
+            .effects
+            .forEach(eff => {
+                oEffectProcessor.applyEffect(eff, target, duration, source)
+            })
     }
 }
 
-function dispose ({ effect }) {
-    effect.data.effects.forEach(eff => {
-        eff.duration = 0
-    })
+function dispose ({ effect, target }, oEffectProcessor) {
+    effect
+        .data
+        .effects
+        .forEach(eff => {
+            oEffectProcessor.removeEffect(target, eff.id)
+        })
 }
 
 module.exports = {

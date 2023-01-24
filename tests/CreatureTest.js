@@ -29,7 +29,7 @@ describe('addEffect', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
-        c.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ABILITY_BONUS, duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_STRENGTH }}})
+        c.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_STRENGTH }})})
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
     })
 
@@ -37,17 +37,26 @@ describe('addEffect', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
-        c.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ABILITY_BONUS, duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_DEXTERITY }}})
+        c.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_DEXTERITY }})})
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(10)
     })
 
     it('should get 18 strength WHEN to str bonus (+5 and +3) are applied', function () {
         const c = new Creature()
+        const ep = new EffectProcessor()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
-        c.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ABILITY_BONUS, duration: 10, amp: 5, data: { ability: CONSTS.ABILITY_STRENGTH }}})
+        ep.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { ability: CONSTS.ABILITY_STRENGTH, value: 5 }),
+            c,
+            10
+        )
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
-        c.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ABILITY_BONUS, duration: 10, amp: 3, data: { ability: CONSTS.ABILITY_STRENGTH }}})
+        ep.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { ability: CONSTS.ABILITY_STRENGTH, value: 3 }),
+            c,
+            10
+        )
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(18)
     })
 
@@ -326,7 +335,7 @@ describe('getTarget', function () {
     it('la target est initialement invisible', function () {
         const c1 = new Creature()
         const c2 = new Creature()
-        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
+        c2.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10 })})
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
     })
@@ -335,7 +344,7 @@ describe('getTarget', function () {
         const c2 = new Creature()
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
-        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 }})
+        c2.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10 })})
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
     })
     it('should update canSeeTarget WHEN invisible effect is added/remove on target', function () {
@@ -343,9 +352,9 @@ describe('getTarget', function () {
         const c2 = new Creature()
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
-        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+        c2.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10 })})
         const eInvis = c2.store.getters.getEffects[0]
-        expect(eInvis.tag).toBe(CONSTS.EFFECT_INVISIBILITY)
+        expect(eInvis.type).toBe(CONSTS.EFFECT_INVISIBILITY)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
         c2.store.mutations.removeEffect({ effect: eInvis })
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
@@ -359,7 +368,7 @@ describe('getEffects', function () {
     })
     it('should have an effect WHEN adding an invisible effect', function() {
         const c1 = new Creature()
-        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+        c1.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10 })})
         expect(c1.store.getters.getEffects[0]).toBeDefined()
     })
 })
@@ -371,7 +380,12 @@ describe('dis and adv', function () {
     })
     it('should return ADV1 when creature has one advantage effect with ADV1 label', function () {
         const c1 = new Creature()
-        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_ADVANTAGE, label: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }})
+        const ep = new EffectProcessor()
+        const eAdv = EffectProcessor.createEffect(
+            CONSTS.EFFECT_ADVANTAGE,
+            { label: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }
+        )
+        ep.applyEffect(eAdv, c1, 10)
         expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
             ROLL_TYPE_ATTACK: {
                 ABILITY_INTELLIGENCE: ['ADV1']
@@ -380,8 +394,8 @@ describe('dis and adv', function () {
     })
     it('should return many ADV1 (on each ability) when creature has one advantage effect with ADV1 label and multiple ability', function () {
         const c1 = new Creature()
-        c1.store.mutations.addEffect({ effect: {
-            tag: CONSTS.EFFECT_ADVANTAGE,
+        const ep = new EffectProcessor()
+        const eAdv = EffectProcessor.createEffect( CONSTS.EFFECT_ADVANTAGE, {
             label: 'ADV1',
             rollTypes: [CONSTS.ROLL_TYPE_ATTACK],
             abilities: [
@@ -392,7 +406,8 @@ describe('dis and adv', function () {
                 CONSTS.ABILITY_WISDOM,
                 CONSTS.ABILITY_CHARISMA
             ]
-        }})
+        })
+        ep.applyEffect(eAdv, c1, 10)
         expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
             ROLL_TYPE_ATTACK: {
                 ABILITY_STRENGTH: ['ADV1'],
@@ -445,7 +460,7 @@ describe('getAdvantages/getDisadvantages', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         c1.setTarget(c2)
-        c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10, source: c1.id } })
+        c2.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10, source: c1.id })})
         expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c1.store.getters.getTargetConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c2.store.getters.getConditionSources[CONSTS.CONDITION_INVISIBLE]).toEqual(new Set([c1.id]))
@@ -467,7 +482,7 @@ describe('getAdvantages/getDisadvantages', function () {
             // cible peut me voir
             expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
             // ajout d'effet invisible sur c1
-            c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            c1.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10 })})
             // c1 vois toujours c2
             expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
             // c1 n'est pas visible par c2
@@ -488,8 +503,8 @@ describe('getAdvantages/getDisadvantages', function () {
             // cible peut me voir
             expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
             // ajout d'effet invisible sur c1
-            c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
-            c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_TRUE_SIGHT, amp: 1, duration: 10 } })
+            c1.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10 })})
+            c2.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT, { amp: 1, duration: 10 })})
             // c1 vois toujours c2
             expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
             expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
@@ -506,8 +521,8 @@ describe('getAdvantages/getDisadvantages', function () {
             c1.setTarget(c2)
             c2.setTarget(c1)
             // pas d'avantage sur les jets d'attaque en force
-            c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
-            c2.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+            c1.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10 })})
+            c2.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10 })})
             // c1 vois toujours c2
             expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
             expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
@@ -524,7 +539,7 @@ describe('getAdvantages/getDisadvantages', function () {
         c2.setTarget(c1)
 
         // ajout d'effet invisible sur c1
-        c1.store.mutations.addEffect({ effect: { tag: CONSTS.EFFECT_INVISIBILITY, amp: 1, duration: 10 } })
+        c1.store.mutations.addEffect({ effect: EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY, { amp: 1, duration: 10 }) })
         // c1 vois toujours c2
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
         // c1 n'est pas visible par c2
@@ -546,10 +561,10 @@ describe('groupEffect', function () {
     it('should create 3 effects when applying a group of two effects', function () {
         const c = new Creature()
         const ep = new EffectProcessor()
-        ep.applyEffect(ep.createEffect(CONSTS.EFFECT_GROUP, {
+        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, {
             effects: [
-                ep.createEffect(CONSTS.EFFECT_INVISIBILITY),
-                ep.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
+                EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY),
+                EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
             ]
         }), c, 10)
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
@@ -571,21 +586,21 @@ describe('groupEffect', function () {
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeFalse()
     })
-    fit('should dispel all effects when dispellint at group effect', function () {
+    it('should dispel all effects when dispellint at group effect', function () {
         const c = new Creature()
         const ep = new EffectProcessor()
-        const eGroup = ep.createEffect(CONSTS.EFFECT_GROUP, {
+        const eGroup = EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, {
             label: 'TEST_GROUP',
             effects: [
-                ep.createEffect(CONSTS.EFFECT_INVISIBILITY),
-                ep.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
+                EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY),
+                EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
             ]
         })
         ep.applyEffect(eGroup, c, 10)
         ep.processCreatureEffects(c)
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
-        const effFound = c.store.getters.getEffects.find(eff => eff.tag === CONSTS.EFFECT_GROUP && eff.data.label === 'TEST_GROUP')
+        const effFound = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.data.label === 'TEST_GROUP')
         effFound.duration = 0
         ep.processCreatureEffects(c)
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()

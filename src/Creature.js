@@ -69,7 +69,7 @@ class Creature {
             .getters
             .getEffects
             .filter(eff =>
-                aTagSet.has(eff.tag) &&
+                aTagSet.has(eff.type) &&
                 (effectFilter ? effectFilter(eff) : true)
             )
         const aFilteredItemProperties = this

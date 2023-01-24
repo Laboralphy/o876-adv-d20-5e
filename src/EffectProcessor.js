@@ -18,7 +18,7 @@ class EffectProcessor {
         }
     }
 
-    createEffect (sEffect, ...aArgs) {
+    static createEffect (sEffect, ...aArgs) {
         return Effects[sEffect].create(...aArgs)
     }
 
@@ -38,7 +38,7 @@ class EffectProcessor {
     }
 
     invokeEffectMethod (oEffect, sMethod, oTarget, oSource) {
-        const oEffectProg = Effects[oEffect.tag]
+        const oEffectProg = Effects[oEffect.type]
         if (sMethod in oEffectProg) {
             oEffectProg[sMethod]({
                 effect: oEffect,
@@ -63,7 +63,6 @@ class EffectProcessor {
     processCreatureEffects (oCreature) {
         const aEffects = oCreature.store.state.effects
         aEffects.forEach(eff => {
-            if (eff.tag === 'EFFECT_GROUP') console.log(eff)
             if (eff.duration > 0) {
                 const oSource = this.getEffectSource(eff)
                 this.runEffect(eff, oCreature, oSource)
@@ -83,10 +82,7 @@ class EffectProcessor {
     }
 
     removeEffect (oCreature, idEffect) {
-        const oEffect = oCreature.store.getters.getEffects.find(eff => eff.id === idEffect)
-        if (oEffect) {
-            oEffect.duration = 0
-        }
+        oCreature.store.mutations.removeEffect({ id: idEffect })
     }
 
     /**
@@ -101,7 +97,9 @@ class EffectProcessor {
         oEffect.duration = duration || 0
         this.runEffect(oEffect, target, source || target)
         if (duration > 0) {
-            target.store.mutations.addEffect({ effect: oEffect })
+            return target.store.mutations.addEffect({ effect: oEffect })
+        } else {
+            return null
         }
     }
 }
