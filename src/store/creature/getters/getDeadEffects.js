@@ -4,5 +4,5 @@
  * @returns {[]}
  */
 module.exports = state => {
-    return state.effects.filter(eff => eff.duration > 0)
+    return state.effects.filter(eff => eff.duration <= 0)
 }

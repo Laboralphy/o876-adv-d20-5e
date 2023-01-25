@@ -12,6 +12,7 @@
  * @property getArmorAndShieldClass {number}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
+ * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffects {[]}

@@ -31,13 +31,15 @@ function mutate ({ effect, target, source }, oEffectProcessor) {
     }
 }
 
-function dispose ({ effect, target }, oEffectProcessor) {
-    effect
-        .data
-        .effects
+function dispose ({ target }, oEffectProcessor) {
+    target
+        .store
+        .getters
+        .getEffects
         .forEach(eff => {
-            oEffectProcessor.removeEffect(target, eff.id)
+            eff.duration = 0
         })
+    oEffectProcessor.removeDeadEffects(target)
 }
 
 module.exports = {
