@@ -33,6 +33,8 @@
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}
  * @property getSelectedWeaponProperties {array}
+ * @property getSize {string}
+ * @property getSizeProperties {{value: number, hitDie: number, space: number, carryingCapacity}}
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getTarget {{ condition: Object.<string, boolean>}}
@@ -41,4 +43,5 @@
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
+ * @property isWeildingNonLightWeapon {boolean}
  */

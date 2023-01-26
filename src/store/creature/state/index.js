@@ -33,6 +33,7 @@ module.exports = function () {
             morality: 0
         },
         specie: CONSTS.SPECIE_HUMANOID,
+        size: CONSTS.CREATURE_SIZE_MEDIUM,
         offensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
         proficiencies: [],
         speed: 0,

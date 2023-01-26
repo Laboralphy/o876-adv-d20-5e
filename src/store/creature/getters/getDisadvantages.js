@@ -1,4 +1,6 @@
 const { computeRuleValue } = require('../common/compute-rule-value')
+const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require("../common/get-disandadv-effect-registry");
+const CONSTS = require("../../../consts");
 
 /**
  * Etabli la liste des désavantages de THIS par rapport à THIS.target
@@ -10,86 +12,130 @@ const { computeRuleValue } = require('../common/compute-rule-value')
  * @param getters
  * @return {D20AdvantagesOrDisadvantages}
  */
-module.exports = (state, getters) => {
+module.exports = (state, getters, externals) => {
+    const myConditions = getters.getConditions
+    const myConditionSources = getters.getConditionSources
+
+    const oRelevantEffects = getters
+        .getEffects
+        .filter(effect => effect.type === CONSTS.EFFECT_ADVANTAGE)
+    const oDisadvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects)
+
     const EXHAUSTION_LEVEL_3 = getters.getExhaustionLevel >= 3
     const EXHAUSTION_LEVEL_1 = getters.getExhaustionLevel >= 1
     const NON_PROFICIENT_ARMOR_SHIELD = !getters.isProficientArmorAndShield
     const WEARING_NON_STEALTH_ARMOR = getters.isWearingStealthDisadvantagedArmor
-    const NOT_HIDDEN_AND_TARGET_INVISIBLE = !getters.getEntityVisibility.detectable.target
+    const TARGET_UNSEEN = !getters.getEntityVisibility.detectable.target && getters.getEntityVisibility.detectedBy.target
+    const CREATURE_IS_SMALL = getters.getSizeProperties.value < externals.data['creature-size'][CONSTS.CREATURE_SIZE_MEDIUM].value
+    const HEAVY_WEAPON = getters.isWeildingNonLightWeapon && CREATURE_IS_SMALL
+
+    const POISONED = myConditions.has(CONSTS.CONDITION_POISONED)
+
     return {
         ROLL_TYPE_ATTACK: {
             ABILITY_STRENGTH: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
                 NON_PROFICIENT_ARMOR_SHIELD,
-                NOT_HIDDEN_AND_TARGET_INVISIBLE
+                TARGET_UNSEEN,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH)
             }),
             ABILITY_DEXTERITY: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
                 NON_PROFICIENT_ARMOR_SHIELD,
-                NOT_HIDDEN_AND_TARGET_INVISIBLE
+                TARGET_UNSEEN,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
             }),
             ABILITY_CONSTITUTION: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                NOT_HIDDEN_AND_TARGET_INVISIBLE
+                TARGET_UNSEEN,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CONSTITUTION)
             }),
             ABILITY_INTELLIGENCE: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                NOT_HIDDEN_AND_TARGET_INVISIBLE
+                TARGET_UNSEEN,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_INTELLIGENCE)
             }),
             ABILITY_WISDOM: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                NOT_HIDDEN_AND_TARGET_INVISIBLE
+                TARGET_UNSEEN,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_WISDOM)
             }),
             ABILITY_CHARISMA: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                NOT_HIDDEN_AND_TARGET_INVISIBLE
+                TARGET_UNSEEN,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CHARISMA)
             })
         },
         ROLL_TYPE_SAVE: {
             ABILITY_STRENGTH: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                NON_PROFICIENT_ARMOR_SHIELD
+                NON_PROFICIENT_ARMOR_SHIELD,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_STRENGTH)
             }),
             ABILITY_DEXTERITY: computeRuleValue({
                 EXHAUSTION_LEVEL_3,
-                NON_PROFICIENT_ARMOR_SHIELD
+                NON_PROFICIENT_ARMOR_SHIELD,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_DEXTERITY)
             }),
             ABILITY_CONSTITUTION: computeRuleValue({
-                EXHAUSTION_LEVEL_3
+                EXHAUSTION_LEVEL_3,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_CONSTITUTION)
             }),
             ABILITY_INTELLIGENCE: computeRuleValue({
-                EXHAUSTION_LEVEL_3
+                EXHAUSTION_LEVEL_3,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_INTELLIGENCE)
             }),
             ABILITY_WISDOM: computeRuleValue({
-                EXHAUSTION_LEVEL_3
+                EXHAUSTION_LEVEL_3,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_WISDOM)
             }),
             ABILITY_CHARISMA: computeRuleValue({
-                EXHAUSTION_LEVEL_3
+                EXHAUSTION_LEVEL_3,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_CHARISMA)
             })
         },
         ROLL_TYPE_CHECK: {
             ABILITY_STRENGTH: computeRuleValue({
                 EXHAUSTION_LEVEL_1,
-                NON_PROFICIENT_ARMOR_SHIELD
+                NON_PROFICIENT_ARMOR_SHIELD,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.ABILITY_STRENGTH)
             }),
             ABILITY_DEXTERITY: computeRuleValue({
                 EXHAUSTION_LEVEL_1,
-                NON_PROFICIENT_ARMOR_SHIELD
+                NON_PROFICIENT_ARMOR_SHIELD,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.ABILITY_DEXTERITY)
             }),
             ABILITY_CONSTITUTION: computeRuleValue({
-                EXHAUSTION_LEVEL_1
+                EXHAUSTION_LEVEL_1,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.ABILITY_CONSTITUTION)
             }),
             ABILITY_INTELLIGENCE: computeRuleValue({
-                EXHAUSTION_LEVEL_1
+                EXHAUSTION_LEVEL_1,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.ABILITY_INTELLIGENCE)
             }),
             ABILITY_WISDOM: computeRuleValue({
-                EXHAUSTION_LEVEL_1
+                EXHAUSTION_LEVEL_1,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.ABILITY_WISDOM)
             }),
             ABILITY_CHARISMA: computeRuleValue({
-                EXHAUSTION_LEVEL_1
+                EXHAUSTION_LEVEL_1,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.ABILITY_CHARISMA)
             }),
             SKILL_STEALTH: computeRuleValue({
-                WEARING_NON_STEALTH_ARMOR
+                WEARING_NON_STEALTH_ARMOR,
+                POISONED,
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.SKILL_STEALTH)
             })
         }
     }
