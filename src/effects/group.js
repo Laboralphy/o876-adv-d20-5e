@@ -3,12 +3,12 @@ const CONSTS = require('../consts')
 
 /**
  * Groups several effects
- * @param label {string}
+ * @param tag {string}
  * @param effects {D20Effect[]}
  * @returns {D20Effect}
  */
-function create ({ label = '', effects = [] }) {
-    return createEffect(CONSTS.EFFECT_GROUP, 1, { label, effects, applied: false })
+function create ({ tag = '', effects = [] }) {
+    return createEffect(CONSTS.EFFECT_GROUP, 1, { tag, effects, applied: false })
 }
 
 /**

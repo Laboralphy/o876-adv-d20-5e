@@ -381,12 +381,12 @@ describe('dis and adv', function () {
         const c1 = new Creature()
         expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({})
     })
-    it('should return ADV1 when creature has one advantage effect with ADV1 label', function () {
+    it('should return ADV1 when creature has one advantage effect with ADV1 tag', function () {
         const c1 = new Creature()
         const ep = new EffectProcessor()
         const eAdv = EffectProcessor.createEffect(
             CONSTS.EFFECT_ADVANTAGE,
-            { label: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }
+            { tag: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }
         )
         ep.applyEffect(eAdv, c1, 10)
         expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
@@ -395,11 +395,11 @@ describe('dis and adv', function () {
             }
         })
     })
-    it('should return many ADV1 (on each ability) when creature has one advantage effect with ADV1 label and multiple ability', function () {
+    it('should return many ADV1 (on each ability) when creature has one advantage effect with ADV1 tag and multiple ability', function () {
         const c1 = new Creature()
         const ep = new EffectProcessor()
         const eAdv = EffectProcessor.createEffect( CONSTS.EFFECT_ADVANTAGE, {
-            label: 'ADV1',
+            tag: 'ADV1',
             rollTypes: [CONSTS.ROLL_TYPE_ATTACK],
             abilities: [
                 CONSTS.ABILITY_STRENGTH,
@@ -598,17 +598,17 @@ describe('groupEffect', function () {
         const eInvis = EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY)
         const eThrSi = EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
         const eGroup = EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, {
-            label: 'TEST_GROUP',
+            tag: 'TEST_GROUP',
             effects: [eInvis, eThrSi]
         })
         c.applyEffect(eGroup, 10)
         c.processEffects()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
-        const effFound = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.data.label === 'TEST_GROUP')
+        const effFound = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.data.tag === 'TEST_GROUP')
         effFound.duration = 0
         c.processEffects()
-        const effFound2 = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.data.label === 'TEST_GROUP')
+        const effFound2 = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.data.tag === 'TEST_GROUP')
         expect(effFound2).not.toBeDefined()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeFalse()
