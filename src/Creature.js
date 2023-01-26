@@ -1,5 +1,6 @@
 const Store = require('@laboralphy/store')
 const CONSTS = require('./consts')
+const EffectProcessor = require('./EffectProcessor')
 
 // Store
 const CreatureStore = require('./store/creature')
@@ -33,6 +34,8 @@ class Creature {
                 blueprints: assetManager.blueprints
             }
         })
+
+        this._effectProcessor = new EffectProcessor()
     }
 
     get dice () {
@@ -69,7 +72,7 @@ class Creature {
             .getters
             .getEffects
             .filter(eff =>
-                aTagSet.has(eff.tag) &&
+                aTagSet.has(eff.type) &&
                 (effectFilter ? effectFilter(eff) : true)
             )
         const aFilteredItemProperties = this
@@ -283,6 +286,14 @@ class Creature {
                 disadvantages: dl,
             }
         }
+    }
+
+    applyEffect (oEffect, duration = 0, source = null) {
+        return this._effectProcessor.applyEffect(oEffect, this, duration, source)
+    }
+
+    processEffects () {
+        this._effectProcessor.processCreatureEffects(this)
     }
 
     rollD20 (sRollType, sAbility, extra) {

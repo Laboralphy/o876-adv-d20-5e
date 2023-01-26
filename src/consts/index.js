@@ -59,6 +59,7 @@
 
 module.exports = {
     ...require('./abilities.json'),
+    ...require('./actions.json'),
     ...require('./against-type.json'),
     ...require('./alignments.json'),
     ...require('./conditions.json'),

@@ -50,6 +50,7 @@ module.exports = function () {
             id: 0,
             active: false,
             conditions: {}
-        }
+        },
+        action: ''
     }
 }

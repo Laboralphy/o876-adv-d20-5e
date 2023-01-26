@@ -1,4 +1,5 @@
 const Effects = require('./effects')
+const Events = require('events')
 
 /**
  * @class EffectProcessor
@@ -6,10 +7,15 @@ const Effects = require('./effects')
 class EffectProcessor {
     constructor () {
         this._creatures = {}
+        this._events = new Events()
+    }
+
+    get events () {
+        return this._events
     }
 
     /**
-     * Référence une entité pour un usage futur dans les effecct program
+     * Référence une entité pour un usage futur dans les effect program
      * @param oCreature {Creature}
      */
     refCreature (oCreature) {
@@ -18,27 +24,12 @@ class EffectProcessor {
         }
     }
 
-    createEffect (sEffect, ...aArgs) {
+    static createEffect (sEffect, ...aArgs) {
         return Effects[sEffect].create(...aArgs)
     }
 
-    /**
-     *
-     * @param aCreatures {Creature[]}
-     */
-    processEffects (aCreatures) {
-        const aCreatureToDelete = new Set(Object.keys(this._creatures))
-        aCreatures.forEach(c => {
-            aCreatureToDelete.delete(c.id)
-            this.processCreatureEffects(c, aCreatures)
-        })
-        aCreatureToDelete.forEach(id => {
-            delete this._creatures[id]
-        })
-    }
-
     invokeEffectMethod (oEffect, sMethod, oTarget, oSource) {
-        const oEffectProg = Effects[oEffect.tag]
+        const oEffectProg = Effects[oEffect.type]
         if (sMethod in oEffectProg) {
             oEffectProg[sMethod]({
                 effect: oEffect,
@@ -61,32 +52,40 @@ class EffectProcessor {
     }
 
     processCreatureEffects (oCreature) {
-        const aEffects = oCreature.store.state.effects
+        const aEffects = oCreature.store.getters.getEffects
+        // getEffects semble renvoyer null
         aEffects.forEach(eff => {
-            if (eff.tag === 'EFFECT_GROUP') console.log(eff)
-            if (eff.duration > 0) {
-                const oSource = this.getEffectSource(eff)
-                this.runEffect(eff, oCreature, oSource)
-                --eff.duration
-            }
+            const oSource = this.getEffectSource(eff)
+            this.runEffect(eff, oCreature, oSource)
+            oCreature.store.mutations.decrementEffectDuration({ effect: eff, value: -1 })
         })
-        // remove dead effects
-        for (let i = aEffects.length - 1; i >= 0; --i) {
-            const oEffect = aEffects[i]
-            if (oEffect.duration <= 0) {
-                const aDisposedEffects = aEffects.splice(i, 1)
-                aDisposedEffects.forEach(eff => {
-                    this.invokeEffectMethod(eff, 'dispose', oCreature, this.getEffectSource(eff))
-                })
-            }
-        }
+        this.removeDeadEffects(oCreature)
+        this.flushCreatureRegistry(oCreature)
     }
 
-    removeEffect (oCreature, idEffect) {
-        const oEffect = oCreature.store.getters.getEffects.find(eff => eff.id === idEffect)
-        if (oEffect) {
-            oEffect.duration = 0
-        }
+    removeDeadEffects (oCreature) {
+        const aDeadEffects = oCreature
+            .store
+            .getters
+            .getDeadEffects
+        oCreature.store.mutations.removeDeadEffects()
+        aDeadEffects
+            .forEach(eff => {
+                this._events.emit('dispose', { effect: eff })
+                this.invokeEffectMethod(eff, 'dispose', oCreature, this.getEffectSource(eff))
+            })
+    }
+
+    flushCreatureRegistry (oCreature) {
+        const aCreatureToDelete = new Set(Object.keys(this._creatures))
+        aCreatureToDelete.delete(oCreature.id)
+        const aEffects = oCreature.store.getters.getEffects
+        aEffects.forEach(eff => {
+            aCreatureToDelete.delete(eff.source)
+        })
+        aCreatureToDelete.forEach(id => {
+            delete this._creatures[id]
+        })
     }
 
     /**
@@ -101,7 +100,9 @@ class EffectProcessor {
         oEffect.duration = duration || 0
         this.runEffect(oEffect, target, source || target)
         if (duration > 0) {
-            target.store.mutations.addEffect({ effect: oEffect })
+            return target.store.mutations.addEffect({ effect: oEffect })
+        } else {
+            return null
         }
     }
 }

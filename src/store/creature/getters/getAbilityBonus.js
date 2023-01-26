@@ -18,7 +18,7 @@ module.exports = (state, getters) => {
     getters
         .getEffects
         .forEach(eff => {
-            if (eff.tag === CONSTS.EFFECT_ABILITY_BONUS) {
+            if (eff.type === CONSTS.EFFECT_ABILITY_BONUS) {
                 r[eff.data.ability] += eff.amp
             }
         })

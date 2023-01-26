@@ -18,7 +18,7 @@ module.exports = (state, getters) => {
     const myID = getters.getId
     const oRelevantEffects = getters
         .getEffects
-        .filter(effect => effect.tag === CONSTS.EFFECT_ADVANTAGE)
+        .filter(effect => effect.type === CONSTS.EFFECT_ADVANTAGE)
     const oAdvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects)
 
     /**

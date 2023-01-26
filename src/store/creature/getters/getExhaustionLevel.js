@@ -10,7 +10,7 @@ module.exports = state => {
     return state
         .effects
         .filter(eff =>
-            eff.tag === CONSTS.EFFECT_EXHAUSTION
+            eff.type === CONSTS.EFFECT_EXHAUSTION
         )
         .length
 }

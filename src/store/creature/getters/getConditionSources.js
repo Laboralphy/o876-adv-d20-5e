@@ -8,16 +8,16 @@ const CONSTS = require('../../../consts')
  */
 module.exports = (state, getters) => {
     const aEffects = getters.getEffects
-    const aTags = aEffects.map(eff => ({ tag: eff.tag, source: eff.source }))
+    const aTags = aEffects.map(eff => ({ type: eff.type, source: eff.source }))
     const oRegistry = {}
-    for (const { tag, source } of aTags) {
-        if (!(tag in oRegistry)) {
-            oRegistry[tag] = {
-                tag,
+    for (const { type: sType, source } of aTags) {
+        if (!(sType in oRegistry)) {
+            oRegistry[sType] = {
+                type: sType,
                 sources: new Set()
             }
         }
-        oRegistry[tag].sources.add(source)
+        oRegistry[sType].sources.add(source)
     }
 
     const getSources = (effects = undefined) => {

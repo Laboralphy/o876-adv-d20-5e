@@ -2,8 +2,9 @@ function getDisAndAdvEffectRegistry (effects) {
     const oDisAndAdvEffectRegistry = {}
     effects
         .forEach(effect => {
-            effect.rollTypes.forEach(rt => {
-                effect.abilities.forEach(ab => {
+            const effectData = effect.data
+            effectData.rollTypes.forEach(rt => {
+                effectData.abilities.forEach(ab => {
                     if (!(rt in oDisAndAdvEffectRegistry)) {
                         oDisAndAdvEffectRegistry[rt] = {}
                     }
@@ -11,7 +12,7 @@ function getDisAndAdvEffectRegistry (effects) {
                     if (!(ab in oAdvEffRegRoll)) {
                         oAdvEffRegRoll[ab] = []
                     }
-                    oAdvEffRegRoll[ab].push(effect.label)
+                    oAdvEffRegRoll[ab].push(effectData.tag)
                 })
             })
         })
