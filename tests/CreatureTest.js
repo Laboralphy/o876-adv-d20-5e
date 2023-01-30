@@ -520,7 +520,7 @@ describe('getAdvantages/getDisadvantages', function () {
             expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
             // c1 et c2 se voient
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_CANNOT_SEE_ME')).toBeFalse()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeFalse()
         })
         it('should not be an advantage on attack rolls when target also invisible', function () {
             const c1 = new Creature()
@@ -556,7 +556,7 @@ describe('getAdvantages/getDisadvantages', function () {
         expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
         // c2 a donc bien un désavantage d'attaque en tout
         expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
-        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('NOT_HIDDEN_AND_TARGET_INVISIBLE')).toBeTrue()
+        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_UNSEEN')).toBeTrue()
     })
 })
 

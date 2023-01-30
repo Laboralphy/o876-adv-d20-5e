@@ -52,6 +52,8 @@ module.exports = function () {
             active: false,
             conditions: {}
         },
-        action: ''
+        action: '',
+        encumbrance: 0,
+        areaFlags: []
     }
 }

@@ -5,4 +5,4 @@
  * @param externals
  * @return {{value: number, hitDie: number, space: number, carryingCapacity}}
  */
-module.exports = (state, getters, externals) => externals.data['creature-size'][getters.getSize]
+module.exports = (state, getters, externals) => externals.data['creature-sizes'][getters.getSize]

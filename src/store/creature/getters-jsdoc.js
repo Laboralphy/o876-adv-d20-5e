@@ -9,13 +9,16 @@
  * @property getAggressor {{ condition: Object.<string, boolean>}}
  * @property getAggressorConditionSources {{}}
  * @property getAggressorConditions {Set}
+ * @property getAreaFlags {Set<string>}
  * @property getArmorAndShieldClass {number}
+ * @property getCarryingCapacity {number}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffects {[]}
+ * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
  * @property getEntropyType {string}
  * @property getEquipmentItemProperties {[]}

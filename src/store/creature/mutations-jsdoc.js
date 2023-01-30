@@ -14,4 +14,6 @@
  * @property clearAggressor {function}
  * @property updateTargetConditions {function({ [id]: number, conditions: Set|[] })}
  * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[] })}
+ * @property setEncumbrance {function({ value: number })}
+ * @property setAreaFlags {function({ flags: string[] })}
  * */
