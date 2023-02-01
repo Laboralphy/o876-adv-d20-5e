@@ -379,7 +379,7 @@ describe('getEffects', function () {
 describe('dis and adv', function () {
     it('should not return anything when creature has no effect', function () {
         const c1 = new Creature()
-        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({})
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects, [])).toEqual({})
     })
     it('should return ADV1 when creature has one advantage effect with ADV1 tag', function () {
         const c1 = new Creature()
@@ -389,7 +389,7 @@ describe('dis and adv', function () {
             { tag: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }
         )
         ep.applyEffect(eAdv, c1, 10)
-        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects, [])).toEqual({
             ROLL_TYPE_ATTACK: {
                 ABILITY_INTELLIGENCE: ['ADV1']
             }
@@ -414,7 +414,7 @@ describe('dis and adv', function () {
         if (!c1.store.getters.getEffects) {
             throw new Error('WTF getEffects is undefined')
         }
-        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects, [])).toEqual({
             ROLL_TYPE_ATTACK: {
                 ABILITY_STRENGTH: ['ADV1'],
                 ABILITY_DEXTERITY: ['ADV1'],

@@ -20,7 +20,10 @@ module.exports = (state, getters, externals) => {
     const oRelevantEffects = getters
         .getEffects
         .filter(effect => effect.type === CONSTS.EFFECT_ADVANTAGE)
-    const oDisadvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects)
+    const oRelevantProperties = getters
+        .getEquipmentItemProperties
+        .filter(prop => prop.property === CONSTS.ITEM_PROPERTY_ADVANTAGE)
+    const oDisadvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects, oRelevantProperties)
 
     // Créature très fatiguée
     const EXHAUSTION_LEVEL_3 = getters.getExhaustionLevel >= 3
