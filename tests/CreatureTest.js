@@ -152,7 +152,7 @@ describe('getAC', function () {
             "itemType": "ITEM_TYPE_ARMOR",
             "armorType": "ARMOR_TYPE_LEATHER",
             "properties": [{
-                "property": CONSTS.ITEM_PROPERTY_AC_BONUS,
+                "property": CONSTS.EXTRA_PROPERTY_AC_BONUS,
                 "amp": 2
             }],
             "proficiency": "PROFICIENCY_ARMOR_LIGHT",
@@ -250,7 +250,7 @@ describe('getAttackBonus', function () {
             "weaponType": "WEAPON_TYPE_LONGSWORD",
             "proficiency": CONSTS.PROFICIENCY_WEAPON_MARTIAL,
             "properties": [{
-                property: CONSTS.ITEM_PROPERTY_ATTACK_BONUS,
+                property: CONSTS.EXTRA_PROPERTY_ATTACK_BONUS,
                 amp: 1
             }],
             "damage": "1d8",
@@ -264,7 +264,7 @@ describe('getAttackBonus', function () {
             "proficiency": CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             "weaponType": "WEAPON_TYPE_DAGGER",
             "properties": [{
-                property: CONSTS.ITEM_PROPERTY_ENHANCEMENT,
+                property: CONSTS.EXTRA_PROPERTY_ENHANCEMENT,
                 amp: 2
             }],
             "damage": "1d4",
@@ -277,7 +277,7 @@ describe('getAttackBonus', function () {
             "proficiency": CONSTS.PROFICIENCY_WEAPON_MARTIAL,
             "weaponType": "WEAPON_TYPE_SHORTBOW",
             "properties": [{
-                property: CONSTS.ITEM_PROPERTY_ATTACK_BONUS,
+                property: CONSTS.EXTRA_PROPERTY_ATTACK_BONUS,
                 amp: 3
             }],
             "damage": "1d6",
@@ -289,7 +289,7 @@ describe('getAttackBonus', function () {
             "entityType": "ENTITY_TYPE_ITEM",
             "itemType": "ITEM_TYPE_AMMO",
             "properties": [{
-                property: CONSTS.ITEM_PROPERTY_ENHANCEMENT,
+                property: CONSTS.EXTRA_PROPERTY_ENHANCEMENT,
                 amp: 2
             }],
             "stack": 10

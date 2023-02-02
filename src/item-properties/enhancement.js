@@ -2,7 +2,7 @@ const CONSTS = require('../consts')
 
 module.exports = function ({ value }) {
     return {
-        property: CONSTS.ITEM_PROPERTY_ENHANCEMENT,
+        property: CONSTS.EXTRA_PROPERTY_ENHANCEMENT,
         amp: value
     }
 }

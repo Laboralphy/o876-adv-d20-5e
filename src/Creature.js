@@ -75,10 +75,10 @@ class Creature {
                 aTagSet.has(eff.type) &&
                 (effectFilter ? effectFilter(eff) : true)
             )
-        const aFilteredItemProperties = this
+        const aFilteredExtraProperties = this
             .store
             .getters
-            .getEquipmentItemProperties
+            .getEquipmentExtraProperties
             .filter(ip =>
                 aTagSet.has(ip.property) &&
                 (propFilter ? propFilter(ip) : true)
@@ -86,9 +86,9 @@ class Creature {
         const nEffAcc = aFilteredEffects.reduce((prev, curr) => prev + curr.amp, 0)
         const nEffMax = aFilteredEffects.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
         const nEffMin = aFilteredEffects.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
-        const nIPAcc = aFilteredItemProperties.reduce((prev, curr) => prev + curr.amp, 0)
-        const nIPMax = aFilteredItemProperties.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
-        const nIPMin = aFilteredItemProperties.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
+        const nIPAcc = aFilteredExtraProperties.reduce((prev, curr) => prev + curr.amp, 0)
+        const nIPMax = aFilteredExtraProperties.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
+        const nIPMin = aFilteredExtraProperties.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
         return {
             effects: aFilteredEffects,
             sum: nEffAcc + nIPAcc,
@@ -117,7 +117,7 @@ class Creature {
         const nBaseAC = this.store.getters.getArmorAndShieldClass
         const nItemACProps = this.aggregateModifiers([
             CONSTS.EFFECT_AC_BONUS,
-            CONSTS.ITEM_PROPERTY_AC_BONUS
+            CONSTS.EXTRA_PROPERTY_AC_BONUS
         ]).sum
         return nBaseAC + nItemACProps
     }
@@ -134,8 +134,8 @@ class Creature {
         const nAbilityBonus = getters.getAbilityModifiers[sOffensiveAbility]
         return nAbilityBonus + nProfBonus + this.aggregateModifiers([
             CONSTS.EFFECT_ATTACK_BONUS,
-            CONSTS.ITEM_PROPERTY_ENHANCEMENT,
-            CONSTS.ITEM_PROPERTY_ATTACK_BONUS
+            CONSTS.EXTRA_PROPERTY_ENHANCEMENT,
+            CONSTS.EXTRA_PROPERTY_ATTACK_BONUS
         ]).sum
     }
 
@@ -156,8 +156,8 @@ class Creature {
         const nAbilityBonus = getters.getAbilityModifiers[sOffensiveAbility]
         return nAbilityBonus + this.aggregateModifiers([
             CONSTS.EFFECT_DAMAGE_BONUS,
-            CONSTS.ITEM_PROPERTY_DAMAGE_BONUS,
-            CONSTS.ITEM_PROPERTY_ENHANCEMENT
+            CONSTS.EXTRA_PROPERTY_DAMAGE_BONUS,
+            CONSTS.EXTRA_PROPERTY_ENHANCEMENT
         ]).sum
     }
 

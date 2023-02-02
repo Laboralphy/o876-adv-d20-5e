@@ -14,6 +14,7 @@
  * @property getCarryingCapacity {number}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
+ * @property getCreatureProperties {[]}
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
@@ -21,7 +22,7 @@
  * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
  * @property getEntropyType {string}
- * @property getEquipmentItemProperties {[]}
+ * @property getEquipmentExtraProperties {[]}
  * @property getEquipmentList {D20Item[]}
  * @property getEquippedItems {{[slot: string]: D20Item}}
  * @property getExhaustionLevel {number}

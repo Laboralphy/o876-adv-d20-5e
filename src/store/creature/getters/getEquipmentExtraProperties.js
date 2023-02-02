@@ -11,4 +11,3 @@ module.exports = (state, getters) =>
         .getEquipmentList
         .map(item => item.properties)
         .flat()
-

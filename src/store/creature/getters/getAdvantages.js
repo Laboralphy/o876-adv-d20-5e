@@ -20,8 +20,8 @@ module.exports = (state, getters) => {
         .getEffects
         .filter(effect => effect.type === CONSTS.EFFECT_ADVANTAGE)
     const oRelevantProperties = getters
-        .getEquipmentItemProperties
-        .filter(prop => prop.property === CONSTS.ITEM_PROPERTY_ADVANTAGE)
+        .getEquipmentExtraProperties
+        .filter(prop => prop.property === CONSTS.EXTRA_PROPERTY_ADVANTAGE)
     const oAdvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects, oRelevantProperties)
 
     /**

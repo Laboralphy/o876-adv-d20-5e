@@ -3,6 +3,7 @@ function creatureCreated (oCreature) {
 
 }
 
+
 function creatureEquipmentChanged (oCreature) {
 
 }

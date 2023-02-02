@@ -38,6 +38,7 @@ module.exports = function () {
         proficiencies: [],
         speed: 0,
         effects: [],
+        properties: [],
         classes: [],
         gauges: {
             damage: 0
