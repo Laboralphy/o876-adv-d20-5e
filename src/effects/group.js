@@ -8,7 +8,7 @@ const CONSTS = require('../consts')
  * @returns {D20Effect}
  */
 function create ({ tag = '', effects = [] }) {
-    return createEffect(CONSTS.EFFECT_GROUP, 1, { tag, effects, applied: false })
+    return createEffect(CONSTS.EFFECT_GROUP, 1, { effects, applied: false }, tag)
 }
 
 /**

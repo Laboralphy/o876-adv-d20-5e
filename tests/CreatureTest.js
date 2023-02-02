@@ -600,15 +600,15 @@ describe('groupEffect', function () {
         const eGroup = EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, {
             tag: 'TEST_GROUP',
             effects: [eInvis, eThrSi]
-        })
+        }, )
         c.applyEffect(eGroup, 10)
         c.processEffects()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
-        const effFound = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.data.tag === 'TEST_GROUP')
+        const effFound = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.tag === 'TEST_GROUP')
         effFound.duration = 0
         c.processEffects()
-        const effFound2 = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.data.tag === 'TEST_GROUP')
+        const effFound2 = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.tag === 'TEST_GROUP')
         expect(effFound2).not.toBeDefined()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeFalse()

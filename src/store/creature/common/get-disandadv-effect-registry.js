@@ -13,7 +13,7 @@ function getDisAndAdvEffectRegistry (effects, properties) {
                     if (!(ab in oAdvEffRegRoll)) {
                         oAdvEffRegRoll[ab] = []
                     }
-                    oAdvEffRegRoll[ab].push(effectData.tag)
+                    oAdvEffRegRoll[ab].push(effect.tag)
                 })
             })
         })

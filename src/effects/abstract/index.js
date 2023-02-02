@@ -7,6 +7,7 @@ const { v4: uuidv4 } = require('uuid');
  * @property duration {number} effect duration (in turns)
  * @property source {number|string} source of effect (creature identifier)
  * @property data {object} effect additional properties
+ * @property tag {string}
  */
 
 /**
@@ -14,15 +15,17 @@ const { v4: uuidv4 } = require('uuid');
  * @param sType {string}
  * @param amp {number}
  * @param data {object}
+ * @param tag {string}
  * @returns {D20Effect}
  */
-module.exports = function create (sType, amp = 0, data = {}) {
+module.exports = function create (sType, amp = 0, data = {}, tag = '') {
     return {
         id: uuidv4({}, null, 0),
         type: sType,
         amp,
         duration: 0,
         source: 0,
-        data
+        data,
+        tag
     }
 }

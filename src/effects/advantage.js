@@ -8,9 +8,8 @@ const CONSTS = require('../consts')
 function create ({ rollTypes, abilities, tag }) {
     return createEffect(CONSTS.EFFECT_ADVANTAGE, 1, {
         rollTypes,
-        abilities,
-        tag
-    })
+        abilities
+    }, tag)
 }
 
 module.exports = {
