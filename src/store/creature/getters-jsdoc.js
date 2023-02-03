@@ -14,7 +14,8 @@
  * @property getCarryingCapacity {number}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
- * @property getCreatureProperties {[]}
+ * @property getCreatureAllProperties {[]}
+ * @property getCreatureInnateProperties {[]}
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}

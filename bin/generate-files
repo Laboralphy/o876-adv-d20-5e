@@ -1,11 +1,11 @@
 #!/bin/bash
 
-echo "generate ./src/item-properties/index.js"
-node ./bin/generate-index ii > ./src/item-properties/index.js
+echo "generate ./src/extra-properties/index.js"
+node ./bin/generate-index ii > ./src/extra-properties/index.js
 echo "generate ./src/effects/index.js"
 node ./bin/generate-index ei > ./src/effects/index.js
-echo "generate ./src/consts/item-properties.json"
-node ./bin/generate-index ic > ./src/consts/item-properties.json
+echo "generate ./src/consts/extra-properties.json"
+node ./bin/generate-index ic > ./src/consts/extra-properties.json
 echo "generate ./src/consts/effects.json"
 node ./bin/generate-index ec > ./src/consts/effects.json
 echo "generate ./src/store/creature/getters-jsdoc.js"

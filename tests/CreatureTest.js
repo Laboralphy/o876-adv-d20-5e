@@ -386,7 +386,7 @@ describe('dis and adv', function () {
         const ep = new EffectProcessor()
         const eAdv = EffectProcessor.createEffect(
             CONSTS.EFFECT_ADVANTAGE,
-            { tag: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }
+            { origin: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }
         )
         ep.applyEffect(eAdv, c1, 10)
         expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects, [])).toEqual({
@@ -399,7 +399,7 @@ describe('dis and adv', function () {
         const c1 = new Creature()
         const ep = new EffectProcessor()
         const eAdv = EffectProcessor.createEffect( CONSTS.EFFECT_ADVANTAGE, {
-            tag: 'ADV1',
+            origin: 'ADV1',
             rollTypes: [CONSTS.ROLL_TYPE_ATTACK],
             abilities: [
                 CONSTS.ABILITY_STRENGTH,
@@ -612,5 +612,85 @@ describe('groupEffect', function () {
         expect(effFound2).not.toBeDefined()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeFalse()
+    })
+})
+
+fdescribe('creatureProperties', function () {
+    it('should have an ac of 12 when wering armor of 10 + 2', function () {
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
+        c.store.mutations.equipItem({
+            item: {
+                ac: 10,
+                properties: [{
+                    property: CONSTS.EXTRA_PROPERTY_AC_BONUS,
+                    amp: 2
+                }]
+            },
+            slot: CONSTS.EQUIPMENT_SLOT_CHEST
+        })
+        expect(c.getAC()).toBe(12)
+    })
+    fit('should gain +1AC when applying extra property', function () {
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
+        expect(c.store.getters.getCreatureAllProperties.length).toBe(0)
+        expect(c.getAC()).toBe(0)
+        c.store.mutations.addCreatureProperty({
+            property: {
+                property: CONSTS.EXTRA_PROPERTY_AC_BONUS,
+                amp: 77
+            }
+        })
+        expect(c.store.state.properties.length).toBe(1)
+        expect(c.store.getters.getCreatureInnateProperties.length).toBe(1)
+        expect(c.store.getters.getEquipmentExtraProperties.length).toBe(0)
+        expect(c.store.getters.getCreatureInnateProperties.concat(c.store.getters.getEquipmentExtraProperties).length).toBe(1)
+        console.log('ca va checker')
+        expect(c.store.getters.getCreatureAllProperties.length).toBe(1)
+        expect(c.getAC()).toBe(77)
+    })
+    it('should gain +109AC when applying extra property', function () {
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
+        expect(c.store.getters.getCreatureAllProperties.length).toBe(0)
+        expect(c.getAC()).toBe(0)
+        c.store.mutations.addCreatureProperty({
+            property: {
+                property: CONSTS.EXTRA_PROPERTY_AC_BONUS,
+                amp: 77
+            }
+        })
+        c.store.mutations.equipItem({
+            item: {
+                ac: 10,
+                properties: [{
+                    property: CONSTS.EXTRA_PROPERTY_AC_BONUS,
+                    amp: 22
+                }]
+            },
+            slot: CONSTS.EQUIPMENT_SLOT_CHEST
+        })
+        expect(c.store.state.properties.length).toBe(1)
+        expect(c.store.getters.getCreatureInnateProperties.length).toBe(1)
+        expect(c.store.getters.getEquipmentExtraProperties.length).toBe(1)
+        expect(c.store.getters.getCreatureInnateProperties.concat(c.store.getters.getEquipmentExtraProperties).length).toBe(2)
+        expect(c.store.getters.getCreatureAllProperties.length).toBe(2)
+        expect(c.getAC()).toBe(77 + 10 + 22)
     })
 })

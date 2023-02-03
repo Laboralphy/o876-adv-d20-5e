@@ -22,4 +22,10 @@ describe('createEntity', function () {
         const w = r.createEntity('arm-leather')
         expect(w.armorType).toBe('armor-type-leather')
     })
+    it('item should have a ref when created by createItem', function () {
+        const r = new Rules()
+        r.init()
+        const w = r.createEntity('arm-leather')
+        expect(w.ref).toBe('arm-leather')
+    })
 })

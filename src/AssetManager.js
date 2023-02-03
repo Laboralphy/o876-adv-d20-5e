@@ -86,7 +86,10 @@ class AssetManager {
     addItemBlueprint (sId, oBlueprint) {
         try {
             this.validator.validate(oBlueprint, 'blueprint-item')
-            this._assets.blueprints[sId] = oBlueprint
+            this._assets.blueprints[sId] = {
+                ...oBlueprint,
+                ref: sId
+            }
         } catch (e) {
             console.error(e)
             if (e.message.startsWith('ERR_SCHEMA_VALIDATION')) {

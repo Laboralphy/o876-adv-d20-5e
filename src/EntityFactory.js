@@ -1,5 +1,6 @@
 const CONSTS = require("./consts")
 const AssetManager = require('./AssetManager')
+const Creature = require('./Creature')
 
 class EntityFactory {
     constructor () {
@@ -63,6 +64,11 @@ class EntityFactory {
         }
     }
 
+    createCreature (oBlueprint) {
+        const oCreature = new Creature()
+
+    }
+
     createEntity (sResRef) {
         const oBlueprint = this._am.blueprints[sResRef]
         if (!oBlueprint) {
@@ -71,6 +77,10 @@ class EntityFactory {
         switch (oBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
                 return this.createItem(oBlueprint)
+            }
+
+            case CONSTS.ENTITY_TYPE_ACTOR: {
+                return this.createCreature(oBlueprint)
             }
 
             default: {

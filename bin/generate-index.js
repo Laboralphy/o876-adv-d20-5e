@@ -113,7 +113,7 @@ function main (sType) {
     switch (sType) {
         // item property index
         case 'ii': {
-            console.log(generateIndex('./src/item-properties', 'EXTRA_PROPERTY_'))
+            console.log(generateIndex('./src/extra-properties', 'EXTRA_PROPERTY_'))
             break
         }
 
@@ -125,7 +125,7 @@ function main (sType) {
 
         // item property consts
         case 'ic': {
-            console.log(generateConsts('./src/item-properties', 'EXTRA_PROPERTY_'))
+            console.log(generateConsts('./src/extra-properties', 'EXTRA_PROPERTY_'))
             break
         }
 

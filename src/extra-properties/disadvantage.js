@@ -1,11 +1,11 @@
 const CONSTS = require('../consts')
 
-module.exports = function ({ rollTypes, abilities, tag }) {
+module.exports = function ({ rollTypes, abilities, origin }) {
     return {
         property: CONSTS.EXTRA_PROPERTY_DISADVANTAGE,
         amp: 0,
         abilities,
         rollTypes,
-        tag
+        origin
     }
 }

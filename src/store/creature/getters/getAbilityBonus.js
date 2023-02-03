@@ -23,7 +23,7 @@ module.exports = (state, getters) => {
             }
         })
     getters
-        .getEquipmentExtraProperties
+        .getCreatureAllProperties
         .forEach(ip => {
             if (ip.property === CONSTS.EFFECT_ABILITY_BONUS) {
                 r[ip.ability] += ip.amp

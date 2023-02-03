@@ -62,7 +62,7 @@ class Creature {
      * @returns {{effects: D20Effect[], min: number, max: number, sum: number}}
      */
     aggregateModifiers (aTags, { effectFilter, propFilter } = {}) {
-        const aTagSet = new Set(
+        const aTypeSet = new Set(
             Array.isArray(aTags)
                 ? aTags
                 : [aTags]
@@ -72,15 +72,15 @@ class Creature {
             .getters
             .getEffects
             .filter(eff =>
-                aTagSet.has(eff.type) &&
+                aTypeSet.has(eff.type) &&
                 (effectFilter ? effectFilter(eff) : true)
             )
         const aFilteredExtraProperties = this
             .store
             .getters
-            .getEquipmentExtraProperties
+            .getCreatureAllProperties
             .filter(ip =>
-                aTagSet.has(ip.property) &&
+                aTypeSet.has(ip.property) &&
                 (propFilter ? propFilter(ip) : true)
             )
         const nEffAcc = aFilteredEffects.reduce((prev, curr) => prev + curr.amp, 0)
