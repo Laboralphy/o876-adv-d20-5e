@@ -4,5 +4,5 @@
  * @returns {[]}
  */
 module.exports = state => {
-    return state.properties
+    return state.properties.slice(0)
 }

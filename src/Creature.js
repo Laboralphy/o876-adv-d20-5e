@@ -132,10 +132,13 @@ class Creature {
         const nProfBonus = bProficient ? getters.getProficiencyBonus : 0
         const sOffensiveAbility = getters.getOffensiveAbility
         const nAbilityBonus = getters.getAbilityModifiers[sOffensiveAbility]
+        const bRanged = getters.getSelectedWeapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
         return nAbilityBonus + nProfBonus + this.aggregateModifiers([
             CONSTS.EFFECT_ATTACK_BONUS,
+            bRanged ? CONSTS.EFFECT_RANGED_ATTACK_BONUS : CONSTS.EFFECT_MELEE_ATTACK_BONUS,
             CONSTS.EXTRA_PROPERTY_ENHANCEMENT,
-            CONSTS.EXTRA_PROPERTY_ATTACK_BONUS
+            CONSTS.EXTRA_PROPERTY_ATTACK_BONUS,
+            bRanged ? CONSTS.EXTRA_PROPERTY_RANGED_ATTACK_BONUS : CONSTS.EXTRA_PROPERTY_MELEE_ATTACK_BONUS
         ]).sum
     }
 

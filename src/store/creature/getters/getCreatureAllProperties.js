@@ -7,7 +7,6 @@
 module.exports = (state, getters) => {
     const cip = getters.getCreatureInnateProperties
     const eep = getters.getEquipmentExtraProperties
-    console.log('CHEEEECK', cip, eep)
     return cip.concat(eep)
 }
 
