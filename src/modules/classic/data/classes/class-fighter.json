@@ -20,15 +20,22 @@
     "SKILL_PERCEPTION",
     "SKILL_SURVIVAL"
   ],
-  "feats": [
-    {
-      "id": "FIGHTING_STYLE_ARCHERY",
+  "feats": {
+    "FEAT_FIGHTING_STYLE_ARCHERY": {
       "properties": [
         {
           "property": "EXTRA_PROPERTY_RANGED_ATTACK_BONUS",
           "value": 2
         }
       ]
+    },
+    "FEAT_FIGHTING_STYLE_DEFENSE": {
+      "properties": [
+        {
+          "property": "EXTRA_PROPERTY_AC_BONUS",
+          "value": 1
+        }
+      ]
     }
-  ]
+  }
 }
