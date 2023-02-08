@@ -1,7 +1,8 @@
 const CONSTS = require('./consts')
 const TreeSync = require('../libs/tree-sync')
 const path = require('path')
-const SchemaValidator = require("./SchemaValidator");
+const SchemaValidator = require("./SchemaValidator")
+const StoreManager = require('./StoreManager')
 
 class AssetManager {
     constructor () {
@@ -10,6 +11,18 @@ class AssetManager {
             data: {}
         }
         this._validator = new SchemaValidator()
+        this._storeManagers = {
+            creature: new StoreManager({
+                state: require(path.resolve(__dirname, 'store', 'creature', 'state')),
+                mutations: TreeSync.recursiveRequire(path.resolve(__dirname, 'store', 'creature', 'mutations'), true),
+                getters: TreeSync.recursiveRequire(path.resolve(__dirname, 'store', 'creature', 'getters'), true),
+                externals: this._assets
+            })
+        }
+    }
+
+    get storeManagers () {
+        return this._storeManagers
     }
 
     /**
@@ -42,6 +55,11 @@ class AssetManager {
                 break
             }
 
+            case 'getters/creature': {
+                this.storeManagers.creature.defineGetters(d)
+                break
+            }
+
             default: {
                 throw new Error('ERR_ASSET_TYPE_INVALID: ' + sType)
             }
@@ -51,6 +69,7 @@ class AssetManager {
     loadModule (sPath) {
         this.loadPath(path.join(sPath, 'blueprints'), 'blueprint')
         this.loadPath(path.join(sPath, 'data'), 'data')
+        this.loadPath(path.join(sPath, 'store', 'creature', 'getters'), 'getters/creature')
     }
 
     init () {
@@ -164,6 +183,10 @@ class AssetManager {
                 throw new Error('ERR_INVALID_DATA_TYPE: ' + sId + ' - supported item data types are : [' + sSupportedTypes + ']. but the specified data document is named : ' + sId + ' (does not start with any of the data types).')
             }
         }
+    }
+
+    createStore (sType) {
+        return this.storeManagers[sType].createStore()
     }
 }
 

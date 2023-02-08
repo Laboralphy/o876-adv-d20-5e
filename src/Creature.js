@@ -11,7 +11,6 @@ let LAST_ID = 0
 class Creature {
     constructor () {
         this._id = ++LAST_ID
-        this._state = CreatureStore.buildState()
         this._dice = null
         this._target = {
             handler: null,
@@ -25,16 +24,7 @@ class Creature {
          * @type {D20CreatureStore}
          * @private
          */
-        this._store = new Store({
-            state: this._state,
-            getters: CreatureStore.getters,
-            mutations: CreatureStore.mutations,
-            externals: {
-                data: assetManager.data,
-                blueprints: assetManager.blueprints
-            }
-        })
-
+        this._store = assetManager.createStore('creature')
         this._effectProcessor = new EffectProcessor()
     }
 

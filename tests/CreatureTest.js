@@ -657,6 +657,8 @@ fdescribe('creatureProperties', function () {
         expect(c.store.getters.getEquipmentExtraProperties.length).toBe(0)
         expect(c.store.getters.getCreatureInnateProperties.concat(c.store.getters.getEquipmentExtraProperties).length).toBe(1)
         console.log('ca va checker')
+        console.log(c.store.state)
+        console.log(c.store.getters.getCreatureAllProperties)
         expect(c.store.getters.getCreatureAllProperties.length).toBe(1)
         expect(c.getAC()).toBe(77)
     })
