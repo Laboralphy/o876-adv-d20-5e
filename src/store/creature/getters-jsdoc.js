@@ -49,5 +49,5 @@
  * @property isProficientSelectedWeapon {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWeildingNonLightWeapon {boolean}
- * @property isEquippedWithArmor {boolean}
+ * @property isWearingArmor {boolean}
  */

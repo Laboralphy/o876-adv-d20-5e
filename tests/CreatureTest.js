@@ -615,7 +615,7 @@ describe('groupEffect', function () {
     })
 })
 
-fdescribe('creatureProperties', function () {
+describe('creatureProperties', function () {
     it('should have an ac of 12 when wering armor of 10 + 2', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
@@ -636,7 +636,7 @@ fdescribe('creatureProperties', function () {
         })
         expect(c.getAC()).toBe(12)
     })
-    fit('should gain +1AC when applying extra property', function () {
+    it('should gain +1AC when applying extra property', function () {
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
@@ -656,9 +656,6 @@ fdescribe('creatureProperties', function () {
         expect(c.store.getters.getCreatureInnateProperties.length).toBe(1)
         expect(c.store.getters.getEquipmentExtraProperties.length).toBe(0)
         expect(c.store.getters.getCreatureInnateProperties.concat(c.store.getters.getEquipmentExtraProperties).length).toBe(1)
-        console.log('ca va checker')
-        console.log(c.store.state)
-        console.log(c.store.getters.getCreatureAllProperties)
         expect(c.store.getters.getCreatureAllProperties.length).toBe(1)
         expect(c.getAC()).toBe(77)
     })
