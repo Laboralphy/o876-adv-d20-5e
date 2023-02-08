@@ -1,0 +1,12 @@
+{
+  "description": "Adds +1 AC when wearing armor",
+  "when": "isWearingArmor",
+  "properties": [
+    {
+      "property": "EXTRA_PROPERTY_AC_BONUS",
+      "parameters": {
+        "value": 1
+      }
+    }
+  ]
+}

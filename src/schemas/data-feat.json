@@ -1,0 +1,35 @@
+{
+  "description": "définition d'un feat",
+  "type": "object",
+  "properties": {
+    "description": {
+      "description": "Description du feat",
+      "type": "string"
+    },
+    "when": {
+      "description": "nom du getter déterminant si les propriété du feat peuvent s'exprimer",
+      "type": "string"
+    },
+    "properties": {
+      "description": "liste des propriétés qui doivent s'appliquer quand le feat est actif",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "property"
+        ],
+        "properties": {
+          "property": {
+            "description": "code de l'extra-propriété",
+            "type": "string",
+            "pattern": "^EXTRA_PROPERTY_"
+          },
+          "parameters": {
+            "description": "paramètres de l'extra-propriété",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

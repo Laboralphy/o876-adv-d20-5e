@@ -27,6 +27,7 @@
  * @property getEquipmentList {D20Item[]}
  * @property getEquippedItems {{[slot: string]: D20Item}}
  * @property getExhaustionLevel {number}
+ * @property getFeatReport {Set<string>}
  * @property getId {number}
  * @property getLevel {number}
  * @property getLevelByClass {{[c: string]: number}}

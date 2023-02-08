@@ -8,7 +8,7 @@ const CONSTS = require('../../../../../consts')
  */
 module.exports = (state, getters) => {
     const oArmor = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_CHEST]
-    const sProf = oArmor.proficiency
+    const sProf = oArmor ? oArmor.proficiency : ''
     return sProf === CONSTS.PROFICIENCY_ARMOR_HEAVY ||
         sProf === CONSTS.PROFICIENCY_ARMOR_MEDIUM ||
         sProf === CONSTS.PROFICIENCY_ARMOR_LIGHT

@@ -1,0 +1,11 @@
+{
+  "description": "Adds +2 attack roll when using ranged weapon",
+  "properties": [
+    {
+      "property": "EXTRA_PROPERTY_RANGED_ATTACK_BONUS",
+      "parameters": {
+        "value": 2
+      }
+    }
+  ]
+}

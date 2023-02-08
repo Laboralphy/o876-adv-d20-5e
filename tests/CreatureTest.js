@@ -108,19 +108,19 @@ describe('addClass', function () {
 })
 
 describe('getMaxHitPoints', function () {
-    it('should have 12 hp on first level of barbarian', function () {
+    it('should have 10 hp on first level of fighter', function () {
         const c = new Creature()
-        c.store.mutations.addClass({ ref: 'barbarian' })
+        c.store.mutations.addClass({ ref: 'fighter' })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
-        expect(c.store.getters.getMaxHitPoints).toBe(12)
+        expect(c.store.getters.getMaxHitPoints).toBe(10)
     })
-    it('should have 19 hp on second level of barbarian', function () {
+    it('should have 16 hp on second level of fighter', function () {
         const c = new Creature()
-        c.store.mutations.addClass({ ref: 'barbarian', levels: 2 })
+        c.store.mutations.addClass({ ref: 'fighter', levels: 2 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_CONSTITUTION]).toBe(10)
         expect(c.store.getters.getAbilityModifiers[CONSTS.ABILITY_CONSTITUTION]).toBe(0)
-        expect(c.store.getters.getMaxHitPoints).toBe(19)
+        expect(c.store.getters.getMaxHitPoints).toBe(16)
     })
 })
 
@@ -647,10 +647,8 @@ describe('creatureProperties', function () {
         expect(c.store.getters.getCreatureAllProperties.length).toBe(0)
         expect(c.getAC()).toBe(0)
         c.store.mutations.addCreatureProperty({
-            property: {
-                property: CONSTS.EXTRA_PROPERTY_AC_BONUS,
-                amp: 77
-            }
+            property: CONSTS.EXTRA_PROPERTY_AC_BONUS,
+            parameters: { value: 77 }
         })
         expect(c.store.state.properties.length).toBe(1)
         expect(c.store.getters.getCreatureInnateProperties.length).toBe(1)
@@ -670,10 +668,8 @@ describe('creatureProperties', function () {
         expect(c.store.getters.getCreatureAllProperties.length).toBe(0)
         expect(c.getAC()).toBe(0)
         c.store.mutations.addCreatureProperty({
-            property: {
-                property: CONSTS.EXTRA_PROPERTY_AC_BONUS,
-                amp: 77
-            }
+            property: CONSTS.EXTRA_PROPERTY_AC_BONUS,
+            parameters: { value: 77 }
         })
         c.store.mutations.equipItem({
             item: {

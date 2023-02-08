@@ -39,7 +39,6 @@ module.exports = function () {
         speed: 0,
         effects: [],
         properties: [],
-        feats: [],
         classes: [],
         gauges: {
             damage: 0
@@ -57,6 +56,7 @@ module.exports = function () {
         action: '',
         encumbrance: 0,
         areaFlags: [],
-        feats: []
+        feats: [],
+        skills: []
     }
 }

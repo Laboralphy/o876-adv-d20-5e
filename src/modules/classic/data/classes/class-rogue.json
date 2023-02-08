@@ -7,7 +7,10 @@
     "PROFICIENCY_SAVING_THROW_INTELLIGENCE",
     "weapon-type-rapier",
     "weapon-type-shortsword",
-    "weapon-type-longsword",
+    "weapon-type-longsword"
+  ],
+  "skillCount": 4,
+  "skills": [
     "SKILL_ACROBATICS",
     "SKILL_ATHLETICS",
     "SKILL_DECEPTION",

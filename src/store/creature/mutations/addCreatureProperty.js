@@ -1,9 +1,5 @@
-const { v4: uuidv4 } = require('uuid')
+const { createExtraProperty } = require('../common/create-extra-property')
 
-module.exports = ({ state }, { property, tag = '' }) => {
-    state.properties.push({
-        ...property,
-        id: uuidv4({}, null, 0),
-        tag
-    })
+module.exports = ({ state }, { property, parameters, tag = '' }) => {
+    state.properties.push(createExtraProperty(property, parameters, tag))
 }

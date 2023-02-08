@@ -2,7 +2,7 @@
  * @typedef D20CreatureStoreMutations {object}
  * @property addClass {function({ ref: string, levels: number })}
  * @property addEffect {function({ effect: D20Effect })}
- * @property addCreatureProperty {function({ property, tag = '' })}
+ * @property addCreatureProperty {function({ property, parameters, tag = '' })}
  * @property removeCreatureProperty {function({ id })}
  * @property removeCreatureTaggedProperties {function({ tag })}
  * @property removeEffect {function({ effect: D20Effect })}
@@ -19,4 +19,6 @@
  * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[] })}
  * @property setEncumbrance {function({ value: number })}
  * @property setAreaFlags {function({ flags: string[] })}
+ * @property addFeat {function({ feat: string })}
+ * @property updateFeatProperties {function()}
  */
