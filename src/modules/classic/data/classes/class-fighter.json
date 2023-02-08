@@ -1,0 +1,41 @@
+{
+  "hitDice": 10,
+  "proficiencies": [
+    "PROFICIENCY_ARMOR_LIGHT",
+    "PROFICIENCY_ARMOR_MEDIUM",
+    "PROFICIENCY_ARMOR_HEAVY",
+    "PROFICIENCY_ARMOR_SHIELD",
+    "PROFICIENCY_WEAPON_SIMPLE",
+    "PROFICIENCY_WEAPON_MARTIAL",
+    "PROFICIENCY_SAVING_THROW_STRENGTH",
+    "PROFICIENCY_SAVING_THROW_CONSTITUTION"
+  ],
+  "skillCount": 2,
+  "classSkills": [
+    "SKILL_ACROBATICS",
+    "SKILL_ATHLETICS",
+    "SKILL_HISTORY",
+    "SKILL_INSIGHT",
+    "SKILL_INTIMIDATION",
+    "SKILL_PERCEPTION",
+    "SKILL_SURVIVAL"
+  ],
+  "feats": {
+    "FEAT_FIGHTING_STYLE_ARCHERY": {
+      "properties": [
+        {
+          "property": "EXTRA_PROPERTY_RANGED_ATTACK_BONUS",
+          "value": 2
+        }
+      ]
+    },
+    "FEAT_FIGHTING_STYLE_DEFENSE": {
+      "properties": [
+        {
+          "property": "EXTRA_PROPERTY_AC_BONUS",
+          "value": 1
+        }
+      ]
+    }
+  }
+}

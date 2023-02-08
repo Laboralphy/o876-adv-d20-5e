@@ -56,6 +56,7 @@ module.exports = function () {
         },
         action: '',
         encumbrance: 0,
-        areaFlags: []
+        areaFlags: [],
+        feats: []
     }
 }
