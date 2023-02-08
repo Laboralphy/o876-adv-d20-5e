@@ -1,4 +1,4 @@
-const CONSTS = require('../../../consts')
+const {propertyMapper} = require("../common/property-mapper");
 
 /**
  * Liste des propriétés des équippement défensif (armure, bouclier etc...)
@@ -7,7 +7,7 @@ const CONSTS = require('../../../consts')
  * @returns {[]}
  */
 module.exports = (state, getters) =>
-    getters
+    propertyMapper(getters
         .getEquipmentList
         .map(item => item
             .properties
@@ -16,4 +16,6 @@ module.exports = (state, getters) =>
                 tag: item.ref
             }))
         )
-        .flat()
+        .flat(),
+        getters
+    )

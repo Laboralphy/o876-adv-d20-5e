@@ -7,5 +7,6 @@
   "attributes": [
     "WEAPON_ATTRIBUTE_AMMUNITION",
     "WEAPON_ATTRIBUTE_LOADING"
-  ]
+  ],
+  "slots": ["EQUIPMENT_SLOT_WEAPON_RANGED"]
 }

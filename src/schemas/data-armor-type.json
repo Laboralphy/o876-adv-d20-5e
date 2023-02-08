@@ -46,6 +46,13 @@
     "weight": {
       "type": "number",
       "minimum": 0
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^EQUIPMENT_SLOT_"
+      }
     }
   }
 }

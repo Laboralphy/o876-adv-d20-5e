@@ -51,6 +51,13 @@
     },
     "attributes": {
       "$ref": "def-weapon-attributes"
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^EQUIPMENT_SLOT_"
+      }
     }
   }
 }

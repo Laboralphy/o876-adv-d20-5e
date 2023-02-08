@@ -7,5 +7,6 @@
   "attributes": [
     "WEAPON_ATTRIBUTE_HEAVY",
     "WEAPON_ATTRIBUTE_TWO_HANDED"
-  ]
+  ],
+  "slots": ["EQUIPMENT_SLOT_WEAPON_MELEE"]
 }

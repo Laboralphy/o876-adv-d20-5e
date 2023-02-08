@@ -6,5 +6,6 @@
   "weight": 2,
   "attributes": [
     "WEAPON_ATTRIBUTE_THROWN"
-  ]
+  ],
+  "slots": ["EQUIPMENT_SLOT_WEAPON_MELEE"]
 }

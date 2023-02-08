@@ -11,3 +11,4 @@ module.exports = {
   [CONSTS.EXTRA_PROPERTY_MELEE_ATTACK_BONUS]: require('./melee-attack-bonus'),
   [CONSTS.EXTRA_PROPERTY_RANGED_ATTACK_BONUS]: require('./ranged-attack-bonus')
 }
+

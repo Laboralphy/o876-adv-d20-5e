@@ -4,5 +4,6 @@
   "maxDexterityModifier": 0,
   "minStrengthRequired": 13,
   "disadvantageStealth": true,
-  "weight": 55
+  "weight": 55,
+  "slots": ["EQUIPMENT_SLOT_CHEST"]
 }

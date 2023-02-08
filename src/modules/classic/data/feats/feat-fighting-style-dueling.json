@@ -1,0 +1,12 @@
+{
+  "description": "Adds +2 damage with a one hand melee weapon, and no shield",
+  "when": "has1HWeaponNoShield",
+  "properties": [
+    {
+      "property": "EXTRA_PROPERTY_DAMAGE_BONUS",
+      "parameters": {
+        "value": 2
+      }
+    }
+  ]
+}

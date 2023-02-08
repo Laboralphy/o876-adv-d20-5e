@@ -1,5 +1,4 @@
-const CONSTS = require("../../../consts");
-
+const {propertyMapper} = require("../common/property-mapper")
 /**
  * Liste des propriétés de l'arme équipée et des munitions dans le cas d'arme à distance utilisant des munitions
  * @param state
@@ -7,5 +6,5 @@ const CONSTS = require("../../../consts");
  * @returns {array}
  */
 module.exports = (state, getters) => {
-    return getters.getOffensiveEquipmentList.map(w => w.properties).flat()
+    return propertyMapper(getters.getOffensiveEquipmentList.map(w => w.properties).flat(), getters)
 }
