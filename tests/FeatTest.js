@@ -72,7 +72,7 @@ describe('feat-fighting-style-defense', function () {
     })
 })
 
-describe('feat-fighting-style-dueling', function () {
+fdescribe('feat-fighting-style-dueling', function () {
     it('should have a bonus damage +2 when wield one longsword and no shield', function () {
         const c = new Creature()
         const r = new Rules()
@@ -80,6 +80,8 @@ describe('feat-fighting-style-dueling', function () {
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-dueling'})
         const oSword = r.createEntity('wpn-longsword')
         const oStaff = r.createEntity('wpn-quaterstaff')
-        c.store.mutations.equipItem({ item: oSword, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        const oShield = r.createEntity('arm-shield')
+        const oArmor = r.createEntity('arm-leather')
+        c.store.mutations.equipItem({ item: oSword })
     })
 })

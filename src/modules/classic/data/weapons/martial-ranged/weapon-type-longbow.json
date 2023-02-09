@@ -12,6 +12,5 @@
   "ammo": {
     "type": "AMMO_TYPE_ARROW",
     "count": 1
-  },
-  "slots": ["EQUIPMENT_SLOT_WEAPON_RANGED"]
+  }
 }

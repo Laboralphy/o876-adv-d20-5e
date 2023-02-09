@@ -31,6 +31,15 @@ class EntityFactory {
         }
     }
 
+    createItemShield (oBlueprint) {
+        const oArmorData = this._am.data[oBlueprint.shieldType]
+        return {
+            ...oBlueprint,
+            ...oArmorData,
+            equipmentSlots: [CONSTS.EQUIPMENT_SLOT_SHIELD]
+        }
+    }
+
     createItemWeapon (oBlueprint) {
         const oWeaponData = this._am.data[oBlueprint.weaponType]
         const slot = oWeaponData.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
@@ -55,6 +64,10 @@ class EntityFactory {
             }
 
             case CONSTS.ITEM_TYPE_WEAPON: {
+                return this.createItemWeapon(oBlueprint)
+            }
+
+            case CONSTS.ITEM_TYPE_SHIELD: {
                 return this.createItemWeapon(oBlueprint)
             }
 

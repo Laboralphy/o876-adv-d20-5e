@@ -7,6 +7,5 @@
   "attributes": [
     "WEAPON_ATTRIBUTE_THROWN",
     "WEAPON_ATTRIBUTE_VERSATILE"
-  ],
-  "slots": ["EQUIPMENT_SLOT_WEAPON_MELEE"]
+  ]
 }

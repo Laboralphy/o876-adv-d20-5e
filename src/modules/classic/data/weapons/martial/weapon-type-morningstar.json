@@ -5,6 +5,5 @@
   "damageType": "DAMAGE_TYPE_PIERCING",
   "weight": 4,
   "attributes": [
-  ],
-  "slots": ["EQUIPMENT_SLOT_WEAPON_MELEE"]
+  ]
 }

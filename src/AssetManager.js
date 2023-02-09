@@ -170,6 +170,7 @@ class AssetManager {
             'class',
             'weapon-type',
             'armor-type',
+            'shield-type',
             'feat'
         ]
         const getDataType = (sId) => {

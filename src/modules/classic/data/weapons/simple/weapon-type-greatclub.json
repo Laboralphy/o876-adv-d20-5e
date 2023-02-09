@@ -6,6 +6,5 @@
   "weight": 10,
   "attributes": [
     "WEAPON_ATTRIBUTE_TWO_HANDED"
-  ],
-  "slots": ["EQUIPMENT_SLOT_WEAPON_MELEE"]
+  ]
 }

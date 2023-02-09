@@ -7,6 +7,5 @@
   "attributes": [
     "WEAPON_ATTRIBUTE_FINESSE",
     "WEAPON_ATTRIBUTE_LIGHT"
-  ],
-  "slots": ["EQUIPMENT_SLOT_WEAPON_MELEE"]
+  ]
 }
