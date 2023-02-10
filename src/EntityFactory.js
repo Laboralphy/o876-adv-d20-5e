@@ -47,6 +47,9 @@ class EntityFactory {
             : CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
         return {
             ...oBlueprint,
+            properties: [
+                ...oBlueprint.properties
+            ],
             ...oWeaponData,
             equipmentSlots: [slot]
         }
@@ -68,7 +71,7 @@ class EntityFactory {
             }
 
             case CONSTS.ITEM_TYPE_SHIELD: {
-                return this.createItemWeapon(oBlueprint)
+                return this.createItemShield(oBlueprint)
             }
 
             default: {

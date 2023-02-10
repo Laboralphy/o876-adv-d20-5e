@@ -49,9 +49,11 @@ class Creature {
      * @param aTags {string[]} liste des effets désiré
      * @param effectFilter {function} prédicat de selection d'effets
      * @param propFilter {function}
-     * @returns {{effects: D20Effect[], min: number, max: number, sum: number}}
+     * @param effectDisc {function} prédicat de discrimination des effets filtrés
+     * @param propDisc {function}
+     * @returns {{effects: D20Effect[], properties: object[], sorter: object, min: number, max: number, sum: number}}
      */
-    aggregateModifiers (aTags, { effectFilter, propFilter } = {}) {
+    aggregateModifiers (aTags, { effectFilter = null, propFilter = null, effectDisc = null, propDisc = null } = {}) {
         const aTypeSet = new Set(
             Array.isArray(aTags)
                 ? aTags
@@ -73,6 +75,42 @@ class Creature {
                 aTypeSet.has(ip.property) &&
                 (propFilter ? propFilter(ip) : true)
             )
+        const oSorter = {}
+        const rdisc = sDisc => {
+            if (!(sDisc in oSorter)) {
+                oSorter[sDisc] = {
+                    properties: [],
+                    effects: [],
+                    sum: 0,
+                    min: 0,
+                    max: 0
+                }
+            }
+            return oSorter[sDisc]
+        }
+        if (effectDisc) {
+            aFilteredEffects.forEach(f => {
+                const sDisc = effectDisc(f)
+                const sd = rdisc(sDisc)
+                const amp = f.amp
+                sd.effects.push(f)
+                sd.min = Math.min(sd.min, amp)
+                sd.max = Math.max(sd.max, amp)
+                sd.sum += amp
+            })
+        }
+        if (propDisc) {
+            aFilteredExtraProperties.forEach(f => {
+                const sDisc = propDisc(f)
+                const sd = rdisc(sDisc)
+                const amp = f.amp
+                sd.properties.push(f)
+                sd.min = Math.min(sd.min, amp)
+                sd.max = Math.max(sd.max, amp)
+                sd.sum += amp
+            })
+        }
+
         const nEffAcc = aFilteredEffects.reduce((prev, curr) => prev + curr.amp, 0)
         const nEffMax = aFilteredEffects.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
         const nEffMin = aFilteredEffects.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
@@ -81,9 +119,11 @@ class Creature {
         const nIPMin = aFilteredExtraProperties.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
         return {
             effects: aFilteredEffects,
+            properties: aFilteredExtraProperties,
             sum: nEffAcc + nIPAcc,
             min: Math.min(nEffMin, nIPMin),
-            max: Math.max(nEffMax, nIPMax)
+            max: Math.max(nEffMax, nIPMax),
+            sorter: oSorter
         }
     }
 
@@ -127,14 +167,13 @@ class Creature {
             CONSTS.EFFECT_ATTACK_BONUS,
             bRanged ? CONSTS.EFFECT_RANGED_ATTACK_BONUS : CONSTS.EFFECT_MELEE_ATTACK_BONUS,
             CONSTS.EXTRA_PROPERTY_ENHANCEMENT,
-            CONSTS.EXTRA_PROPERTY_ATTACK_BONUS,
-            bRanged ? CONSTS.EXTRA_PROPERTY_RANGED_ATTACK_BONUS : CONSTS.EXTRA_PROPERTY_MELEE_ATTACK_BONUS
+            CONSTS.EXTRA_PROPERTY_ATTACK_BONUS
         ]).sum
     }
 
     /**
      * Calcule le bonus de dégât de l'arme actuellement
-     * @return {number}
+     * @return {object}
      */
     getDamageBonus () {
         // Effect & Props damageBonus
@@ -146,12 +185,28 @@ class Creature {
         // Weapon attribute auto : +100%
         const getters = this.store.getters
         const sOffensiveAbility = getters.getOffensiveAbility
+        const oWeapon = getters.getSelectedWeapon
         const nAbilityBonus = getters.getAbilityModifiers[sOffensiveAbility]
-        return nAbilityBonus + this.aggregateModifiers([
+        const sWeaponDamType = oWeapon.damageType
+        const am = this.aggregateModifiers([
             CONSTS.EFFECT_DAMAGE_BONUS,
             CONSTS.EXTRA_PROPERTY_DAMAGE_BONUS,
             CONSTS.EXTRA_PROPERTY_ENHANCEMENT
-        ]).sum
+        ], {
+            effectDisc: effect => effect.data.type || sWeaponDamType,
+            propDisc: property => property.type || sWeaponDamType
+        })
+        const oResult = {
+            [sWeaponDamType]: nAbilityBonus
+        }
+        for (const [sDamageType, oDamageStruct] of Object.entries(am.sorter)) {
+            if (sDamageType in oResult) {
+                oResult[sDamageType] += oDamageStruct.sum
+            } else {
+                oResult[sDamageType] = oDamageStruct.sum
+            }
+        }
+        return oResult
     }
 
     clearTarget () {

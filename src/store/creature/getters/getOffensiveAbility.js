@@ -1,6 +1,13 @@
 const CONSTS = require("../../../consts");
 
-function getOffensiveAbility (oWeapon, state, getters) {
+/**
+ * Renvoie le bonus d'attaque généré par l'arme actuellement équipée
+ * @param state
+ * @param getters
+ * @returns {string}
+ */
+module.exports = (state, getters) => {
+    const oWeapon = getters.getSelectedWeapon
     if (oWeapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)) {
         return CONSTS.ABILITY_DEXTERITY
     } else {
@@ -13,14 +20,4 @@ function getOffensiveAbility (oWeapon, state, getters) {
             ? CONSTS.ABILITY_DEXTERITY
             : CONSTS.ABILITY_STRENGTH
     }
-}
-
-/**
- * Renvoie le bonus d'attaque généré par l'arme actuellement équipée
- * @param state
- * @param getters
- * @returns {string}
- */
-module.exports = (state, getters) => {
-    return getOffensiveAbility(getters.getSelectedWeapon, state, getters)
 }
