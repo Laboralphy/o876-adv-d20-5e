@@ -6,7 +6,7 @@ const CONSTS = require('../consts')
  * @returns {D20Effect}
  */
 function create () {
-    return createEffect(CONSTS.EFFECT_INVISIBILITY, 1)
+    return createEffect(CONSTS.EFFECT_INVISIBILITY, 0)
 }
 
 module.exports = {

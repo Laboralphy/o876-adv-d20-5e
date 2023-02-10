@@ -10,25 +10,22 @@
       "description": "nom du getter déterminant si les propriété du feat peuvent s'exprimer",
       "type": "string"
     },
-    "properties": {
-      "description": "liste des propriétés qui doivent s'appliquer quand le feat est actif",
+    "effects": {
+      "description": "liste des effets qui doivent s'appliquer quand le feat est actif",
       "type": "array",
       "items": {
-        "type": "object",
-        "required": [
-          "property"
-        ],
-        "properties": {
-          "property": {
-            "description": "code de l'extra-propriété",
+        "type": "array",
+        "allowAdditionalItems": true,
+        "items": [
+          {
+            "description": "le type d'effet",
             "type": "string",
-            "pattern": "^EXTRA_PROPERTY_"
+            "pattern": "^EFFECT_"
           },
-          "parameters": {
-            "description": "paramètres de l'extra-propriété",
-            "type": "object"
+          {
+            "$ref": "def-effect-amp"
           }
-        }
+        ]
       }
     }
   }

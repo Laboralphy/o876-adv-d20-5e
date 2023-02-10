@@ -7,6 +7,7 @@ const { warmup } = require('../src/assets')
 const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
 
 beforeEach(function () {
+    Error.stackTraceLimit = Infinity
     warmup()
 })
 
@@ -29,10 +30,10 @@ describe('setAbility', function () {
 describe('addEffect', function () {
     it('should get 15 strength WHEN base strength is 10 and ability bonus effect is 5 (on strength)', function () {
         const c = new Creature()
-        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10})
         // ajouter un ability modifier
         const ep = new EffectProcessor()
-        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { ability: CONSTS.ABILITY_STRENGTH, value: 5 }), c, 10)
+        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, CONSTS.ABILITY_STRENGTH, 5), c, 10)
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
     })
 
@@ -41,7 +42,7 @@ describe('addEffect', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
         const ep = new EffectProcessor()
-        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { value: 5, ability: CONSTS.ABILITY_DEXTERITY }), c, 10)
+        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, CONSTS.ABILITY_DEXTERITY, 5), c, 10)
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(10)
     })
 
@@ -51,13 +52,13 @@ describe('addEffect', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
         ep.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { ability: CONSTS.ABILITY_STRENGTH, value: 5 }),
+            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, CONSTS.ABILITY_STRENGTH, 5),
             c,
             10
         )
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
         ep.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { ability: CONSTS.ABILITY_STRENGTH, value: 3 }),
+            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, CONSTS.ABILITY_STRENGTH, 3),
             c,
             10
         )
@@ -388,7 +389,7 @@ describe('dis and adv', function () {
         const ep = new EffectProcessor()
         const eAdv = EffectProcessor.createEffect(
             CONSTS.EFFECT_ADVANTAGE,
-            { origin: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }
+            [CONSTS.ROLL_TYPE_ATTACK], [CONSTS.ABILITY_INTELLIGENCE], 'ADV1'
         )
         ep.applyEffect(eAdv, c1, 10)
         expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects, [])).toEqual({
@@ -400,18 +401,18 @@ describe('dis and adv', function () {
     it('should return many ADV1 (on each ability) when creature has one advantage effect with ADV1 tag and multiple ability', function () {
         const c1 = new Creature()
         const ep = new EffectProcessor()
-        const eAdv = EffectProcessor.createEffect( CONSTS.EFFECT_ADVANTAGE, {
-            origin: 'ADV1',
-            rollTypes: [CONSTS.ROLL_TYPE_ATTACK],
-            abilities: [
+        const eAdv = EffectProcessor.createEffect( CONSTS.EFFECT_ADVANTAGE,
+            [CONSTS.ROLL_TYPE_ATTACK],
+            [
                 CONSTS.ABILITY_STRENGTH,
                 CONSTS.ABILITY_DEXTERITY,
                 CONSTS.ABILITY_CONSTITUTION,
                 CONSTS.ABILITY_INTELLIGENCE,
                 CONSTS.ABILITY_WISDOM,
                 CONSTS.ABILITY_CHARISMA
-            ]
-        })
+            ],
+            'ADV1'
+        )
         ep.applyEffect(eAdv, c1, 10)
         if (!c1.store.getters.getEffects) {
             throw new Error('WTF getEffects is undefined')
@@ -570,12 +571,11 @@ describe('groupEffect', function () {
     it('should create 3 effects when applying a group of two effects', function () {
         const c = new Creature()
         const ep = new EffectProcessor()
-        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, {
-            effects: [
+        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, [
                 EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY),
                 EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
             ]
-        }), c, 10)
+        ), c, 10)
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
         ep.processCreatureEffects(c)
@@ -599,16 +599,13 @@ describe('groupEffect', function () {
         const c = new Creature()
         const eInvis = EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY)
         const eThrSi = EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
-        const eGroup = EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, {
-            tag: 'TEST_GROUP',
-            effects: [eInvis, eThrSi]
-        }, )
+        const eGroup = EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, [eInvis, eThrSi], 'TEST_GROUP')
         c.applyEffect(eGroup, 10)
         c.processEffects()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
         const effFound = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.tag === 'TEST_GROUP')
-        effFound.duration = 0
+        c.store.mutations.dispellEffect({ effect: effFound })
         c.processEffects()
         const effFound2 = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.tag === 'TEST_GROUP')
         expect(effFound2).not.toBeDefined()

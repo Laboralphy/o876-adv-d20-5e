@@ -6,7 +6,7 @@ const CONSTS = require('../consts')
  * @param nValue {string}
  * @returns {D20Effect}
  */
-function create ({ amount }) {
+function create (amount) {
     return createEffect(CONSTS.EFFECT_HEAL, amount)
 }
 

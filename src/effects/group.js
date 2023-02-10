@@ -3,12 +3,14 @@ const CONSTS = require('../consts')
 
 /**
  * Groups several effects
- * @param tag {string}
  * @param effects {D20Effect[]}
+ * @param tag {string}
  * @returns {D20Effect}
  */
-function create ({ tag = '', effects = [] }) {
-    return createEffect(CONSTS.EFFECT_GROUP, 1, { effects, applied: false }, tag)
+function create (effects, tag) {
+    // GROUP_TYPE_MAGICAL : les effets de ce groupe peuvent être dissipés
+    // GROUP_TYPE
+    return createEffect(CONSTS.EFFECT_GROUP, 0, { effects, applied: false }, tag)
 }
 
 /**
@@ -37,7 +39,7 @@ function dispose ({ target }, oEffectProcessor) {
         .getters
         .getEffects
         .forEach(eff => {
-            eff.duration = 0
+            target.store.mutations.dispellEffect({ effect: eff })
         })
     oEffectProcessor.removeDeadEffects(target)
 }

@@ -16,5 +16,7 @@ module.exports = ({ state }, { effect }) => {
                 oFoundEffect[key] = value
             }
         }
+    } else {
+        throw new Error('This effect ' + effect.id + ' does not exist')
     }
 }

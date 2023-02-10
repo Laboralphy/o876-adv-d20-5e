@@ -1,3 +1,4 @@
+const CONSTS = require('../../../consts')
 /**
  * @typedef FeatReport {object}
  * @property feat {string}
@@ -15,10 +16,10 @@ module.exports = (state, getters, externals) => {
     // Tous les feat déclaré sur la créature
     const aAllFeats = state.feats
     // ensemble des feats qui ont des propriétés actuellement appliquées sur la creature
-    const aFeatSet = new Set(state
-        .properties
-        .map(p => p.tag)
-        .filter(tag => tag !== undefined && tag.startsWith('feat-') && (tag in data))
+    const aFeatSet = new Set(getters
+        .getEffects
+        .filter(eff => eff.subtype === CONSTS.EFFECT_SUBTYPE_FEAT)
+        .map(eff => eff.tag)
     )
     // Pour chaque feat déclaré, vérifier s'il est actif, vérifier s'il devrait être actif
     return aAllFeats.map(feat => {

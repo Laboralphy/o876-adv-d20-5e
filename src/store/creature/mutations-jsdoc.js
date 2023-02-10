@@ -20,5 +20,6 @@
  * @property setEncumbrance {function({ value: number })}
  * @property setAreaFlags {function({ flags: string[] })}
  * @property addFeat {function({ feat: string })}
- * @property updateFeatProperties {function()}
+ * @property updateFeatEffects {function()}
+ * @property dispellEffect {function({ effect })}
  */

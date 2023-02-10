@@ -71,6 +71,7 @@ module.exports = {
     ...require('./entity-types.json'),
     ...require('./equipment-slots.json'),
     ...require('./genders.json'),
+    ...require('./effect-subtypes.json'),
     ...require('./index.js'),
     ...require('./item-types.json'),
     ...require('./extra-properties.json'),

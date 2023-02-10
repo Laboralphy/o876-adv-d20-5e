@@ -6,7 +6,7 @@ const CONSTS = require('../consts')
  * @param value {number}
  * @returns {D20Effect}
  */
-function create ({ value }) {
+function create (value) {
     return createEffect(CONSTS.EFFECT_RANGED_ATTACK_BONUS, value)
 }
 

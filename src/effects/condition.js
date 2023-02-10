@@ -6,7 +6,7 @@ const CONSTS = require('../consts')
  * @param condition {string} CONDITION_*
  * @returns {D20Effect}
  */
-function create ({ condition }) {
+function create (condition) {
     return createEffect(CONSTS.EFFECT_CONDITION, 1, {
         condition
     })

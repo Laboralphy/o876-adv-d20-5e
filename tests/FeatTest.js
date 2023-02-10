@@ -26,7 +26,7 @@ describe('feat-fighting-style-archery', function () {
     it ('should activate a +2 ranged attack bonus when applying feat', function () {
         const c = new Creature()
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-archery'})
-        c.store.mutations.updateFeatProperties()
+        c.store.mutations.updateFeatEffects()
         const aFeatReport = c.store.getters.getFeatReport
         expect(aFeatReport).toEqual([{
             feat: 'feat-fighting-style-archery',
@@ -40,7 +40,7 @@ describe('feat-fighting-style-defense', function () {
     it ('should not have +1 AC when having feat and not wearing armor', function () {
         const c = new Creature()
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-defense'})
-        c.store.mutations.updateFeatProperties()
+        c.store.mutations.updateFeatEffects()
         expect(c.store.getters.getFeatReport).toEqual([{
             feat: 'feat-fighting-style-defense',
             active: false,
@@ -53,7 +53,7 @@ describe('feat-fighting-style-defense', function () {
         const r = new Rules()
         r.init()
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-defense'})
-        c.store.mutations.updateFeatProperties()
+        c.store.mutations.updateFeatEffects()
         const oArmor = r.createEntity('arm-leather')
         expect(c.getAC()).toBe(-5) // 0 (no armor) -5 (dex 0)
         c.store.mutations.equipItem({ item: oArmor, slot: CONSTS.EQUIPMENT_SLOT_CHEST })
@@ -62,7 +62,7 @@ describe('feat-fighting-style-defense', function () {
             active: false,
             shouldBeActive: true
         }])
-        c.store.mutations.updateFeatProperties()
+        c.store.mutations.updateFeatEffects()
         expect(c.store.getters.getFeatReport).toEqual([{
             feat: 'feat-fighting-style-defense',
             active: true,
@@ -85,6 +85,6 @@ describe('feat-fighting-style-dueling', function () {
         c.store.mutations.equipItem({ item: oSword })
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
         expect(c.store.getters.getSelectedWeapon).toBeDefined()
-
+        console.log(c.getDamageBonus())
     })
 })
