@@ -21,7 +21,7 @@
  * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
  * @property getEntropyType {string}
- * @property getEquipmentExtraProperties {[]}
+ * @property getEquipmentItemProperties {[]}
  * @property getEquipmentList {D20Item[]}
  * @property getEquippedItems {{[slot: string]: D20Item}}
  * @property getExhaustionLevel {number}

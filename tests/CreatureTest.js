@@ -1,7 +1,7 @@
 const Creature = require('../src/Creature')
 const Rules = require('../src/Rules')
 const EffectProcessor = require('../src/EffectProcessor')
-const ExtraProperties = require('../src/extra-properties')
+const ItemProperties = require('../src/item-properties')
 const CONSTS = require('../src/consts')
 const { warmup } = require('../src/assets')
 const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
@@ -155,7 +155,7 @@ describe('getAC', function () {
             "itemType": "ITEM_TYPE_ARMOR",
             "armorType": "ARMOR_TYPE_LEATHER",
             "properties": [{
-                "property": CONSTS.EXTRA_PROPERTY_AC_BONUS,
+                "property": CONSTS.ITEM_PROPERTY_AC_BONUS,
                 "amp": 2
             }],
             "proficiency": "PROFICIENCY_ARMOR_LIGHT",
@@ -253,7 +253,7 @@ describe('getAttackBonus', function () {
             "weaponType": "WEAPON_TYPE_LONGSWORD",
             "proficiency": CONSTS.PROFICIENCY_WEAPON_MARTIAL,
             "properties": [{
-                property: CONSTS.EXTRA_PROPERTY_ATTACK_BONUS,
+                property: CONSTS.ITEM_PROPERTY_ATTACK_BONUS,
                 amp: 1
             }],
             "damage": "1d8",
@@ -267,7 +267,7 @@ describe('getAttackBonus', function () {
             "proficiency": CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             "weaponType": "WEAPON_TYPE_DAGGER",
             "properties": [{
-                property: CONSTS.EXTRA_PROPERTY_ENHANCEMENT,
+                property: CONSTS.ITEM_PROPERTY_ENHANCEMENT,
                 amp: 2
             }],
             "damage": "1d4",
@@ -280,7 +280,7 @@ describe('getAttackBonus', function () {
             "proficiency": CONSTS.PROFICIENCY_WEAPON_MARTIAL,
             "weaponType": "WEAPON_TYPE_SHORTBOW",
             "properties": [{
-                property: CONSTS.EXTRA_PROPERTY_ATTACK_BONUS,
+                property: CONSTS.ITEM_PROPERTY_ATTACK_BONUS,
                 amp: 3
             }],
             "damage": "1d6",
@@ -292,7 +292,7 @@ describe('getAttackBonus', function () {
             "entityType": "ENTITY_TYPE_ITEM",
             "itemType": "ITEM_TYPE_AMMO",
             "properties": [{
-                property: CONSTS.EXTRA_PROPERTY_ENHANCEMENT,
+                property: CONSTS.ITEM_PROPERTY_ENHANCEMENT,
                 amp: 2
             }],
             "stack": 10
@@ -626,7 +626,7 @@ describe('getDamageBonus', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
         r.init()
         const oSword = r.createEntity('wpn-shortsword')
-        oSword.properties.push(ExtraProperties[CONSTS.EXTRA_PROPERTY_ENHANCEMENT]({ value: 1 }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
         c.store.mutations.equipItem({ item: oSword })
         const db = c.getDamageBonus()
         expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1 })
@@ -642,8 +642,8 @@ describe('getDamageBonus', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
         r.init()
         const oSword = r.createEntity('wpn-shortsword')
-        oSword.properties.push(ExtraProperties[CONSTS.EXTRA_PROPERTY_ENHANCEMENT]({ value: 1 }))
-        oSword.properties.push(ExtraProperties[CONSTS.EXTRA_PROPERTY_DAMAGE_BONUS]({ value: 1, type: CONSTS.DAMAGE_TYPE_FIRE }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ value: 1, type: CONSTS.DAMAGE_TYPE_FIRE }))
         c.store.mutations.equipItem({ item: oSword })
         const db = c.getDamageBonus()
         expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1, DAMAGE_TYPE_FIRE: 1 })

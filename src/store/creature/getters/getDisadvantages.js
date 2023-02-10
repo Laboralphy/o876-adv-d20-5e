@@ -21,8 +21,8 @@ module.exports = (state, getters, externals) => {
         .getEffects
         .filter(effect => effect.type === CONSTS.EFFECT_ADVANTAGE)
     const oRelevantProperties = getters
-        .getEquipmentExtraProperties
-        .filter(prop => prop.property === CONSTS.EXTRA_PROPERTY_ADVANTAGE)
+        .getEquipmentItemProperties
+        .filter(prop => prop.property === CONSTS.ITEM_PROPERTY_ADVANTAGE)
     const oDisadvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects, oRelevantProperties)
 
     // Créature très fatiguée

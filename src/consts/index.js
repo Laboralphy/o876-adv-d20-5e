@@ -74,7 +74,7 @@ module.exports = {
     ...require('./effect-subtypes.json'),
     ...require('./index.js'),
     ...require('./item-types.json'),
-    ...require('./extra-properties.json'),
+    ...require('./item-properties.json'),
     ...require('./proficiencies.json'),
     ...require('./roll-types.json'),
     ...require('./sizes.json'),

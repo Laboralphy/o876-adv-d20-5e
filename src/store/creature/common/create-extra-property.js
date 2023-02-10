@@ -1,16 +1,16 @@
 const { v4: uuidv4 } = require('uuid')
-const extraProperties = require('../../../extra-properties')
+const itemProperties = require('../../../item-properties')
 
-function createExtraProperty (sProperty, oParameters, tag = '') {
-    if (!(sProperty in extraProperties)) {
+function createItemProperty (sProperty, oParameters, tag = '') {
+    if (!(sProperty in itemProperties)) {
         throw new Error('This property is unknown: ' + sProperty)
     }
-    const p = extraProperties[sProperty](oParameters)
+    const p = itemProperties[sProperty](oParameters)
     p.id = uuidv4({}, null, 0)
     p.tag = tag
     return p
 }
 
 module.exports = {
-    createExtraProperty
+    createItemProperty
 }

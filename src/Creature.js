@@ -84,15 +84,15 @@ class Creature {
         aFilteredEffects.forEach(eff => {
             eff.amp = this.roll(eff.amp)
         })
-        const aFilteredExtraProperties = this
+        const aFilteredItemProperties = this
             .store
             .getters
-            .getEquipmentExtraProperties
+            .getEquipmentItemProperties
             .filter(ip =>
                 aTypeSet.has(ip.property) &&
                 (propFilter ? propFilter(ip) : true)
             )
-        aFilteredExtraProperties.forEach(ip => {
+        aFilteredItemProperties.forEach(ip => {
             ip.amp = this.roll(ip.amp)
         })
         const oSorter = {}
@@ -120,7 +120,7 @@ class Creature {
             })
         }
         if (propDisc) {
-            aFilteredExtraProperties.forEach(f => {
+            aFilteredItemProperties.forEach(f => {
                 const sDisc = propDisc(f)
                 const sd = rdisc(sDisc)
                 const amp = f.amp
@@ -134,12 +134,12 @@ class Creature {
         const nEffAcc = aFilteredEffects.reduce((prev, curr) => prev + curr.amp, 0)
         const nEffMax = aFilteredEffects.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
         const nEffMin = aFilteredEffects.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
-        const nIPAcc = aFilteredExtraProperties.reduce((prev, curr) => prev + curr.amp, 0)
-        const nIPMax = aFilteredExtraProperties.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
-        const nIPMin = aFilteredExtraProperties.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
+        const nIPAcc = aFilteredItemProperties.reduce((prev, curr) => prev + curr.amp, 0)
+        const nIPMax = aFilteredItemProperties.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
+        const nIPMin = aFilteredItemProperties.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
         return {
             effects: aFilteredEffects,
-            properties: aFilteredExtraProperties,
+            properties: aFilteredItemProperties,
             sum: nEffAcc + nIPAcc,
             min: Math.min(nEffMin, nIPMin),
             max: Math.max(nEffMax, nIPMax),
@@ -167,7 +167,7 @@ class Creature {
         const nBaseAC = this.store.getters.getArmorAndShieldClass
         const nItemACProps = this.aggregateModifiers([
             CONSTS.EFFECT_AC_BONUS,
-            CONSTS.EXTRA_PROPERTY_AC_BONUS
+            CONSTS.ITEM_PROPERTY_AC_BONUS
         ]).sum
         return nBaseAC + nItemACProps
     }
@@ -186,8 +186,8 @@ class Creature {
         return nAbilityBonus + nProfBonus + this.aggregateModifiers([
             CONSTS.EFFECT_ATTACK_BONUS,
             bRanged ? CONSTS.EFFECT_RANGED_ATTACK_BONUS : CONSTS.EFFECT_MELEE_ATTACK_BONUS,
-            CONSTS.EXTRA_PROPERTY_ENHANCEMENT,
-            CONSTS.EXTRA_PROPERTY_ATTACK_BONUS
+            CONSTS.ITEM_PROPERTY_ENHANCEMENT,
+            CONSTS.ITEM_PROPERTY_ATTACK_BONUS
         ]).sum
     }
 
@@ -210,8 +210,8 @@ class Creature {
         const sWeaponDamType = oWeapon.damageType
         const am = this.aggregateModifiers([
             CONSTS.EFFECT_DAMAGE_BONUS,
-            CONSTS.EXTRA_PROPERTY_DAMAGE_BONUS,
-            CONSTS.EXTRA_PROPERTY_ENHANCEMENT
+            CONSTS.ITEM_PROPERTY_DAMAGE_BONUS,
+            CONSTS.ITEM_PROPERTY_ENHANCEMENT
         ], {
             effectDisc: effect => effect.data.type || sWeaponDamType,
             propDisc: property => property.type || sWeaponDamType
