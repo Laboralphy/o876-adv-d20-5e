@@ -21,7 +21,7 @@ module.exports = (state, getters, externals) => {
         .getEffects
         .filter(effect => effect.type === CONSTS.EFFECT_ADVANTAGE)
     const oRelevantProperties = getters
-        .getCreatureAllProperties
+        .getEquipmentExtraProperties
         .filter(prop => prop.property === CONSTS.EXTRA_PROPERTY_ADVANTAGE)
     const oDisadvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects, oRelevantProperties)
 

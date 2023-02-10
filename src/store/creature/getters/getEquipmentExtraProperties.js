@@ -1,4 +1,4 @@
-const {propertyMapper} = require("../common/property-mapper");
+const { propertyMapper } = require("../common/property-mapper");
 
 /**
  * Liste des propriétés des équippement défensif (armure, bouclier etc...)

@@ -79,12 +79,14 @@ class Dice {
 
   /**
    * Evalue une expression du type xDy+z
-   * @param value {string|object}
+   * @param value {number|string|object}
    * @return {number}
    */
   evaluate (value) {
     const t = typeof value
-    if (t === 'object') {
+    if (t === 'number') {
+      return value
+    } else if (t === 'object') {
       const { sides, count, modifier } = value
       return this.roll(sides, count, modifier)
     } else {

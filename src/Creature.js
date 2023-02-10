@@ -1,6 +1,6 @@
-const Store = require('@laboralphy/store')
 const CONSTS = require('./consts')
 const EffectProcessor = require('./EffectProcessor')
+const Dice = require('../libs/dice')
 
 // Store
 const CreatureStore = require('./store/creature')
@@ -11,7 +11,7 @@ let LAST_ID = 0
 class Creature {
     constructor () {
         this._id = ++LAST_ID
-        this._dice = null
+        this._dice = new Dice()
         this._target = {
             handler: null,
             creature: null
@@ -45,6 +45,15 @@ class Creature {
     }
 
     /**
+     * Evalue le tir de dé
+     * @param d {number|string}
+     * @returns {number}
+     */
+    roll (d) {
+        return this._dice.evaluate(d)
+    }
+
+    /**
      * Aggrège les effets spécifiés dans la liste, selon un prédicat
      * @param aTags {string[]} liste des effets désiré
      * @param effectFilter {function} prédicat de selection d'effets
@@ -53,7 +62,12 @@ class Creature {
      * @param propDisc {function}
      * @returns {{effects: D20Effect[], properties: object[], sorter: object, min: number, max: number, sum: number}}
      */
-    aggregateModifiers (aTags, { effectFilter = null, propFilter = null, effectDisc = null, propDisc = null } = {}) {
+    aggregateModifiers (aTags, {
+        effectFilter = null,
+        propFilter = null,
+        effectDisc = null,
+        propDisc = null
+    } = {}) {
         const aTypeSet = new Set(
             Array.isArray(aTags)
                 ? aTags
@@ -67,14 +81,20 @@ class Creature {
                 aTypeSet.has(eff.type) &&
                 (effectFilter ? effectFilter(eff) : true)
             )
+        aFilteredEffects.forEach(eff => {
+            eff.amp = this.roll(eff.amp)
+        })
         const aFilteredExtraProperties = this
             .store
             .getters
-            .getCreatureAllProperties
+            .getEquipmentExtraProperties
             .filter(ip =>
                 aTypeSet.has(ip.property) &&
                 (propFilter ? propFilter(ip) : true)
             )
+        aFilteredExtraProperties.forEach(ip => {
+            ip.amp = this.roll(ip.amp)
+        })
         const oSorter = {}
         const rdisc = sDisc => {
             if (!(sDisc in oSorter)) {

@@ -12,11 +12,11 @@ module.exports = ({ state, getters, externals }) => {
             })
         } else if (active && !shouldBeActive) {
             // il faut désactiver les propriétés de ce feat
-            const sp = state.getEffects
+            const sp = getters.getEffects
             for (let i = sp.length - 1; i >= 0; --i) {
                 const { tag, id } = sp[i]
                 if (tag === feat) {
-                    const nIndex = state.effects.find(eff => eff.id === id)
+                    const nIndex = state.effects.findIndex(eff => eff.id === id)
                     if (nIndex >= 0) {
                         state.effects[nIndex].duration = 0
                     }

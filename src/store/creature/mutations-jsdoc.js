@@ -2,7 +2,6 @@
  * @typedef D20CreatureStoreMutations {object}
  * @property addClass {function({ ref: string, levels: number })}
  * @property addEffect {function({ effect: D20Effect })}
- * @property addCreatureProperty {function({ property, parameters, tag = '' })}
  * @property removeCreatureProperty {function({ id })}
  * @property removeCreatureTaggedProperties {function({ tag })}
  * @property removeEffect {function({ effect: D20Effect })}

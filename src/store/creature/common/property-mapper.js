@@ -1,3 +1,4 @@
+const { ampMapper } = require('./amp-mapper')
 /**
  *
  * @param properties {[]}
@@ -7,7 +8,7 @@
 function propertyMapper (properties, getters) {
     return properties.map(p => ({
         ...p,
-        amp: typeof p.amp === 'number' ? p.amp : getters[p.amp] || -1
+        amp: ampMapper(p.amp, getters)
     }))
 }
 
