@@ -11,6 +11,10 @@ class Rules {
         this._ef = ef
     }
 
+    get assetManager () {
+        return this._ef.assetManager
+    }
+
     createEntity (sResRef) {
         return this._ef.createEntity(sResRef)
     }

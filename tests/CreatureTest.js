@@ -145,7 +145,7 @@ describe('getAC', function () {
             "equipmentSlots": [CONSTS.EQUIPMENT_SLOT_CHEST]
         }
         c.equipItem(oArmorLeather)
-        expect(c.getAC()).toBe(12)
+        expect(c.store.getters.getArmorClass).toBe(12)
     })
     it('should have AC 14 WHEN wearing magical (+2) armor', function () {
         const c = new Creature()
@@ -167,7 +167,7 @@ describe('getAC', function () {
             "equipmentSlots": [CONSTS.EQUIPMENT_SLOT_CHEST]
         }
         c.equipItem(oArmorLeather)
-        expect(c.getAC()).toBe(14)
+        expect(c.store.getters.getArmorClass).toBe(14)
     })
 })
 
@@ -190,11 +190,11 @@ describe('getAttackBonus', function () {
         expect(c.store.getters.getLevel).toBe(1)
         expect(c.store.getters.getProficiencyBonus).toBe(2)
         expect(c.store.getters.isProficientSelectedWeapon).toBeTrue()
-        expect(c.getAttackBonus()).toBe(2)
+        expect(c.store.getters.getAttackBonus).toBe(2)
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 12 })
-        expect(c.getAttackBonus()).toBe(3)
+        expect(c.store.getters.getAttackBonus).toBe(3)
         c.store.mutations.addClass({ ref: 'tourist', levels: 4 })
-        expect(c.getAttackBonus()).toBe(4)
+        expect(c.store.getters.getAttackBonus).toBe(4)
     })
     it ('should update attack bonus WHEN switching from weapon melee to ranged', function () {
         const c = new Creature()
@@ -239,11 +239,11 @@ describe('getAttackBonus', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 14 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 18 })
         c.store.mutations.addClass({ ref: 'tourist', levels: 1 })
-        expect(c.getAttackBonus()).toBe(2)
+        expect(c.store.getters.getAttackBonus).toBe(2)
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
-        expect(c.getAttackBonus()).toBe(4)
+        expect(c.store.getters.getAttackBonus).toBe(4)
         c.store.mutations.equipItem({ item: oDagger, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
-        expect(c.getAttackBonus()).toBe(4)
+        expect(c.store.getters.getAttackBonus).toBe(4)
     })
     it ('should update attack bonus WHEN switching from magical weapon melee to ranged', function () {
         const c = new Creature()
@@ -311,15 +311,15 @@ describe('getAttackBonus', function () {
         expect(c.store.getters.getProficiencyBonus).toBe(2)
         // +2 prof, +1 weapon +2 ability
         expect(c.store.getters.getOffensiveEquipmentList.length).toBe(1)
-        expect(c.getAttackBonus()).toBe(5)
+        expect(c.store.getters.getAttackBonus).toBe(5)
         c.store.mutations.equipItem({ item: oDagger, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
         // +2 prof, +2 weapon +4 ability
-        expect(c.getAttackBonus()).toBe(8)
+        expect(c.store.getters.getAttackBonus).toBe(8)
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         // +2 prof, +3 weapon +2 ammo +4 ability
         expect(c.store.getters.getOffensiveEquipmentList.length).toBe(2)
         expect(c.store.getters.getSelectedWeaponProperties.length).toBe(2)
-        expect(c.getAttackBonus()).toBe(11)
+        expect(c.store.getters.getAttackBonus).toBe(11)
     })
 })
 

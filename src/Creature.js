@@ -5,6 +5,7 @@ const Dice = require('../libs/dice')
 // Store
 const CreatureStore = require('./store/creature')
 const { assetManager } = require('./assets')
+const {aggregateModifiers} = require("./store/creature/common/aggregate-modifiers");
 
 let LAST_ID = 0
 
@@ -45,106 +46,13 @@ class Creature {
     }
 
     /**
-     * Evalue le tir de dé
-     * @param d {number|string}
-     * @returns {number}
-     */
-    roll (d) {
-        return this._dice.evaluate(d)
-    }
-
-    /**
      * Aggrège les effets spécifiés dans la liste, selon un prédicat
      * @param aTags {string[]} liste des effets désiré
-     * @param effectFilter {function} prédicat de selection d'effets
-     * @param propFilter {function}
-     * @param effectDisc {function} prédicat de discrimination des effets filtrés
-     * @param propDisc {function}
+     * @param filters {*} voir la fonction store/creature/common/aggregate-modifiers
      * @returns {{effects: D20Effect[], properties: object[], sorter: object, min: number, max: number, sum: number}}
      */
-    aggregateModifiers (aTags, {
-        effectFilter = null,
-        propFilter = null,
-        effectDisc = null,
-        propDisc = null
-    } = {}) {
-        const aTypeSet = new Set(
-            Array.isArray(aTags)
-                ? aTags
-                : [aTags]
-        )
-        const aFilteredEffects = this
-            .store
-            .getters
-            .getEffects
-            .filter(eff =>
-                aTypeSet.has(eff.type) &&
-                (effectFilter ? effectFilter(eff) : true)
-            )
-        aFilteredEffects.forEach(eff => {
-            eff.amp = this.roll(eff.amp)
-        })
-        const aFilteredItemProperties = this
-            .store
-            .getters
-            .getEquipmentItemProperties
-            .filter(ip =>
-                aTypeSet.has(ip.property) &&
-                (propFilter ? propFilter(ip) : true)
-            )
-        aFilteredItemProperties.forEach(ip => {
-            ip.amp = this.roll(ip.amp)
-        })
-        const oSorter = {}
-        const rdisc = sDisc => {
-            if (!(sDisc in oSorter)) {
-                oSorter[sDisc] = {
-                    properties: [],
-                    effects: [],
-                    sum: 0,
-                    min: 0,
-                    max: 0
-                }
-            }
-            return oSorter[sDisc]
-        }
-        if (effectDisc) {
-            aFilteredEffects.forEach(f => {
-                const sDisc = effectDisc(f)
-                const sd = rdisc(sDisc)
-                const amp = f.amp
-                sd.effects.push(f)
-                sd.min = Math.min(sd.min, amp)
-                sd.max = Math.max(sd.max, amp)
-                sd.sum += amp
-            })
-        }
-        if (propDisc) {
-            aFilteredItemProperties.forEach(f => {
-                const sDisc = propDisc(f)
-                const sd = rdisc(sDisc)
-                const amp = f.amp
-                sd.properties.push(f)
-                sd.min = Math.min(sd.min, amp)
-                sd.max = Math.max(sd.max, amp)
-                sd.sum += amp
-            })
-        }
-
-        const nEffAcc = aFilteredEffects.reduce((prev, curr) => prev + curr.amp, 0)
-        const nEffMax = aFilteredEffects.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
-        const nEffMin = aFilteredEffects.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
-        const nIPAcc = aFilteredItemProperties.reduce((prev, curr) => prev + curr.amp, 0)
-        const nIPMax = aFilteredItemProperties.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
-        const nIPMin = aFilteredItemProperties.reduce((prev, curr) => Math.min(prev, curr.amp), nEffMax)
-        return {
-            effects: aFilteredEffects,
-            properties: aFilteredItemProperties,
-            sum: nEffAcc + nIPAcc,
-            min: Math.min(nEffMin, nIPMin),
-            max: Math.max(nEffMax, nIPMax),
-            sorter: oSorter
-        }
+    aggregateModifiers (aTags, filters) {
+        return aggregateModifiers(aTags, this.store.getters, filters)
     }
 
     /**
@@ -160,42 +68,23 @@ class Creature {
     }
 
     /**
-     * Calcule la classe d'armure de la créature
+     * Renvoie le bonus de la caractéristique offensive
      * @return {number}
      */
-    getAC () {
-        const nBaseAC = this.store.getters.getArmorAndShieldClass
-        const nItemACProps = this.aggregateModifiers([
-            CONSTS.EFFECT_AC_BONUS,
-            CONSTS.ITEM_PROPERTY_AC_BONUS
-        ]).sum
-        return nBaseAC + nItemACProps
-    }
-
-    /**
-     * Calcule le bonus d'attaque
-     * @returns {number}
-     */
-    getAttackBonus () {
+    getOffensiveAbilityBonus () {
         const getters = this.store.getters
-        const bProficient = getters.isProficientSelectedWeapon
-        const nProfBonus = bProficient ? getters.getProficiencyBonus : 0
         const sOffensiveAbility = getters.getOffensiveAbility
-        const nAbilityBonus = getters.getAbilityModifiers[sOffensiveAbility]
-        const bRanged = getters.getSelectedWeapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
-        return nAbilityBonus + nProfBonus + this.aggregateModifiers([
-            CONSTS.EFFECT_ATTACK_BONUS,
-            bRanged ? CONSTS.EFFECT_RANGED_ATTACK_BONUS : CONSTS.EFFECT_MELEE_ATTACK_BONUS,
-            CONSTS.ITEM_PROPERTY_ENHANCEMENT,
-            CONSTS.ITEM_PROPERTY_ATTACK_BONUS
-        ]).sum
+        return getters.getAbilityModifiers[sOffensiveAbility]
     }
 
     /**
      * Calcule le bonus de dégât de l'arme actuellement
-     * @return {object}
+     * Inclue les effets appliqués à la créature qui peuvent influencer les dégats
+     * Inclue les effets et propriété de l'arme
+     * Inclue le bonus de caractéristique offensive
+     * @return {Object<string, number>}
      */
-    getDamageBonus () {
+    getDamageBonus (bCritical = false) {
         // Effect & Props damageBonus
         // Effect enhancement
         // offensive ability modifier
@@ -204,9 +93,7 @@ class Creature {
         // Weapon attribute semi auto : +50%
         // Weapon attribute auto : +100%
         const getters = this.store.getters
-        const sOffensiveAbility = getters.getOffensiveAbility
         const oWeapon = getters.getSelectedWeapon
-        const nAbilityBonus = getters.getAbilityModifiers[sOffensiveAbility]
         const sWeaponDamType = oWeapon.damageType
         const am = this.aggregateModifiers([
             CONSTS.EFFECT_DAMAGE_BONUS,
@@ -217,14 +104,27 @@ class Creature {
             propDisc: property => property.type || sWeaponDamType
         })
         const oResult = {
-            [sWeaponDamType]: nAbilityBonus
+            [sWeaponDamType]: this.store.getters.getOffensiveAbilityBonus
         }
-        for (const [sDamageType, oDamageStruct] of Object.entries(am.sorter)) {
-            if (sDamageType in oResult) {
-                oResult[sDamageType] += oDamageStruct.sum
-            } else {
-                oResult[sDamageType] = oDamageStruct.sum
+        const updateResult = sorter => {
+            for (const [sDamageType, oDamageStruct] of Object.entries(sorter)) {
+                if (sDamageType in oResult) {
+                    oResult[sDamageType] += oDamageStruct.sum
+                } else {
+                    oResult[sDamageType] = oDamageStruct.sum
+                }
             }
+        }
+        updateResult(am.sorter)
+        if (bCritical) {
+            const amCrit = this.aggregateModifiers([
+                CONSTS.ITEM_PROPERTY_DAMAGE_BONUS,
+                CONSTS.ITEM_PROPERTY_ENHANCEMENT,
+                CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL
+            ], {
+                propDisc: property => property.type || sWeaponDamType
+            })
+            updateResult(amCrit.sorter)
         }
         return oResult
     }
@@ -364,6 +264,17 @@ class Creature {
         this._effectProcessor.processCreatureEffects(this)
     }
 
+    /**
+     * Effectue un jet de dé 20, en appliquant les avantages et désavantages de ce type de lancer
+     * (attaque, sauvegarde, compétence)
+     * @param sRollType {string} ROLL_TYPE_* déterminer en quelle occasion on lance le dé
+     * @param sAbility {string} spécifié la caractéristique impliquée dans le jet de dé
+     * @param extra {string} information supplémentaire
+     * pour un jet de sauvegarde on peut indiquer le type de menace (DAMAGE_TYPE_FIRE, SPELL_TYPE_MIND_CONTROL)
+     * pour un jet de compétence on peut indiquer la nature de la compétence (SKILL_STEALTH...)
+     * certaines créature ont des avantage ou des désavantaeg spécifique à certaines situations
+     * @returns {number}
+     */
     rollD20 (sRollType, sAbility, extra) {
         const { advantage, disadvantage } = this.getCircumstances(sRollType, sAbility, extra)
         const r = this._dice.roll(20)
@@ -374,6 +285,68 @@ class Creature {
             return Math.min(r, this._dice.roll(20))
         }
         return r
+    }
+
+    /**
+     * Lance un dé pour déterminer le résultat d'une vérification compétence
+     * On détermine la caractéristique associée à la compétence puis lance un D20
+     */
+    rollSkill (sSkill) {
+
+    }
+
+
+    /**
+     * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
+     * La valeur renvoyer ne fait pas intervenir des bonus liés aux effets de la créature  ou à ses caractéristiques
+     * @param critical {boolean} si true alors le coup est critique et tous les jets de dé doivent être doublés
+     * @param additionals {string[]} jet de dés additionnels tels que sneak attack, dirty strike etc...
+     */
+    rollWeaponDamage ({ critical = false, additionals = []} = {}) {
+        const oWeapon = this.store.getters.getSelectedWeapon
+        const n = critical ? 2 : 1
+        let nDamage = 0
+        for (let i = 0; i < n; ++i) {
+            nDamage += this.roll(oWeapon.damage)
+            additionals.forEach(ad => {
+                nDamage += this.roll(ad)
+            })
+        }
+        const oDamageBonus = this.getDamageBonus(critical)
+        if (!(oWeapon.damageType in oDamageBonus)) {
+            oDamageBonus[oWeapon.damageType] = nDamage
+        } else {
+            oDamageBonus[oWeapon.damageType] += nDamage
+        }
+        return oDamageBonus
+    }
+
+    /**
+     * Tire des dé en fonction de la formule spécifiée
+     * formule exemple : 1d6 ; 2d6+1 ; 10d8 ; 3d8 ; 2d10...
+     * @param d {number|string}
+     * @returns {number}
+     */
+    roll (d) {
+        return this._dice.evaluate(d)
+    }
+
+    doFeatAction (sFeat) {
+        if (sFeat in assetManager.data) {
+            const oFeatData = assetManager.data[sFeat]
+            if ('when' in oFeatData) {
+                if (!this.store.getters[oFeatData.when]) {
+                    throw new Error('ERR_FEAT_USES_DEPLETED')
+                }
+            }
+            if ('action' in oFeatData) {
+                assetManager.scripts[oFeatData.action](this)
+            } else {
+                throw new Error('ERR_FEAT_HAS_NO_ACTION')
+            }
+        } else {
+            throw new Error('ERR_FEAT_IS_INVALID')
+        }
     }
 }
 

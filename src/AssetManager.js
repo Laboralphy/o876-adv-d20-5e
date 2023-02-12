@@ -8,7 +8,8 @@ class AssetManager {
     constructor () {
         this._assets = {
             blueprints: {},
-            data: {}
+            data: {},
+            scripts: {}
         }
         this._validator = new SchemaValidator()
         this._storeManagers = {
@@ -16,7 +17,10 @@ class AssetManager {
                 state: require(path.resolve(__dirname, 'store', 'creature', 'state')),
                 mutations: TreeSync.recursiveRequire(path.resolve(__dirname, 'store', 'creature', 'mutations'), true),
                 getters: TreeSync.recursiveRequire(path.resolve(__dirname, 'store', 'creature', 'getters'), true),
-                externals: this._assets
+                externals: {
+                    blueprints: this.blueprints,
+                    data: this.data
+                }
             })
         }
     }
@@ -60,6 +64,21 @@ class AssetManager {
                 break
             }
 
+            case 'state/creature': {
+                this.storeManagers.creature.patchState(d.index())
+                break
+            }
+
+            case 'mutations/creature': {
+                this.storeManagers.creature.defineMutations(d)
+                break
+            }
+
+            case 'script': {
+                Object.assign(this._assets.scripts, d)
+                break
+            }
+
             default: {
                 throw new Error('ERR_ASSET_TYPE_INVALID: ' + sType)
             }
@@ -70,6 +89,9 @@ class AssetManager {
         this.loadPath(path.join(sPath, 'blueprints'), 'blueprint')
         this.loadPath(path.join(sPath, 'data'), 'data')
         this.loadPath(path.join(sPath, 'store', 'creature', 'getters'), 'getters/creature')
+        this.loadPath(path.join(sPath, 'store', 'creature', 'state'), 'state/creature')
+        this.loadPath(path.join(sPath, 'store', 'creature', 'mutations'), 'mutations/creature')
+        this.loadPath(path.join(sPath, 'scripts'), 'script')
     }
 
     init () {
@@ -95,6 +117,10 @@ class AssetManager {
      */
     get data () {
         return this._assets.data
+    }
+
+    get scripts () {
+        return this._assets.scripts
     }
 
     /**

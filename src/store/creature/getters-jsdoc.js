@@ -10,7 +10,8 @@
  * @property getAggressorConditionSources {{}}
  * @property getAggressorConditions {Set}
  * @property getAreaFlags {Set<string>}
- * @property getArmorAndShieldClass {number}
+ * @property getArmorClass {number}
+ * @property getAttackBonus {number}
  * @property getCarryingCapacity {number}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
@@ -32,6 +33,7 @@
  * @property getMaxHitPoints {number}
  * @property getMoralityType {string}
  * @property getOffensiveAbility {string}
+ * @property getOffensiveAbilityBonus {number}
  * @property getOffensiveEquipmentList {D20Item[]}
  * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
@@ -49,5 +51,6 @@
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWeildingNonLightWeapon {boolean}
  * @property has1HWeaponNoShield {boolean}
+ * @property has2HWeaponNoShield {boolean}
  * @property isWearingArmor {boolean}
  */

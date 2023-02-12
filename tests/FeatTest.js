@@ -46,7 +46,7 @@ describe('feat-fighting-style-defense', function () {
             active: false,
             shouldBeActive: false
         }])
-        expect(c.getAC()).toBe(-5)
+        expect(c.store.getters.getArmorClass).toBe(-5)
     })
     it ('should have +1 AC when having feat and wearing armor', function () {
         const c = new Creature()
@@ -55,7 +55,7 @@ describe('feat-fighting-style-defense', function () {
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-defense'})
         c.store.mutations.updateFeatEffects()
         const oArmor = r.createEntity('arm-leather')
-        expect(c.getAC()).toBe(-5) // 0 (no armor) -5 (dex 0)
+        expect(c.store.getters.getArmorClass).toBe(-5) // 0 (no armor) -5 (dex 0)
         c.store.mutations.equipItem({ item: oArmor, slot: CONSTS.EQUIPMENT_SLOT_CHEST })
         expect(c.store.getters.getFeatReport).toEqual([{
             feat: 'feat-fighting-style-defense',
@@ -68,7 +68,7 @@ describe('feat-fighting-style-defense', function () {
             active: true,
             shouldBeActive: true
         }])
-        expect(c.getAC()).toBe(7) // 11 (armor) +1 (feat) -5 (dex 0)
+        expect(c.store.getters.getArmorClass).toBe(7) // 11 (armor) +1 (feat) -5 (dex 0)
     })
 })
 
@@ -99,5 +99,30 @@ describe('feat-fighting-style-dueling', function () {
         c.store.mutations.updateFeatEffects()
         expect(c.store.getters.has1HWeaponNoShield).toBeFalse()
         expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_CRUSHING: 0 })
+    })
+})
+
+describe('feat-fighting-style-great-weapon', function() {
+    it('should have 5 attack bonus instead of 3 only when using great or versatile weapon', function () {
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 16 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
+        const r = new Rules()
+        r.init()
+        c.store.mutations.addFeat({ feat: 'feat-fighting-style-great-weapon'})
+        const oStaff = r.createEntity('wpn-quaterstaff')
+        const oDagger = r.createEntity('wpn-dagger')
+        c.store.mutations.equipItem({ item: oDagger })
+        c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        c.store.mutations.updateFeatEffects()
+        expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_PIERCING: 3 })
+        c.store.mutations.equipItem({ item: oStaff })
+        c.store.mutations.updateFeatEffects()
+        // Pour calculer les bonus de degat on liste les effets de bonus
+        // certains effets ont des getters en amp
+        // ces getters ont besoin d'obtenir la liste des effets
+        // ces effets ont des getters...
+        expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_CRUSHING: 5 })
     })
 })

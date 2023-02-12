@@ -19,4 +19,6 @@
  * @property addFeat {function({ feat: string })}
  * @property updateFeatEffects {function()}
  * @property dispellEffect {function({ effect })}
+ * @property incCounter {function({ counter })}
+ * @property resetCounters {function()}
  */

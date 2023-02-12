@@ -7,6 +7,10 @@ class EntityFactory {
         this._am = null
     }
 
+    get assetManager () {
+        return this._am
+    }
+
     init () {
         this.initAssetManager()
     }

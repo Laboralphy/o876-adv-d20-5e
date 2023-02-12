@@ -4,7 +4,7 @@ const CONSTS = require('../consts')
 /**
  * This effect modifies a weapon damage output
  * either by augmenting or reducing
- * @param damage {number} formula, ex: 2d6 or 3d6+1
+ * @param damage {number|string} formula, ex: 2d6 or 3d6+1
  * @param type {string} type of damage
  * @returns {D20Effect}
  */

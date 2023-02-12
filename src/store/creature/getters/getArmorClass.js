@@ -1,4 +1,5 @@
 const CONSTS = require('../../../consts')
+const { aggregateModifiers } = require('../common/aggregate-modifiers')
 
 /**
  * Classe d'armure complete de la créature
@@ -16,5 +17,9 @@ module.exports = (state, getters) => {
         : nDexterityBonus
     const oShield = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_SHIELD]
     const nShieldAC = oShield ?oShield.ac : 0
-    return nArmorAC + nMaxedDexterityBonus + nShieldAC
+    const nItemACProps = aggregateModifiers([
+        CONSTS.EFFECT_AC_BONUS,
+        CONSTS.ITEM_PROPERTY_AC_BONUS
+    ], getters).sum
+    return nArmorAC + nMaxedDexterityBonus + nShieldAC + nItemACProps
 }

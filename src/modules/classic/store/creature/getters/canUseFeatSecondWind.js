@@ -1,0 +1,1 @@
+module.exports = state => (state.counters.featSecondWind || 0) === 0
