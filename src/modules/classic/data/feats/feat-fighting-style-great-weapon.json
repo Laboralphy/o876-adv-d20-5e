@@ -1,8 +1,7 @@
 {
-  "description": "Adds +2 damage +2 crit damage with a great melee weapon, and no shield",
+  "description": "Adds +6 crit damage with a great melee weapon, and no shield",
   "when": "has2HWeaponNoShield",
   "effects": [
-    ["EFFECT_DAMAGE_BONUS", 2],
-    ["EFFECT_MASSIVE_CRITICAL", 2]
+    ["EFFECT_MASSIVE_CRITICAL", 6]
   ]
 }

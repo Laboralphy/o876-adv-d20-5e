@@ -47,11 +47,11 @@ class Creature {
 
     /**
      * Aggrège les effets spécifiés dans la liste, selon un prédicat
-     * @param aTags {string[]} liste des effets désiré
-     * @param filters {*} voir la fonction store/creature/common/aggregate-modifiers
-     * @returns {{effects: D20Effect[], properties: object[], sorter: object, min: number, max: number, sum: number}}
+     * @param aTags {string[]} liste des effets désirés
+     * @param filters {Object} voir la fonction store/creature/common/aggregate-modifiers
+     * @returns {{effects: D20Effect[], properties: object[], sorter: {Object}, max: number, sum: number}}
      */
-    aggregateModifiers (aTags, filters) {
+    aggregateModifiers (aTags, filters = {}) {
         return aggregateModifiers(aTags, this.store.getters, filters)
     }
 
@@ -336,7 +336,7 @@ class Creature {
             const oFeatData = assetManager.data[sFeat]
             if ('when' in oFeatData) {
                 if (!this.store.getters[oFeatData.when]) {
-                    throw new Error('ERR_FEAT_USES_DEPLETED')
+                    throw new Error('ERR_FEAT_ACTION_NOT_AVAILABLE')
                 }
             }
             if ('action' in oFeatData) {

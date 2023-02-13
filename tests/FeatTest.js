@@ -123,6 +123,29 @@ describe('feat-fighting-style-great-weapon', function() {
         // certains effets ont des getters en amp
         // ces getters ont besoin d'obtenir la liste des effets
         // ces effets ont des getters...
-        expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_CRUSHING: 5 })
+        expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_CRUSHING: 3 })
+        expect(c.aggregateModifiers([CONSTS.EFFECT_MASSIVE_CRITICAL]).sum).toEqual(6)
+    })
+})
+
+describe('feat-second-wind', function () {
+    it('should heal hp when used', function () {
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
+        const r = new Rules()
+        r.init()
+        c.store.mutations.addFeat({ feat: 'feat-second-wind'})
+        c.store.mutations.addClass({ ref: 'fighter', levels: 5 })
+        c.store.mutations.updateFeatEffects()
+        // 10 + 6 * 4 // 34
+        expect(c.store.getters.getMaxHitPoints).toBe(34)
+        expect(c.store.getters.getHitPoints).toBe(34)
+        c.store.mutations.setHitPoints({ value: 34 - 1 })
+        expect(c.store.getters.getHitPoints).toBe(1)
+        c.dice.debug(true, 0.999999)
+        c.doFeatAction('feat-second-wind')
+        expect(c.store.getters.getHitPoints).toBe(1 + 10 + 5)
     })
 })

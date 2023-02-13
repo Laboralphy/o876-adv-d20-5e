@@ -6,6 +6,13 @@ function alwaysEmpty () {
     return ''
 }
 
+/**
+ * Aggrège les effets spécifiés dans la liste, selon un prédicat
+ * @param aTags {string[]} liste des effets désirés
+ * @param getters {D20CreatureStoreGetters}
+ * @param filters {Object} voir la fonction store/creature/common/aggregate-modifiers
+ * @returns {{effects: D20Effect[], properties: object[], sorter: {Object}, max: number, sum: number}}
+ */
 function aggregateModifiers (aTags, getters, {
     effectFilter = alwaysTrue,
     propFilter = alwaysTrue,
