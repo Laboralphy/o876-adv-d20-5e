@@ -49,7 +49,7 @@ class Creature {
      * Aggrège les effets spécifiés dans la liste, selon un prédicat
      * @param aTags {string[]} liste des effets désirés
      * @param filters {Object} voir la fonction store/creature/common/aggregate-modifiers
-     * @returns {{effects: D20Effect[], properties: object[], sorter: {Object}, max: number, sum: number}}
+     * @returns {{sorter: {Object}, max: number, sum: number}}
      */
     aggregateModifiers (aTags, filters = {}) {
         return aggregateModifiers(aTags, this.store.getters, filters)
@@ -95,13 +95,16 @@ class Creature {
         const getters = this.store.getters
         const oWeapon = getters.getSelectedWeapon
         const sWeaponDamType = oWeapon.damageType
+        const ampRndMapper = ({ amp }) => this.roll(amp)
         const am = this.aggregateModifiers([
             CONSTS.EFFECT_DAMAGE_BONUS,
             CONSTS.ITEM_PROPERTY_DAMAGE_BONUS,
             CONSTS.ITEM_PROPERTY_ENHANCEMENT
         ], {
             effectDisc: effect => effect.data.type || sWeaponDamType,
-            propDisc: property => property.type || sWeaponDamType
+            propDisc: property => property.type || sWeaponDamType,
+            effectAmpMapper: eff => ampRndMapper(eff),
+            propAmpMapper: prop => ampRndMapper(prop)
         })
         const oResult = {
             [sWeaponDamType]: this.store.getters.getOffensiveAbilityBonus
@@ -115,14 +118,17 @@ class Creature {
                 }
             }
         }
+        // Les bonus fixes
         updateResult(am.sorter)
+        // les bonus randoms
         if (bCritical) {
             const amCrit = this.aggregateModifiers([
                 CONSTS.ITEM_PROPERTY_DAMAGE_BONUS,
                 CONSTS.ITEM_PROPERTY_ENHANCEMENT,
                 CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL
             ], {
-                propDisc: property => property.type || sWeaponDamType
+                propDisc: property => property.type || sWeaponDamType,
+                propAmpMapper: prop => ampRndMapper(prop)
             })
             updateResult(amCrit.sorter)
         }
@@ -300,17 +306,24 @@ class Creature {
      * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
      * La valeur renvoyer ne fait pas intervenir des bonus liés aux effets de la créature  ou à ses caractéristiques
      * @param critical {boolean} si true alors le coup est critique et tous les jets de dé doivent être doublés
-     * @param additionals {string[]} jet de dés additionnels tels que sneak attack, dirty strike etc...
      */
-    rollWeaponDamage ({ critical = false, additionals = []} = {}) {
+    rollWeaponDamage ({ critical = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
         const n = critical ? 2 : 1
         let nDamage = 0
+        const nRerollThreshold = this
+            .aggregateModifiers(
+                [CONSTS.EFFECT_REROLL],
+                { effectFilter: f => f.data.when === CONSTS.ROLL_TYPE_DAMAGE }
+            ).sum
+        let bReroll = false
         for (let i = 0; i < n; ++i) {
-            nDamage += this.roll(oWeapon.damage)
-            additionals.forEach(ad => {
-                nDamage += this.roll(ad)
-            })
+            let nRoll = this.roll(oWeapon.damage)
+            if (nRoll <= nRerollThreshold && !bReroll) {
+                bReroll = true
+                nRoll = this.roll(oWeapon.damage)
+            }
+            nDamage += nRoll
         }
         const oDamageBonus = this.getDamageBonus(critical)
         if (!(oWeapon.damageType in oDamageBonus)) {

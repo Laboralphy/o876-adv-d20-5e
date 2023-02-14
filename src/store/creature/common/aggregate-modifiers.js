@@ -1,23 +1,38 @@
-function alwaysTrue () {
-    return true
+function rollRandomItemProperties (aEffects) {
+    let n = 0
+    aEffects
+        .forEach(f => {
+            if (('random' in f) && f.random !== '') {
+                n += this.roll(f.random)
+            }
+        })
+    return n
 }
 
-function alwaysEmpty () {
-    return ''
+function rollRandomEffects (aEffects) {
+    return rollRandomItemProperties(aEffects.map(f => f.data || {}))
 }
+
 
 /**
  * Aggrège les effets spécifiés dans la liste, selon un prédicat
  * @param aTags {string[]} liste des effets désirés
  * @param getters {D20CreatureStoreGetters}
- * @param filters {Object} voir la fonction store/creature/common/aggregate-modifiers
- * @returns {{effects: D20Effect[], properties: object[], sorter: {Object}, max: number, sum: number}}
+ * @param effectFilter {function}
+ * @param effectAmpMapper {function}
+ * @param effectDisc {function}
+ * @param propFilter {function}
+ * @param propAmpMapper {function}
+ * @param propDisc {function}
+ * @returns {{sorter: {Object}, max: number, sum: number}}
  */
 function aggregateModifiers (aTags, getters, {
-    effectFilter = alwaysTrue,
-    propFilter = alwaysTrue,
-    effectDisc = alwaysEmpty,
-    propDisc = alwaysEmpty
+    effectFilter = null,
+    propFilter = null,
+    effectAmpMapper = null,
+    propAmpMapper = null,
+    effectDisc = null,
+    propDisc = null
 } = {}) {
     const aTypeSet = new Set(
         Array.isArray(aTags)
@@ -30,18 +45,24 @@ function aggregateModifiers (aTags, getters, {
             aTypeSet.has(eff.type) &&
             (effectFilter ? effectFilter(eff) : true)
         )
+        .map(eff => ({
+            ...eff,
+            amp: effectAmpMapper ? effectAmpMapper(eff) : eff.amp
+        }))
     const aFilteredItemProperties = getters
         .getEquipmentItemProperties
         .filter(ip =>
             aTypeSet.has(ip.property) &&
             (propFilter ? propFilter(ip) : true)
         )
+        .map(prop => ({
+            ...prop,
+            amp: propAmpMapper ? propAmpMapper(prop) : prop.amp
+        }))
     const oSorter = {}
     const rdisc = sDisc => {
         if (!(sDisc in oSorter)) {
             oSorter[sDisc] = {
-                properties: [],
-                effects: [],
                 sum: 0,
                 max: 0
             }
@@ -52,8 +73,10 @@ function aggregateModifiers (aTags, getters, {
         aFilteredEffects.forEach(f => {
             const sDisc = effectDisc(f)
             const sd = rdisc(sDisc)
-            const amp = f.amp
-            sd.effects.push(f)
+            const amp = effectAmpMapper ? effectAmpMapper(f) : f.amp
+            if (typeof amp !== 'number') {
+                throw TypeError('Effect amp has not been properly evaluated')
+            }
             sd.max = Math.max(sd.max, amp)
             sd.sum += amp
         })
@@ -63,7 +86,6 @@ function aggregateModifiers (aTags, getters, {
             const sDisc = propDisc(f)
             const sd = rdisc(sDisc)
             const amp = f.amp
-            sd.properties.push(f)
             sd.max = Math.max(sd.max, amp)
             sd.sum += amp
         })
@@ -74,8 +96,6 @@ function aggregateModifiers (aTags, getters, {
     const nIPAcc = aFilteredItemProperties.reduce((prev, curr) => prev + curr.amp, 0)
     const nIPMax = aFilteredItemProperties.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
     return {
-        effects: aFilteredEffects,
-        properties: aFilteredItemProperties,
         sum: nEffAcc + nIPAcc,
         max: Math.max(nEffMax, nIPMax),
         sorter: oSorter

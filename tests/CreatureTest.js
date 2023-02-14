@@ -648,4 +648,45 @@ describe('getDamageBonus', function () {
         const db = c.getDamageBonus()
         expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1, DAMAGE_TYPE_FIRE: 1 })
     })
+    it('blade of angurvadal', function () {
+        const r = new Rules()
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
+        r.init()
+        c.dice.debug(true, 0.99999)
+        const oSword = r.createEntity('wpn-shortsword')
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ value: '1d4', type: CONSTS.DAMAGE_TYPE_FIRE }))
+        c.store.mutations.equipItem({ item: oSword })
+        const db = c.getDamageBonus()
+        expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1, DAMAGE_TYPE_FIRE: 4 })
+    })
+})
+
+describe('aggregateModifier with randomn amp', function () {
+    it('should return amp 1 when applying effect with amplitude 1d6 and random fixed to 0', function () {
+        const r = new Rules()
+        const c = new Creature()
+        c.dice.debug(true, 0.000001) // almost 0
+        c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
+        const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
+            effectAmpMapper: eff => c.roll(eff.amp)
+        })
+        expect(am).toEqual({ sum: 1, max: 1, sorter: {} })
+    })
+    it('should return amp 6 when applying effect with amplitude 1d6 and random fixed to 1', function () {
+        const r = new Rules()
+        const c = new Creature()
+        c.dice.debug(true, 0.999999) // almost 1
+        c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
+        const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
+            effectAmpMapper: eff => c.roll(eff.amp)
+        })
+        expect(am).toEqual({ sum: 6, max: 6, sorter: {} })
+    })
 })
