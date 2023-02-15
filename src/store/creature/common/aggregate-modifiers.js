@@ -73,7 +73,7 @@ function aggregateModifiers (aTags, getters, {
         aFilteredEffects.forEach(f => {
             const sDisc = effectDisc(f)
             const sd = rdisc(sDisc)
-            const amp = effectAmpMapper ? effectAmpMapper(f) : f.amp
+            const amp = f.amp
             if (typeof amp !== 'number') {
                 throw TypeError('Effect amp has not been properly evaluated')
             }

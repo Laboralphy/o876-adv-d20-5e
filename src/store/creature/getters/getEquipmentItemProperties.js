@@ -1,5 +1,3 @@
-const { propertyMapper } = require("../common/property-mapper");
-
 /**
  * Liste des propriétés des équippement défensif (armure, bouclier etc...)
  * @param state
@@ -7,7 +5,7 @@ const { propertyMapper } = require("../common/property-mapper");
  * @returns {[]}
  */
 module.exports = (state, getters) =>
-    propertyMapper(getters
+    getters
         .getEquipmentList
         .map(item => item
             .properties
@@ -16,6 +14,4 @@ module.exports = (state, getters) =>
                 tag: item.ref
             }))
         )
-        .flat(),
-        getters
-    )
+        .flat()
