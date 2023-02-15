@@ -61,6 +61,9 @@ function aggregateModifiers (aTags, getters, {
         }))
     const oSorter = {}
     const rdisc = sDisc => {
+        if (typeof sDisc !== 'string') {
+            throw new Error('invalid sorting key for aggregateModifiers prop/effect sorter"' + sDisc + '"')
+        }
         if (!(sDisc in oSorter)) {
             oSorter[sDisc] = {
                 sum: 0,

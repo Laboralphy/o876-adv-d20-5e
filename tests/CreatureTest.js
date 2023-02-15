@@ -690,3 +690,50 @@ describe('aggregateModifier with randomn amp', function () {
         expect(am).toEqual({ sum: 6, max: 6, sorter: {}, count: 1 })
     })
 })
+
+describe('damage mitigation', function () {
+    it ('should not have damage mitigation when not effect is applied', function () {
+        const c = new Creature()
+        expect(c.store.getters.getDamageMitigation).toEqual({})
+    })
+    it ('should have fire damage reduction 1 when one effect of DAMAGE_REDUCTION fire 1 is applied', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_REDUCTION, 1, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 1, factor: 1, vulnerability: false, resistance: false }})
+    })
+    it ('should have fire damage resistance when one effect of DAMAGE_RESIST fire is applied', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 0.5, vulnerability: false, resistance: true }})
+    })
+    it ('should have fire damage vulnerability when one effect of DAMAGE_VULNERABILITY fire is applied', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 2, vulnerability: true, resistance: false }})
+    })
+    it ('should have fire damage mitig. factor 1 when both DAMAGE_VULNERABILITY fire  DAMAGE_RESISTANCE fire are applied', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 1, vulnerability: true, resistance: true }})
+    })
+})
