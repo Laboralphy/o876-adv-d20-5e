@@ -39,6 +39,7 @@
  * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}
+ * @property getSelectedWeaponCriticalThreat undefined
  * @property getSelectedWeaponProperties {array}
  * @property getSize {string}
  * @property getSizeProperties {{value: number, hitDie: number, space: number, carryingCapacity}}

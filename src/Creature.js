@@ -46,16 +46,6 @@ class Creature {
     }
 
     /**
-     * Aggrège les effets spécifiés dans la liste, selon un prédicat
-     * @param aTags {string[]} liste des effets désirés
-     * @param filters {Object} voir la fonction store/creature/common/aggregate-modifiers
-     * @returns {{sorter: {Object}, max: number, sum: number}}
-     */
-    aggregateModifiers (aTags, filters = {}) {
-        return aggregateModifiers(aTags, this.store.getters, filters)
-    }
-
-    /**
      *
      * @param oItem {D20Item}
      * @param sEquipmentSlot {string}
@@ -65,6 +55,26 @@ class Creature {
         const oPrevItem = this.store.getters.getEquippedItems[sES]
         this.store.mutations.equipItem({ item: oItem, slot: sES })
         return oPrevItem
+    }
+
+    /*
+        ######
+        #     #   ####   #    #  #    #   ####
+        #     #  #    #  ##   #  #    #  #
+        ######   #    #  # #  #  #    #   ####
+        #     #  #    #  #  # #  #    #       #
+        #     #  #    #  #   ##  #    #  #    #
+        ######    ####   #    #   ####    ####
+     */
+
+    /**
+     * Aggrège les effets spécifiés dans la liste, selon un prédicat
+     * @param aTags {string[]} liste des effets désirés
+     * @param filters {Object} voir la fonction store/creature/common/aggregate-modifiers
+     * @returns {{sorter: {Object}, max: number, sum: number}}
+     */
+    aggregateModifiers (aTags, filters = {}) {
+        return aggregateModifiers(aTags, this.store.getters, filters)
     }
 
     /**
@@ -101,8 +111,8 @@ class Creature {
             CONSTS.ITEM_PROPERTY_DAMAGE_BONUS,
             CONSTS.ITEM_PROPERTY_ENHANCEMENT
         ], {
-            effectDisc: effect => effect.data.type || sWeaponDamType,
-            propDisc: property => property.type || sWeaponDamType,
+            effectSorter: effect => effect.data.type || sWeaponDamType,
+            propSorter: property => property.type || sWeaponDamType,
             effectAmpMapper: eff => ampRndMapper(eff),
             propAmpMapper: prop => ampRndMapper(prop)
         })
@@ -127,13 +137,40 @@ class Creature {
                 CONSTS.ITEM_PROPERTY_ENHANCEMENT,
                 CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL
             ], {
-                propDisc: property => property.type || sWeaponDamType,
+                propSorter: property => property.type || sWeaponDamType,
                 propAmpMapper: prop => ampRndMapper(prop)
             })
             updateResult(amCrit.sorter)
         }
         return oResult
     }
+
+    /**
+     * Obtenir le bonus d'attaque pour l'arme spécifiée
+     * @return {number}
+     */
+    getAttackBonus () {
+        return this.store.getters.getAttackBonus
+    }
+
+/*
+       #                                                              ##
+      # #     ####    ####   #####   ######   ####    ####           #  #
+     #   #   #    #  #    #  #    #  #       #       #                ##
+    #     #  #       #       #    #  #####    ####    ####           ###
+    #######  #  ###  #  ###  #####   #            #       #         #   # #
+    #     #  #    #  #    #  #   #   #       #    #  #    #         #    #
+    #     #   ####    ####   #    #  ######   ####    ####           #### #
+
+    #######
+       #       ##    #####    ####   ######   #####   ####
+       #      #  #   #    #  #    #  #          #    #
+       #     #    #  #    #  #       #####      #     ####
+       #     ######  #####   #  ###  #          #         #
+       #     #    #  #   #   #    #  #          #    #    #
+       #     #    #  #    #   ####   ######     #     ####
+
+ */
 
     clearTarget () {
         if (this._target.creature && this._target.handler) {
@@ -215,6 +252,42 @@ class Creature {
         }
     }
 
+    /*
+        #######
+        #        ######  ######  ######   ####    #####
+        #        #       #       #       #    #     #
+        #####    #####   #####   #####   #          #
+        #        #       #       #       #          #
+        #        #       #       #       #    #     #
+        #######  #       #       ######   ####      #
+
+        ######
+        #     #  #####    ####    ####   ######   ####    ####    ####   #####
+        #     #  #    #  #    #  #    #  #       #       #       #    #  #    #
+        ######   #    #  #    #  #       #####    ####    ####   #    #  #    #
+        #        #####   #    #  #       #            #       #  #    #  #####
+        #        #   #   #    #  #    #  #       #    #  #    #  #    #  #   #
+        #        #    #   ####    ####   ######   ####    ####    ####   #    #
+     */
+
+    applyEffect (oEffect, duration = 0, source = null) {
+        return this._effectProcessor.applyEffect(oEffect, this, duration, source)
+    }
+
+    processEffects () {
+        this._effectProcessor.processCreatureEffects(this)
+    }
+
+    /*
+         #####
+        #     #     #    #####    ####   #    #  #    #   ####    #####    ##    #    #   ####   ######   ####
+        #           #    #    #  #    #  #    #  ##  ##  #          #     #  #   ##   #  #    #  #       #
+        #           #    #    #  #       #    #  # ## #   ####      #    #    #  # #  #  #       #####    ####
+        #           #    #####   #       #    #  #    #       #     #    ######  #  # #  #       #            #
+        #     #     #    #   #   #    #  #    #  #    #  #    #     #    #    #  #   ##  #    #  #       #    #
+         #####      #    #    #   ####    ####   #    #   ####      #    #    #  #    #   ####   ######   ####
+     */
+
     /**
      *
      * @param sRollType
@@ -262,12 +335,25 @@ class Creature {
         }
     }
 
-    applyEffect (oEffect, duration = 0, source = null) {
-        return this._effectProcessor.applyEffect(oEffect, this, duration, source)
-    }
+    /*
+        ######
+        #     #   ####   #       #        ####
+        #     #  #    #  #       #       #
+        ######   #    #  #       #        ####
+        #   #    #    #  #       #            #
+        #    #   #    #  #       #       #    #
+        #     #   ####   ######  ######   ####
 
-    processEffects () {
-        this._effectProcessor.processCreatureEffects(this)
+     */
+
+    /**
+     * Tire des dé en fonction de la formule spécifiée
+     * formule exemple : 1d6 ; 2d6+1 ; 10d8 ; 3d8 ; 2d10...
+     * @param d {number|string}
+     * @returns {number}
+     */
+    roll (d) {
+        return this._dice.evaluate(d)
     }
 
     /**
@@ -275,13 +361,13 @@ class Creature {
      * (attaque, sauvegarde, compétence)
      * @param sRollType {string} ROLL_TYPE_* déterminer en quelle occasion on lance le dé
      * @param sAbility {string} spécifié la caractéristique impliquée dans le jet de dé
-     * @param extra {string} information supplémentaire
+     * @param [extra] {string} information supplémentaire
      * pour un jet de sauvegarde on peut indiquer le type de menace (DAMAGE_TYPE_FIRE, SPELL_TYPE_MIND_CONTROL)
      * pour un jet de compétence on peut indiquer la nature de la compétence (SKILL_STEALTH...)
-     * certaines créature ont des avantage ou des désavantaeg spécifique à certaines situations
+     * certaines créature ont des avantages ou des désavantages spécifiques à certaines situations
      * @returns {number}
      */
-    rollD20 (sRollType, sAbility, extra) {
+    rollD20 (sRollType, sAbility, extra = '') {
         const { advantage, disadvantage } = this.getCircumstances(sRollType, sAbility, extra)
         const r = this._dice.roll(20)
         if (advantage && !disadvantage) {
@@ -291,6 +377,45 @@ class Creature {
             return Math.min(r, this._dice.roll(20))
         }
         return r
+    }
+
+    /**
+     * Effectue une attaque, ajoute les bonus d'attaque, détermine si le coup est critique
+     * Ne fonctionne qu'avec les attaques physiques, pas les sorts
+     *
+     * @typedef AttackOutcome {object}
+     * @property ac {number}
+     * @property hit {boolean}
+     * @property critical {boolean}
+     * @property bonus {number}
+     * @property roll {number}
+     * @property damages {amount: number, types: object<string, number>}
+     *
+     * @returns {AttackOutcome}
+     */
+    rollAttack () {
+        const bonus = this.getAttackBonus()
+        const sOffensiveAbility = this.store.getters.getOffensiveAbility
+        const roll = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility)
+        const nCritThreat = this.store.getters.getSelectedWeaponCriticalThreat
+        const critical = roll >= nCritThreat
+        const ac = this.store.getters.getArmorClass
+        const hit = critical
+            ? true
+            : roll === 1
+                ? false
+                : (roll + bonus) >= ac
+        return {
+            ac,
+            bonus,
+            critical,
+            hit,
+            roll,
+            damages: {
+                amount: 0,
+                types: {}
+            }
+        }
     }
 
     /**
@@ -304,7 +429,7 @@ class Creature {
 
     /**
      * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
-     * La valeur renvoyer ne fait pas intervenir des bonus liés aux effets de la créature  ou à ses caractéristiques
+     * La valeur renvoyer ne fait pas intervenir des bonus liés aux effets de la créature ou à ses caractéristiques
      * @param critical {boolean} si true alors le coup est critique et tous les jets de dé doivent être doublés
      */
     rollWeaponDamage ({ critical = false } = {}) {
@@ -316,11 +441,11 @@ class Creature {
                 [CONSTS.EFFECT_REROLL],
                 { effectFilter: f => f.data.when === CONSTS.ROLL_TYPE_DAMAGE }
             ).sum
-        let bReroll = false
+        let bRerolled = false
         for (let i = 0; i < n; ++i) {
             let nRoll = this.roll(oWeapon.damage)
-            if (nRoll <= nRerollThreshold && !bReroll) {
-                bReroll = true
+            if (nRoll <= nRerollThreshold && !bRerolled) {
+                bRerolled = true
                 nRoll = this.roll(oWeapon.damage)
             }
             nDamage += nRoll
@@ -334,15 +459,15 @@ class Creature {
         return oDamageBonus
     }
 
-    /**
-     * Tire des dé en fonction de la formule spécifiée
-     * formule exemple : 1d6 ; 2d6+1 ; 10d8 ; 3d8 ; 2d10...
-     * @param d {number|string}
-     * @returns {number}
+    /*
+           #
+          # #     ####    #####     #     ####   #    #   ####
+         #   #   #    #     #       #    #    #  ##   #  #
+        #     #  #          #       #    #    #  # #  #   ####
+        #######  #          #       #    #    #  #  # #       #
+        #     #  #    #     #       #    #    #  #   ##  #    #
+        #     #   ####      #       #     ####   #    #   ####
      */
-    roll (d) {
-        return this._dice.evaluate(d)
-    }
 
     doFeatAction (sFeat) {
         if (sFeat in assetManager.data) {
@@ -360,6 +485,34 @@ class Creature {
         } else {
             throw new Error('ERR_FEAT_IS_INVALID')
         }
+    }
+
+    /**
+     * Effectue une attaque contre la cible actuelle
+     */
+    doAttack () {
+        // jet d'attaque
+        const oAtk = this.rollAttack()
+        // si ça touche, calculer les dégâts
+        if (oAtk.hit) {
+            const oDamages = this.rollWeaponDamage({
+                critical: oAtk.critical
+            })
+            // générer les effets de dégâts
+            let amount = 0
+            const aDamageEffects = Object
+                .entries(oDamages)
+                .map(([sType, nValue]) => {
+                    amount += nValue
+                    return EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, { type: sType })
+                })
+            // appliquer les effets sur la cible
+            const oTarget = this.getTarget()
+            aDamageEffects.forEach(d => oTarget.applyEffect(d, 0))
+            oAtk.damages.types = oDamages
+            oAtk.damages.amount = amount
+        }
+        return oAtk
     }
 }
 

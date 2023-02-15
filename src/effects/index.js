@@ -7,6 +7,7 @@ module.exports = {
   [CONSTS.EFFECT_ATTACK_BONUS]: require('./attack-bonus'),
   [CONSTS.EFFECT_BLINDNESS]: require('./blindness'),
   [CONSTS.EFFECT_CONDITION]: require('./condition'),
+  [CONSTS.EFFECT_CRITICAL_THREAT]: require('./critical-threat'),
   [CONSTS.EFFECT_DAMAGE_BONUS]: require('./damage-bonus'),
   [CONSTS.EFFECT_DAMAGE]: require('./damage'),
   [CONSTS.EFFECT_DISADVANTAGE]: require('./disadvantage'),
@@ -18,6 +19,7 @@ module.exports = {
   [CONSTS.EFFECT_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.EFFECT_MELEE_ATTACK_BONUS]: require('./melee-attack-bonus'),
   [CONSTS.EFFECT_RANGED_ATTACK_BONUS]: require('./ranged-attack-bonus'),
+  [CONSTS.EFFECT_REROLL]: require('./reroll'),
   [CONSTS.EFFECT_TRUE_SIGHT]: require('./true-sight')
 }
 

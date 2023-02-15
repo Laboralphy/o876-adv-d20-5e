@@ -8,7 +8,10 @@ const CONSTS = require('../consts')
  * @returns {D20Effect}
  */
 function create (amount, type) {
-    return createEffect(CONSTS.EFFECT_DAMAGE, amount, { type })
+    return createEffect(CONSTS.EFFECT_DAMAGE, amount, {
+        type,
+        resistedAmount: 0
+    })
 }
 
 /**
@@ -17,11 +20,8 @@ function create (amount, type) {
  * @param target {Creature}
  */
 function mutate ({ effect, target }) {
-    // Removing armor and TGH
-    target.store.mutations.applyDamage({
-        amount: effect.amp,
-        type: effect.data.type
-    })
+    // What is the damage resistance, vulnerability, reduction ?
+    target.store.mutations.damage(effect.amp)
 }
 
 module.exports = {

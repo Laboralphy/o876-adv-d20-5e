@@ -20,19 +20,19 @@ function rollRandomEffects (aEffects) {
  * @param getters {D20CreatureStoreGetters}
  * @param effectFilter {function}
  * @param effectAmpMapper {function}
- * @param effectDisc {function}
+ * @param effectSorter {function}
  * @param propFilter {function}
  * @param propAmpMapper {function}
- * @param propDisc {function}
- * @returns {{sorter: {Object}, max: number, sum: number}}
+ * @param propSorter {function}
+ * @returns {{sorter: {Object}, max: number, sum: number, count: number }}
  */
 function aggregateModifiers (aTags, getters, {
     effectFilter = null,
     propFilter = null,
     effectAmpMapper = null,
     propAmpMapper = null,
-    effectDisc = null,
-    propDisc = null
+    effectSorter = null,
+    propSorter = null
 } = {}) {
     const aTypeSet = new Set(
         Array.isArray(aTags)
@@ -64,14 +64,15 @@ function aggregateModifiers (aTags, getters, {
         if (!(sDisc in oSorter)) {
             oSorter[sDisc] = {
                 sum: 0,
-                max: 0
+                max: 0,
+                count: 0
             }
         }
         return oSorter[sDisc]
     }
-    if (effectDisc) {
+    if (effectSorter) {
         aFilteredEffects.forEach(f => {
-            const sDisc = effectDisc(f)
+            const sDisc = effectSorter(f)
             const sd = rdisc(sDisc)
             const amp = f.amp
             if (typeof amp !== 'number') {
@@ -79,15 +80,17 @@ function aggregateModifiers (aTags, getters, {
             }
             sd.max = Math.max(sd.max, amp)
             sd.sum += amp
+            ++sd.count
         })
     }
-    if (propDisc) {
+    if (propSorter) {
         aFilteredItemProperties.forEach(f => {
-            const sDisc = propDisc(f)
+            const sDisc = propSorter(f)
             const sd = rdisc(sDisc)
             const amp = f.amp
             sd.max = Math.max(sd.max, amp)
             sd.sum += amp
+            ++sd.count
         })
     }
 
@@ -98,6 +101,7 @@ function aggregateModifiers (aTags, getters, {
     return {
         sum: nEffAcc + nIPAcc,
         max: Math.max(nEffMax, nIPMax),
+        count: aFilteredEffects.length + aFilteredItemProperties.length,
         sorter: oSorter
     }
 }

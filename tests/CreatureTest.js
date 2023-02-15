@@ -677,7 +677,7 @@ describe('aggregateModifier with randomn amp', function () {
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
             effectAmpMapper: eff => c.roll(eff.amp)
         })
-        expect(am).toEqual({ sum: 1, max: 1, sorter: {} })
+        expect(am).toEqual({ sum: 1, max: 1, sorter: {}, count: 1 })
     })
     it('should return amp 6 when applying effect with amplitude 1d6 and random fixed to 1', function () {
         const r = new Rules()
@@ -687,6 +687,6 @@ describe('aggregateModifier with randomn amp', function () {
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
             effectAmpMapper: eff => c.roll(eff.amp)
         })
-        expect(am).toEqual({ sum: 6, max: 6, sorter: {} })
+        expect(am).toEqual({ sum: 6, max: 6, sorter: {}, count: 1 })
     })
 })
