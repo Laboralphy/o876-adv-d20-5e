@@ -53,6 +53,7 @@
  * @property isProficientSelectedWeapon {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWeildingNonLightWeapon {boolean}
+ * @property getWizardSpellSlots {number[]}
  * @property has1HWeaponNoShield {boolean}
  * @property has2HWeaponNoShield {boolean}
  * @property isWearingArmor {boolean}

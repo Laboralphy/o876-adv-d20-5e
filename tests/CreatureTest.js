@@ -792,7 +792,7 @@ describe('attack logs', function () {
           damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
         })
     })
-    fit('should do 12 dmg when doing attack with a blade of angurvadal and a strength of 10', function () {
+    it('should do 12 dmg when doing attack with a blade of angurvadal and a strength of 10', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         const r = new Rules()

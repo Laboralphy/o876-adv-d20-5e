@@ -20,6 +20,17 @@ function addMitigation(oMitig, am) {
         })
 }
 
+/**
+ * @typedef D20OneDamageMitigation {object}
+ * @property reduction {number}
+ * @property factor {number}
+ * @property resistance {boolean}
+ * @property vulnerability {boolean}
+ *
+ * @param state
+ * @param getters
+ * @returns {Object<string, D20OneDamageMitigation>}}
+ */
 module.exports = (state, getters) => {
     const fEffectSorter = eff => {
         return eff.data.type
