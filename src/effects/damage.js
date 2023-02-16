@@ -4,13 +4,13 @@ const CONSTS = require('../consts')
 /**
  * Inflict damage
  * @param amount {number}
- * @param type {number} DAMAGE_TYPE_
+ * @param type {string} DAMAGE_TYPE_
  * @returns {D20Effect}
  */
 function create (amount, type) {
     return createEffect(CONSTS.EFFECT_DAMAGE, amount, {
         type,
-        resistedAmount: 0
+        appliedAmount: 0
     })
 }
 
@@ -21,7 +21,15 @@ function create (amount, type) {
  */
 function mutate ({ effect, target }) {
     // What is the damage resistance, vulnerability, reduction ?
-    target.store.mutations.damage(effect.amp)
+    const oMitigation = target.store.getters.getDamageMitigation
+    const sType = effect.data.type
+    let amp = effect.amp
+    if (sType in oMitigation) {
+        const { resistance, vulnerability, factor, reduction } = oMitigation[sType]
+        console.log({ resistance, vulnerability, factor, reduction })
+        amp = Math.floor(Math.max(0, (amp - reduction)) * factor)
+    }
+    target.store.mutations.damage({ amount: amp })
 }
 
 module.exports = {

@@ -352,6 +352,10 @@ describe('getTarget', function () {
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
         ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), c2, 10)
+        expect(c1.store.state.target.id).toBe(c2.id)
+        expect([...c2.store.getters.getConditions]).toEqual(['CONDITION_INVISIBLE'])
+        expect([...c1.getTarget().store.getters.getConditions]).toEqual(['CONDITION_INVISIBLE'])
+        expect([...c1.store.getters.getTargetConditions]).toEqual(['CONDITION_INVISIBLE'])
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
     })
     it('should update canSeeTarget WHEN invisible effect is added/remove on target', function () {
@@ -735,5 +739,93 @@ describe('damage mitigation', function () {
         )
         expect(c.store.getters.getDamageMitigation)
             .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 1, vulnerability: true, resistance: true }})
+    })
+    it ('should have fire and cold damage mitig. factor 0.5 for fire, factor 2 for fire', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, 0, CONSTS.DAMAGE_TYPE_COLD),
+            10
+        )
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({
+                DAMAGE_TYPE_FIRE: { reduction: 0, factor: 0.5, vulnerability: false, resistance: true },
+                DAMAGE_TYPE_COLD: { reduction: 0, factor: 2, vulnerability: true, resistance: false }
+            })
+    })
+})
+
+describe('attack logs', function () {
+    it('should do at least 1 dmg when doing attack with a shortsword and a strength of 0', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        const r = new Rules()
+        r.init()
+        const oSword1 = r.createEntity('wpn-shortsword')
+        const oSword2 = r.createEntity('wpn-shortsword')
+        const oArmor1 = r.createEntity('arm-leather')
+        const oArmor2 = r.createEntity('arm-leather')
+        c1.equipItem(oSword1)
+        c1.equipItem(oArmor1)
+        c2.equipItem(oSword2)
+        c2.equipItem(oArmor2)
+        c1.store.mutations.addClass({ ref: 'fighter', levels: 5 })
+        c2.store.mutations.addClass({ ref: 'fighter', levels: 5 })
+        c1.setTarget(c2)
+        c2.setTarget(c1)
+        let oLastAttack
+        c1.events.on('attack', ({ attack }) => {
+            oLastAttack = attack
+        })
+        c1.dice.debug(true, 0.75)
+        c1.doAttack()
+        expect(oLastAttack).toEqual( {
+          ac: 6,
+          bonus: -2,
+          roll: 14,
+          critical: false,
+          hit: true,
+          dice: 16,
+          damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
+        })
+    })
+    fit('should do 12 dmg when doing attack with a blade of angurvadal and a strength of 10', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        const r = new Rules()
+        r.init()
+        const oSword1 = r.createEntity('wpn-longsword')
+        const oSword2 = r.createEntity('wpn-longsword')
+        const oArmor1 = r.createEntity('arm-leather')
+        const oArmor2 = r.createEntity('arm-leather')
+        c1.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        oSword1.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
+        oSword1.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ value: '1d4', type: CONSTS.DAMAGE_TYPE_FIRE }))
+        c1.equipItem(oSword1)
+        c1.equipItem(oArmor1)
+        c2.equipItem(oSword2)
+        c2.equipItem(oArmor2)
+        c1.store.mutations.addClass({ ref: 'fighter', levels: 5 })
+        c2.store.mutations.addClass({ ref: 'fighter', levels: 5 })
+        c1.setTarget(c2)
+        c2.setTarget(c1)
+        let oLastAttack
+        c1.events.on('attack', ({ attack }) => {
+            oLastAttack = attack
+        })
+        c1.dice.debug(true, 0.75)
+        c1.doAttack()
+        expect(oLastAttack).toEqual( {
+            ac: 6,
+            bonus: 4,
+            roll: 20,
+            critical: false,
+            hit: true,
+            dice: 16,
+            damages: { amount: 12, types: { DAMAGE_TYPE_SLASHING: 8, DAMAGE_TYPE_FIRE: 4 } }
+        })
     })
 })

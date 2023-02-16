@@ -1,17 +1,18 @@
 const CONSTS = require('./consts')
 const EffectProcessor = require('./EffectProcessor')
 const Dice = require('../libs/dice')
+const { v4: uuidv4 } = require('uuid')
+const Events = require('events')
 
 // Store
-const CreatureStore = require('./store/creature')
 const { assetManager } = require('./assets')
-const {aggregateModifiers} = require("./store/creature/common/aggregate-modifiers");
+const { aggregateModifiers } = require("./store/creature/common/aggregate-modifiers");
 
 let LAST_ID = 0
 
 class Creature {
     constructor () {
-        this._id = ++LAST_ID
+        this._id = uuidv4({}, null, 0)
         this._dice = new Dice()
         this._target = {
             handler: null,
@@ -27,6 +28,11 @@ class Creature {
          */
         this._store = assetManager.createStore('creature')
         this._effectProcessor = new EffectProcessor()
+        this._events = new Events()
+    }
+
+    get events () {
+        return this._events
     }
 
     get dice () {
@@ -271,7 +277,9 @@ class Creature {
      */
 
     applyEffect (oEffect, duration = 0, source = null) {
-        return this._effectProcessor.applyEffect(oEffect, this, duration, source)
+        const oAppliedEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
+        this._events.emit('effect-applied', { effect: oEffect })
+        return oAppliedEffect
     }
 
     processEffects () {
@@ -299,11 +307,17 @@ class Creature {
         const oAdvantages = this.store.getters.getAdvantages
         const oDisadvantages = this.store.getters.getDisadvantages
         const ar = oAdvantages[sRollType]
+        if (!ar) {
+            throw new Error('This roll type (' + sRollType + ') does not exist in advantages. Available roll types are : ' + Object.keys(oAdvantages).join(', '))
+        }
         const dr = oDisadvantages[sRollType]
-        const ara = ar.abilities[sAbility].value
-        const dra = dr.abilities[sAbility].value
-        const al = ar.abilities[sAbility].rules
-        const dl = dr.abilities[sAbility].rules
+        if (!dr) {
+            throw new Error('This roll type (' + sRollType + ') does not exist in disadvantages. Available roll types are : ' + Object.keys(oDisadvantages).join(', '))
+        }
+        const ara = ar[sAbility].value
+        const dra = dr[sAbility].value
+        const al = ar[sAbility].rules
+        const dl = dr[sAbility].rules
         let
             advantage = ara,
             disadvantage = dra
@@ -396,21 +410,23 @@ class Creature {
     rollAttack () {
         const bonus = this.getAttackBonus()
         const sOffensiveAbility = this.store.getters.getOffensiveAbility
-        const roll = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility)
+        const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility)
         const nCritThreat = this.store.getters.getSelectedWeaponCriticalThreat
-        const critical = roll >= nCritThreat
+        const critical = dice >= nCritThreat
         const ac = this.store.getters.getArmorClass
+        const roll = dice + bonus
         const hit = critical
             ? true
-            : roll === 1
+            : dice === 1
                 ? false
-                : (roll + bonus) >= ac
+                : (dice + bonus) >= ac
         return {
             ac,
             bonus,
+            roll,
             critical,
             hit,
-            roll,
+            dice,
             damages: {
                 amount: 0,
                 types: {}
@@ -452,9 +468,9 @@ class Creature {
         }
         const oDamageBonus = this.getDamageBonus(critical)
         if (!(oWeapon.damageType in oDamageBonus)) {
-            oDamageBonus[oWeapon.damageType] = nDamage
+            oDamageBonus[oWeapon.damageType] = Math.max(1, nDamage)
         } else {
-            oDamageBonus[oWeapon.damageType] += nDamage
+            oDamageBonus[oWeapon.damageType] = Math.max(1, oDamageBonus[oWeapon.damageType] + nDamage)
         }
         return oDamageBonus
     }
@@ -504,14 +520,15 @@ class Creature {
                 .entries(oDamages)
                 .map(([sType, nValue]) => {
                     amount += nValue
-                    return EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, { type: sType })
+                    return EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType)
                 })
             // appliquer les effets sur la cible
             const oTarget = this.getTarget()
-            aDamageEffects.forEach(d => oTarget.applyEffect(d, 0))
+            aDamageEffects.map(d => oTarget.applyEffect(d, 0))
             oAtk.damages.types = oDamages
             oAtk.damages.amount = amount
         }
+        this._events.emit('attack', { attack: oAtk, attacker: this, attacked: this.getTarget() })
         return oAtk
     }
 }
