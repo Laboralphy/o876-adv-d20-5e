@@ -57,6 +57,7 @@
  * @property properties {[]}
  * @property data {D20ArmorData|D20WeaponData}
  * @property equipmentSlots {string[]}
+ * @property material {string}
  */
 
 module.exports = {

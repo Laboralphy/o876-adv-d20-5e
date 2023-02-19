@@ -40,6 +40,18 @@
       "then": {
         "$ref": "./def-item-type-armor"
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "itemType": {
+            "const": "ITEM_TYPE_SHIELD"
+          }
+        }
+      },
+      "then": {
+        "$ref": "./def-item-type-shield"
+      }
     }
   ]
 }

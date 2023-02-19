@@ -4,5 +4,6 @@
   "properties": [],
   "damage": "1",
   "damageType": "DAMAGE_TYPE_CRUSHING",
-  "attributes": []
+  "attributes": [],
+  "material": ""
 }
