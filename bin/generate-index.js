@@ -73,17 +73,18 @@ function getLastReturnTagOfFile (sFile) {
         .pop()
 }
 
-function generateGetterReturnType (sPath) {
-    const aFiles = ls(sPath)
-    const aProperties = aFiles
-        .map(f => {
-            const sFile = path.join(sPath, f) + '.js'
-            const sType = getLastReturnTagOfFile(sFile)
-            if (!sType) {
-                console.error('This file has no valid @return tag : ' + sFile)
-            }
-            return ' * @property ' + f + ' ' + sType
-        })
+function generateGetterReturnType (aPaths) {
+    const aProperties = aPaths.map(sPath => {
+        return ls(sPath)
+            .map(f => {
+                const sFile = path.join(sPath, f) + '.js'
+                const sType = getLastReturnTagOfFile(sFile)
+                if (!sType) {
+                    console.error('This file has no valid @return tag : ' + sFile)
+                }
+                return ' * @property ' + f + ' ' + sType
+            })
+    }).flat()
     aProperties.unshift( ' * @typedef D20CreatureStoreGetters {object}')
     aProperties.unshift( '/**')
     aProperties.push(' */')
@@ -137,7 +138,10 @@ function main (sType) {
 
         // getters
         case 'g': {
-            console.log(generateGetterReturnType('./src/store/creature/getters'))
+            console.log(generateGetterReturnType([
+                './src/store/creature/getters',
+                './src/modules/classic/store/creature/getters'
+            ]))
             break
         }
 

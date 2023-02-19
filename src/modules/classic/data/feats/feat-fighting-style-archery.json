@@ -1,0 +1,6 @@
+{
+  "description": "Adds +2 attack roll when using ranged weapon",
+  "effects": [
+    ["EFFECT_RANGED_ATTACK_BONUS", 2]
+  ]
+}

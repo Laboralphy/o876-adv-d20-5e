@@ -14,4 +14,13 @@
  * @property clearAggressor {function}
  * @property updateTargetConditions {function({ [id]: number, conditions: Set|[] })}
  * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[] })}
- * */
+ * @property setEncumbrance {function({ value: number })}
+ * @property setAreaFlags {function({ flags: string[] })}
+ * @property addFeat {function({ feat: string })}
+ * @property updateFeatEffects {function()}
+ * @property dispellEffect {function({ effect })}
+ * @property incCounter {function({ counter })}
+ * @property resetCounters {function()}
+ * @property setHitPoints {function({ value })}
+ * @property heal {function({ amount })}
+ */

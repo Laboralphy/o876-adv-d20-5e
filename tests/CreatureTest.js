@@ -1,10 +1,13 @@
 const Creature = require('../src/Creature')
+const Rules = require('../src/Rules')
 const EffectProcessor = require('../src/EffectProcessor')
+const ItemProperties = require('../src/item-properties')
 const CONSTS = require('../src/consts')
 const { warmup } = require('../src/assets')
 const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
 
 beforeEach(function () {
+    Error.stackTraceLimit = Infinity
     warmup()
 })
 
@@ -27,10 +30,10 @@ describe('setAbility', function () {
 describe('addEffect', function () {
     it('should get 15 strength WHEN base strength is 10 and ability bonus effect is 5 (on strength)', function () {
         const c = new Creature()
-        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10})
         // ajouter un ability modifier
         const ep = new EffectProcessor()
-        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { ability: CONSTS.ABILITY_STRENGTH, value: 5 }), c, 10)
+        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, CONSTS.ABILITY_STRENGTH, 5), c, 10)
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
     })
 
@@ -39,7 +42,7 @@ describe('addEffect', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
         const ep = new EffectProcessor()
-        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { value: 5, ability: CONSTS.ABILITY_DEXTERITY }), c, 10)
+        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, CONSTS.ABILITY_DEXTERITY, 5), c, 10)
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(10)
     })
 
@@ -49,13 +52,13 @@ describe('addEffect', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
         ep.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { ability: CONSTS.ABILITY_STRENGTH, value: 5 }),
+            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, CONSTS.ABILITY_STRENGTH, 5),
             c,
             10
         )
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(15)
         ep.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, { ability: CONSTS.ABILITY_STRENGTH, value: 3 }),
+            EffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_BONUS, CONSTS.ABILITY_STRENGTH, 3),
             c,
             10
         )
@@ -108,19 +111,19 @@ describe('addClass', function () {
 })
 
 describe('getMaxHitPoints', function () {
-    it('should have 12 hp on first level of barbarian', function () {
+    it('should have 10 hp on first level of fighter', function () {
         const c = new Creature()
-        c.store.mutations.addClass({ ref: 'barbarian' })
+        c.store.mutations.addClass({ ref: 'fighter' })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
-        expect(c.store.getters.getMaxHitPoints).toBe(12)
+        expect(c.store.getters.getMaxHitPoints).toBe(10)
     })
-    it('should have 19 hp on second level of barbarian', function () {
+    it('should have 16 hp on second level of fighter', function () {
         const c = new Creature()
-        c.store.mutations.addClass({ ref: 'barbarian', levels: 2 })
+        c.store.mutations.addClass({ ref: 'fighter', levels: 2 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_CONSTITUTION]).toBe(10)
         expect(c.store.getters.getAbilityModifiers[CONSTS.ABILITY_CONSTITUTION]).toBe(0)
-        expect(c.store.getters.getMaxHitPoints).toBe(19)
+        expect(c.store.getters.getMaxHitPoints).toBe(16)
     })
 })
 
@@ -142,7 +145,7 @@ describe('getAC', function () {
             "equipmentSlots": [CONSTS.EQUIPMENT_SLOT_CHEST]
         }
         c.equipItem(oArmorLeather)
-        expect(c.getAC()).toBe(12)
+        expect(c.store.getters.getArmorClass).toBe(12)
     })
     it('should have AC 14 WHEN wearing magical (+2) armor', function () {
         const c = new Creature()
@@ -164,7 +167,7 @@ describe('getAC', function () {
             "equipmentSlots": [CONSTS.EQUIPMENT_SLOT_CHEST]
         }
         c.equipItem(oArmorLeather)
-        expect(c.getAC()).toBe(14)
+        expect(c.store.getters.getArmorClass).toBe(14)
     })
 })
 
@@ -187,11 +190,11 @@ describe('getAttackBonus', function () {
         expect(c.store.getters.getLevel).toBe(1)
         expect(c.store.getters.getProficiencyBonus).toBe(2)
         expect(c.store.getters.isProficientSelectedWeapon).toBeTrue()
-        expect(c.getAttackBonus()).toBe(2)
+        expect(c.store.getters.getAttackBonus).toBe(2)
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 12 })
-        expect(c.getAttackBonus()).toBe(3)
+        expect(c.store.getters.getAttackBonus).toBe(3)
         c.store.mutations.addClass({ ref: 'tourist', levels: 4 })
-        expect(c.getAttackBonus()).toBe(4)
+        expect(c.store.getters.getAttackBonus).toBe(4)
     })
     it ('should update attack bonus WHEN switching from weapon melee to ranged', function () {
         const c = new Creature()
@@ -236,11 +239,11 @@ describe('getAttackBonus', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 14 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 18 })
         c.store.mutations.addClass({ ref: 'tourist', levels: 1 })
-        expect(c.getAttackBonus()).toBe(2)
+        expect(c.store.getters.getAttackBonus).toBe(2)
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
-        expect(c.getAttackBonus()).toBe(4)
+        expect(c.store.getters.getAttackBonus).toBe(4)
         c.store.mutations.equipItem({ item: oDagger, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
-        expect(c.getAttackBonus()).toBe(4)
+        expect(c.store.getters.getAttackBonus).toBe(4)
     })
     it ('should update attack bonus WHEN switching from magical weapon melee to ranged', function () {
         const c = new Creature()
@@ -308,15 +311,15 @@ describe('getAttackBonus', function () {
         expect(c.store.getters.getProficiencyBonus).toBe(2)
         // +2 prof, +1 weapon +2 ability
         expect(c.store.getters.getOffensiveEquipmentList.length).toBe(1)
-        expect(c.getAttackBonus()).toBe(5)
+        expect(c.store.getters.getAttackBonus).toBe(5)
         c.store.mutations.equipItem({ item: oDagger, slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
         // +2 prof, +2 weapon +4 ability
-        expect(c.getAttackBonus()).toBe(8)
+        expect(c.store.getters.getAttackBonus).toBe(8)
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         // +2 prof, +3 weapon +2 ammo +4 ability
         expect(c.store.getters.getOffensiveEquipmentList.length).toBe(2)
         expect(c.store.getters.getSelectedWeaponProperties.length).toBe(2)
-        expect(c.getAttackBonus()).toBe(11)
+        expect(c.store.getters.getAttackBonus).toBe(11)
     })
 })
 
@@ -349,6 +352,10 @@ describe('getTarget', function () {
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
         ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), c2, 10)
+        expect(c1.store.state.target.id).toBe(c2.id)
+        expect([...c2.store.getters.getConditions]).toEqual(['CONDITION_INVISIBLE'])
+        expect([...c1.getTarget().store.getters.getConditions]).toEqual(['CONDITION_INVISIBLE'])
+        expect([...c1.store.getters.getTargetConditions]).toEqual(['CONDITION_INVISIBLE'])
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
     })
     it('should update canSeeTarget WHEN invisible effect is added/remove on target', function () {
@@ -379,17 +386,17 @@ describe('getEffects', function () {
 describe('dis and adv', function () {
     it('should not return anything when creature has no effect', function () {
         const c1 = new Creature()
-        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({})
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects, [])).toEqual({})
     })
     it('should return ADV1 when creature has one advantage effect with ADV1 tag', function () {
         const c1 = new Creature()
         const ep = new EffectProcessor()
         const eAdv = EffectProcessor.createEffect(
             CONSTS.EFFECT_ADVANTAGE,
-            { tag: 'ADV1', rollTypes: [CONSTS.ROLL_TYPE_ATTACK], abilities: [CONSTS.ABILITY_INTELLIGENCE] }
+            [CONSTS.ROLL_TYPE_ATTACK], [CONSTS.ABILITY_INTELLIGENCE], 'ADV1'
         )
         ep.applyEffect(eAdv, c1, 10)
-        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects, [])).toEqual({
             ROLL_TYPE_ATTACK: {
                 ABILITY_INTELLIGENCE: ['ADV1']
             }
@@ -398,23 +405,23 @@ describe('dis and adv', function () {
     it('should return many ADV1 (on each ability) when creature has one advantage effect with ADV1 tag and multiple ability', function () {
         const c1 = new Creature()
         const ep = new EffectProcessor()
-        const eAdv = EffectProcessor.createEffect( CONSTS.EFFECT_ADVANTAGE, {
-            tag: 'ADV1',
-            rollTypes: [CONSTS.ROLL_TYPE_ATTACK],
-            abilities: [
+        const eAdv = EffectProcessor.createEffect( CONSTS.EFFECT_ADVANTAGE,
+            [CONSTS.ROLL_TYPE_ATTACK],
+            [
                 CONSTS.ABILITY_STRENGTH,
                 CONSTS.ABILITY_DEXTERITY,
                 CONSTS.ABILITY_CONSTITUTION,
                 CONSTS.ABILITY_INTELLIGENCE,
                 CONSTS.ABILITY_WISDOM,
                 CONSTS.ABILITY_CHARISMA
-            ]
-        })
+            ],
+            'ADV1'
+        )
         ep.applyEffect(eAdv, c1, 10)
         if (!c1.store.getters.getEffects) {
             throw new Error('WTF getEffects is undefined')
         }
-        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects)).toEqual({
+        expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects, [])).toEqual({
             ROLL_TYPE_ATTACK: {
                 ABILITY_STRENGTH: ['ADV1'],
                 ABILITY_DEXTERITY: ['ADV1'],
@@ -520,7 +527,7 @@ describe('getAdvantages/getDisadvantages', function () {
             expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
             // c1 et c2 se voient
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_CANNOT_SEE_ME')).toBeFalse()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeFalse()
         })
         it('should not be an advantage on attack rolls when target also invisible', function () {
             const c1 = new Creature()
@@ -556,7 +563,7 @@ describe('getAdvantages/getDisadvantages', function () {
         expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
         // c2 a donc bien un désavantage d'attaque en tout
         expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
-        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('NOT_HIDDEN_AND_TARGET_INVISIBLE')).toBeTrue()
+        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_UNSEEN')).toBeTrue()
     })
 })
 
@@ -568,12 +575,11 @@ describe('groupEffect', function () {
     it('should create 3 effects when applying a group of two effects', function () {
         const c = new Creature()
         const ep = new EffectProcessor()
-        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, {
-            effects: [
+        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, [
                 EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY),
                 EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
             ]
-        }), c, 10)
+        ), c, 10)
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
         ep.processCreatureEffects(c)
@@ -597,20 +603,229 @@ describe('groupEffect', function () {
         const c = new Creature()
         const eInvis = EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY)
         const eThrSi = EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
-        const eGroup = EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, {
-            tag: 'TEST_GROUP',
-            effects: [eInvis, eThrSi]
-        })
+        const eGroup = EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, [eInvis, eThrSi], 'TEST_GROUP')
         c.applyEffect(eGroup, 10)
         c.processEffects()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
-        const effFound = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.data.tag === 'TEST_GROUP')
-        effFound.duration = 0
+        const effFound = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.tag === 'TEST_GROUP')
+        c.store.mutations.dispellEffect({ effect: effFound })
         c.processEffects()
-        const effFound2 = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.data.tag === 'TEST_GROUP')
+        const effFound2 = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.tag === 'TEST_GROUP')
         expect(effFound2).not.toBeDefined()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
         expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeFalse()
+    })
+})
+
+describe('getDamageBonus', function () {
+    it('should have damage bonus +1 slashing when equiping sword +1', function () {
+        const r = new Rules()
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
+        r.init()
+        const oSword = r.createEntity('wpn-shortsword')
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
+        c.store.mutations.equipItem({ item: oSword })
+        const db = c.getDamageBonus()
+        expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1 })
+    })
+    it('should have damage bonus +1 slashing +1 fire when equiping sword +1 of flame', function () {
+        const r = new Rules()
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
+        r.init()
+        const oSword = r.createEntity('wpn-shortsword')
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ value: 1, type: CONSTS.DAMAGE_TYPE_FIRE }))
+        c.store.mutations.equipItem({ item: oSword })
+        const db = c.getDamageBonus()
+        expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1, DAMAGE_TYPE_FIRE: 1 })
+    })
+    it('blade of angurvadal', function () {
+        const r = new Rules()
+        const c = new Creature()
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
+        c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
+        r.init()
+        c.dice.debug(true, 0.99999)
+        const oSword = r.createEntity('wpn-shortsword')
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ value: '1d4', type: CONSTS.DAMAGE_TYPE_FIRE }))
+        c.store.mutations.equipItem({ item: oSword })
+        const db = c.getDamageBonus()
+        expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1, DAMAGE_TYPE_FIRE: 4 })
+    })
+})
+
+describe('aggregateModifier with randomn amp', function () {
+    it('should return amp 1 when applying effect with amplitude 1d6 and random fixed to 0', function () {
+        const r = new Rules()
+        const c = new Creature()
+        c.dice.debug(true, 0.000001) // almost 0
+        c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
+        const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
+            effectAmpMapper: eff => c.roll(eff.amp)
+        })
+        expect(am).toEqual({ sum: 1, max: 1, sorter: {}, count: 1 })
+    })
+    it('should return amp 6 when applying effect with amplitude 1d6 and random fixed to 1', function () {
+        const r = new Rules()
+        const c = new Creature()
+        c.dice.debug(true, 0.999999) // almost 1
+        c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
+        const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
+            effectAmpMapper: eff => c.roll(eff.amp)
+        })
+        expect(am).toEqual({ sum: 6, max: 6, sorter: {}, count: 1 })
+    })
+})
+
+describe('damage mitigation', function () {
+    it ('should not have damage mitigation when not effect is applied', function () {
+        const c = new Creature()
+        expect(c.store.getters.getDamageMitigation).toEqual({})
+    })
+    it ('should have fire damage reduction 1 when one effect of DAMAGE_REDUCTION fire 1 is applied', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_REDUCTION, 1, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 1, factor: 1, vulnerability: false, resistance: false }})
+    })
+    it ('should have fire damage resistance when one effect of DAMAGE_RESIST fire is applied', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 0.5, vulnerability: false, resistance: true }})
+    })
+    it ('should have fire damage vulnerability when one effect of DAMAGE_VULNERABILITY fire is applied', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 2, vulnerability: true, resistance: false }})
+    })
+    it ('should have fire damage mitig. factor 1 when both DAMAGE_VULNERABILITY fire  DAMAGE_RESISTANCE fire are applied', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 1, vulnerability: true, resistance: true }})
+    })
+    it ('should have fire and cold damage mitig. factor 0.5 for fire, factor 2 for fire', function () {
+        const c = new Creature()
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, 0, CONSTS.DAMAGE_TYPE_COLD),
+            10
+        )
+        c.applyEffect(
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            10
+        )
+        expect(c.store.getters.getDamageMitigation)
+            .toEqual({
+                DAMAGE_TYPE_FIRE: { reduction: 0, factor: 0.5, vulnerability: false, resistance: true },
+                DAMAGE_TYPE_COLD: { reduction: 0, factor: 2, vulnerability: true, resistance: false }
+            })
+    })
+})
+
+describe('attack logs', function () {
+    it('should do at least 1 dmg when doing attack with a shortsword and a strength of 0', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        const r = new Rules()
+        r.init()
+        const oSword1 = r.createEntity('wpn-shortsword')
+        const oSword2 = r.createEntity('wpn-shortsword')
+        const oArmor1 = r.createEntity('arm-leather')
+        const oArmor2 = r.createEntity('arm-leather')
+        c1.equipItem(oSword1)
+        c1.equipItem(oArmor1)
+        c2.equipItem(oSword2)
+        c2.equipItem(oArmor2)
+        c1.store.mutations.addClass({ ref: 'fighter', levels: 5 })
+        c2.store.mutations.addClass({ ref: 'fighter', levels: 5 })
+        c1.setTarget(c2)
+        c2.setTarget(c1)
+        let oLastAttack
+        c1.events.on('attack', ({ attack }) => {
+            oLastAttack = attack
+        })
+        c1.dice.debug(true, 0.75)
+        c1.doAttack()
+        expect(oLastAttack).toEqual( {
+          ac: 6,
+          bonus: -2,
+          roll: 14,
+          critical: false,
+          hit: true,
+          dice: 16,
+          damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
+        })
+    })
+    it('should do 12 dmg when doing attack with a blade of angurvadal and a strength of 10', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        const r = new Rules()
+        r.init()
+        const oSword1 = r.createEntity('wpn-longsword')
+        const oSword2 = r.createEntity('wpn-longsword')
+        const oArmor1 = r.createEntity('arm-leather')
+        const oArmor2 = r.createEntity('arm-leather')
+        c1.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
+        oSword1.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
+        oSword1.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ value: '1d4', type: CONSTS.DAMAGE_TYPE_FIRE }))
+        c1.equipItem(oSword1)
+        c1.equipItem(oArmor1)
+        c2.equipItem(oSword2)
+        c2.equipItem(oArmor2)
+        c1.store.mutations.addClass({ ref: 'fighter', levels: 5 })
+        c2.store.mutations.addClass({ ref: 'fighter', levels: 5 })
+        c1.setTarget(c2)
+        c2.setTarget(c1)
+        let oLastAttack
+        c1.events.on('attack', ({ attack }) => {
+            oLastAttack = attack
+        })
+        c1.dice.debug(true, 0.75)
+        c1.doAttack()
+        expect(oLastAttack).toEqual( {
+            ac: 6,
+            bonus: 4,
+            roll: 20,
+            critical: false,
+            hit: true,
+            dice: 16,
+            damages: { amount: 12, types: { DAMAGE_TYPE_SLASHING: 8, DAMAGE_TYPE_FIRE: 4 } }
+        })
     })
 })

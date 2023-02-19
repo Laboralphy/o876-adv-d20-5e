@@ -1,7 +1,5 @@
-const CONSTS = require('../../../consts')
-
 /**
- * Liste des propriété des équippement défensif (armure, bouclier etc...)
+ * Liste des propriétés des équippement défensif (armure, bouclier etc...)
  * @param state
  * @param getters {D20CreatureStoreGetters}
  * @returns {[]}
@@ -9,6 +7,11 @@ const CONSTS = require('../../../consts')
 module.exports = (state, getters) =>
     getters
         .getEquipmentList
-        .map(item => item.properties)
+        .map(item => item
+            .properties
+            .map(prop => ({
+                ...prop,
+                tag: item.ref
+            }))
+        )
         .flat()
-

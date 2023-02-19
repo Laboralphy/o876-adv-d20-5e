@@ -1,0 +1,7 @@
+{
+  "description": "Adds +2 damage with a one hand melee weapon, and no shield",
+  "when": "has1HWeaponNoShield",
+  "effects": [
+    ["EFFECT_DAMAGE_BONUS", 2]
+  ]
+}

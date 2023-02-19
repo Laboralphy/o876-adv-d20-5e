@@ -12,11 +12,15 @@
  * maintain reactivity
  */
 const ARRAY_TRACKED_METHODS = filterArrayFunction([
+    'at',
+    'concat',
     'entries',
     'every',
     'filter',
     'find',
     'findIndex',
+    'flat',
+    'flatMap',
     'forEach',
     'includes',
     'indexOf',
@@ -39,8 +43,6 @@ const ARRAY_TRACKED_METHODS = filterArrayFunction([
 const ARRAY_TRIGGERED_METHODS = filterArrayFunction([
     'copyWithin',
     'fill',
-    'flat',
-    'flatMap',
     'push',
     'pop',
     'reverse',
@@ -86,6 +88,7 @@ class Reactor {
     constructor ({ state, getters, mutations = {}, externals = {} }) {
         this._runningEffects = []
         this._getters = {}
+        this._getterData = {}
         this._getterProxies = {}
         this._mutations = {}
         this._externals = externals
@@ -104,8 +107,11 @@ class Reactor {
                 return Reflect.get(target, property, receiver)
             },
             set (target, property, value, receiver) {
+                if (value === target[property]) {
+                    return
+                }
                 trigger(target, property)
-                if (typeof target[property] === 'object') {
+                if (typeof value === 'object') {
                     value = proxify(value)
                 }
                 return Reflect.set(target, property, value, receiver)
@@ -126,6 +132,10 @@ class Reactor {
         this.iterate(mutations, (m, name) => {
             this.defineMutation(name, m)
         })
+    }
+
+    static get getUnsupportedArrayMethods () {
+
     }
 
     createProxy (oTarget) {
@@ -167,10 +177,14 @@ class Reactor {
     createEffect (fn) {
         const effect = () => {
             this._runningEffects.push(effect)
-            fn()
-            this._runningEffects.pop()
+            try {
+                fn()
+            } catch (e) {
+                throw e
+            } finally {
+                this._runningEffects.pop()
+            }
         }
-        effect._name = fn._name
         effect._depreg = fn._depreg
         effect()
     }
@@ -197,7 +211,7 @@ class Reactor {
      * @return {boolean}
      */
     findDependency (registry, target, property) {
-        return !!registry.find(tp => tp.target === target && tp.property === property)
+        return (property in registry) && registry[property].indexOf(target) >= 0
     }
 
     /**
@@ -211,8 +225,10 @@ class Reactor {
         this._runningEffects.forEach(re => {
             const d = re._depreg
             if (!this.findDependency(d, target, property)) {
-                console.log('dependency :', re._name, 'uses', property === '' ? '<empty>' : property)
-                d.push({ target, property })
+                if (!(property in d)) {
+                    d[property] = []
+                }
+                d[property].push(target)
             }
         })
     }
@@ -225,10 +241,10 @@ class Reactor {
      */
     trigger (target, property) {
         // invalidate cache for all getters having target/property
+        const gd = this._getterData
         this.iterate(this._getters, (g, name) => {
-            const gns = g[REACTOR_NAMESPACE]
+            const gns = gd[name]
             if (this.findDependency(gns._depreg, target, property)) {
-                console.log('invalidating cache of getter', name)
                 this.trigger(gns, '_cache')
                 gns._invalidCache = true
             }
@@ -271,7 +287,6 @@ class Reactor {
         ARRAY_TRIGGERED_METHODS.forEach(m => {
             Object.defineProperty(aClone, m, {
                 value: (...args) => {
-                    console.log('trigger array method', m, 'with', ...args)
                     this.trigger(aClone, '')
                     return Array.prototype[m].call(aClone, ...(args.map(i => this.proxify(i))))
                 }
@@ -338,11 +353,11 @@ class Reactor {
             throw new TypeError(`Getter "${name}" must be a function ; "${sGetterType}" was given.`)
         }
         this._getters[name] = getter
-        getter[REACTOR_NAMESPACE] = {
+        this._getterData[name] = {
             _cache: undefined,
             _invalidCache: true,
             _name: name,
-            _depreg: []
+            _depreg: {}
         }
         Object.defineProperty(
             this._getterProxies,
@@ -359,7 +374,6 @@ class Reactor {
             const result = mutation({
                 state: this.state,
                 getters: this.getters,
-                mutations: this.mutations,
                 externals: this.externals
             }, payload)
             this._events.emit('mutation', {
@@ -376,25 +390,18 @@ class Reactor {
      * @return {*} result of the getter
      */
     runGetter (name) {
-        console.group('running getter', name)
         const getter = this._getters[name]
-        const gns = getter[REACTOR_NAMESPACE]
+        const gns = this._getterData[name]
         this.track(gns, '_cache')
         if (!gns._invalidCache) {
-            console.log('using', name, 'cache :', gns._cache)
-            console.groupEnd('running getter', name)
             return gns._cache
         }
-        console.log('computing', name, 'value')
         const pEffect = () => {
             gns._cache = getter(this._state, this.getters, this.externals)
             gns._invalidCache = false
         }
-        pEffect._name = name
-        pEffect._depreg = gns._depreg = []
+        pEffect._depreg = gns._depreg = {}
         this.createEffect(pEffect)
-        console.groupEnd('running getter', name)
-        console.log('exiting getter', name)
         return gns._cache
     }
 }

@@ -7,7 +7,7 @@ const CONSTS = require('../consts')
  * @param value {number}
  * @returns {D20Effect}
  */
-function create ({ ability, value }) {
+function create (ability, value) {
     return createEffect(CONSTS.EFFECT_ABILITY_BONUS, value, {
         ability
     })

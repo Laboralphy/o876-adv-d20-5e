@@ -1,15 +1,32 @@
 const CONSTS = require('./consts')
 const TreeSync = require('../libs/tree-sync')
 const path = require('path')
-const SchemaValidator = require("./SchemaValidator");
+const SchemaValidator = require("./SchemaValidator")
+const StoreManager = require('./StoreManager')
 
 class AssetManager {
     constructor () {
         this._assets = {
             blueprints: {},
-            data: {}
+            data: {},
+            scripts: {}
         }
         this._validator = new SchemaValidator()
+        this._storeManagers = {
+            creature: new StoreManager({
+                state: require(path.resolve(__dirname, 'store', 'creature', 'state')),
+                mutations: TreeSync.recursiveRequire(path.resolve(__dirname, 'store', 'creature', 'mutations'), true),
+                getters: TreeSync.recursiveRequire(path.resolve(__dirname, 'store', 'creature', 'getters'), true),
+                externals: {
+                    blueprints: this.blueprints,
+                    data: this.data
+                }
+            })
+        }
+    }
+
+    get storeManagers () {
+        return this._storeManagers
     }
 
     /**
@@ -42,6 +59,26 @@ class AssetManager {
                 break
             }
 
+            case 'getters/creature': {
+                this.storeManagers.creature.defineGetters(d)
+                break
+            }
+
+            case 'state/creature': {
+                this.storeManagers.creature.patchState(d.index())
+                break
+            }
+
+            case 'mutations/creature': {
+                this.storeManagers.creature.defineMutations(d)
+                break
+            }
+
+            case 'script': {
+                Object.assign(this._assets.scripts, d)
+                break
+            }
+
             default: {
                 throw new Error('ERR_ASSET_TYPE_INVALID: ' + sType)
             }
@@ -51,6 +88,10 @@ class AssetManager {
     loadModule (sPath) {
         this.loadPath(path.join(sPath, 'blueprints'), 'blueprint')
         this.loadPath(path.join(sPath, 'data'), 'data')
+        this.loadPath(path.join(sPath, 'store', 'creature', 'getters'), 'getters/creature')
+        this.loadPath(path.join(sPath, 'store', 'creature', 'state'), 'state/creature')
+        this.loadPath(path.join(sPath, 'store', 'creature', 'mutations'), 'mutations/creature')
+        this.loadPath(path.join(sPath, 'scripts'), 'script')
     }
 
     init () {
@@ -78,6 +119,10 @@ class AssetManager {
         return this._assets.data
     }
 
+    get scripts () {
+        return this._assets.scripts
+    }
+
     /**
      * Ajoute un blueprint d'item
      * @param sId {string}
@@ -86,7 +131,10 @@ class AssetManager {
     addItemBlueprint (sId, oBlueprint) {
         try {
             this.validator.validate(oBlueprint, 'blueprint-item')
-            this._assets.blueprints[sId] = oBlueprint
+            this._assets.blueprints[sId] = {
+                ...oBlueprint,
+                ref: sId
+            }
         } catch (e) {
             console.error(e)
             if (e.message.startsWith('ERR_SCHEMA_VALIDATION')) {
@@ -147,7 +195,9 @@ class AssetManager {
         const DATA_TYPES = [
             'class',
             'weapon-type',
-            'armor-type'
+            'armor-type',
+            'shield-type',
+            'feat'
         ]
         const getDataType = (sId) => {
             return DATA_TYPES.find(dt => sId.startsWith(dt + '-'))
@@ -161,6 +211,10 @@ class AssetManager {
                 throw new Error('ERR_INVALID_DATA_TYPE: ' + sId + ' - supported item data types are : [' + sSupportedTypes + ']. but the specified data document is named : ' + sId + ' (does not start with any of the data types).')
             }
         }
+    }
+
+    createStore (sType) {
+        return this.storeManagers[sType].createStore()
     }
 }
 

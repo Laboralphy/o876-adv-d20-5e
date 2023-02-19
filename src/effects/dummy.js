@@ -2,12 +2,12 @@ const createEffect = require('./abstract')
 const CONSTS = require('../consts')
 
 /**
- * This effect do nothing
+ * This effect does nothing
  * @param amp {number}
  * @param data {{}}
  * @returns {D20Effect}
  */
-function create ({ amp, data }) {
+function create (amp, data) {
     return createEffect(CONSTS.EFFECT_CONDITION, amp, {
         ...data
     })

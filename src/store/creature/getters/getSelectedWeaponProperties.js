@@ -1,5 +1,3 @@
-const CONSTS = require("../../../consts");
-
 /**
  * Liste des propriétés de l'arme équipée et des munitions dans le cas d'arme à distance utilisant des munitions
  * @param state

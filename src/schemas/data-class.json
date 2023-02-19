@@ -17,6 +17,14 @@
         "type": "string",
         "pattern": "^(PROFICIENCY_|weapon-type-|armor-type-|SKILL_)"
       }
+    },
+    "skills": {
+      "description": "liste des compétence de classe",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SKILL_"
+      }
     }
   }
 }

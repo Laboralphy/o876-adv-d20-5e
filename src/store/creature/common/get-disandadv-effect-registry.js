@@ -1,5 +1,6 @@
-function getDisAndAdvEffectRegistry (effects) {
+function getDisAndAdvEffectRegistry (effects, properties) {
     const oDisAndAdvEffectRegistry = {}
+
     effects
         .forEach(effect => {
             const effectData = effect.data
@@ -12,7 +13,22 @@ function getDisAndAdvEffectRegistry (effects) {
                     if (!(ab in oAdvEffRegRoll)) {
                         oAdvEffRegRoll[ab] = []
                     }
-                    oAdvEffRegRoll[ab].push(effectData.tag)
+                    oAdvEffRegRoll[ab].push(effectData.origin)
+                })
+            })
+        })
+    properties
+        .forEach(prop => {
+            prop.rollTypes.forEach(rt => {
+                prop.abilities.forEach(ab => {
+                    if (!(rt in oDisAndAdvEffectRegistry)) {
+                        oDisAndAdvEffectRegistry[rt] = {}
+                    }
+                    const oAdvEffRegRoll = oDisAndAdvEffectRegistry[rt]
+                    if (!(ab in oAdvEffRegRoll)) {
+                        oAdvEffRegRoll[ab] = []
+                    }
+                    oAdvEffRegRoll[ab].push(prop.origin)
                 })
             })
         })

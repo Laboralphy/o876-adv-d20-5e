@@ -53,8 +53,10 @@
  * @property itemType {string}
  * @property [armorType] {string}
  * @property [weaponType] {string}
+ * @property [shieldType] {string}
  * @property properties {[]}
  * @property data {D20ArmorData|D20WeaponData}
+ * @property equipmentSlots {string[]}
  */
 
 module.exports = {
@@ -62,12 +64,14 @@ module.exports = {
     ...require('./actions.json'),
     ...require('./against-type.json'),
     ...require('./alignments.json'),
+    ...require('./area-flags.json'),
     ...require('./conditions.json'),
     ...require('./damage-types.json'),
     ...require('./effects.json'),
     ...require('./entity-types.json'),
     ...require('./equipment-slots.json'),
     ...require('./genders.json'),
+    ...require('./effect-subtypes.json'),
     ...require('./index.js'),
     ...require('./item-types.json'),
     ...require('./item-properties.json'),

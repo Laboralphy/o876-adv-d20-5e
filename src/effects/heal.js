@@ -3,10 +3,10 @@ const CONSTS = require('../consts')
 
 /**
  * Remove damage point previously taken
- * @param nValue {string}
+ * @param amount {number}
  * @returns {D20Effect}
  */
-function create ({ amount }) {
+function create (amount) {
     return createEffect(CONSTS.EFFECT_HEAL, amount)
 }
 
@@ -16,7 +16,7 @@ function create ({ amount }) {
  * @param target
  */
 function mutate ({ effect, target }) {
-    target.store.mutations.heal(effect.amp)
+    target.store.mutations.heal({ amount: effect.amp })
 }
 
 module.exports = {

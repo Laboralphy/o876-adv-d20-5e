@@ -3,6 +3,7 @@
  * @param state
  * @returns {[]}
  */
-module.exports = state => {
-    return state.effects.filter(eff => eff.duration > 0)
-}
+module.exports = state =>
+        state
+            .effects
+            .filter(eff => eff.duration > 0)

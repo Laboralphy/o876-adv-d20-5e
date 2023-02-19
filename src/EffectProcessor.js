@@ -57,7 +57,7 @@ class EffectProcessor {
         aEffects.forEach(eff => {
             const oSource = this.getEffectSource(eff)
             this.runEffect(eff, oCreature, oSource)
-            oCreature.store.mutations.decrementEffectDuration({ effect: eff, value: -1 })
+            oCreature.store.mutations.decrementEffectDuration({ effect: eff })
         })
         this.removeDeadEffects(oCreature)
         this.flushCreatureRegistry(oCreature)

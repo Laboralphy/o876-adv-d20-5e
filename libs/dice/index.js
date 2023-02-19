@@ -1,4 +1,4 @@
-const REGEX_XDY = /^([-+]?) *(\d)d(\d) *(([-+]) *(\d))?$/
+const REGEX_XDY = /^([-+]?) *(\d+) *d *(\d+) *(([-+]) *(\d+))?$/
 
 class Dice {
   /**
@@ -50,6 +50,9 @@ class Dice {
   static xdy (value) {
     if (typeof value === 'string' && isNaN(value)) {
       const r = value.trim().match(REGEX_XDY)
+      if (!r) {
+        throw new Error('This dice formula is invalid : "' + value + '"')
+      }
       const [filler0, sCountSign, sCount, sSides, filler1, sModifierSign, sModifier] = r
       const count = parseInt(sCount) * (sCountSign === '-' ? -1 : 1)
       const sides = parseInt(sSides)
@@ -79,12 +82,14 @@ class Dice {
 
   /**
    * Evalue une expression du type xDy+z
-   * @param value {string|object}
+   * @param value {number|string|object}
    * @return {number}
    */
   evaluate (value) {
     const t = typeof value
-    if (t === 'object') {
+    if (t === 'number') {
+      return value
+    } else if (t === 'object') {
       const { sides, count, modifier } = value
       return this.roll(sides, count, modifier)
     } else {

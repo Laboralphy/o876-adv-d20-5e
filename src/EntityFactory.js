@@ -1,9 +1,14 @@
 const CONSTS = require("./consts")
 const AssetManager = require('./AssetManager')
+const Creature = require('./Creature')
 
 class EntityFactory {
     constructor () {
         this._am = null
+    }
+
+    get assetManager () {
+        return this._am
     }
 
     init () {
@@ -30,6 +35,15 @@ class EntityFactory {
         }
     }
 
+    createItemShield (oBlueprint) {
+        const oArmorData = this._am.data[oBlueprint.shieldType]
+        return {
+            ...oBlueprint,
+            ...oArmorData,
+            equipmentSlots: [CONSTS.EQUIPMENT_SLOT_SHIELD]
+        }
+    }
+
     createItemWeapon (oBlueprint) {
         const oWeaponData = this._am.data[oBlueprint.weaponType]
         const slot = oWeaponData.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
@@ -37,6 +51,9 @@ class EntityFactory {
             : CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
         return {
             ...oBlueprint,
+            properties: [
+                ...oBlueprint.properties
+            ],
             ...oWeaponData,
             equipmentSlots: [slot]
         }
@@ -57,10 +74,19 @@ class EntityFactory {
                 return this.createItemWeapon(oBlueprint)
             }
 
+            case CONSTS.ITEM_TYPE_SHIELD: {
+                return this.createItemShield(oBlueprint)
+            }
+
             default: {
                 throw new Error('ERR_ITEM_TYPE_NOT_SUPPORTED')
             }
         }
+    }
+
+    createCreature (oBlueprint) {
+        const oCreature = new Creature()
+
     }
 
     createEntity (sResRef) {
@@ -71,6 +97,10 @@ class EntityFactory {
         switch (oBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
                 return this.createItem(oBlueprint)
+            }
+
+            case CONSTS.ENTITY_TYPE_ACTOR: {
+                return this.createCreature(oBlueprint)
             }
 
             default: {

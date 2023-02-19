@@ -14,7 +14,8 @@ module.exports = (state, getters, externals) => {
     let nMaxHitPoints = 0
     const nConModifier = getters.getAbilityModifiers[CONSTS.ABILITY_CONSTITUTION]
     for (const [ ref, levels ] of Object.entries(oClasses)) {
-        const oClassData = DATA['class-' + ref]
+        const sClassName = 'class-' + ref
+        const oClassData = DATA[sClassName]
         const nHD = oClassData.hitDice
         const nHitPointsPerLevel = Math.floor(nHD / 2) + 1 + nConModifier
         const nLevel = levels

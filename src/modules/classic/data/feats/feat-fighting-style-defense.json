@@ -1,0 +1,7 @@
+{
+  "description": "Adds +1 AC when wearing armor",
+  "when": "isWearingArmor",
+  "effects": [
+    ["EFFECT_AC_BONUS", 1]
+  ]
+}
