@@ -829,3 +829,88 @@ describe('attack logs', function () {
         })
     })
 })
+
+describe('weapon ranges and target distance', function () {
+    it('should have melee range when no weapon is equipped', function () {
+        const c1 = new Creature()
+        const r = new Rules()
+        r.init()
+        expect(c1.store.getters.getSelectedWeaponRange).toBe(1) // melee
+    })
+    it('should have melee range when a long sword is equipped', function () {
+        const c1 = new Creature()
+        const r = new Rules()
+        r.init()
+        const oSword1 = r.createEntity('wpn-longsword')
+        c1.store.mutations.equipItem({ item: oSword1 })
+        expect(c1.store.getters.getSelectedWeaponRange).toBe(1) // melee
+    })
+    it('should have long range when a bow is equipped', function () {
+        const c1 = new Creature()
+        const r = new Rules()
+        r.init()
+        const oBow1 = r.createEntity('wpn-longbow')
+        c1.store.mutations.equipItem({ item: oBow1 })
+        c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
+        expect(oBow1.equipmentSlots).toEqual([CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED])
+        expect(c1.store.state.offensiveSlot).toBe(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
+        expect(c1.store.state.equipment[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]).not.toBeNull()
+        expect(c1.store.getters.getSelectedWeapon).toEqual(oBow1)
+        expect(c1.store.getters.getSelectedWeaponRange).toBe(10) // ranged
+    })
+    it('should have reach range when a halberd is equipped', function () {
+        const c1 = new Creature()
+        const r = new Rules()
+        r.init()
+        const oHalberd1 = r.createEntity('wpn-halberd')
+        c1.store.mutations.equipItem({ item: oHalberd1 })
+        expect(c1.store.getters.getSelectedWeaponRange).toBe(2) // reach
+    })
+    it('should return a valid range variation when target is moving', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        const r = new Rules()
+        r.init()
+        const oBow1 = r.createEntity('wpn-longbow')
+        const oSword1 = r.createEntity('wpn-longsword')
+        const oHalberd1 = r.createEntity('wpn-halberd')
+        c1.store.mutations.equipItem({ item: oSword1 })
+        c1.store.mutations.equipItem({ item: oBow1 })
+        c1.setTarget(c2)
+        c1.setDistanceToTarget(1)
+        c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        expect(c1.store.getters.isTargetInWeaponRange).toBeTrue()
+        c1.setDistanceToTarget(2)
+        expect(c1.store.getters.isTargetInWeaponRange).toBeFalse()
+        c1.store.mutations.equipItem({ item: oHalberd1 })
+        expect(c1.store.getters.isTargetInWeaponRange).toBeTrue()
+        c1.setDistanceToTarget(5)
+        expect(c1.store.getters.isTargetInWeaponRange).toBeFalse()
+        c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
+        expect(c1.store.getters.isTargetInWeaponRange).toBeTrue()
+    })
+})
+
+describe('multiple targets and distances', function () {
+    it('should have a target-distance of NaN when no target is selected', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        expect(c1.store.getters.getTargetDistance).toBeNaN()
+        expect(c2.store.getters.getTargetDistance).toBeNaN()
+    })
+    it('should have a target-distance of not NaN when target is selected', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.setTarget(c2)
+        expect(c2.store.getters.getTargetDistance).toBeNaN()
+        expect(c1.store.getters.getTargetDistance).not.toBeNaN()
+    })
+    it('should have same distance when targetting a creature that target me', function () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        c1.setTarget(c2)
+        expect(c1.store.getters.getTargetDistance).not.toBeNaN()
+        c2.setTarget(c1)
+        expect(c1.store.getters.getTargetDistance).toBe(c2.store.getters.getTargetDistance)
+    })
+})

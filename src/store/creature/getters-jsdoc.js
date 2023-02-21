@@ -15,10 +15,11 @@
  * @property getCarryingCapacity {number}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
- * @property getDamageMitigation undefined
+ * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
+ * @property getDistanceToTarget {number}
  * @property getEffects {[]}
  * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
@@ -40,8 +41,9 @@
  * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}
- * @property getSelectedWeaponCriticalThreat undefined
+ * @property getSelectedWeaponCriticalThreat {number}
  * @property getSelectedWeaponProperties {array}
+ * @property getSelectedWeaponRange {number}
  * @property getSize {string}
  * @property getSizeProperties {{value: number, hitDie: number, space: number, carryingCapacity}}
  * @property getSpecie {string}
@@ -49,8 +51,10 @@
  * @property getTarget {{ condition: Object.<string, boolean>}}
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
+ * @property getTargetDistance {number}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
+ * @property isTargetInWeaponRange {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWeildingNonLightWeapon {boolean}
  * @property getWizardSpellSlots {number[]}
