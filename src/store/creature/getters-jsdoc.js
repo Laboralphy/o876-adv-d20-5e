@@ -11,11 +11,12 @@
  * @property getAggressorConditions {Set}
  * @property getAreaFlags {Set<string>}
  * @property getArmorClass {number}
+ * @property getArmorMaterial {string}
  * @property getAttackBonus {number}
  * @property getCarryingCapacity {number}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
- * @property getDamageMitigation undefined
+ * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
@@ -40,8 +41,10 @@
  * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}
- * @property getSelectedWeaponCriticalThreat undefined
+ * @property getSelectedWeaponCriticalThreat {number}
+ * @property getSelectedWeaponMaterial {string}
  * @property getSelectedWeaponProperties {array}
+ * @property getShieldMaterial {string}
  * @property getSize {string}
  * @property getSizeProperties {{value: number, hitDie: number, space: number, carryingCapacity}}
  * @property getSpecie {string}

@@ -1,12 +1,12 @@
 {
   "type": "object",
   "required": [
-    "weaponType"
+    "shieldType"
   ],
   "properties": {
-    "weaponType": {
+    "shieldType": {
       "type": "string",
-      "pattern": "^weapon-type-"
+      "pattern": "^shield-type-"
     },
     "material": {
       "type": "string",

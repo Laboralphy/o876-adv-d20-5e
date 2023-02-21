@@ -57,6 +57,7 @@
  * @property properties {[]}
  * @property data {D20ArmorData|D20WeaponData}
  * @property equipmentSlots {string[]}
+ * @property material {string}
  */
 
 module.exports = {
@@ -80,5 +81,6 @@ module.exports = {
     ...require('./sizes.json'),
     ...require('./skills.json'),
     ...require('./species.json'),
-    ...require('./weapon-attributes.json')
+    ...require('./weapon-attributes.json'),
+    ...require('./materials.json')
 }

@@ -1,0 +1,26 @@
+{
+  "MATERIAL_UNKNOWN": {
+    "parent": ""
+  },
+  "MATERIAL_WOOD": {
+    "parent": ""
+  },
+  "MATERIAL_METAL": {
+    "parent": ""
+  },
+  "MATERIAL_FABRIC": {
+    "parent": ""
+  },
+  "MATERIAL_LEATHER": {
+    "parent": ""
+  },
+  "MATERIAL_STONE": {
+    "parent": ""
+  },
+  "MATERIAL_SILVER": {
+    "parent": "MATERIAL_METAL"
+  },
+  "MATERIAL_IRON": {
+    "parent": "MATERIAL_METAL"
+  }
+}
