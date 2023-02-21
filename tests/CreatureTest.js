@@ -914,3 +914,39 @@ describe('multiple targets and distances', function () {
         expect(c1.store.getters.getTargetDistance).toBe(c2.store.getters.getTargetDistance)
     })
 })
+
+describe('getMaterial armor and weapon and shield', function () {
+    it('should return only material_metal when testing sword material', function () {
+        const r = new Rules()
+        const c1 = new Creature()
+        r.init()
+        const oSword = r.createEntity('wpn-shortsword')
+        oSword.material = CONSTS.MATERIAL_METAL
+        c1.store.mutations.equipItem({ item: oSword })
+        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_METAL)).toBeTrue()
+        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_SILVER)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
+    })
+    it('should return material_silver and material_metal when setting material to silver on sword', function () {
+        const r = new Rules()
+        const c1 = new Creature()
+        r.init()
+        const oSword = r.createEntity('wpn-shortsword')
+        oSword.material = CONSTS.MATERIAL_SILVER
+        c1.store.mutations.equipItem({ item: oSword })
+        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_METAL)).toBeTrue()
+        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_SILVER)).toBeTrue()
+        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
+    })
+    it('should return material_wood and not metal when setting material to wood on sword', function () {
+        const r = new Rules()
+        const c1 = new Creature()
+        r.init()
+        const oSword = r.createEntity('wpn-shortsword')
+        oSword.material = CONSTS.MATERIAL_WOOD
+        c1.store.mutations.equipItem({ item: oSword })
+        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_METAL)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_SILVER)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_WOOD)).toBeTrue()
+    })
+})

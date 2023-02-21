@@ -4,5 +4,6 @@
   "properties": [],
   "damage": "2d6+10",
   "damageType": "DAMAGE_TYPE_SLASHING",
-  "attributes": []
+  "attributes": [],
+  "material": ""
 }
