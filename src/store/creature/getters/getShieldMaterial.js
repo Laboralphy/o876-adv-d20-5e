@@ -10,9 +10,9 @@ const { getMaterialSuite } = require('../common/get-material-suite')
  */
 module.exports = (state, getters, externals) => {
     const { data } = externals
-    const oArmor = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_CHEST]
+    const oShield = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_SHIELD]
 
-    return oArmor
-        ? getMaterialSuite(new Set(), oArmor.material, data)
+    return oShield
+        ? getMaterialSuite(new Set(), oShield.material, data)
         : CONSTS.MATERIAL_UNKNOWN
 }
