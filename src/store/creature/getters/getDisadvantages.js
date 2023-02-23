@@ -15,6 +15,7 @@ const CONSTS = require("../../../consts");
  */
 module.exports = (state, getters, externals) => {
     const myConditions = getters.getConditions
+    const targetConditions = getters.getTargetConditions
     const myConditionSources = getters.getConditionSources
 
     const oRelevantEffects = getters
@@ -61,6 +62,9 @@ module.exports = (state, getters, externals) => {
     const AREA_UNDERWATER = af.has(CONSTS.AREA_FLAG_UNDERWATER)
     const AREA_DARK = af.has(CONSTS.AREA_FLAG_DARK)
 
+    const PRONE = myConditions.has(CONSTS.CONDITION_PRONE)
+    const TARGET_PRONE_AND_FAR = targetConditions.has(CONSTS.CONDITION_PRONE) && !getters.isTargetInMeleeWeaponRange
+
     return {
         ROLL_TYPE_ATTACK: {
             ABILITY_STRENGTH: computeRuleValue({
@@ -68,6 +72,8 @@ module.exports = (state, getters, externals) => {
                 NON_PROFICIENT_ARMOR_SHIELD,
                 TARGET_UNSEEN,
                 POISONED,
+                PRONE,
+                TARGET_PRONE_AND_FAR,
                 FRIGHTENED,
                 RESTRAINED,
                 HEAVY_WEAPON,
@@ -80,6 +86,8 @@ module.exports = (state, getters, externals) => {
                 NON_PROFICIENT_ARMOR_SHIELD,
                 TARGET_UNSEEN,
                 POISONED,
+                PRONE,
+                TARGET_PRONE_AND_FAR,
                 FRIGHTENED,
                 RESTRAINED,
                 HEAVY_WEAPON,
@@ -91,6 +99,8 @@ module.exports = (state, getters, externals) => {
                 EXHAUSTION_LEVEL_3,
                 TARGET_UNSEEN,
                 POISONED,
+                PRONE,
+                TARGET_PRONE_AND_FAR,
                 FRIGHTENED,
                 RESTRAINED,
                 HEAVY_WEAPON,
@@ -102,6 +112,8 @@ module.exports = (state, getters, externals) => {
                 EXHAUSTION_LEVEL_3,
                 TARGET_UNSEEN,
                 POISONED,
+                PRONE,
+                TARGET_PRONE_AND_FAR,
                 FRIGHTENED,
                 RESTRAINED,
                 HEAVY_WEAPON,
@@ -113,6 +125,8 @@ module.exports = (state, getters, externals) => {
                 EXHAUSTION_LEVEL_3,
                 TARGET_UNSEEN,
                 POISONED,
+                PRONE,
+                TARGET_PRONE_AND_FAR,
                 FRIGHTENED,
                 RESTRAINED,
                 HEAVY_WEAPON,
@@ -124,6 +138,8 @@ module.exports = (state, getters, externals) => {
                 EXHAUSTION_LEVEL_3,
                 TARGET_UNSEEN,
                 POISONED,
+                PRONE,
+                TARGET_PRONE_AND_FAR,
                 FRIGHTENED,
                 RESTRAINED,
                 HEAVY_WEAPON,

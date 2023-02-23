@@ -8,7 +8,7 @@ const CONSTS = require('../consts')
  * @returns {D20Effect}
  */
 function create (amp, data) {
-    return createEffect(CONSTS.EFFECT_CONDITION, amp, {
+    return createEffect(CONSTS.EFFECT_DUMMY, amp, {
         ...data
     })
 }
