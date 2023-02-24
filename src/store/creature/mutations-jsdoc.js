@@ -23,4 +23,5 @@
  * @property resetCounters {function()}
  * @property setHitPoints {function({ value })}
  * @property heal {function({ amount })}
+ * @property setTargetDistance {function({ value })}
  */

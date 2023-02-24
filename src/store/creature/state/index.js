@@ -45,7 +45,8 @@ module.exports = function () {
         target: {
             id: '',
             active: false,
-            conditions: {}
+            conditions: {},
+            distance: 0
         },
         aggressor: {
             id: '',

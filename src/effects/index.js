@@ -5,7 +5,6 @@ module.exports = {
   [CONSTS.EFFECT_AC_BONUS]: require('./ac-bonus'),
   [CONSTS.EFFECT_ADVANTAGE]: require('./advantage'),
   [CONSTS.EFFECT_ATTACK_BONUS]: require('./attack-bonus'),
-  [CONSTS.EFFECT_BLINDNESS]: require('./blindness'),
   [CONSTS.EFFECT_CONDITION]: require('./condition'),
   [CONSTS.EFFECT_CRITICAL_THREAT]: require('./critical-threat'),
   [CONSTS.EFFECT_DAMAGE_BONUS]: require('./damage-bonus'),

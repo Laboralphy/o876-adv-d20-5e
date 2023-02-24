@@ -197,13 +197,54 @@ class Creature {
         }
     }
 
+    setDistanceToTarget (n) {
+        if (n !== this.store.getters.getDistanceToTarget) {
+            this.store.mutations.setTargetDistance({ value: n})
+            this._events.emit('target-distance', { from: this, to: this.getTarget(), value: n })
+        }
+        const oTarget = this.getTarget()
+        if (oTarget) {
+            if (n !== oTarget.store.getters.getDistanceToTarget) {
+                oTarget.store.mutations.setTargetDistance({ value: n })
+                oTarget.events.emit('target-distance', { to: this, from: this.getTarget(), value: n })
+            }
+        }
+    }
+
+    /**
+     *
+     * @returns {Creature|null}
+     */
+    getTargetTarget () {
+        const oTarget = this.getTarget()
+        if (oTarget) {
+            return oTarget.getTarget()
+        } else {
+            return null
+        }
+    }
+
+    trySetTargetDistance (n) {
+        const oTargetTarget = this.getTargetTarget()
+        if (this.getTargetTarget() === this) {
+            this.setDistanceToTarget(oTargetTarget.store.getters.getDistanceToTarget)
+        } else {
+            this.setDistanceToTarget(n)
+        }
+    }
+
     setTarget (oCreature) {
+        if (oCreature === this) {
+            this.clearTarget()
+            return
+        }
         if (this._target.creature !== oCreature) {
             this.clearTarget()
             this._target.creature = oCreature
             this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
             this.store.mutations.updateTargetConditions({ id: oCreature.id, conditions: this._target.creature.store.getters.getConditionSources })
             oCreature.store.events.on('mutation', this._target.handler)
+            this.trySetTargetDistance(this.dice.roll(4, 2))
         }
     }
 
@@ -415,9 +456,9 @@ class Creature {
         const critical = dice >= nCritThreat
         const ac = this.store.getters.getArmorClass
         const roll = dice + bonus
-        const hit = critical
+        const hit = dice >= assetManager.data.variables.ROLL_AUTO_SUCCESS
             ? true
-            : dice === 1
+            : dice <= assetManager.data.variables.ROLL_AUTO_FAIL
                 ? false
                 : (dice + bonus) >= ac
         return {
@@ -450,7 +491,7 @@ class Creature {
      */
     rollWeaponDamage ({ critical = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
-        const n = critical ? 2 : 1
+        const n = critical ? assetManager.data.variables.CRITICAL_FACTOR : 1
         let nDamage = 0
         const nRerollThreshold = this
             .aggregateModifiers(
@@ -507,6 +548,16 @@ class Creature {
      * Effectue une attaque contre la cible actuelle
      */
     doAttack () {
+        // On a vraiment une cible
+        const oTarget = this.getTarget()
+        if (!oTarget) {
+            throw new Error('ERR_TARGET_INVALID')
+        }
+        // Déterminer si on est à portée
+        if (!this.store.getters.isTargetInWeaponRange) {
+            // hors de portee
+            this._events.emit('target-out-of-range', { attacker: this, attacked: this.getTarget() })
+        }
         // jet d'attaque
         const oAtk = this.rollAttack()
         // si ça touche, calculer les dégâts
@@ -523,7 +574,6 @@ class Creature {
                     return EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType)
                 })
             // appliquer les effets sur la cible
-            const oTarget = this.getTarget()
             aDamageEffects.map(d => oTarget.applyEffect(d, 0))
             oAtk.damages.types = oDamages
             oAtk.damages.amount = amount

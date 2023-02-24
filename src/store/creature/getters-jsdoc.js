@@ -20,6 +20,7 @@
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
+ * @property getDistanceToTarget {number}
  * @property getEffects {[]}
  * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
@@ -44,6 +45,7 @@
  * @property getSelectedWeaponCriticalThreat {number}
  * @property getSelectedWeaponMaterial {string}
  * @property getSelectedWeaponProperties {array}
+ * @property getSelectedWeaponRange {number}
  * @property getShieldMaterial {string}
  * @property getSize {string}
  * @property getSizeProperties {{value: number, hitDie: number, space: number, carryingCapacity}}
@@ -52,10 +54,14 @@
  * @property getTarget {{ condition: Object.<string, boolean>}}
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
+ * @property getTargetDistance {number}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
+ * @property isTargetInMeleeWeaponRange {boolean}
+ * @property isTargetInWeaponRange {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWeildingNonLightWeapon {boolean}
+ * @property isWeildingRangedWeapon {boolean}
  * @property getWizardSpellSlots {number[]}
  * @property has1HWeaponNoShield {boolean}
  * @property has2HWeaponNoShield {boolean}

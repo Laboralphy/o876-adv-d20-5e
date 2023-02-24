@@ -47,6 +47,8 @@ module.exports = (state, getters) => {
     const UNDETECTED = getters.getEntityVisibility.detectable.target &&
         !getters.getEntityVisibility.detectedBy.target
 
+    const TARGET_PRONE_AND_CLOSE = targetConditions.has(CONSTS.CONDITION_PRONE) && getters.isTargetInMeleeWeaponRange
+
     /*
     Définir l'ossature D20AdvantagesOrDisadvantages
      */
@@ -55,31 +57,37 @@ module.exports = (state, getters) => {
             ABILITY_STRENGTH: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
+                TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH)
             }),
             ABILITY_DEXTERITY: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
+                TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
             }),
             ABILITY_CONSTITUTION: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
+                TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CONSTITUTION)
             }),
             ABILITY_INTELLIGENCE: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
+                TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_INTELLIGENCE)
             }),
             ABILITY_WISDOM: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
+                TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_WISDOM)
             }),
             ABILITY_CHARISMA: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
+                TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CHARISMA)
             })
         },
