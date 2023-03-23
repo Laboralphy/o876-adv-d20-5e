@@ -1,7 +1,7 @@
 {
   "entityType": "ENTITY_TYPE_ITEM",
   "itemType": "ITEM_TYPE_WEAPON",
-  "weaponType": "weapon-type-longbow",
+  "weaponType": "weapon-type-morningstar",
   "properties": [],
-  "material": "MATERIAL_WOOD"
+  "material": "MATERIAL_IRON"
 }
