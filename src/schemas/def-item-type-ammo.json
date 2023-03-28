@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "required": [
+  ],
+  "properties": {
+    "material": {
+      "type": "string",
+      "pattern": "^MATERIAL_"
+    }
+  }
+}

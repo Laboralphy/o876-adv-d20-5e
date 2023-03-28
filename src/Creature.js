@@ -13,6 +13,7 @@ let LAST_ID = 0
 class Creature {
     constructor () {
         this._id = uuidv4({}, null, 0)
+        this._name = this._id
         this._dice = new Dice()
         this._target = {
             handler: null,
@@ -29,6 +30,14 @@ class Creature {
         this._store = assetManager.createStore('creature')
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
+    }
+
+    set name (value) {
+        this._name = value
+    }
+
+    get name () {
+        return this._name
     }
 
     get events () {
@@ -57,8 +66,17 @@ class Creature {
      * @param sEquipmentSlot {string}
      */
     equipItem (oItem, sEquipmentSlot = '') {
-        const sES = sEquipmentSlot === '' ? oItem.equipmentSlots[0] : sEquipmentSlot
-        const oPrevItem = this.store.getters.getEquippedItems[sES]
+        const aES = Array.isArray(sEquipmentSlot)
+            ? sEquipmentSlot // C'est un tableau
+            : sEquipmentSlot === ''
+                ? oItem.equipmentSlots.slice(0) // c'est une chaine vide, alors on prend la valeur par défaut
+                : [sEquipmentSlot] // c'est un slot précis, on le mets dans une liste
+        let oPrevItem = null
+        let sES = ''
+        do {
+            sES = aES.shift()
+            oPrevItem = this.store.getters.getEquippedItems[sES]
+        } while (oPrevItem !== null && aES.length > 0)
         this.store.mutations.equipItem({ item: oItem, slot: sES })
         return oPrevItem
     }
@@ -544,8 +562,27 @@ class Creature {
         }
     }
 
+    useOffensiveSlot (slot) {
+        if (slot !== this.store.getters.getOffensiveSlot) {
+            const oEmit = {
+                previous: {
+                    slot: this.store.getters.getOffensiveSlot,
+                    weapon: this.store.getters.getSelectedWeapon
+                },
+                current: {
+                    slot: '',
+                    weapon: null
+                }
+            }
+            this._events.emit('offensive-slot', oEmit)
+            this.store.mutations.setSelectedWeapon({ slot })
+        }
+    }
+
     /**
      * Effectue une attaque contre la cible actuelle
+     * @returns {AttackOutcome|false}
+     *
      */
     doAttack () {
         // On a vraiment une cible
@@ -557,6 +594,7 @@ class Creature {
         if (!this.store.getters.isTargetInWeaponRange) {
             // hors de portee
             this._events.emit('target-out-of-range', { attacker: this, attacked: this.getTarget() })
+            return false
         }
         // jet d'attaque
         const oAtk = this.rollAttack()

@@ -6,6 +6,10 @@ const CONSTS = require('../src/consts')
 const { warmup } = require('../src/assets')
 const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
 
+const DISTANCE_MELEE = 4
+const DISTANCE_REACH = 9
+const DISTANCE_RANGED = 30
+
 beforeEach(function () {
     Error.stackTraceLimit = Infinity
     warmup()
@@ -781,6 +785,7 @@ describe('attack logs', function () {
             oLastAttack = attack
         })
         c1.dice.debug(true, 0.75)
+        c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.doAttack()
         expect(oLastAttack).toEqual( {
           ac: 6,
@@ -817,6 +822,7 @@ describe('attack logs', function () {
             oLastAttack = attack
         })
         c1.dice.debug(true, 0.75)
+        c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.doAttack()
         expect(oLastAttack).toEqual( {
             ac: 6,
@@ -835,7 +841,7 @@ describe('weapon ranges and target distance', function () {
         const c1 = new Creature()
         const r = new Rules()
         r.init()
-        expect(c1.store.getters.getSelectedWeaponRange).toBe(1) // melee
+        expect(c1.store.getters.getSelectedWeaponRange).toBe(5) // melee
     })
     it('should have melee range when a long sword is equipped', function () {
         const c1 = new Creature()
@@ -843,7 +849,7 @@ describe('weapon ranges and target distance', function () {
         r.init()
         const oSword1 = r.createEntity('wpn-longsword')
         c1.store.mutations.equipItem({ item: oSword1 })
-        expect(c1.store.getters.getSelectedWeaponRange).toBe(1) // melee
+        expect(c1.store.getters.getSelectedWeaponRange).toBe(5) // melee
     })
     it('should have long range when a bow is equipped', function () {
         const c1 = new Creature()
@@ -856,7 +862,7 @@ describe('weapon ranges and target distance', function () {
         expect(c1.store.state.offensiveSlot).toBe(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
         expect(c1.store.state.equipment[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]).not.toBeNull()
         expect(c1.store.getters.getSelectedWeapon).toEqual(oBow1)
-        expect(c1.store.getters.getSelectedWeaponRange).toBe(10) // ranged
+        expect(c1.store.getters.getSelectedWeaponRange).toBe(100) // ranged
     })
     it('should have reach range when a halberd is equipped', function () {
         const c1 = new Creature()
@@ -864,7 +870,7 @@ describe('weapon ranges and target distance', function () {
         r.init()
         const oHalberd1 = r.createEntity('wpn-halberd')
         c1.store.mutations.equipItem({ item: oHalberd1 })
-        expect(c1.store.getters.getSelectedWeaponRange).toBe(2) // reach
+        expect(c1.store.getters.getSelectedWeaponRange).toBe(10) // reach
     })
     it('should return a valid range variation when target is moving', function () {
         const c1 = new Creature()
@@ -877,14 +883,14 @@ describe('weapon ranges and target distance', function () {
         c1.store.mutations.equipItem({ item: oSword1 })
         c1.store.mutations.equipItem({ item: oBow1 })
         c1.setTarget(c2)
-        c1.setDistanceToTarget(1)
+        c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
         expect(c1.store.getters.isTargetInWeaponRange).toBeTrue()
-        c1.setDistanceToTarget(2)
+        c1.setDistanceToTarget(DISTANCE_REACH)
         expect(c1.store.getters.isTargetInWeaponRange).toBeFalse()
         c1.store.mutations.equipItem({ item: oHalberd1 })
         expect(c1.store.getters.isTargetInWeaponRange).toBeTrue()
-        c1.setDistanceToTarget(5)
+        c1.setDistanceToTarget(DISTANCE_RANGED)
         expect(c1.store.getters.isTargetInWeaponRange).toBeFalse()
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         expect(c1.store.getters.isTargetInWeaponRange).toBeTrue()
@@ -963,7 +969,7 @@ describe('prone condition test', function () {
         c1.store.mutations.equipItem({ item: oBow1 })
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         c1.setTarget(c2)
-        c1.setDistanceToTarget(8)
+        c1.setDistanceToTarget(DISTANCE_RANGED)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
         expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_PRONE)).toBeTrue()
         const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
@@ -984,12 +990,12 @@ describe('prone condition test', function () {
         c1.store.mutations.equipItem({ item: oSword1 })
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
         c1.setTarget(c2)
-        c1.setDistanceToTarget(1)
+        c1.setDistanceToTarget(DISTANCE_MELEE)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
         expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_PRONE)).toBeTrue()
         const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
         expect(circ1.disadvantage).toBe(false)
-        c1.setDistanceToTarget(2)
+        c1.setDistanceToTarget(DISTANCE_REACH)
         expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY).disadvantage).toBeTrue()
         c1.store.mutations.equipItem({ item: oHalberd1 })
         expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY).disadvantage).toBeFalse()
@@ -1007,12 +1013,12 @@ describe('prone condition test', function () {
         c1.store.mutations.equipItem({ item: oSword1 })
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
         c1.setTarget(c2)
-        c1.setDistanceToTarget(1)
+        c1.setDistanceToTarget(DISTANCE_MELEE)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
         expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_PRONE)).toBeTrue()
         // proche d'une cible prone avec une arme de mélée
         expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH).advantage).toBeTrue()
-        c1.setDistanceToTarget(2)
+        c1.setDistanceToTarget(DISTANCE_REACH)
         // pas si proche d'une cible prone avec une arme de mélée
         expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH).advantage).toBeFalse()
         c1.store.mutations.equipItem({ item: oHalberd1 })
@@ -1022,7 +1028,7 @@ describe('prone condition test', function () {
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         // pas si proche d'une cible prone avec une arme à distance
         expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH).advantage).toBeFalse()
-        c1.setDistanceToTarget(1)
+        c1.setDistanceToTarget(DISTANCE_MELEE)
         // proche d'une cible prone avec une arme à distance
         expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH).advantage).toBeTrue()
     })

@@ -1,4 +1,3 @@
 {
-  "weight": 0.15,
-  "weaponTypes": ["weapon-type-heavy-crossbow", "weapon-type-light-crossbow"]
+  "weight": 0.15
 }

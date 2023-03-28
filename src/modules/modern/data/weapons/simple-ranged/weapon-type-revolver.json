@@ -11,7 +11,7 @@
     "WEAPON_ATTRIBUTE_SEMI_AUTOMATIC"
   ],
   "ammo": {
-    "type": "AMMO_TYPE_CARTRIDGE_SMALL",
+    "type": "ammo-type-cartridge-high-small",
     "count": 6
   }
 }

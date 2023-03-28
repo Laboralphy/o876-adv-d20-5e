@@ -39,6 +39,7 @@
  * @property getOffensiveAbility {string}
  * @property getOffensiveAbilityBonus {number}
  * @property getOffensiveEquipmentList {D20Item[]}
+ * @property getOffensiveSlot {string}
  * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
  * @property getSelectedWeapon {D20Item}

@@ -54,10 +54,20 @@
  * @property [armorType] {string}
  * @property [weaponType] {string}
  * @property [shieldType] {string}
+ * @property [ammoType] {string}
  * @property properties {[]}
- * @property data {D20ArmorData|D20WeaponData}
+ * @property data {D20ArmorData|D20WeaponData|D20AmmoData}
  * @property equipmentSlots {string[]}
  * @property material {string}
+ *
+ * @property D20AmmoData {object}
+ * @property weight {number}
+ * @property weaponTypes {string[]}
+ * @property equipmentSlots {string}
+ *
+ * @property D20ShieldData {object}
+ * @property weight {number}
+ * @property equipmentSlots {string}
  */
 
 module.exports = {

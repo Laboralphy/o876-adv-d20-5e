@@ -11,7 +11,7 @@
     "WEAPON_ATTRIBUTE_TWO_HANDED"
   ],
   "ammo": {
-    "type": "AMMO_TYPE_CARTRIDGE_LONG_RANGE",
+    "type": "ammo-type-cartridge-long-range",
     "count": 5
   }
 }

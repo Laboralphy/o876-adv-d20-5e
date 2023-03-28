@@ -10,7 +10,7 @@ const CONSTS = require("../../../consts");
 module.exports = (state, getters, externals) => {
     const nDistance = getters.getTargetDistance
     if (isNaN(nDistance)) {
-        return false
+        throw new Error('ERR_DISTANCE_TO_TARGET_NAN')
     } else {
         return nDistance <= getters.getSelectedWeaponRange
     }
