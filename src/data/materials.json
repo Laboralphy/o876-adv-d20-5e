@@ -3,24 +3,35 @@
     "parent": ""
   },
   "MATERIAL_WOOD": {
+    "description": "Standard non magical wood",
     "parent": ""
   },
   "MATERIAL_METAL": {
+    "description": "Standard non magical metallic material (iron, steel)",
     "parent": ""
   },
   "MATERIAL_FABRIC": {
+    "description": "Standard non magical fabric",
     "parent": ""
   },
   "MATERIAL_LEATHER": {
+    "description": "Material made out of processed animal skin",
     "parent": ""
   },
   "MATERIAL_STONE": {
+    "description": "Cutted stone or other rocky material",
     "parent": ""
   },
   "MATERIAL_SILVER": {
+    "description": "Silver makes weapon effective against super natural creature that are immune to mundane weapon",
     "parent": "MATERIAL_METAL"
   },
   "MATERIAL_IRON": {
+    "description": "Pure non alloyed metal",
+    "parent": "MATERIAL_METAL"
+  },
+  "MATERIAL_STEEL": {
+    "description": "Higher quality non magical material. Need high level of smithing",
     "parent": "MATERIAL_METAL"
   }
 }

@@ -39,7 +39,7 @@
           "properties": {
             "type": {
               "type": "string",
-              "pattern": "^AMMO_TYPE_"
+              "pattern": "^ammo-type-"
             },
             "count": {
               "type": "number",

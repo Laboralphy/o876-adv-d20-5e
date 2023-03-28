@@ -1,0 +1,7 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_ARMOR",
+  "armorType": "armor-type-studded-leather",
+  "properties": [],
+  "material": "MATERIAL_LEATHER"
+}

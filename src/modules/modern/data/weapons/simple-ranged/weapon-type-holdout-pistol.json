@@ -10,7 +10,7 @@
     "WEAPON_ATTRIBUTE_LIGHT"
   ],
   "ammo": {
-    "type": "AMMO_TYPE_CARTRIDGE_SMALL",
+    "type": "ammo-type-cartridge-high-small",
     "count": 2
   }
 }

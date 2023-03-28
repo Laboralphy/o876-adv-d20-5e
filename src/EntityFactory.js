@@ -59,6 +59,15 @@ class EntityFactory {
         }
     }
 
+    createItemAmmo (oBlueprint) {
+        const oAmmoData = this._am.data[oBlueprint.ammoType]
+        return {
+            ...oBlueprint,
+            oAmmoData,
+            equipmentSlots: [CONSTS.EQUIPMENT_SLOT_AMMO]
+        }
+    }
+
     /**
      * creation d'un item
      * @param oBlueprint
@@ -78,6 +87,10 @@ class EntityFactory {
                 return this.createItemShield(oBlueprint)
             }
 
+            case CONSTS.ITEM_TYPE_AMMO: {
+                return this.createItemAmmo(oBlueprint)
+            }
+
             default: {
                 throw new Error('ERR_ITEM_TYPE_NOT_SUPPORTED')
             }
@@ -85,8 +98,7 @@ class EntityFactory {
     }
 
     createCreature (oBlueprint) {
-        const oCreature = new Creature()
-
+        return new Creature()
     }
 
     createEntity (sResRef) {

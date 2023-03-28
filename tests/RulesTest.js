@@ -29,5 +29,3 @@ describe('createEntity', function () {
         expect(w.ref).toBe('arm-leather')
     })
 })
-
-

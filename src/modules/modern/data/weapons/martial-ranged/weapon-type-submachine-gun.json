@@ -12,7 +12,7 @@
     "WEAPON_ATTRIBUTE_TWO_HANDED"
   ],
   "ammo": {
-    "type": "AMMO_TYPE_CARTRIDGE_HIGH_ROF",
+    "type": "ammo-type-cartridge-high-rof",
     "count": 30
   }
 }

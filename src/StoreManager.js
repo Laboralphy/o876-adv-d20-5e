@@ -36,7 +36,7 @@ class StoreManager {
 
     defineGetter (sGetter, pGetter) {
         if (sGetter in this._getters) {
-            throw new Error('ERR_GETTER_ALREADY_DEFINED')
+            throw new Error('ERR_GETTER_ALREADY_DEFINED: ' + sGetter)
         } else {
             this._getters[sGetter] = pGetter
             this.tryWarn()

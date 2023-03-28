@@ -12,7 +12,7 @@
     "WEAPON_ATTRIBUTE_SEMI_AUTOMATIC"
   ],
   "ammo": {
-    "type": "AMMO_TYPE_ENERGY_CELL_II",
+    "type": "ammo-type-energy-cell-ii",
     "count": 10
   }
 }

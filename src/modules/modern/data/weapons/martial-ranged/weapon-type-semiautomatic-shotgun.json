@@ -13,7 +13,7 @@
     "WEAPON_ATTRIBUTE_SEMIAUTOMATIC"
   ],
   "ammo": {
-    "type": "AMMO_TYPE_SLUG",
+    "type": "ammo-type-slug",
     "count": 7
   }
 }

@@ -2,5 +2,6 @@
   "entityType": "ENTITY_TYPE_ITEM",
   "itemType": "ITEM_TYPE_WEAPON",
   "weaponType": "weapon-type-quaterstaff",
-  "properties": []
+  "properties": [],
+  "material": "MATERIAL_WOOD"
 }
