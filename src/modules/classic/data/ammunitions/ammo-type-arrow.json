@@ -1,0 +1,4 @@
+{
+  "weight": 0.1,
+  "weaponTypes": ["weapon-type-shortbow", "weapon-type-longbow"]
+}
