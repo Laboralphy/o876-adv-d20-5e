@@ -1,0 +1,19 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "tourist",
+  "level": 1,
+  "abilities": {
+    "strength": 10,
+    "dexterity": 10,
+    "constitution": 10,
+    "intelligence": 10,
+    "wisdom": 14,
+    "charisma": 12
+  },
+  "size": "medium",
+  "specie": "humanoid",
+  "equipment": [
+    "arm-clothe",
+    "wpn-quaterstaff"
+  ]
+}

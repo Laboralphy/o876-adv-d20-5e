@@ -144,6 +144,13 @@ class AssetManager {
         }
     }
 
+    addActorBlueprint (sId, oBlueprint) {
+        this._assets.blueprints[sId] = {
+            ...oBlueprint,
+            ref: sId
+        }
+    }
+
     /**
      * Ajoute un blueprint
      * @param sId {string}
@@ -153,6 +160,10 @@ class AssetManager {
         switch (oBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
                 return this.addItemBlueprint(sId, oBlueprint)
+            }
+
+            case CONSTS.ENTITY_TYPE_ACTOR: {
+                return this.addActorBlueprint(sId, oBlueprint)
             }
 
             default: {

@@ -97,8 +97,62 @@ class EntityFactory {
         }
     }
 
+    /**
+     * @typedef CreatureBlueprintAbilitiyDef {object}
+     * @property strength {number}
+     * @property dexterity {number}
+     * @property constitution {number}
+     * @property intelligence {number}
+     * @property wisdom {number}
+     * @property charisma {number}
+     *
+     * @typedef CreatureBlueprint {object}
+     * @property [class] {string}
+     * @property [level] {number}
+     * @property classes {{ class: string, levels: number}[]}
+     * @property abilities {CreatureBlueprintAbilityDef}
+     * @property equipment {string[]}
+     *
+     * @param oBlueprint
+     * @returns {Creature}
+     */
     createCreature (oBlueprint) {
-        return new Creature()
+        const oCreature = new Creature()
+        const csm = oCreature.store.mutations
+        if ('class' in oBlueprint) {
+            csm.addClass({ ref: oBlueprint.class, levels: oBlueprint.level })
+        }
+        if ('classes' in oBlueprint) {
+            oBlueprint.classes.forEach(c => {
+                csm.addClass({ ref: c.class, levels: c.level })
+            })
+        }
+        const ba = oBlueprint.abilities
+        csm.setAbility(CONSTS.ABILITY_STRENGTH, ba.strength)
+        csm.setAbility(CONSTS.ABILITY_DEXTERITY, ba.dexterity)
+        csm.setAbility(CONSTS.ABILITY_CONSTITUTION, ba.constitution)
+        csm.setAbility(CONSTS.ABILITY_INTELLIGENCE, ba.intelligence)
+        csm.setAbility(CONSTS.ABILITY_WISDOM, ba.wisdom)
+        csm.setAbility(CONSTS.ABILITY_CHARISMA, ba.charisma)
+
+        const bi = oBlueprint.equipment
+        bi.forEach(e => {
+            oCreature.equipItem(this.createEntity(e))
+        })
+
+        const sSizeConst = 'CREATURE_SIZE_' + (oBlueprint.size || 'medium').toUpperCase()
+        if (sSizeConst in CONSTS) {
+            csm.setSize({ value: sSizeConst })
+        } else {
+            throw new Error('ERR_INVALID_SIZE: ' + oBlueprint.size)
+        }
+        const sSpecieConst = 'SPECIE_' + oBlueprint.specie.toUpperCase()
+        if (sSpecieConst in CONSTS) {
+            csm.setSpecie({ value: sSpecieConst })
+        } else {
+            throw new Error('ERR_INVALID_SPECIE: ' + oBlueprint.specie)
+        }
+        return oCreature
     }
 
     createEntity (sResRef) {

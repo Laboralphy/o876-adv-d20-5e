@@ -612,7 +612,7 @@ class Creature {
                     return EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType)
                 })
             // appliquer les effets sur la cible
-            aDamageEffects.map(d => oTarget.applyEffect(d, 0))
+            aDamageEffects.map(d => oTarget.applyEffect(d))
             oAtk.damages.types = oDamages
             oAtk.damages.amount = amount
         }

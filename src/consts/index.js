@@ -49,6 +49,7 @@
  * @property equipmentSlots {string}
  *
  * @typedef D20Item {object}
+ * @property ref {string} blueprint reference
  * @property entityType {string}
  * @property itemType {string}
  * @property [armorType] {string}
