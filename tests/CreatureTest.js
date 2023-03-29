@@ -781,14 +781,16 @@ describe('attack logs', function () {
         c1.setTarget(c2)
         c2.setTarget(c1)
         let oLastAttack
-        c1.events.on('attack', ({ attack }) => {
-            oLastAttack = attack
+        c1.events.on('attack', ({ outcome }) => {
+            oLastAttack = outcome
         })
         c1.dice.debug(true, 0.75)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.doAttack()
         expect(oLastAttack).toEqual( {
           ac: 6,
+          distance: DISTANCE_MELEE,
+          range: 5,
           bonus: -2,
           roll: 14,
           critical: false,
@@ -818,14 +820,16 @@ describe('attack logs', function () {
         c1.setTarget(c2)
         c2.setTarget(c1)
         let oLastAttack
-        c1.events.on('attack', ({ attack }) => {
-            oLastAttack = attack
+        c1.events.on('attack', ({ outcome }) => {
+            oLastAttack = outcome
         })
         c1.dice.debug(true, 0.75)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.doAttack()
         expect(oLastAttack).toEqual( {
             ac: 6,
+            distance: DISTANCE_MELEE,
+            range: 5,
             bonus: 4,
             roll: 20,
             critical: false,

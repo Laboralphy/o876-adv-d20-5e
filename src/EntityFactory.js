@@ -128,12 +128,12 @@ class EntityFactory {
             })
         }
         const ba = oBlueprint.abilities
-        csm.setAbility(CONSTS.ABILITY_STRENGTH, ba.strength)
-        csm.setAbility(CONSTS.ABILITY_DEXTERITY, ba.dexterity)
-        csm.setAbility(CONSTS.ABILITY_CONSTITUTION, ba.constitution)
-        csm.setAbility(CONSTS.ABILITY_INTELLIGENCE, ba.intelligence)
-        csm.setAbility(CONSTS.ABILITY_WISDOM, ba.wisdom)
-        csm.setAbility(CONSTS.ABILITY_CHARISMA, ba.charisma)
+        csm.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: ba.strength })
+        csm.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: ba.dexterity })
+        csm.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: ba.constitution })
+        csm.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: ba.intelligence })
+        csm.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: ba.wisdom })
+        csm.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: ba.charisma })
 
         const bi = oBlueprint.equipment
         bi.forEach(e => {

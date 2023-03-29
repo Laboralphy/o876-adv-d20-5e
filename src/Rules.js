@@ -23,10 +23,14 @@ class Rules {
     }
 
     defineCreatureEventHandlers (oCreature) {
-        oCreature.events.on('attack', ({ attack, attacker, attacked }) => {
-            const weapon = attacker.store.getters.getSelectedWeapon
-            const ammo = attacker.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_AMMO]
-            this._events.emit('attack', { attack, attacker, attacked, weapon, ammo })
+        const aEvents = ['attack', 'target-out-of-range', 'target-distance']
+        aEvents.forEach(evName => {
+            oCreature.events.on(evName, oPayload => {
+                this._events.emit(evName, {
+                    ...oPayload,
+                    creature: oCreature
+                })
+            })
         })
     }
 
@@ -55,18 +59,15 @@ class Rules {
      * Effectue une attaque de melee contre la cible.
      * Si la cible n'est pas à portée l'attaque échoue
      * @param oAttacker {Creature}
-     * @param oTarget {Creature}
      */
-    strike (oAttacker, oTarget) {
+    strike (oAttacker) {
         oAttacker.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
-        oAttacker.setTarget(oTarget)
-        oAttacker.doAttack()
+        return oAttacker.doAttack()
     }
 
     shoot (oAttacker, oTarget) {
         oAttacker.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
-        oAttacker.setTarget(oTarget)
-        oAttacker.doAttack()
+        return oAttacker.doAttack()
     }
 }
 

@@ -217,14 +217,14 @@ class Creature {
 
     setDistanceToTarget (n) {
         if (n !== this.store.getters.getDistanceToTarget) {
-            this.store.mutations.setTargetDistance({ value: n})
-            this._events.emit('target-distance', { from: this, to: this.getTarget(), value: n })
+            this.store.mutations.setTargetDistance({ value: n })
+            this._events.emit('target-distance', { value: n })
         }
         const oTarget = this.getTarget()
         if (oTarget) {
             if (n !== oTarget.store.getters.getDistanceToTarget) {
                 oTarget.store.mutations.setTargetDistance({ value: n })
-                oTarget.events.emit('target-distance', { to: this, from: this.getTarget(), value: n })
+                oTarget.events.emit('target-distance', { value: n })
             }
         }
     }
@@ -458,6 +458,8 @@ class Creature {
      *
      * @typedef AttackOutcome {object}
      * @property ac {number}
+     * @property distance {number}
+     * @property range {number}
      * @property hit {boolean}
      * @property critical {boolean}
      * @property bonus {number}
@@ -472,8 +474,10 @@ class Creature {
         const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility)
         const nCritThreat = this.store.getters.getSelectedWeaponCriticalThreat
         const critical = dice >= nCritThreat
-        const ac = this.store.getters.getArmorClass
+        const ac = this.getTarget().store.getters.getArmorClass
         const roll = dice + bonus
+        const distance = this.store.getters.getTargetDistance
+        const range = this.store.getters.getSelectedWeaponRange
         const hit = dice >= assetManager.data.variables.ROLL_AUTO_SUCCESS
             ? true
             : dice <= assetManager.data.variables.ROLL_AUTO_FAIL
@@ -481,11 +485,36 @@ class Creature {
                 : (dice + bonus) >= ac
         return {
             ac,
+            distance,
+            range,
             bonus,
             roll,
             critical,
             hit,
             dice,
+            damages: {
+                amount: 0,
+                types: {}
+            }
+        }
+    }
+
+    /**
+     * @returns {AttackOutcome}
+     */
+    createMissedAttack () {
+        const distance = this.store.getters.getTargetDistance
+        const range = this.store.getters.getSelectedWeaponRange
+        const ac = this.getTarget().store.getters.getArmorClass
+        return {
+            ac,
+            distance,
+            range,
+            bonus: 0,
+            roll: 0,
+            critical: false,
+            hit: false,
+            dice: 0,
             damages: {
                 amount: 0,
                 types: {}
@@ -593,8 +622,13 @@ class Creature {
         // Déterminer si on est à portée
         if (!this.store.getters.isTargetInWeaponRange) {
             // hors de portee
-            this._events.emit('target-out-of-range', { attacker: this, attacked: this.getTarget() })
-            return false
+            this._events.emit('target-out-of-range', {
+                distance: this.store.getters.getTargetDistance,
+                range: this.store.getters.getSelectedWeaponRange
+            })
+            return {
+                hit: false
+            }
         }
         // jet d'attaque
         const oAtk = this.rollAttack()
@@ -616,7 +650,7 @@ class Creature {
             oAtk.damages.types = oDamages
             oAtk.damages.amount = amount
         }
-        this._events.emit('attack', { attack: oAtk, attacker: this, attacked: this.getTarget() })
+        this._events.emit('attack', { outcome: oAtk })
         return oAtk
     }
 }
