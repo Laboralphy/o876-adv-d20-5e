@@ -15,6 +15,7 @@ function getWeaponRange (oWeapon, externals) {
     } else if (oWeapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_REACH)) {
         return data['weapon-ranges'].WEAPON_RANGE_REACH
     } else {
+        console.log(externals)
         return data['weapon-ranges'].WEAPON_RANGE_MELEE
     }
 }
