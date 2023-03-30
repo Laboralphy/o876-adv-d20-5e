@@ -145,9 +145,18 @@ class AssetManager {
     }
 
     addActorBlueprint (sId, oBlueprint) {
-        this._assets.blueprints[sId] = {
-            ...oBlueprint,
-            ref: sId
+        try {
+            this.validator.validate(oBlueprint, 'blueprint-actor')
+            this._assets.blueprints[sId] = {
+                ...oBlueprint,
+                ref: sId
+            }
+        } catch (e) {
+            console.error(e)
+            if (e.message.startsWith('ERR_SCHEMA_VALIDATION')) {
+                throw new Error('ERR_INVALID_ITEM_ACTOR: ' + sId + '\n' + e.message)
+            }
+            throw e
         }
     }
 
