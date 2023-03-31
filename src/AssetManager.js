@@ -95,7 +95,6 @@ class AssetManager {
     }
 
     init () {
-        console.log('AM INIT')
         this._validator.init()
         const oBaseData = TreeSync.recursiveRequire(path.resolve(__dirname, 'data'), true)
         for (const [sId, data] of Object.entries(oBaseData)) {
@@ -104,7 +103,6 @@ class AssetManager {
         this.loadModule(path.resolve(__dirname, 'modules', 'base'))
         this.loadModule(path.resolve(__dirname, 'modules', 'classic'))
         this.loadModule(path.resolve(__dirname, 'modules', 'modern'))
-        console.log(this.data['weapon-ranges'])
     }
 
     /**

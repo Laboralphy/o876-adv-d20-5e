@@ -26,7 +26,6 @@ function mutate ({ effect, target }) {
     let amp = effect.amp
     if (sType in oMitigation) {
         const { resistance, vulnerability, factor, reduction } = oMitigation[sType]
-        console.log({ resistance, vulnerability, factor, reduction })
         amp = Math.floor(Math.max(0, (amp - reduction)) * factor)
     }
     target.store.mutations.damage({ amount: amp })

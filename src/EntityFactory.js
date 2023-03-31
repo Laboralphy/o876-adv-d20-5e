@@ -1,10 +1,10 @@
 const CONSTS = require("./consts")
-const AssetManager = require('./AssetManager')
+const { warmup, assetManager } = require('./assets')
 const Creature = require('./Creature')
 
 class EntityFactory {
     constructor () {
-        this._am = null
+        this._am = assetManager
     }
 
     get assetManager () {
@@ -12,7 +12,8 @@ class EntityFactory {
     }
 
     init () {
-        this.initAssetManager()
+        warmup()
+        // this.initAssetManager()
     }
 
     initAssetManager () {

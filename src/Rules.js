@@ -36,6 +36,7 @@ class Rules {
 
     createEntity (sResRef) {
         const oEntity = this._ef.createEntity(sResRef)
+        console.log(oEntity)
         if (oEntity.type === CONSTS.ENTITY_TYPE_ACTOR) {
             this.defineCreatureEventHandlers(oEntity)
         }
