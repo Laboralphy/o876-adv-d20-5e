@@ -8,18 +8,6 @@ const { aggregateModifiers } = require('../common/aggregate-modifiers')
  * @returns {number}
  */
 module.exports = (state, getters) => {
-    const nDexterityBonus = getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]
-    const oArmor = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_CHEST]
-    const bHasArmor = !!oArmor
-    const nArmorAC = bHasArmor ? oArmor.ac : 0
-    const nMaxedDexterityBonus = bHasArmor && oArmor.maxDexterityModifier !== false && !isNaN(oArmor.maxDexterityModifier)
-        ? Math.min(nDexterityBonus, oArmor.maxDexterityModifier)
-        : nDexterityBonus
-    const oShield = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_SHIELD]
-    const nShieldAC = oShield ?oShield.ac : 0
-    const nItemACProps = aggregateModifiers([
-        CONSTS.EFFECT_AC_BONUS,
-        CONSTS.ITEM_PROPERTY_AC_BONUS
-    ], getters).sum
-    return nArmorAC + nMaxedDexterityBonus + nShieldAC + nItemACProps
+    const { armor, dexterity, shield, effects, props } = getters.getArmorClassDetails
+    return armor + dexterity + shield + effects + props
 }

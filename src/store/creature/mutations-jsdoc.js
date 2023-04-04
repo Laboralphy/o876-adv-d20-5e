@@ -26,4 +26,5 @@
  * @property setTargetDistance {function({ value })}
  * @property setSize {function({ value })}
  * @property setSpecie {function({ value })}
+ * @property setSpeed {function({ value })}
  */

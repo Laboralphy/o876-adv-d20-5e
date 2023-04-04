@@ -29,6 +29,9 @@ class EntityFactory {
      */
     createItemArmor (oBlueprint) {
         const oArmorData = this._am.data[oBlueprint.armorType]
+        if (!oArmorData) {
+            throw new Error('This armor blueprint is undefined : ' + oBlueprint.armorType)
+        }
         return {
             ...oBlueprint,
             ...oArmorData,
@@ -38,6 +41,9 @@ class EntityFactory {
 
     createItemShield (oBlueprint) {
         const oArmorData = this._am.data[oBlueprint.shieldType]
+        if (!oArmorData) {
+            throw new Error('This shield blueprint is undefined : ' + oBlueprint.shieldType)
+        }
         return {
             ...oBlueprint,
             ...oArmorData,
@@ -47,6 +53,9 @@ class EntityFactory {
 
     createItemWeapon (oBlueprint) {
         const oWeaponData = this._am.data[oBlueprint.weaponType]
+        if (!oWeaponData) {
+            throw new Error('This weapon blueprint is undefined : ' + oBlueprint.shieldType)
+        }
         const slot = oWeaponData.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
             ? CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
             : CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
@@ -62,6 +71,9 @@ class EntityFactory {
 
     createItemAmmo (oBlueprint) {
         const oAmmoData = this._am.data[oBlueprint.ammoType]
+        if (!oAmmoData) {
+            throw new Error('This ammo blueprint is undefined : ' + oBlueprint.ammoType)
+        }
         return {
             ...oBlueprint,
             oAmmoData,
@@ -153,6 +165,7 @@ class EntityFactory {
         } else {
             throw new Error('ERR_INVALID_SPECIE: ' + oBlueprint.specie)
         }
+        csm.setSpeed({ value: oBlueprint.speed })
         return oCreature
     }
 

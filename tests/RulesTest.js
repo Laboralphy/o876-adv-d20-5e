@@ -56,7 +56,7 @@ describe('strike', function () {
         c1.equipItem(w)
         c1.setTarget(c2)
         c1.setDistanceToTarget(4)
-        r.strike(c1)
+        r.attack(c1)
         expect(aLog[aLog.length - 1]).toEqual('Burnasse attacked Mr.X with wpn-longsword')
     })
 })

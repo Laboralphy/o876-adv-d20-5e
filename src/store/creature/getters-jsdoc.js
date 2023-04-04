@@ -11,6 +11,8 @@
  * @property getAggressorConditions {Set}
  * @property getAreaFlags {Set<string>}
  * @property getArmorClass {number}
+ * @property getArmorClassDetails {{armor: number, dexterity: number, shield: number, effects: number, props: number}}
+ * @property getArmorClassRanges {{type: string, min: number, max: number}[]}
  * @property getArmorMaterial {string}
  * @property getAttackBonus {number}
  * @property getCarryingCapacity {number}

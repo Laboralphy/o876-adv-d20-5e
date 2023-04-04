@@ -12,6 +12,7 @@
   },
   "size": "medium",
   "specie": "humanoid",
+  "speed": 30,
   "equipment": [
     "arm-clothing",
     "wpn-quaterstaff"

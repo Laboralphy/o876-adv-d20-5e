@@ -1,6 +1,7 @@
 const EntityFactory = require('./EntityFactory')
 const CONSTS = require('./consts')
 const Events = require('events')
+const Creature = require('./Creature')
 
 class Rules {
     constructor () {
@@ -23,7 +24,7 @@ class Rules {
     }
 
     defineCreatureEventHandlers (oCreature) {
-        const aEvents = ['attack', 'target-out-of-range', 'target-distance']
+        const aEvents = ['attack', 'target-distance']
         aEvents.forEach(evName => {
             oCreature.events.on(evName, oPayload => {
                 this._events.emit(evName, {
@@ -36,8 +37,7 @@ class Rules {
 
     createEntity (sResRef) {
         const oEntity = this._ef.createEntity(sResRef)
-        console.log(oEntity)
-        if (oEntity.type === CONSTS.ENTITY_TYPE_ACTOR) {
+        if (oEntity instanceof Creature) {
             this.defineCreatureEventHandlers(oEntity)
         }
         return oEntity
@@ -61,14 +61,21 @@ class Rules {
      * Si la cible n'est pas à portée l'attaque échoue
      * @param oAttacker {Creature}
      */
-    strike (oAttacker) {
-        oAttacker.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
-        return oAttacker.doAttack()
+    attack (oAttacker) {
+        if (!oAttacker.getTarget()) {
+            throw new Error('No target')
+        }
+        if (oAttacker.store.getters.isTargetInMeleeWeaponRange) {
+            oAttacker.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+            return oAttacker.doAttack()
+        } else if (oAttacker.store.getter.) {
+
+        }
     }
 
-    shoot (oAttacker, oTarget) {
-        oAttacker.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
-        return oAttacker.doAttack()
+    walkToTarget (oAttacker) {
+        const nDistance = oAttacker.store.getters.getDistanceToTarget - oAttacker.store.getters.getSpeed
+        oAttacker.setDistanceToTarget(nDistance)
     }
 }
 

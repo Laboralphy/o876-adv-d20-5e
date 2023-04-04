@@ -57,7 +57,7 @@
  * @property [shieldType] {string}
  * @property [ammoType] {string}
  * @property properties {[]}
- * @property data {D20ArmorData|D20WeaponData|D20AmmoData}
+ * @property data {D20ArmorData|D20WeaponData|D20AmmoData|D20ShieldData}
  * @property equipmentSlots {string[]}
  * @property material {string}
  *

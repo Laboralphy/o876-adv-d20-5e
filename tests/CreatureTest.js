@@ -685,7 +685,7 @@ describe('aggregateModifier with randomn amp', function () {
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
             effectAmpMapper: eff => c.roll(eff.amp)
         })
-        expect(am).toEqual({ sum: 1, max: 1, sorter: {}, count: 1 })
+        expect(am).toEqual({ sum: 1, max: 1, sorter: {}, count: 1, effects: 1, ip: 0 })
     })
     it('should return amp 6 when applying effect with amplitude 1d6 and random fixed to 1', function () {
         const r = new Rules()
@@ -695,7 +695,7 @@ describe('aggregateModifier with randomn amp', function () {
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
             effectAmpMapper: eff => c.roll(eff.amp)
         })
-        expect(am).toEqual({ sum: 6, max: 6, sorter: {}, count: 1 })
+        expect(am).toEqual({ sum: 6, max: 6, sorter: {}, count: 1, effects: 6, ip: 0 })
     })
 })
 
@@ -789,13 +789,16 @@ describe('attack logs', function () {
         c1.doAttack()
         expect(oLastAttack).toEqual( {
           ac: 6,
-          distance: DISTANCE_MELEE,
+          distance: 5,
           range: 5,
           bonus: -2,
           roll: 14,
           critical: false,
           hit: true,
           dice: 16,
+          deflector: '',
+          target: c2,
+          weapon: c1.store.getters.getSelectedWeapon,
           damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
         })
     })
@@ -828,13 +831,16 @@ describe('attack logs', function () {
         c1.doAttack()
         expect(oLastAttack).toEqual( {
             ac: 6,
-            distance: DISTANCE_MELEE,
+            distance: 5,
             range: 5,
             bonus: 4,
             roll: 20,
             critical: false,
             hit: true,
             dice: 16,
+            deflector: '',
+            target: c2,
+            weapon: c1.store.getters.getSelectedWeapon,
             damages: { amount: 12, types: { DAMAGE_TYPE_SLASHING: 8, DAMAGE_TYPE_FIRE: 4 } }
         })
     })

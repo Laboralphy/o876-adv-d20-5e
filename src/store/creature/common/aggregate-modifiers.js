@@ -24,7 +24,7 @@ function rollRandomEffects (aEffects) {
  * @param propFilter {function}
  * @param propAmpMapper {function}
  * @param propSorter {function}
- * @returns {{sorter: {Object}, max: number, sum: number, count: number }}
+ * @returns {{sorter: {Object}, max: number, sum: number, count: number, effects: number, ip: number }}
  */
 function aggregateModifiers (aTags, getters, {
     effectFilter = null,
@@ -103,6 +103,8 @@ function aggregateModifiers (aTags, getters, {
     const nIPMax = aFilteredItemProperties.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
     return {
         sum: nEffAcc + nIPAcc,
+        effects: nEffAcc,
+        ip: nIPAcc,
         max: Math.max(nEffMax, nIPMax),
         count: aFilteredEffects.length + aFilteredItemProperties.length,
         sorter: oSorter
