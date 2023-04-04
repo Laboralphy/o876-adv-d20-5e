@@ -62,14 +62,13 @@ class Rules {
      * @param oAttacker {Creature}
      */
     attack (oAttacker) {
-        if (!oAttacker.getTarget()) {
-            throw new Error('No target')
-        }
-        if (oAttacker.store.getters.isTargetInMeleeWeaponRange) {
-            oAttacker.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        const asg = oAttacker.store.getters
+        const sBetterSlot = asg.getSuitableOffensiveSlot
+        if (sBetterSlot !== '') {
+            oAttacker.useOffensiveSlot(sBetterSlot)
             return oAttacker.doAttack()
-        } else if (oAttacker.store.getter.) {
-
+        } else {
+            return oAttacker.createDefaultAttackOutcome()
         }
     }
 

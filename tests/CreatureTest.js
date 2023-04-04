@@ -788,18 +788,26 @@ describe('attack logs', function () {
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.doAttack()
         expect(oLastAttack).toEqual( {
-          ac: 6,
-          distance: 5,
-          range: 5,
-          bonus: -2,
-          roll: 14,
-          critical: false,
-          hit: true,
-          dice: 16,
-          deflector: '',
-          target: c2,
-          weapon: c1.store.getters.getSelectedWeapon,
-          damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
+            ac: 6,
+            distance: 5,
+            range: 5,
+            bonus: -2,
+            roll: 14,
+            critical: false,
+            hit: true,
+            dice: 16,
+            deflector: '',
+            target: c2,
+            advantages: {
+                rules: [],
+                value: false
+            },
+            disadvantages: {
+                rules: [],
+                value: false
+            },
+            weapon: c1.store.getters.getSelectedWeapon,
+            damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
         })
     })
     it('should do 12 dmg when doing attack with a blade of angurvadal and a strength of 10', function () {
@@ -840,6 +848,14 @@ describe('attack logs', function () {
             dice: 16,
             deflector: '',
             target: c2,
+            advantages: {
+                rules: [],
+                value: false
+            },
+            disadvantages: {
+                rules: [],
+                value: false
+            },
             weapon: c1.store.getters.getSelectedWeapon,
             damages: { amount: 12, types: { DAMAGE_TYPE_SLASHING: 8, DAMAGE_TYPE_FIRE: 4 } }
         })

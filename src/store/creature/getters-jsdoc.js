@@ -54,12 +54,15 @@
  * @property getSizeProperties {{value: number, hitDie: number, space: number, carryingCapacity}}
  * @property getSpecie {string}
  * @property getSpeed {number}
+ * @property getSuitableOffensiveSlot {string}
  * @property getTarget {{ condition: Object.<string, boolean>}}
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property getTargetDistance {number}
+ * @property isEquippedWithRangedWeapon {boolean}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
+ * @property isRangedWeaponProperlyLoaded {boolean}
  * @property isTargetInMeleeWeaponRange {boolean}
  * @property isTargetInWeaponRange {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}

@@ -81,6 +81,10 @@ class Creature {
         return oPrevItem
     }
 
+    unequipItem (slot) {
+        this.equipItem(null, slot)
+    }
+
     /*
         ######
         #     #   ####   #    #  #    #   ####
@@ -215,16 +219,16 @@ class Creature {
         }
     }
 
-    setDistanceToTarget (n) {
-        if (n !== this.store.getters.getDistanceToTarget) {
-            this.store.mutations.setTargetDistance({ value: n })
-            this._events.emit('target-distance', { value: n })
-        }
+    setDistanceToTarget (n, bRecursed = false) {
         const oTarget = this.getTarget()
         if (oTarget) {
-            if (n !== oTarget.store.getters.getDistanceToTarget) {
-                oTarget.store.mutations.setTargetDistance({ value: n })
-                oTarget.events.emit('target-distance', { value: n })
+            const td = this.store.getters.getTargetDistance
+            if (n !== td) {
+                if (!bRecursed) {
+                    oTarget.setDistanceToTarget(n, true)
+                }
+                this.store.mutations.setTargetDistance({ value: n })
+                this._events.emit('target-distance', { value: n })
             }
         }
     }
@@ -242,15 +246,6 @@ class Creature {
         }
     }
 
-    trySetTargetDistance (n) {
-        const oTargetTarget = this.getTargetTarget()
-        if (this.getTargetTarget() === this) {
-            this.setDistanceToTarget(oTargetTarget.store.getters.getDistanceToTarget)
-        } else {
-            this.setDistanceToTarget(n)
-        }
-    }
-
     setTarget (oCreature) {
         if (oCreature === this) {
             this.clearTarget()
@@ -262,7 +257,25 @@ class Creature {
             this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
             this.store.mutations.updateTargetConditions({ id: oCreature.id, conditions: this._target.creature.store.getters.getConditionSources })
             oCreature.store.events.on('mutation', this._target.handler)
-            this.trySetTargetDistance(this.dice.roll(6, 6))
+            this.initializeDistanceToTarget(this.dice.roll(6, 6))
+        }
+    }
+
+    /**
+     * Definit une distance entre les cibles si celles ci sont totalement incinue l'une de l'autre
+     * sinon alors l'une des creature connais sa distance par rapport à l'autre et on copie
+     * cette distance sur l'autre
+     * @param nDefault {number}
+     */
+    initializeDistanceToTarget(nDefault) {
+        const oTarget = this.getTarget()
+        const oTargetTarget = this.getTargetTarget()
+        if (oTargetTarget === this) {
+            // copie de la distance
+            this.setDistanceToTarget(oTarget.store.getters.getTargetDistance, true)
+        } else {
+            // aucune de ces deux entités ne se connait
+            this.setDistanceToTarget(nDefault)
         }
     }
 
@@ -420,7 +433,7 @@ class Creature {
      */
 
     /**
-     * Tire des dé en fonction de la formule spécifiée
+     * Tire des dés en fonction de la formule spécifiée
      * formule exemple : 1d6 ; 2d6+1 ; 10d8 ; 3d8 ; 2d10...
      * @param d {number|string}
      * @returns {number}
@@ -468,6 +481,8 @@ class Creature {
      * @property roll {number}
      * @property target {Creature}
      * @property weapon {D20Item}
+     * @property advantages {D20RuleValue}
+     * @property disadvantages {D20RuleValue}
      * @property damages {amount: number, types: object<string, number>}
      *
      * @returns {AttackOutcome}
@@ -483,6 +498,8 @@ class Creature {
         const distance = this.store.getters.getTargetDistance
         const range = this.store.getters.getSelectedWeaponRange
         const weapon = this.store.getters.getSelectedWeapon
+        const advantages = this.store.getters.getAdvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
+        const disadvantages = this.store.getters.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
         const hit = dice >= assetManager.data.variables.ROLL_AUTO_SUCCESS
             ? true
             : dice <= assetManager.data.variables.ROLL_AUTO_FAIL
@@ -502,6 +519,8 @@ class Creature {
             roll,
             target,
             weapon,
+            advantages,
+            disadvantages,
             damages: {
                 amount: 0,
                 types: {}
@@ -509,7 +528,7 @@ class Creature {
         }
     }
 
-    createDefaultAttackOutcome (oDefault) {
+    createDefaultAttackOutcome (oDefault = {}) {
         const target = this.getTarget()
         const distance = this.store.getters.getTargetDistance
         const range = this.store.getters.getSelectedWeaponRange
@@ -527,6 +546,8 @@ class Creature {
             roll: 0,
             target,
             weapon,
+            advantages: { rules: [], value: false },
+            disadvantages: { rules: [], value: false },
             damages: {
                 amount: 0,
                 types: {}
@@ -672,7 +693,7 @@ class Creature {
         if (d) {
             return d
         } else {
-            console.log(this
+            console.log(thiss
                 .store
                 .getters
                 .getArmorClassRanges, this

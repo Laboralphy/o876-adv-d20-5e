@@ -14,6 +14,7 @@ module.exports = (state, getters, externals) => {
         return false
     }
     if (getters.isWeildingRangedWeapon) {
+        // on a une arme à distance, mais il faut déterminer si on tire à bout portant
         return nDistance <= externals.data['weapon-ranges'].WEAPON_RANGE_MELEE
     } else {
         return nDistance <= getWeaponRange(
