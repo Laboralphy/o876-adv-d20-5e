@@ -82,7 +82,7 @@ class Creature {
     }
 
     unequipItem (slot) {
-        this.equipItem(null, slot)
+        return this.equipItem(null, slot)
     }
 
     /*
@@ -481,6 +481,7 @@ class Creature {
      * @property roll {number}
      * @property target {Creature}
      * @property weapon {D20Item}
+     * @property ammo {D20Item}
      * @property advantages {D20RuleValue}
      * @property disadvantages {D20RuleValue}
      * @property damages {amount: number, types: object<string, number>}
@@ -488,18 +489,20 @@ class Creature {
      * @returns {AttackOutcome}
      */
     rollAttack () {
+        const sg = this.store.getters
         const bonus = this.getAttackBonus()
         const sOffensiveAbility = this.store.getters.getOffensiveAbility
         const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility)
-        const nCritThreat = this.store.getters.getSelectedWeaponCriticalThreat
+        const nCritThreat = sg.getSelectedWeaponCriticalThreat
         const critical = dice >= nCritThreat
         const ac = this.getTarget().store.getters.getArmorClass
         const roll = dice + bonus
-        const distance = this.store.getters.getTargetDistance
-        const range = this.store.getters.getSelectedWeaponRange
-        const weapon = this.store.getters.getSelectedWeapon
-        const advantages = this.store.getters.getAdvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
-        const disadvantages = this.store.getters.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
+        const distance = sg.getTargetDistance
+        const range = sg.getSelectedWeaponRange
+        const weapon = sg.getSelectedWeapon
+        const ammo = sg.isRangedWeaponProperlyLoaded ? sg.getEquippedItems[CONSTS.EQUIPMENT_SLOT_AMMO] : null
+        const advantages = sg.getAdvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
+        const disadvantages = sg.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
         const hit = dice >= assetManager.data.variables.ROLL_AUTO_SUCCESS
             ? true
             : dice <= assetManager.data.variables.ROLL_AUTO_FAIL
@@ -519,6 +522,7 @@ class Creature {
             roll,
             target,
             weapon,
+            ammo,
             advantages,
             disadvantages,
             damages: {
@@ -529,11 +533,13 @@ class Creature {
     }
 
     createDefaultAttackOutcome (oDefault = {}) {
+        const sg = this.store.getters
         const target = this.getTarget()
-        const distance = this.store.getters.getTargetDistance
-        const range = this.store.getters.getSelectedWeaponRange
-        const ac = target.store.getters.getArmorClass
-        const weapon = this.store.getters.getSelectedWeapon
+        const tsg = target.store.getters
+        const distance = sg.getTargetDistance
+        const range = sg.getSelectedWeaponRange
+        const ac = tsg.getArmorClass
+        const weapon = sg.getSelectedWeapon
         return {
             ac,
             bonus: 0,
@@ -578,7 +584,7 @@ class Creature {
             .aggregateModifiers(
                 [CONSTS.EFFECT_REROLL],
                 { effectFilter: f => f.data.when === CONSTS.ROLL_TYPE_DAMAGE }
-            ).sum
+            ).max
         let bRerolled = false
         for (let i = 0; i < n; ++i) {
             let nRoll = this.roll(oWeapon.damage)
@@ -595,6 +601,15 @@ class Creature {
             oDamageBonus[oWeapon.damageType] = Math.max(1, oDamageBonus[oWeapon.damageType] + nDamage)
         }
         return oDamageBonus
+    }
+
+    rollSavingThrow (sAbility, sThreat = '') {
+        const st = this.store.getters.getSavingThrowBonus
+        const sta = sAbility in st ? st[sAbility] : 0
+        const stt = sThreat in st ? st[sThreat] : 0
+        const nBonus = sta + stt
+        const r = this.rollD20(CONSTS.ROLL_TYPE_SAVE, sAbility, sThreat)
+        return r + nBonus
     }
 
     /*
@@ -693,7 +708,7 @@ class Creature {
         if (d) {
             return d
         } else {
-            console.log(thiss
+            console.log(this
                 .store
                 .getters
                 .getArmorClassRanges, this

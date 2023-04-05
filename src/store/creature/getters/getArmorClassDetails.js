@@ -9,7 +9,7 @@ const { aggregateModifiers } = require('../common/aggregate-modifiers')
  */
 module.exports = (state, getters) => {
     const nDexterityBonus = getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]
-    const oArmor = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_CHEST]
+    const oArmor = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_CHEST] || getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR]
     const bHasArmor = !!oArmor
     const nArmorAC = bHasArmor ? oArmor.ac : 0
     if (nArmorAC === undefined) {

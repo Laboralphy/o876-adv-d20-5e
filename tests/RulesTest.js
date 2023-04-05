@@ -1,6 +1,7 @@
 const Rules = require('../src/Rules')
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
+const EffectProcessor = require('../src/EffectProcessor')
 
 describe('instanciation', function () {
     it('should instanciate with no error', function () {
@@ -275,5 +276,67 @@ describe('getSuitableOffensiveSlot', function () {
                 expect(c.store.getters.getSuitableOffensiveSlot).toEqual(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
             })
         })
+    })
+})
+
+describe('attack outcome disadvantage', function () {
+    it('should return disadvantage in attack outcome when fighting at melee distance with ranged weapon', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-street-rogue')
+        const c2 = r.createEntity('c-street-rogue')
+        const wr = r.createEntity('wpn-shortbow')
+        const am = r.createEntity('ammo-arrow')
+        c1.equipItem(wr)
+        c1.equipItem(am)
+        const ss = c1.unequipItem(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        c1.setTarget(c2)
+        c1.setDistanceToTarget(5)
+        const a = r.attack(c1)
+        expect(a.disadvantages).toEqual({ rules: [ 'TARGET_TOO_CLOSE' ], value: true })
+        c1.equipItem(ss)
+        const a2 = r.attack(c1)
+        expect(a2.disadvantages).toEqual({ rules: [], value: false })
+    })
+})
+
+
+describe('saving throw bonus effects', function () {
+    it('should have a ST bonus in constitution when being fighter', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-soldier')
+        expect(c1.store.getters.getSavingThrowBonus).toEqual({
+                ABILITY_STRENGTH: 6,
+                ABILITY_DEXTERITY: 2,
+                ABILITY_CONSTITUTION: 5,
+                ABILITY_INTELLIGENCE: 0,
+                ABILITY_WISDOM: 1,
+                ABILITY_CHARISMA: -1
+            }
+        )
+        // adding a bonus to constitution
+        c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 4, CONSTS.ABILITY_CONSTITUTION), 10)
+        expect(c1.store.getters.getSavingThrowBonus).toEqual({
+                ABILITY_STRENGTH: 6,
+                ABILITY_DEXTERITY: 2,
+                ABILITY_CONSTITUTION: 9,
+                ABILITY_INTELLIGENCE: 0,
+                ABILITY_WISDOM: 1,
+                ABILITY_CHARISMA: -1
+            }
+        )
+        // adding a bonus to THREAT_TYPE_POISON
+        c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_POISON), 10)
+        expect(c1.store.getters.getSavingThrowBonus).toEqual({
+                ABILITY_STRENGTH: 6,
+                ABILITY_DEXTERITY: 2,
+                ABILITY_CONSTITUTION: 9,
+                ABILITY_INTELLIGENCE: 0,
+                ABILITY_WISDOM: 1,
+                ABILITY_CHARISMA: -1,
+                THREAT_TYPE_POISON: 3
+            }
+        )
     })
 })

@@ -22,7 +22,6 @@
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
- * @property getDistanceToTarget {number}
  * @property getEffects {[]}
  * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
@@ -44,6 +43,7 @@
  * @property getOffensiveSlot {string}
  * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
+ * @property getSavingThrowBonus {{}}
  * @property getSelectedWeapon {D20Item}
  * @property getSelectedWeaponCriticalThreat {number}
  * @property getSelectedWeaponMaterial {string}
@@ -68,6 +68,7 @@
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWeildingNonLightWeapon {boolean}
  * @property isWeildingRangedWeapon {boolean}
+ * @property getProficiencyHalfBonus {number}
  * @property getWizardSpellSlots {number[]}
  * @property has1HWeaponNoShield {boolean}
  * @property has2HWeaponNoShield {boolean}

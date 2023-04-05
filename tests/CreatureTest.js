@@ -807,6 +807,7 @@ describe('attack logs', function () {
                 value: false
             },
             weapon: c1.store.getters.getSelectedWeapon,
+            ammo: null,
             damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
         })
     })
@@ -857,6 +858,7 @@ describe('attack logs', function () {
                 value: false
             },
             weapon: c1.store.getters.getSelectedWeapon,
+            ammo: null,
             damages: { amount: 12, types: { DAMAGE_TYPE_SLASHING: 8, DAMAGE_TYPE_FIRE: 4 } }
         })
     })

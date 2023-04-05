@@ -15,39 +15,44 @@ module.exports = (state, getters, externals) => {
     // déterminer la portée de l'arme de mélée
     const nDistance = getters.getTargetDistance
     const ei = getters.getEquippedItems
+
+    // Liste des armes équipées
     const oMeleeWeapon = ei[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+    const oNaturalWeapon = ei[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON]
     const oRangedWeapon = ei[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]
     const oShield = ei[CONSTS.EQUIPMENT_SLOT_SHIELD]
-    const bRightAmmo = getters.isRangedWeaponProperlyLoaded
-    const nMeleeWeaponRange = getWeaponRange(getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE], externals)
-    const nRangedWeaponRange = getWeaponRange(getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED], externals)
+
+    // Types d'armes possédés
+    const bHasMelee = !!oMeleeWeapon
+    const bHasRanged = !!oRangedWeapon && getters.isRangedWeaponProperlyLoaded
+    const bHasNatural = !!oNaturalWeapon
+    const bHasShield = !!oShield
+
+    // Calcul des portées
+    const nMeleeWeaponRange = getWeaponRange(oMeleeWeapon || oNaturalWeapon, externals)
+    const nRangedWeaponRange = bHasRanged ? getWeaponRange(oRangedWeapon, externals) : 0
+
     const bInMeleeRange = nDistance <= nMeleeWeaponRange
-    const bInRangedRange = nDistance <= nRangedWeaponRange
-    const bCanUseMelee = !!oMeleeWeapon && bInMeleeRange
-    const bCanUseRanged = !!oRangedWeapon && bRightAmmo && !oShield && bInRangedRange
-    const n =
-        (bCanUseMelee ? 1 : 0) |
-        (bCanUseRanged ? 2 : 0)
-    switch (n) {
-        case 0: {
-            // neither melee nor ranged
+    const bInRangedRange = (nDistance <= nRangedWeaponRange) && !bInMeleeRange
+    if (bInRangedRange && bHasRanged && !bHasShield) {
+        // Utilisation d'arme à distance uniquement si la cible est à portée, et si on n'a pas de bouclier
+        return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+    } else if (bInMeleeRange) {
+        if (bHasMelee) {
+            // Utilisation d'arme de contact lorsque la cible est à portée de l'arme
+            return CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+        } else if (bHasRanged && !bHasShield) {
+            // On n'a qu'une arme à distance, on l'utilise à bout portant
+            return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+        } else if (bHasNatural) {
+            // On n'a pas d'autre arme que ses points, griffes, crocs
+            return CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON
+        } else {
+            // on n'a vraiment aucune arme, pas même naturelle
             return ''
         }
-
-        case 1: {
-            // melee only
-            return CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
-        }
-
-        case 2: {
-            // ranged only
-            return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
-        }
-
-        case 3: {
-            // both melee and ranged
-            // choose best
-            return bInMeleeRange ? CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE : CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
-        }
+    } else {
+        // cible trop loin pour tout l'arsenal équipé
+        return ''
     }
 }

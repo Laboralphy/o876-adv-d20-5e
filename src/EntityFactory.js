@@ -22,6 +22,22 @@ class EntityFactory {
         this._am = am
     }
 
+    mixData(oBlueprint, oData, slots) {
+        const properties = [
+            ...oBlueprint.properties
+        ]
+        const oBlueprintCopy = {
+            ...oBlueprint
+        }
+        delete oBlueprintCopy.properties
+        return {
+            properties,
+            ...oData,
+            ...oBlueprintCopy,
+            equipmentSlots: slots,
+        }
+    }
+
     /**
      * creation d'une armure
      * @param oBlueprint
@@ -32,41 +48,31 @@ class EntityFactory {
         if (!oArmorData) {
             throw new Error('This armor blueprint is undefined : ' + oBlueprint.armorType)
         }
-        return {
-            ...oBlueprint,
-            ...oArmorData,
-            equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST]
-        }
+        return this.mixData(oBlueprint, oArmorData, [oBlueprint.itemType === CONSTS.ITEM_TYPE_NATURAL_ARMOR
+            ? CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR
+            : CONSTS.EQUIPMENT_SLOT_CHEST
+        ])
     }
 
     createItemShield (oBlueprint) {
-        const oArmorData = this._am.data[oBlueprint.shieldType]
-        if (!oArmorData) {
+        const oShieldData = this._am.data[oBlueprint.shieldType]
+        if (!oShieldData) {
             throw new Error('This shield blueprint is undefined : ' + oBlueprint.shieldType)
         }
-        return {
-            ...oBlueprint,
-            ...oArmorData,
-            equipmentSlots: [CONSTS.EQUIPMENT_SLOT_SHIELD]
-        }
+        return this.mixData(oBlueprint, oShieldData, [CONSTS.EQUIPMENT_SLOT_SHIELD])
     }
 
     createItemWeapon (oBlueprint) {
         const oWeaponData = this._am.data[oBlueprint.weaponType]
         if (!oWeaponData) {
-            throw new Error('This weapon blueprint is undefined : ' + oBlueprint.shieldType)
+            throw new Error('This weapon blueprint is undefined : ' + oBlueprint.weaponType)
         }
         const slot = oWeaponData.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
             ? CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
-            : CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
-        return {
-            ...oBlueprint,
-            properties: [
-                ...oBlueprint.properties
-            ],
-            ...oWeaponData,
-            equipmentSlots: [slot]
-        }
+            : oBlueprint.itemType === CONSTS.ITEM_TYPE_NATURAL_WEAPON
+                ? CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON
+                : CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+        return this.mixData(oBlueprint, oWeaponData, [slot])
     }
 
     createItemAmmo (oBlueprint) {
@@ -74,11 +80,7 @@ class EntityFactory {
         if (!oAmmoData) {
             throw new Error('This ammo blueprint is undefined : ' + oBlueprint.ammoType)
         }
-        return {
-            ...oBlueprint,
-            oAmmoData,
-            equipmentSlots: [CONSTS.EQUIPMENT_SLOT_AMMO]
-        }
+        return this.mixData(oBlueprint, oAmmoData, [CONSTS.EQUIPMENT_SLOT_AMMO])
     }
 
     /**
@@ -88,10 +90,12 @@ class EntityFactory {
      */
     createItem (oBlueprint) {
         switch (oBlueprint.itemType) {
+            case CONSTS.ITEM_TYPE_NATURAL_ARMOR:
             case CONSTS.ITEM_TYPE_ARMOR: {
                 return this.createItemArmor(oBlueprint)
             }
 
+            case CONSTS.ITEM_TYPE_NATURAL_WEAPON:
             case CONSTS.ITEM_TYPE_WEAPON: {
                 return this.createItemWeapon(oBlueprint)
             }
@@ -152,6 +156,11 @@ class EntityFactory {
         bi.forEach(e => {
             oCreature.equipItem(this.createEntity(e))
         })
+
+        if (!oCreature.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON]) {
+            const nw = this.createEntity('nwpn-unarmed-strike')
+            oCreature.equipItem(nw, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON)
+        }
 
         const sSizeConst = 'CREATURE_SIZE_' + (oBlueprint.size || 'medium').toUpperCase()
         if (sSizeConst in CONSTS) {

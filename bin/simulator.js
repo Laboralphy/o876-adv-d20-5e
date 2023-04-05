@@ -147,7 +147,7 @@ function assault (rules, atk, def) {
 function bonusAction (rules, creature) {
     if (!creature.store.getters.isTargetInWeaponRange) {
         rules.walkToTarget(creature)
-        console.log(creature.name, 'is now at', creature.store.getters.getDistanceToTarget, 'ft. from', creature.getTarget().name)
+        console.log(creature.name, 'is now at', creature.store.getters.getTargetDistance, 'ft. from', creature.getTarget().name)
     }
 }
 

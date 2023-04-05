@@ -62,8 +62,10 @@ module.exports = (state, getters, externals) => {
     const AREA_UNDERWATER = af.has(CONSTS.AREA_FLAG_UNDERWATER)
     const AREA_DARK = af.has(CONSTS.AREA_FLAG_DARK)
 
+    const TARGET_TOO_CLOSE = getters.isWeildingRangedWeapon && getters.isTargetInMeleeWeaponRange
     const PRONE = myConditions.has(CONSTS.CONDITION_PRONE)
     const TARGET_PRONE_AND_FAR = targetConditions.has(CONSTS.CONDITION_PRONE) && !getters.isTargetInMeleeWeaponRange
+
 
     return {
         ROLL_TYPE_ATTACK: {
@@ -79,6 +81,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH)
             }),
             ABILITY_DEXTERITY: computeRuleValue({
@@ -93,6 +96,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
             }),
             ABILITY_CONSTITUTION: computeRuleValue({
@@ -106,6 +110,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CONSTITUTION)
             }),
             ABILITY_INTELLIGENCE: computeRuleValue({
@@ -119,6 +124,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_INTELLIGENCE)
             }),
             ABILITY_WISDOM: computeRuleValue({
@@ -132,6 +138,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_WISDOM)
             }),
             ABILITY_CHARISMA: computeRuleValue({
@@ -145,6 +152,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CHARISMA)
             })
         },

@@ -73,7 +73,7 @@ class Rules {
     }
 
     walkToTarget (oAttacker) {
-        const nDistance = oAttacker.store.getters.getDistanceToTarget - oAttacker.store.getters.getSpeed
+        const nDistance = oAttacker.store.getters.getTargetDistance - oAttacker.store.getters.getSpeed
         oAttacker.setDistanceToTarget(nDistance)
     }
 }

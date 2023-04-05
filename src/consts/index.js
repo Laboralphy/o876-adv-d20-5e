@@ -93,5 +93,6 @@ module.exports = {
     ...require('./skills.json'),
     ...require('./species.json'),
     ...require('./weapon-attributes.json'),
-    ...require('./materials.json')
+    ...require('./materials.json'),
+    ...require('./threats.json')
 }

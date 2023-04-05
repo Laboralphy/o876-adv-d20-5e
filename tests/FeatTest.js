@@ -119,12 +119,12 @@ describe('feat-fighting-style-great-weapon', function() {
         expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_PIERCING: 3 })
         c.store.mutations.equipItem({ item: oStaff })
         c.store.mutations.updateFeatEffects()
-        // Pour calculer les bonus de degat on liste les effets de bonus
+        // Pour calculer les bonus de dégât on liste les effets de bonus
         // certains effets ont des getters en amp
         // ces getters ont besoin d'obtenir la liste des effets
         // ces effets ont des getters...
         expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_CRUSHING: 3 })
-        expect(c.aggregateModifiers([CONSTS.EFFECT_MASSIVE_CRITICAL]).sum).toEqual(6)
+        expect(c.aggregateModifiers([CONSTS.EFFECT_REROLL]).sum).toEqual(2)
     })
 })
 

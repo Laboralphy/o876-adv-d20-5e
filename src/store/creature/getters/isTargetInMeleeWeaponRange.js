@@ -18,7 +18,7 @@ module.exports = (state, getters, externals) => {
         return nDistance <= externals.data['weapon-ranges'].WEAPON_RANGE_MELEE
     } else {
         return nDistance <= getWeaponRange(
-            getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE],
+            getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE] || getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON],
             externals
         )
     }

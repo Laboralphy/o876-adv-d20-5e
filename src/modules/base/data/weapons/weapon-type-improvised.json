@@ -1,0 +1,8 @@
+{
+  "proficiency": "PROFICIENCY_WEAPON_UNARMED",
+  "damage": "1d4",
+  "versatileDamage": "",
+  "damageType": "DAMAGE_TYPE_CRUSHING",
+  "weight": 0,
+  "attributes": []
+}
