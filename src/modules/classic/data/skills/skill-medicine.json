@@ -1,0 +1,8 @@
+{
+  "description": "Help companion to heal wounds. Stabilize a dying companion. Identify illness.",
+  "ability": "ABILITY_WISDOM",
+  "getters": {
+    "advantage": "getClassicSkillAdvantages",
+    "disadvantage": "getClassicSkillDisadvantages"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "description": "Open lock without a key.",
+  "ability": "ABILITY_DEXTERITY",
+  "getters": {
+  }
+}

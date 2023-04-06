@@ -370,5 +370,6 @@ describe('saving throw advantage and disadvantage on specific threats', function
             disadvantage: false,
             details: { advantages: [], disadvantages: [] }
         })
+        console.log(r.assetManager.data['skill-religion'])
     })
 })

@@ -259,9 +259,6 @@ module.exports = (state, getters, externals) => {
             }),
             SKILL_STEALTH: computeRuleValue({
                 WEARING_NON_STEALTH_ARMOR,
-                POISONED,
-                FRIGHTENED,
-                HEAVILY_ENCUMBERED,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.SKILL_STEALTH)
             }),
             SKILL_PERCEPTION: computeRuleValue({
