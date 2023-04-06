@@ -20,10 +20,10 @@ module.exports = (state, getters, externals) => {
 
     const oRelevantEffects = getters
         .getEffects
-        .filter(effect => effect.type === CONSTS.EFFECT_ADVANTAGE)
+        .filter(effect => effect.type === CONSTS.EFFECT_DISADVANTAGE)
     const oRelevantProperties = getters
         .getEquipmentItemProperties
-        .filter(prop => prop.property === CONSTS.ITEM_PROPERTY_ADVANTAGE)
+        .filter(prop => prop.property === CONSTS.ITEM_PROPERTY_DISADVANTAGE)
     const oDisadvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects, oRelevantProperties)
 
     // Créature très fatiguée
@@ -189,6 +189,27 @@ module.exports = (state, getters, externals) => {
                 EXHAUSTION_LEVEL_3,
                 HEAVILY_ENCUMBERED,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_CHARISMA)
+            }),
+            THREAT_TYPE_DISEASE: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_DISEASE)
+            }),
+            THREAT_TYPE_FEAR: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_FEAR)
+            }),
+            THREAT_TYPE_MIND_SPELL: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_MIND_SPELL)
+            }),
+            THREAT_TYPE_POISON: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_POISON)
+            }),
+            THREAT_TYPE_SPELL: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_SPELL)
+            }),
+            THREAT_TYPE_TRAP: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_TRAP)
+            }),
+            THREAT_TYPE_DEATH: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_DEATH)
             })
         },
         ROLL_TYPE_CHECK: {

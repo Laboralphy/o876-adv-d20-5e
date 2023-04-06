@@ -339,4 +339,36 @@ describe('saving throw bonus effects', function () {
             }
         )
     })
+    it ('should have +6 saving throw bonus agains mind spell when having +3 vs spell + +3 vs mind spell', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-soldier')
+        c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_SPELL), 10)
+        c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_MIND_SPELL), 10)
+        c1.dice.debug(true, 0.000001)
+        const roll = c1.rollSavingThrow(CONSTS.ABILITY_WISDOM, [CONSTS.THREAT_TYPE_SPELL, CONSTS.THREAT_TYPE_MIND_SPELL])
+        // bonus : 1 (wis) + 3 (spell) +3 (mind spell) ; roll 1 ; TOTAL: 8
+        expect(roll).toBe(8)
+    })
+})
+
+describe('saving throw advantage and disadvantage on specific threats', function () {
+    it('should be advantaged against death on saving throw', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-soldier')
+        c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ADVANTAGE, [CONSTS.ROLL_TYPE_SAVE], [CONSTS.THREAT_TYPE_DEATH], 'MEME_PAS_MORT'), 10)
+        const cc = c1.getCircumstances(CONSTS.ROLL_TYPE_SAVE, [CONSTS.ABILITY_CONSTITUTION, CONSTS.THREAT_TYPE_DEATH])
+        expect(cc).toEqual({
+            advantage: true,
+            disadvantage: false,
+            details: { advantages: [ 'MEME_PAS_MORT' ], disadvantages: [] }
+        })
+        const cc2 = c1.getCircumstances(CONSTS.ROLL_TYPE_SAVE, [CONSTS.ABILITY_WISDOM, CONSTS.THREAT_TYPE_FEAR])
+        expect(cc2).toEqual({
+            advantage: false,
+            disadvantage: false,
+            details: { advantages: [], disadvantages: [] }
+        })
+    })
 })

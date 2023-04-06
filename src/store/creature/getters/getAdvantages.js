@@ -109,6 +109,27 @@ module.exports = (state, getters) => {
             }),
             ABILITY_CHARISMA: computeRuleValue({
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_CHARISMA)
+            }),
+            THREAT_TYPE_DISEASE: computeRuleValue({
+                ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_DISEASE)
+            }),
+            THREAT_TYPE_FEAR: computeRuleValue({
+                ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_FEAR)
+            }),
+            THREAT_TYPE_MIND_SPELL: computeRuleValue({
+                ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_MIND_SPELL)
+            }),
+            THREAT_TYPE_POISON: computeRuleValue({
+                ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_POISON)
+            }),
+            THREAT_TYPE_SPELL: computeRuleValue({
+                ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_SPELL)
+            }),
+            THREAT_TYPE_TRAP: computeRuleValue({
+                ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_TRAP)
+            }),
+            THREAT_TYPE_DEATH: computeRuleValue({
+                ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_DEATH)
             })
         },
         ROLL_TYPE_CHECK: {

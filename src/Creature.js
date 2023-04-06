@@ -371,11 +371,10 @@ class Creature {
     /**
      *
      * @param sRollType
-     * @param sAbility
-     * @param sExtra
+     * @param aAbilitySkillThreats
      * @returns {{disadvantage: *, advantage: *, details: {advantages: (*|string|CSSRuleList), disadvantages: (*|string|CSSRuleList)}}}
      */
-    getCircumstances (sRollType, sAbility, sExtra) {
+    getCircumstances (sRollType, aAbilitySkillThreats) {
         const oAdvantages = this.store.getters.getAdvantages
         const oDisadvantages = this.store.getters.getDisadvantages
         const ar = oAdvantages[sRollType]
@@ -386,31 +385,21 @@ class Creature {
         if (!dr) {
             throw new Error('This roll type (' + sRollType + ') does not exist in disadvantages. Available roll types are : ' + Object.keys(oDisadvantages).join(', '))
         }
-        const ara = ar[sAbility].value
-        const dra = dr[sAbility].value
-        const al = ar[sAbility].rules
-        const dl = dr[sAbility].rules
+        const al = []
+        const dl = []
         let
-            advantage = ara,
-            disadvantage = dra
-        if (sExtra !== '') {
-            switch (sRollType) {
-                case CONSTS.ROLL_TYPE_SAVE: {
-                    advantage = advantage || ar[sExtra].value
-                    disadvantage = disadvantage || dr[sExtra].value
-                    al.assign(ar[sExtra].rules)
-                    dl.assign(dr[sExtra].rules)
-                    break
-                }
-                case CONSTS.ROLL_TYPE_CHECK: {
-                    advantage = advantage || ar[sExtra].value
-                    disadvantage = disadvantage || dr[sExtra].value
-                    al.assign(ar[sExtra].rules)
-                    dl.assign(dr[sExtra].rules)
-                    break
-                }
+            advantage = false,
+            disadvantage = false
+        aAbilitySkillThreats.forEach(ex => {
+            if (ex in ar) {
+                advantage = advantage || ar[ex].value
+                al.push(...ar[ex].rules)
             }
-        }
+            if (ex in dr) {
+                disadvantage = disadvantage || dr[ex].value
+                dl.push(...dr[ex].rules)
+            }
+        })
         return {
             advantage,
             disadvantage,
@@ -447,14 +436,14 @@ class Creature {
      * (attaque, sauvegarde, compétence)
      * @param sRollType {string} ROLL_TYPE_* déterminer en quelle occasion on lance le dé
      * @param sAbility {string} spécifié la caractéristique impliquée dans le jet de dé
-     * @param [extra] {string} information supplémentaire
+     * @param [extra] {string[]} information supplémentaire
      * pour un jet de sauvegarde on peut indiquer le type de menace (DAMAGE_TYPE_FIRE, SPELL_TYPE_MIND_CONTROL)
      * pour un jet de compétence on peut indiquer la nature de la compétence (SKILL_STEALTH...)
      * certaines créature ont des avantages ou des désavantages spécifiques à certaines situations
      * @returns {number}
      */
-    rollD20 (sRollType, sAbility, extra = '') {
-        const { advantage, disadvantage } = this.getCircumstances(sRollType, sAbility, extra)
+    rollD20 (sRollType, sAbility, extra = []) {
+        const { advantage, disadvantage } = this.getCircumstances(sRollType, [sAbility, ...extra])
         const r = this._dice.roll(20)
         if (advantage && !disadvantage) {
             return Math.max(r, this._dice.roll(20))
@@ -603,12 +592,20 @@ class Creature {
         return oDamageBonus
     }
 
-    rollSavingThrow (sAbility, sThreat = '') {
+    /**
+     *
+     * @param sAbility {string}
+     * @param aThreats {string[]}
+     * @returns {number}
+     */
+    rollSavingThrow (sAbility, aThreats = []) {
         const st = this.store.getters.getSavingThrowBonus
         const sta = sAbility in st ? st[sAbility] : 0
-        const stt = sThreat in st ? st[sThreat] : 0
+        const stt = aThreats.reduce((prev, sThreat) => {
+            return sThreat in st ? prev + st[sThreat] : prev
+        }, 0)
         const nBonus = sta + stt
-        const r = this.rollD20(CONSTS.ROLL_TYPE_SAVE, sAbility, sThreat)
+        const r = this.rollD20(CONSTS.ROLL_TYPE_SAVE, sAbility, aThreats)
         return r + nBonus
     }
 
