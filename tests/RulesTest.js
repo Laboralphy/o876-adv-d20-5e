@@ -370,6 +370,44 @@ describe('saving throw advantage and disadvantage on specific threats', function
             disadvantage: false,
             details: { advantages: [], disadvantages: [] }
         })
-        console.log(r.assetManager.data['skill-religion'])
+    })
+})
+
+describe('check skills on additionnal modules like "classic"', function () {
+    it('should be advantaged in religion when having specific buff effect', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-soldier')
+        const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_RELIGION'])
+        expect(circ1).toEqual({
+            advantage: false,
+            disadvantage: false,
+            details: { advantages: [], disadvantages: [] }
+        })
+        c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ADVANTAGE, [CONSTS.ROLL_TYPE_CHECK], ['SKILL_RELIGION'], 'ILLUMINE'), 10)
+        const circ2 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_RELIGION'])
+        expect(circ2).toEqual({
+            advantage: true,
+            disadvantage: false,
+            details: { advantages: ['ILLUMINE'], disadvantages: [] }
+        })
+    })
+    it('should be advantaged in any dexterity check when having dexterity advantage buff effect', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-soldier')
+        const circ10 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_UNLOCK'])
+        expect(circ10).toEqual({
+            advantage: false,
+            disadvantage: false,
+            details: { advantages: [], disadvantages: [] }
+        })
+        c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ADVANTAGE, [CONSTS.ROLL_TYPE_CHECK], [CONSTS.ABILITY_DEXTERITY], 'REFLEX'), 10)
+        const circ20 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_UNLOCK'])
+        expect(circ20).toEqual({
+            advantage: true,
+            disadvantage: false,
+            details: { advantages: ['REFLEX'], disadvantages: [] }
+        })
     })
 })

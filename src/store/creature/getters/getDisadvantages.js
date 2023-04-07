@@ -8,23 +8,16 @@ const CONSTS = require("../../../consts");
  * ROLL_TYPE_SAVE : liste des désavantages de THIS quand il effectue un jet de sauvegarde contre une attaque de THIS.target
  * ROLL_TYPE_CHECK : liste des désavantages de THIS quand il lance un jet de compétence contre THIS.target
  * (dans le cas de compétence d'attaque) ou pour agresseur (dans le cas de compétence de défense)
- * @param state
- * @param getters
- * @param externals
+ * @param state {object}
+ * @param getters {D20CreatureStoreGetters}
+ * @param externals {object}
  * @return {D20AdvantagesOrDisadvantages}
  */
 module.exports = (state, getters, externals) => {
     const myConditions = getters.getConditions
     const targetConditions = getters.getTargetConditions
-    const myConditionSources = getters.getConditionSources
 
-    const oRelevantEffects = getters
-        .getEffects
-        .filter(effect => effect.type === CONSTS.EFFECT_DISADVANTAGE)
-    const oRelevantProperties = getters
-        .getEquipmentItemProperties
-        .filter(prop => prop.property === CONSTS.ITEM_PROPERTY_DISADVANTAGE)
-    const oDisadvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects, oRelevantProperties)
+    const oDisadvantageEffectRegistry = getters.getDisadvantagePropEffects
 
     // Créature très fatiguée
     const EXHAUSTION_LEVEL_3 = getters.getExhaustionLevel >= 3
@@ -34,9 +27,6 @@ module.exports = (state, getters, externals) => {
 
     // La créature est équippée d'une armure ou d'un bouclier pour lesquels elle n'a pas la proficiency
     const NON_PROFICIENT_ARMOR_SHIELD = !getters.isProficientArmorAndShield
-
-    // La créature porte une armure qui n'est pas adaptée au déplacement furtif
-    const WEARING_NON_STEALTH_ARMOR = getters.isWearingStealthDisadvantagedArmor
 
     // La cible est cachée ou invisible
     const TARGET_UNSEEN = !getters.getEntityVisibility.detectable.target && getters.getEntityVisibility.detectedBy.target
@@ -60,7 +50,6 @@ module.exports = (state, getters, externals) => {
     // La créature est dans une pièce obscure sans capacité de vision nocturne
     const af = getters.getAreaFlags
     const AREA_UNDERWATER = af.has(CONSTS.AREA_FLAG_UNDERWATER)
-    const AREA_DARK = af.has(CONSTS.AREA_FLAG_DARK)
 
     const TARGET_TOO_CLOSE = getters.isWeildingRangedWeapon && getters.isTargetInMeleeWeaponRange
     const PRONE = myConditions.has(CONSTS.CONDITION_PRONE)

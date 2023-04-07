@@ -140,7 +140,7 @@ class Creature {
             CONSTS.ITEM_PROPERTY_ENHANCEMENT
         ], {
             effectSorter: effect => effect.data.type || sWeaponDamType,
-            propSorter: property => property.type || sWeaponDamType,
+            propSorter: prop => prop.data.type || sWeaponDamType,
             effectAmpMapper: eff => ampRndMapper(eff),
             propAmpMapper: prop => ampRndMapper(prop)
         })
@@ -165,7 +165,7 @@ class Creature {
                 CONSTS.ITEM_PROPERTY_ENHANCEMENT,
                 CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL
             ], {
-                propSorter: property => property.type || sWeaponDamType,
+                propSorter: property => property.data.type || sWeaponDamType,
                 propAmpMapper: prop => ampRndMapper(prop)
             })
             updateResult(amCrit.sorter)
@@ -391,6 +391,36 @@ class Creature {
             advantage = false,
             disadvantage = false
         aAbilitySkillThreats.forEach(ex => {
+            // dans le cas d'un skill particulier...
+            // comme ce système propose des skill configurable par module...
+            if (sRollType === CONSTS.ROLL_TYPE_CHECK) {
+                // 1) lire les data du skill pour déterminer le getter du skill
+                const sSkill = ex
+                const sSkillDataProp = ex.toLowerCase().replace(/_/g, '-')
+                const oSkillData = assetManager.data[sSkillDataProp]
+                if (oSkillData) {
+                    // 2) lire ce getter
+                    const oGetters = oSkillData.getters
+                    // 3) extraire les avantages/désavantages
+                    const oSkillAdvantages = this.store.getters[oGetters.advantage]
+                    if (!oSkillAdvantages) {
+                        throw new Error('This skill adv/dis getters does not exist : "' + oGetters.advantage + '"')
+                    }
+                    const oSkillDisadvantages = this.store.getters[oGetters.disadvantage]
+                    if (!oSkillDisadvantages) {
+                        throw new Error('This skill adv/dis getters does not exist : "' + oGetters.disadvantage + '"')
+                    }
+                    ex = oSkillData.ability
+                    if (sSkill in oSkillAdvantages) {
+                        advantage = advantage || oSkillAdvantages[sSkill].value
+                        al.push(...oSkillAdvantages[sSkill].rules)
+                    }
+                    if (sSkill in oSkillDisadvantages) {
+                        disadvantage = disadvantage || oSkillDisadvantages[sSkill].value
+                        dl.push(...oSkillDisadvantages[sSkill].rules)
+                    }
+                }
+            }
             if (ex in ar) {
                 advantage = advantage || ar[ex].value
                 al.push(...ar[ex].rules)
@@ -400,6 +430,7 @@ class Creature {
                 dl.push(...dr[ex].rules)
             }
         })
+
         return {
             advantage,
             disadvantage,
@@ -705,7 +736,7 @@ class Creature {
         if (d) {
             return d
         } else {
-            console.log(this
+            console.error(this
                 .store
                 .getters
                 .getArmorClassRanges, this

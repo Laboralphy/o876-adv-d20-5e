@@ -145,17 +145,8 @@ function main (sType) {
             break
         }
 
-        // Check skills
-        case 'cs': {
-            console.group('checking skills')
-            checkConstAndData('./src/consts/skills.json', './src/data/skills.json')
-            checkConstAndData('./src/consts/skills.json', './src/data/skills.json')
-            console.groupEnd()
-            break
-        }
-
         default: {
-            console.log('available options: ii, ei, ic, ec, g, cs')
+            console.log('available options: ii, ei, ic, ec, g')
             break
         }
     }

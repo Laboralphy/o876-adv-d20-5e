@@ -20,7 +20,6 @@
  * @property ABILITY_INTELLIGENCE {D20RuleValue}
  * @property ABILITY_WISDOM {D20RuleValue}
  * @property ABILITY_CHARISMA {D20RuleValue}
- * @property SKILL_STEALTH {D20RuleValue}
  *
  * @typedef D20AdvantagesOrDisadvantages {object}
  * @property ROLL_TYPE_ATTACK {D20RuleValueRegistry}
@@ -90,7 +89,6 @@ module.exports = {
     ...require('./proficiencies.json'),
     ...require('./roll-types.json'),
     ...require('./sizes.json'),
-    ...require('./skills.json'),
     ...require('./species.json'),
     ...require('./weapon-attributes.json'),
     ...require('./materials.json'),

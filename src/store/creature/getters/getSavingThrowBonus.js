@@ -29,7 +29,7 @@ module.exports = (state, getters) => {
             effectAmpMapper: eff => ampMapper(eff.amp, getters),
             propAmpMapper: prop => ampMapper(prop.amp, getters),
             effectSorter: eff => eff.data.type,
-            propSorter: prop => prop.type
+            propSorter: prop => prop.data.type
         }
     )
     const ags = ag.sorter

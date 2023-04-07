@@ -5,7 +5,8 @@
  * @property getAbilityList {string[]}
  * @property getAbilityModifiers {D20AbilityNumberRegistry}
  * @property getAbilityValues {D20AbilityNumberRegistry}
- * @property getAdvantages {*}
+ * @property getAdvantagePropEffects {Object<string, Object<string, string>>}
+ * @property getAdvantages {D20AdvantagesOrDisadvantages}
  * @property getAggressor {{ condition: Object.<string, boolean>}}
  * @property getAggressorConditionSources {{}}
  * @property getAggressorConditions {Set}
@@ -21,6 +22,7 @@
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
+ * @property getDisadvantagePropEffects {Object<string, string>}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffects {[]}
  * @property getEncumbranceLevel {number}
@@ -68,7 +70,8 @@
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWeildingNonLightWeapon {boolean}
  * @property isWeildingRangedWeapon {boolean}
- * @property getClassicSkillAdvantages {*}
+ * @property getClassicSkillAdvantages {D20AdvantagesOrDisadvantages}
+ * @property getClassicSkillDisadvantages {*}
  * @property getProficiencyHalfBonus {number}
  * @property getWizardSpellSlots {number[]}
  * @property has1HWeaponNoShield {boolean}
