@@ -256,14 +256,6 @@ module.exports = (state, getters, externals) => {
                 FRIGHTENED,
                 HEAVILY_ENCUMBERED,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.ABILITY_CHARISMA)
-            }),
-            SKILL_STEALTH: computeRuleValue({
-                WEARING_NON_STEALTH_ARMOR,
-                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.SKILL_STEALTH)
-            }),
-            SKILL_PERCEPTION: computeRuleValue({
-                AREA_DARK,
-                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.SKILL_STEALTH)
             })
         }
     }

@@ -2,7 +2,7 @@
   "description": "Your Wisdom (Perception) check lets you spot, hear, or otherwise detect the presence of something. It measures your general awareness of your surroundings and the keenness of your senses.",
   "ability": "ABILITY_WISDOM",
   "getters": {
-    "advantage": "getClassicSkillAdvantages",
-    "disadvantage": "getClassicSkillDisadvantages"
+    "advantage": "getBaseSkillAdvantages",
+    "disadvantage": "getBaseSkillDisadvantages"
   }
 }

@@ -68,6 +68,7 @@
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWeildingNonLightWeapon {boolean}
  * @property isWeildingRangedWeapon {boolean}
+ * @property getClassicSkillAdvantages {*}
  * @property getProficiencyHalfBonus {number}
  * @property getWizardSpellSlots {number[]}
  * @property has1HWeaponNoShield {boolean}
