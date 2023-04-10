@@ -1,0 +1,8 @@
+{
+  "description": "Your Charisma (Deception) check determines whether you can convincingly hide the truth, either verbally or through your actions. This deception can encompass everything from misleading others through ambiguity to telling outright lies. Typical situations include trying to fast-\u00AD‐‑ talk a guard, con a merchant, earn money through gambling, pass yourself off in a disguise, dull someone’s suspicions with false assurances, or maintain a straight face while telling a blatant lie.",
+  "ability": "ABILITY_CHARISMA",
+  "getters": {
+    "advantage": "getClassicSkillAdvantages",
+    "disadvantage": "getClassicSkillDisadvantages"
+  }
+}

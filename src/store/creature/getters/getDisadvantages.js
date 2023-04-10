@@ -8,23 +8,16 @@ const CONSTS = require("../../../consts");
  * ROLL_TYPE_SAVE : liste des désavantages de THIS quand il effectue un jet de sauvegarde contre une attaque de THIS.target
  * ROLL_TYPE_CHECK : liste des désavantages de THIS quand il lance un jet de compétence contre THIS.target
  * (dans le cas de compétence d'attaque) ou pour agresseur (dans le cas de compétence de défense)
- * @param state
- * @param getters
- * @param externals
+ * @param state {object}
+ * @param getters {D20CreatureStoreGetters}
+ * @param externals {object}
  * @return {D20AdvantagesOrDisadvantages}
  */
 module.exports = (state, getters, externals) => {
     const myConditions = getters.getConditions
     const targetConditions = getters.getTargetConditions
-    const myConditionSources = getters.getConditionSources
 
-    const oRelevantEffects = getters
-        .getEffects
-        .filter(effect => effect.type === CONSTS.EFFECT_ADVANTAGE)
-    const oRelevantProperties = getters
-        .getEquipmentItemProperties
-        .filter(prop => prop.property === CONSTS.ITEM_PROPERTY_ADVANTAGE)
-    const oDisadvantageEffectRegistry = getDisAndAdvEffectRegistry(oRelevantEffects, oRelevantProperties)
+    const oDisadvantageEffectRegistry = getters.getDisadvantagePropEffects
 
     // Créature très fatiguée
     const EXHAUSTION_LEVEL_3 = getters.getExhaustionLevel >= 3
@@ -34,9 +27,6 @@ module.exports = (state, getters, externals) => {
 
     // La créature est équippée d'une armure ou d'un bouclier pour lesquels elle n'a pas la proficiency
     const NON_PROFICIENT_ARMOR_SHIELD = !getters.isProficientArmorAndShield
-
-    // La créature porte une armure qui n'est pas adaptée au déplacement furtif
-    const WEARING_NON_STEALTH_ARMOR = getters.isWearingStealthDisadvantagedArmor
 
     // La cible est cachée ou invisible
     const TARGET_UNSEEN = !getters.getEntityVisibility.detectable.target && getters.getEntityVisibility.detectedBy.target
@@ -60,10 +50,11 @@ module.exports = (state, getters, externals) => {
     // La créature est dans une pièce obscure sans capacité de vision nocturne
     const af = getters.getAreaFlags
     const AREA_UNDERWATER = af.has(CONSTS.AREA_FLAG_UNDERWATER)
-    const AREA_DARK = af.has(CONSTS.AREA_FLAG_DARK)
 
+    const TARGET_TOO_CLOSE = getters.isWeildingRangedWeapon && getters.isTargetInMeleeWeaponRange
     const PRONE = myConditions.has(CONSTS.CONDITION_PRONE)
     const TARGET_PRONE_AND_FAR = targetConditions.has(CONSTS.CONDITION_PRONE) && !getters.isTargetInMeleeWeaponRange
+
 
     return {
         ROLL_TYPE_ATTACK: {
@@ -79,6 +70,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH)
             }),
             ABILITY_DEXTERITY: computeRuleValue({
@@ -93,6 +85,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
             }),
             ABILITY_CONSTITUTION: computeRuleValue({
@@ -106,6 +99,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CONSTITUTION)
             }),
             ABILITY_INTELLIGENCE: computeRuleValue({
@@ -119,6 +113,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_INTELLIGENCE)
             }),
             ABILITY_WISDOM: computeRuleValue({
@@ -132,6 +127,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_WISDOM)
             }),
             ABILITY_CHARISMA: computeRuleValue({
@@ -145,6 +141,7 @@ module.exports = (state, getters, externals) => {
                 HEAVY_WEAPON,
                 HEAVILY_ENCUMBERED,
                 AREA_UNDERWATER,
+                TARGET_TOO_CLOSE,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CHARISMA)
             })
         },
@@ -181,6 +178,27 @@ module.exports = (state, getters, externals) => {
                 EXHAUSTION_LEVEL_3,
                 HEAVILY_ENCUMBERED,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.ABILITY_CHARISMA)
+            }),
+            THREAT_TYPE_DISEASE: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_DISEASE)
+            }),
+            THREAT_TYPE_FEAR: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_FEAR)
+            }),
+            THREAT_TYPE_MIND_SPELL: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_MIND_SPELL)
+            }),
+            THREAT_TYPE_POISON: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_POISON)
+            }),
+            THREAT_TYPE_SPELL: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_SPELL)
+            }),
+            THREAT_TYPE_TRAP: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_TRAP)
+            }),
+            THREAT_TYPE_DEATH: computeRuleValue({
+                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_SAVE, CONSTS.THREAT_TYPE_DEATH)
             })
         },
         ROLL_TYPE_CHECK: {
@@ -227,17 +245,6 @@ module.exports = (state, getters, externals) => {
                 FRIGHTENED,
                 HEAVILY_ENCUMBERED,
                 ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.ABILITY_CHARISMA)
-            }),
-            SKILL_STEALTH: computeRuleValue({
-                WEARING_NON_STEALTH_ARMOR,
-                POISONED,
-                FRIGHTENED,
-                HEAVILY_ENCUMBERED,
-                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.SKILL_STEALTH)
-            }),
-            SKILL_PERCEPTION: computeRuleValue({
-                AREA_DARK,
-                ...getThoseProvidedByEffects(oDisadvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, CONSTS.SKILL_STEALTH)
             })
         }
     }

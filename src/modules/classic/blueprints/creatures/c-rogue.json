@@ -1,0 +1,20 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "rogue",
+  "level": 2,
+  "abilities": {
+    "strength": 11,
+    "dexterity": 16,
+    "constitution": 12,
+    "intelligence": 10,
+    "wisdom": 8,
+    "charisma": 14
+  },
+  "size": "medium",
+  "specie": "humanoid",
+  "speed": 30,
+  "equipment": [
+    "arm-leather",
+    "wpn-shortsword"
+  ]
+}

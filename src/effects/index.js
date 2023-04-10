@@ -22,6 +22,7 @@ module.exports = {
   [CONSTS.EFFECT_MELEE_ATTACK_BONUS]: require('./melee-attack-bonus'),
   [CONSTS.EFFECT_RANGED_ATTACK_BONUS]: require('./ranged-attack-bonus'),
   [CONSTS.EFFECT_REROLL]: require('./reroll'),
+  [CONSTS.EFFECT_SAVING_THROW_BONUS]: require('./saving-throw-bonus'),
   [CONSTS.EFFECT_TRUE_SIGHT]: require('./true-sight')
 }
 

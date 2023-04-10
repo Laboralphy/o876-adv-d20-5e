@@ -1,0 +1,22 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "fighter",
+  "level": 5,
+  "abilities": {
+    "strength": 16,
+    "dexterity": 14,
+    "constitution": 14,
+    "intelligence": 10,
+    "wisdom": 12,
+    "charisma": 8
+  },
+  "size": "medium",
+  "specie": "humanoid",
+  "speed": 30,
+  "equipment": [
+    "arm-chain-shirt",
+    "wpn-longsword",
+    "wpn-light-crossbow",
+    "ammo-bolt"
+  ]
+}

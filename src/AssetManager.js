@@ -144,6 +144,22 @@ class AssetManager {
         }
     }
 
+    addActorBlueprint (sId, oBlueprint) {
+        try {
+            this.validator.validate(oBlueprint, 'blueprint-actor')
+            this._assets.blueprints[sId] = {
+                ...oBlueprint,
+                ref: sId
+            }
+        } catch (e) {
+            console.error(e)
+            if (e.message.startsWith('ERR_SCHEMA_VALIDATION')) {
+                throw new Error('ERR_INVALID_ITEM_ACTOR: ' + sId + '\n' + e.message)
+            }
+            throw e
+        }
+    }
+
     /**
      * Ajoute un blueprint
      * @param sId {string}
@@ -153,6 +169,10 @@ class AssetManager {
         switch (oBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
                 return this.addItemBlueprint(sId, oBlueprint)
+            }
+
+            case CONSTS.ENTITY_TYPE_ACTOR: {
+                return this.addActorBlueprint(sId, oBlueprint)
             }
 
             default: {
@@ -198,6 +218,7 @@ class AssetManager {
             'armor-type',
             'shield-type',
             'ammo-type',
+            'skill',
             'feat'
         ]
         const getDataType = (sId) => {

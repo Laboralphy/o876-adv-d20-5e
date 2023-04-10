@@ -81,6 +81,10 @@ class Creature {
         return oPrevItem
     }
 
+    unequipItem (slot) {
+        return this.equipItem(null, slot)
+    }
+
     /*
         ######
         #     #   ####   #    #  #    #   ####
@@ -136,7 +140,7 @@ class Creature {
             CONSTS.ITEM_PROPERTY_ENHANCEMENT
         ], {
             effectSorter: effect => effect.data.type || sWeaponDamType,
-            propSorter: property => property.type || sWeaponDamType,
+            propSorter: prop => prop.data.type || sWeaponDamType,
             effectAmpMapper: eff => ampRndMapper(eff),
             propAmpMapper: prop => ampRndMapper(prop)
         })
@@ -161,7 +165,7 @@ class Creature {
                 CONSTS.ITEM_PROPERTY_ENHANCEMENT,
                 CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL
             ], {
-                propSorter: property => property.type || sWeaponDamType,
+                propSorter: property => property.data.type || sWeaponDamType,
                 propAmpMapper: prop => ampRndMapper(prop)
             })
             updateResult(amCrit.sorter)
@@ -215,16 +219,16 @@ class Creature {
         }
     }
 
-    setDistanceToTarget (n) {
-        if (n !== this.store.getters.getDistanceToTarget) {
-            this.store.mutations.setTargetDistance({ value: n})
-            this._events.emit('target-distance', { from: this, to: this.getTarget(), value: n })
-        }
+    setDistanceToTarget (n, bRecursed = false) {
         const oTarget = this.getTarget()
         if (oTarget) {
-            if (n !== oTarget.store.getters.getDistanceToTarget) {
-                oTarget.store.mutations.setTargetDistance({ value: n })
-                oTarget.events.emit('target-distance', { to: this, from: this.getTarget(), value: n })
+            const td = this.store.getters.getTargetDistance
+            if (n !== td) {
+                if (!bRecursed) {
+                    oTarget.setDistanceToTarget(n, true)
+                }
+                this.store.mutations.setTargetDistance({ value: n })
+                this._events.emit('target-distance', { value: n })
             }
         }
     }
@@ -242,15 +246,6 @@ class Creature {
         }
     }
 
-    trySetTargetDistance (n) {
-        const oTargetTarget = this.getTargetTarget()
-        if (this.getTargetTarget() === this) {
-            this.setDistanceToTarget(oTargetTarget.store.getters.getDistanceToTarget)
-        } else {
-            this.setDistanceToTarget(n)
-        }
-    }
-
     setTarget (oCreature) {
         if (oCreature === this) {
             this.clearTarget()
@@ -262,7 +257,25 @@ class Creature {
             this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
             this.store.mutations.updateTargetConditions({ id: oCreature.id, conditions: this._target.creature.store.getters.getConditionSources })
             oCreature.store.events.on('mutation', this._target.handler)
-            this.trySetTargetDistance(this.dice.roll(4, 2))
+            this.initializeDistanceToTarget(this.dice.roll(6, 6))
+        }
+    }
+
+    /**
+     * Definit une distance entre les cibles si celles ci sont totalement incinue l'une de l'autre
+     * sinon alors l'une des creature connais sa distance par rapport à l'autre et on copie
+     * cette distance sur l'autre
+     * @param nDefault {number}
+     */
+    initializeDistanceToTarget(nDefault) {
+        const oTarget = this.getTarget()
+        const oTargetTarget = this.getTargetTarget()
+        if (oTargetTarget === this) {
+            // copie de la distance
+            this.setDistanceToTarget(oTarget.store.getters.getTargetDistance, true)
+        } else {
+            // aucune de ces deux entités ne se connait
+            this.setDistanceToTarget(nDefault)
         }
     }
 
@@ -358,11 +371,10 @@ class Creature {
     /**
      *
      * @param sRollType
-     * @param sAbility
-     * @param sExtra
+     * @param aAbilitySkillThreats
      * @returns {{disadvantage: *, advantage: *, details: {advantages: (*|string|CSSRuleList), disadvantages: (*|string|CSSRuleList)}}}
      */
-    getCircumstances (sRollType, sAbility, sExtra) {
+    getCircumstances (sRollType, aAbilitySkillThreats) {
         const oAdvantages = this.store.getters.getAdvantages
         const oDisadvantages = this.store.getters.getDisadvantages
         const ar = oAdvantages[sRollType]
@@ -373,31 +385,52 @@ class Creature {
         if (!dr) {
             throw new Error('This roll type (' + sRollType + ') does not exist in disadvantages. Available roll types are : ' + Object.keys(oDisadvantages).join(', '))
         }
-        const ara = ar[sAbility].value
-        const dra = dr[sAbility].value
-        const al = ar[sAbility].rules
-        const dl = dr[sAbility].rules
+        const al = []
+        const dl = []
         let
-            advantage = ara,
-            disadvantage = dra
-        if (sExtra !== '') {
-            switch (sRollType) {
-                case CONSTS.ROLL_TYPE_SAVE: {
-                    advantage = advantage || ar[sExtra].value
-                    disadvantage = disadvantage || dr[sExtra].value
-                    al.assign(ar[sExtra].rules)
-                    dl.assign(dr[sExtra].rules)
-                    break
-                }
-                case CONSTS.ROLL_TYPE_CHECK: {
-                    advantage = advantage || ar[sExtra].value
-                    disadvantage = disadvantage || dr[sExtra].value
-                    al.assign(ar[sExtra].rules)
-                    dl.assign(dr[sExtra].rules)
-                    break
+            advantage = false,
+            disadvantage = false
+        aAbilitySkillThreats.forEach(ex => {
+            // dans le cas d'un skill particulier...
+            // comme ce système propose des skill configurable par module...
+            if (sRollType === CONSTS.ROLL_TYPE_CHECK) {
+                // 1) lire les data du skill pour déterminer le getter du skill
+                const sSkill = ex
+                const sSkillDataProp = ex.toLowerCase().replace(/_/g, '-')
+                const oSkillData = assetManager.data[sSkillDataProp]
+                if (oSkillData) {
+                    // 2) lire ce getter
+                    const oGetters = oSkillData.getters
+                    // 3) extraire les avantages/désavantages
+                    const oSkillAdvantages = this.store.getters[oGetters.advantage]
+                    if (!oSkillAdvantages) {
+                        throw new Error('This skill adv/dis getters does not exist : "' + oGetters.advantage + '"')
+                    }
+                    const oSkillDisadvantages = this.store.getters[oGetters.disadvantage]
+                    if (!oSkillDisadvantages) {
+                        throw new Error('This skill adv/dis getters does not exist : "' + oGetters.disadvantage + '"')
+                    }
+                    ex = oSkillData.ability
+                    if (sSkill in oSkillAdvantages) {
+                        advantage = advantage || oSkillAdvantages[sSkill].value
+                        al.push(...oSkillAdvantages[sSkill].rules)
+                    }
+                    if (sSkill in oSkillDisadvantages) {
+                        disadvantage = disadvantage || oSkillDisadvantages[sSkill].value
+                        dl.push(...oSkillDisadvantages[sSkill].rules)
+                    }
                 }
             }
-        }
+            if (ex in ar) {
+                advantage = advantage || ar[ex].value
+                al.push(...ar[ex].rules)
+            }
+            if (ex in dr) {
+                disadvantage = disadvantage || dr[ex].value
+                dl.push(...dr[ex].rules)
+            }
+        })
+
         return {
             advantage,
             disadvantage,
@@ -420,7 +453,7 @@ class Creature {
      */
 
     /**
-     * Tire des dé en fonction de la formule spécifiée
+     * Tire des dés en fonction de la formule spécifiée
      * formule exemple : 1d6 ; 2d6+1 ; 10d8 ; 3d8 ; 2d10...
      * @param d {number|string}
      * @returns {number}
@@ -434,14 +467,14 @@ class Creature {
      * (attaque, sauvegarde, compétence)
      * @param sRollType {string} ROLL_TYPE_* déterminer en quelle occasion on lance le dé
      * @param sAbility {string} spécifié la caractéristique impliquée dans le jet de dé
-     * @param [extra] {string} information supplémentaire
+     * @param [extra] {string[]} information supplémentaire
      * pour un jet de sauvegarde on peut indiquer le type de menace (DAMAGE_TYPE_FIRE, SPELL_TYPE_MIND_CONTROL)
      * pour un jet de compétence on peut indiquer la nature de la compétence (SKILL_STEALTH...)
      * certaines créature ont des avantages ou des désavantages spécifiques à certaines situations
      * @returns {number}
      */
-    rollD20 (sRollType, sAbility, extra = '') {
-        const { advantage, disadvantage } = this.getCircumstances(sRollType, sAbility, extra)
+    rollD20 (sRollType, sAbility, extra = []) {
+        const { advantage, disadvantage } = this.getCircumstances(sRollType, [sAbility, ...extra])
         const r = this._dice.roll(20)
         if (advantage && !disadvantage) {
             return Math.max(r, this._dice.roll(20))
@@ -458,38 +491,94 @@ class Creature {
      *
      * @typedef AttackOutcome {object}
      * @property ac {number}
-     * @property hit {boolean}
-     * @property critical {boolean}
      * @property bonus {number}
+     * @property critical {boolean}
+     * @property deflector {string}
+     * @property dice {number}
+     * @property distance {number}
+     * @property hit {boolean}
+     * @property range {number}
      * @property roll {number}
+     * @property target {Creature}
+     * @property weapon {D20Item}
+     * @property ammo {D20Item}
+     * @property advantages {D20RuleValue}
+     * @property disadvantages {D20RuleValue}
      * @property damages {amount: number, types: object<string, number>}
      *
      * @returns {AttackOutcome}
      */
     rollAttack () {
+        const sg = this.store.getters
         const bonus = this.getAttackBonus()
         const sOffensiveAbility = this.store.getters.getOffensiveAbility
         const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility)
-        const nCritThreat = this.store.getters.getSelectedWeaponCriticalThreat
+        const nCritThreat = sg.getSelectedWeaponCriticalThreat
         const critical = dice >= nCritThreat
-        const ac = this.store.getters.getArmorClass
+        const ac = this.getTarget().store.getters.getArmorClass
         const roll = dice + bonus
+        const distance = sg.getTargetDistance
+        const range = sg.getSelectedWeaponRange
+        const weapon = sg.getSelectedWeapon
+        const ammo = sg.isRangedWeaponProperlyLoaded ? sg.getEquippedItems[CONSTS.EQUIPMENT_SLOT_AMMO] : null
+        const advantages = sg.getAdvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
+        const disadvantages = sg.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
         const hit = dice >= assetManager.data.variables.ROLL_AUTO_SUCCESS
             ? true
             : dice <= assetManager.data.variables.ROLL_AUTO_FAIL
                 ? false
                 : (dice + bonus) >= ac
+        const target = this.getTarget()
+        const deflector = hit ? '' : target.getDeflectingArmorPart(roll).type
         return {
             ac,
             bonus,
-            roll,
             critical,
-            hit,
+            deflector,
             dice,
+            distance,
+            hit,
+            range,
+            roll,
+            target,
+            weapon,
+            ammo,
+            advantages,
+            disadvantages,
             damages: {
                 amount: 0,
                 types: {}
             }
+        }
+    }
+
+    createDefaultAttackOutcome (oDefault = {}) {
+        const sg = this.store.getters
+        const target = this.getTarget()
+        const tsg = target.store.getters
+        const distance = sg.getTargetDistance
+        const range = sg.getSelectedWeaponRange
+        const ac = tsg.getArmorClass
+        const weapon = sg.getSelectedWeapon
+        return {
+            ac,
+            bonus: 0,
+            critical: false,
+            deflector: '',
+            dice: 0,
+            distance,
+            hit: false,
+            range,
+            roll: 0,
+            target,
+            weapon,
+            advantages: { rules: [], value: false },
+            disadvantages: { rules: [], value: false },
+            damages: {
+                amount: 0,
+                types: {}
+            },
+            ...oDefault
         }
     }
 
@@ -515,7 +604,7 @@ class Creature {
             .aggregateModifiers(
                 [CONSTS.EFFECT_REROLL],
                 { effectFilter: f => f.data.when === CONSTS.ROLL_TYPE_DAMAGE }
-            ).sum
+            ).max
         let bRerolled = false
         for (let i = 0; i < n; ++i) {
             let nRoll = this.roll(oWeapon.damage)
@@ -532,6 +621,23 @@ class Creature {
             oDamageBonus[oWeapon.damageType] = Math.max(1, oDamageBonus[oWeapon.damageType] + nDamage)
         }
         return oDamageBonus
+    }
+
+    /**
+     *
+     * @param sAbility {string}
+     * @param aThreats {string[]}
+     * @returns {number}
+     */
+    rollSavingThrow (sAbility, aThreats = []) {
+        const st = this.store.getters.getSavingThrowBonus
+        const sta = sAbility in st ? st[sAbility] : 0
+        const stt = aThreats.reduce((prev, sThreat) => {
+            return sThreat in st ? prev + st[sThreat] : prev
+        }, 0)
+        const nBonus = sta + stt
+        const r = this.rollD20(CONSTS.ROLL_TYPE_SAVE, sAbility, aThreats)
+        return r + nBonus
     }
 
     /*
@@ -570,8 +676,8 @@ class Creature {
                     weapon: this.store.getters.getSelectedWeapon
                 },
                 current: {
-                    slot: '',
-                    weapon: null
+                    slot,
+                    weapon: this.store.getters.getEquippedItems[slot]
                 }
             }
             this._events.emit('offensive-slot', oEmit)
@@ -593,8 +699,9 @@ class Creature {
         // Déterminer si on est à portée
         if (!this.store.getters.isTargetInWeaponRange) {
             // hors de portee
-            this._events.emit('target-out-of-range', { attacker: this, attacked: this.getTarget() })
-            return false
+            const oOutcome = this.createDefaultAttackOutcome()
+            this._events.emit('attack', { outcome: oOutcome })
+            return oOutcome
         }
         // jet d'attaque
         const oAtk = this.rollAttack()
@@ -612,12 +719,32 @@ class Creature {
                     return EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType)
                 })
             // appliquer les effets sur la cible
-            aDamageEffects.map(d => oTarget.applyEffect(d, 0))
+            aDamageEffects.map(d => oTarget.applyEffect(d))
             oAtk.damages.types = oDamages
             oAtk.damages.amount = amount
         }
-        this._events.emit('attack', { attack: oAtk, attacker: this, attacked: this.getTarget() })
+        this._events.emit('attack', { outcome: oAtk })
         return oAtk
+    }
+
+    getDeflectingArmorPart (nAttackRoll) {
+        const d = this
+            .store
+            .getters
+            .getArmorClassRanges
+            .find(({ min, max }) => min <= nAttackRoll && nAttackRoll <= max)
+        if (d) {
+            return d
+        } else {
+            console.error(this
+                .store
+                .getters
+                .getArmorClassRanges, this
+                .store
+                .getters
+                .getArmorClassDetails)
+            throw new Error('WTF ' + nAttackRoll + ' not in range')
+        }
     }
 }
 

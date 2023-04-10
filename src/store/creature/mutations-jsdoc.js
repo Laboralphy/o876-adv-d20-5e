@@ -24,4 +24,7 @@
  * @property setHitPoints {function({ value })}
  * @property heal {function({ amount })}
  * @property setTargetDistance {function({ value })}
+ * @property setSize {function({ value })}
+ * @property setSpecie {function({ value })}
+ * @property setSpeed {function({ value })}
  */

@@ -4,6 +4,7 @@
   "properties": [],
   "damage": "1",
   "damageType": "DAMAGE_TYPE_CRUSHING",
+  "weaponType": "weapon-type-unarmed",
   "attributes": [],
   "material": ""
 }

@@ -1,4 +1,4 @@
-function ampMapperWithOutGetters (amp, getter) {
+function ampMapperWithOutGetters (amp, getters) {
     return amp
 }
 
@@ -10,4 +10,4 @@ function ampMapperWithGetters (amp, getters) {
             : amp
 }
 
-module.exports = { ampMapper: ampMapperWithOutGetters }
+module.exports = { ampMapper: ampMapperWithGetters }

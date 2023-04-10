@@ -5,9 +5,5 @@ const CONSTS = require('../../../consts')
  * @returns {D20Item}
  */
 module.exports = state => {
-    let oWeapon = state.equipment[state.offensiveSlot]
-    if (!oWeapon) {
-        oWeapon = state.equipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON]
-    }
-    return oWeapon
+    return state.equipment[state.offensiveSlot] || state.equipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON]
 }

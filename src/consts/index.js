@@ -20,7 +20,6 @@
  * @property ABILITY_INTELLIGENCE {D20RuleValue}
  * @property ABILITY_WISDOM {D20RuleValue}
  * @property ABILITY_CHARISMA {D20RuleValue}
- * @property SKILL_STEALTH {D20RuleValue}
  *
  * @typedef D20AdvantagesOrDisadvantages {object}
  * @property ROLL_TYPE_ATTACK {D20RuleValueRegistry}
@@ -49,6 +48,7 @@
  * @property equipmentSlots {string}
  *
  * @typedef D20Item {object}
+ * @property ref {string} blueprint reference
  * @property entityType {string}
  * @property itemType {string}
  * @property [armorType] {string}
@@ -56,7 +56,7 @@
  * @property [shieldType] {string}
  * @property [ammoType] {string}
  * @property properties {[]}
- * @property data {D20ArmorData|D20WeaponData|D20AmmoData}
+ * @property data {D20ArmorData|D20WeaponData|D20AmmoData|D20ShieldData}
  * @property equipmentSlots {string[]}
  * @property material {string}
  *
@@ -89,8 +89,8 @@ module.exports = {
     ...require('./proficiencies.json'),
     ...require('./roll-types.json'),
     ...require('./sizes.json'),
-    ...require('./skills.json'),
     ...require('./species.json'),
     ...require('./weapon-attributes.json'),
-    ...require('./materials.json')
+    ...require('./materials.json'),
+    ...require('./threats.json')
 }

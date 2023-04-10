@@ -1,7 +1,7 @@
 {
-  "description": "Adds +6 crit damage with a great melee weapon, and no shield",
+  "description": "Reroll damage dice on 1 or 2",
   "when": "has2HWeaponNoShield",
   "effects": [
-    ["EFFECT_MASSIVE_CRITICAL", 6]
+    ["EFFECT_REROLL", 2, "ROLL_TYPE_DAMAGE"]
   ]
 }

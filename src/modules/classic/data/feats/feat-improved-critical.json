@@ -1,0 +1,6 @@
+{
+  "description": "Increase weapon critical threat to 1",
+  "effects": [
+    ["EFFECT_CRITICAL_THREAT", 1]
+  ]
+}

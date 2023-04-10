@@ -1,9 +1,16 @@
 const EntityFactory = require('./EntityFactory')
 const CONSTS = require('./consts')
+const Events = require('events')
+const Creature = require('./Creature')
 
 class Rules {
     constructor () {
         this._ef = null
+        this._events = new Events()
+    }
+
+    get events () {
+        return this._events
     }
 
     init () {
@@ -16,39 +23,35 @@ class Rules {
         return this._ef.assetManager
     }
 
-    log (...args) {
-        console.log(...args)
-    }
-
     defineCreatureEventHandlers (oCreature) {
-        oCreature.events.on('attack', ({ attack, attacker, attacked }) => {
-            const oWeapon = attacker.store.getters.getSelectedWeapon
-            const oAmmo = attacker.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_AMMO]
-            this.log('%s attacks %s with %s', attacker.name, attacked.name, oWeapon.weaponType)
+        const aEvents = ['attack', 'target-distance']
+        aEvents.forEach(evName => {
+            oCreature.events.on(evName, oPayload => {
+                this._events.emit(evName, {
+                    ...oPayload,
+                    creature: oCreature
+                })
+            })
         })
     }
 
     createEntity (sResRef) {
         const oEntity = this._ef.createEntity(sResRef)
-        if (oEntity.type === CONSTS.ENTITY_TYPE_ACTOR) {
+        if (oEntity instanceof Creature) {
             this.defineCreatureEventHandlers(oEntity)
         }
         return oEntity
     }
 
-    createInventory (oCreature, oInventory) {
-        const oDef = {
-            resref: '',
-            classes: []
-            inventory
-        }
+    createInventoryItems (oCreature, oInventory) {
         for (const [sSlot, item] of Object.entries(oInventory)) {
             if (typeof item === 'string') {
                 const oItem = this.createEntity(item)
                 oCreature.equipItem(oItem)
-            } else {
-                const oItem = this.createEntity(item.blueprint)
-
+            } else if (typeof item === 'object') {
+                const { slot = '', ref } = item
+                const oItem = this.createEntity(ref)
+                oCreature.equipItem(oItem, slot)
             }
         }
     }
@@ -57,18 +60,21 @@ class Rules {
      * Effectue une attaque de melee contre la cible.
      * Si la cible n'est pas à portée l'attaque échoue
      * @param oAttacker {Creature}
-     * @param oTarget {Creature}
      */
-    strike (oAttacker, oTarget) {
-        oAttacker.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
-        oAttacker.setTarget(oTarget)
-        oAttacker.doAttack()
+    attack (oAttacker) {
+        const asg = oAttacker.store.getters
+        const sBetterSlot = asg.getSuitableOffensiveSlot
+        if (sBetterSlot !== '') {
+            oAttacker.useOffensiveSlot(sBetterSlot)
+            return oAttacker.doAttack()
+        } else {
+            return oAttacker.createDefaultAttackOutcome()
+        }
     }
 
-    shoot (oAttacker, oTarget) {
-        oAttacker.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
-        oAttacker.setTarget(oTarget)
-        oAttacker.doAttack()
+    walkToTarget (oAttacker) {
+        const nDistance = oAttacker.store.getters.getTargetDistance - oAttacker.store.getters.getSpeed
+        oAttacker.setDistanceToTarget(nDistance)
     }
 }
 

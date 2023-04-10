@@ -5,12 +5,15 @@
  * @property getAbilityList {string[]}
  * @property getAbilityModifiers {D20AbilityNumberRegistry}
  * @property getAbilityValues {D20AbilityNumberRegistry}
- * @property getAdvantages {*}
+ * @property getAdvantagePropEffects {Object<string, Object<string, string>>}
+ * @property getAdvantages {D20AdvantagesOrDisadvantages}
  * @property getAggressor {{ condition: Object.<string, boolean>}}
  * @property getAggressorConditionSources {{}}
  * @property getAggressorConditions {Set}
  * @property getAreaFlags {Set<string>}
  * @property getArmorClass {number}
+ * @property getArmorClassDetails {{armor: number, dexterity: number, shield: number, effects: number, props: number}}
+ * @property getArmorClassRanges {{type: string, min: number, max: number}[]}
  * @property getArmorMaterial {string}
  * @property getAttackBonus {number}
  * @property getCarryingCapacity {number}
@@ -19,8 +22,8 @@
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
+ * @property getDisadvantagePropEffects {Object<string, string>}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
- * @property getDistanceToTarget {number}
  * @property getEffects {[]}
  * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
@@ -42,6 +45,7 @@
  * @property getOffensiveSlot {string}
  * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
+ * @property getSavingThrowBonus {{}}
  * @property getSelectedWeapon {D20Item}
  * @property getSelectedWeaponCriticalThreat {number}
  * @property getSelectedWeaponMaterial {string}
@@ -52,17 +56,23 @@
  * @property getSizeProperties {{value: number, hitDie: number, space: number, carryingCapacity}}
  * @property getSpecie {string}
  * @property getSpeed {number}
+ * @property getSuitableOffensiveSlot {string}
  * @property getTarget {{ condition: Object.<string, boolean>}}
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property getTargetDistance {number}
+ * @property isEquippedWithRangedWeapon {boolean}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
+ * @property isRangedWeaponProperlyLoaded {boolean}
  * @property isTargetInMeleeWeaponRange {boolean}
  * @property isTargetInWeaponRange {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWeildingNonLightWeapon {boolean}
  * @property isWeildingRangedWeapon {boolean}
+ * @property getClassicSkillAdvantages {D20AdvantagesOrDisadvantages}
+ * @property getClassicSkillDisadvantages {*}
+ * @property getProficiencyHalfBonus {number}
  * @property getWizardSpellSlots {number[]}
  * @property has1HWeaponNoShield {boolean}
  * @property has2HWeaponNoShield {boolean}

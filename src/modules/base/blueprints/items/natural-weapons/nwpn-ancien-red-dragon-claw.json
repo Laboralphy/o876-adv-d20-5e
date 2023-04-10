@@ -4,6 +4,7 @@
   "properties": [],
   "damage": "2d6+10",
   "damageType": "DAMAGE_TYPE_SLASHING",
+  "weaponType": "weapon-type-unarmed",
   "attributes": [],
   "material": ""
 }

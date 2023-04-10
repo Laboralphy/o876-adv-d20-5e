@@ -685,7 +685,7 @@ describe('aggregateModifier with randomn amp', function () {
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
             effectAmpMapper: eff => c.roll(eff.amp)
         })
-        expect(am).toEqual({ sum: 1, max: 1, sorter: {}, count: 1 })
+        expect(am).toEqual({ sum: 1, max: 1, sorter: {}, count: 1, effects: 1, ip: 0 })
     })
     it('should return amp 6 when applying effect with amplitude 1d6 and random fixed to 1', function () {
         const r = new Rules()
@@ -695,7 +695,7 @@ describe('aggregateModifier with randomn amp', function () {
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
             effectAmpMapper: eff => c.roll(eff.amp)
         })
-        expect(am).toEqual({ sum: 6, max: 6, sorter: {}, count: 1 })
+        expect(am).toEqual({ sum: 6, max: 6, sorter: {}, count: 1, effects: 6, ip: 0 })
     })
 })
 
@@ -781,20 +781,34 @@ describe('attack logs', function () {
         c1.setTarget(c2)
         c2.setTarget(c1)
         let oLastAttack
-        c1.events.on('attack', ({ attack }) => {
-            oLastAttack = attack
+        c1.events.on('attack', ({ outcome }) => {
+            oLastAttack = outcome
         })
         c1.dice.debug(true, 0.75)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.doAttack()
         expect(oLastAttack).toEqual( {
-          ac: 6,
-          bonus: -2,
-          roll: 14,
-          critical: false,
-          hit: true,
-          dice: 16,
-          damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
+            ac: 6,
+            distance: 5,
+            range: 5,
+            bonus: -2,
+            roll: 14,
+            critical: false,
+            hit: true,
+            dice: 16,
+            deflector: '',
+            target: c2,
+            advantages: {
+                rules: [],
+                value: false
+            },
+            disadvantages: {
+                rules: [],
+                value: false
+            },
+            weapon: c1.store.getters.getSelectedWeapon,
+            ammo: null,
+            damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
         })
     })
     it('should do 12 dmg when doing attack with a blade of angurvadal and a strength of 10', function () {
@@ -818,19 +832,33 @@ describe('attack logs', function () {
         c1.setTarget(c2)
         c2.setTarget(c1)
         let oLastAttack
-        c1.events.on('attack', ({ attack }) => {
-            oLastAttack = attack
+        c1.events.on('attack', ({ outcome }) => {
+            oLastAttack = outcome
         })
         c1.dice.debug(true, 0.75)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.doAttack()
         expect(oLastAttack).toEqual( {
             ac: 6,
+            distance: 5,
+            range: 5,
             bonus: 4,
             roll: 20,
             critical: false,
             hit: true,
             dice: 16,
+            deflector: '',
+            target: c2,
+            advantages: {
+                rules: [],
+                value: false
+            },
+            disadvantages: {
+                rules: [],
+                value: false
+            },
+            weapon: c1.store.getters.getSelectedWeapon,
+            ammo: null,
             damages: { amount: 12, types: { DAMAGE_TYPE_SLASHING: 8, DAMAGE_TYPE_FIRE: 4 } }
         })
     })
@@ -972,8 +1000,8 @@ describe('prone condition test', function () {
         c1.setDistanceToTarget(DISTANCE_RANGED)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
         expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_PRONE)).toBeTrue()
-        const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
-        const circ2 = c2.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
+        const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY])
+        const circ2 = c2.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY])
         expect(circ1.disadvantage).toBe(true)
         expect(circ1.details.disadvantages).toEqual(['TARGET_PRONE_AND_FAR'])
         expect(circ2.disadvantage).toBe(true)
@@ -993,12 +1021,12 @@ describe('prone condition test', function () {
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
         expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_PRONE)).toBeTrue()
-        const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
+        const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY])
         expect(circ1.disadvantage).toBe(false)
         c1.setDistanceToTarget(DISTANCE_REACH)
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY).disadvantage).toBeTrue()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY]).disadvantage).toBeTrue()
         c1.store.mutations.equipItem({ item: oHalberd1 })
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY).disadvantage).toBeFalse()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY]).disadvantage).toBeFalse()
         c1.store.mutations.equipItem({ item: oBow1 })
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
     })
@@ -1017,19 +1045,19 @@ describe('prone condition test', function () {
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
         expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_PRONE)).toBeTrue()
         // proche d'une cible prone avec une arme de mélée
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH).advantage).toBeTrue()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTrue()
         c1.setDistanceToTarget(DISTANCE_REACH)
         // pas si proche d'une cible prone avec une arme de mélée
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH).advantage).toBeFalse()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeFalse()
         c1.store.mutations.equipItem({ item: oHalberd1 })
         // pas si proche d'une cible prone avec une arme de mélée possédant une bonne allonge
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH).advantage).toBeTrue()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTrue()
         c1.store.mutations.equipItem({ item: oBow1 })
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         // pas si proche d'une cible prone avec une arme à distance
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH).advantage).toBeFalse()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeFalse()
         c1.setDistanceToTarget(DISTANCE_MELEE)
         // proche d'une cible prone avec une arme à distance
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH).advantage).toBeTrue()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTrue()
     })
 })
