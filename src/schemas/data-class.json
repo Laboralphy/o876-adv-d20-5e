@@ -2,12 +2,11 @@
   "description": "définition d'une classe",
   "type": "object",
   "required": [
-    "hitDice",
     "proficiencies"
   ],
   "properties": {
     "hitDice": {
-      "description": "Nombre max de pv gagné à chaque niveau",
+      "description": "Nombre max de pv gagné à chaque niveau. Si cette propriété est absente, on se sert de la taille de la créature pour calculer le hitDice.",
       "type": "number"
     },
     "proficiencies": {

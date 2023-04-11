@@ -8,7 +8,7 @@ const CONSTS = require('../consts')
  * @returns {D20Effect}
  */
 function create (type = '') {
-    return createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, {
+    return createEffect(CONSTS.EFFECT_DAMAGE_IMMUNITY, 0, {
         type
     })
 }

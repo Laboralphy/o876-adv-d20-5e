@@ -1,6 +1,6 @@
 {
   "entityType": "ENTITY_TYPE_ACTOR",
-  "class": "hd6",
+  "class": "monster",
   "level": 5,
   "abilities": {
     "strength": 8,
@@ -14,5 +14,34 @@
   "specie": "elemental",
   "speed": 30,
   "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_ARMOR",
+      "armorType": "armor-type-natural",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "data": {
+            "type": "DAMAGE_TYPE_FIRE"
+          }
+        },{
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "data": {
+            "type": "DAMAGE_TYPE_POISON"
+          }
+        },{
+          "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
+          "data": {
+            "type": "DAMAGE_TYPE_COLD"
+          }
+        },{
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "data": {
+            "condition": "CONDITION_POISONED"
+          }
+        }
+      ],
+      "material": "MATERIAL_UNKNOWN"
+    }
   ]
 }

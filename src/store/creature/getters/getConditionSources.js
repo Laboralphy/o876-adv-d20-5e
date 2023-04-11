@@ -1,4 +1,5 @@
 const CONSTS = require('../../../consts')
+const {aggregateModifiers} = require("../common/aggregate-modifiers");
 
 /**
  * Registre des altérations d'états, et de leurs sources
@@ -8,9 +9,18 @@ const CONSTS = require('../../../consts')
  */
 module.exports = (state, getters) => {
     const aEffects = getters.getEffects
+    const oImmunities = aggregateModifiers([
+        CONSTS.EFFECT_CONDITION_IMMUNITY,
+        CONSTS.ITEM_PROPERTY_CONDITION_IMMUNITY
+    ], getters,{
+        effectSorter: effect => effect.data.condition,
+        propSorter: prop => prop.data.condition
+    })
+    const oImmunitySet = new Set(Object.keys(oImmunities.sorter))
     const aTags = aEffects.map(eff => eff.type === CONSTS.EFFECT_CONDITION
         ? ({ type: eff.data.condition, source: eff.source })
         : ({ type: eff.type, source: eff.source }))
+        .filter(({ type: sType }) => !oImmunitySet.has(sType))
     const oRegistry = {}
     for (const { type: sType, source } of aTags) {
         if (!(sType in oRegistry)) {

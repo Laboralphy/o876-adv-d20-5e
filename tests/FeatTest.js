@@ -4,7 +4,7 @@ const EffectProcessor = require('../src/EffectProcessor')
 const CONSTS = require('../src/consts')
 const { warmup } = require('../src/assets')
 
-beforeEach(function () {
+beforeAll(function () {
     warmup()
 })
 

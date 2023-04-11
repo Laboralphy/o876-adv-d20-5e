@@ -53,7 +53,7 @@
  * @property getSelectedWeaponRange {number}
  * @property getShieldMaterial {string}
  * @property getSize {string}
- * @property getSizeProperties {{value: number, hitDie: number, space: number, carryingCapacity}}
+ * @property getSizeProperties {{value: number, hitDice: number, space: number, carryingCapacity}}
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getSuitableOffensiveSlot {string}

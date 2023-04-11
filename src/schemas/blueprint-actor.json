@@ -95,7 +95,14 @@
     "equipment": {
       "type": "array",
       "items": {
-        "type": "string"
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "/blueprint-item"
+          }
+        ]
       }
     }
   }

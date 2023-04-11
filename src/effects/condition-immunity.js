@@ -4,12 +4,12 @@ const CONSTS = require('../consts')
 /**
  * This effect modifies a weapon damage output
  * either by augmenting or reducing
- * @param type {string} type of damage
+ * @param condition {string} type of damage
  * @returns {D20Effect}
  */
-function create (type = '') {
-    return createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, {
-        type
+function create (condition = '') {
+    return createEffect(CONSTS.EFFECT_CONDITION_IMMUNITY, 0, {
+        condition
     })
 }
 

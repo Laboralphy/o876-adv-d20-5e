@@ -162,6 +162,11 @@ class EntityFactory {
             oCreature.equipItem(nw, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON)
         }
 
+        if (!oCreature.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR]) {
+            const nw = this.createEntity('narm-base-properties')
+            oCreature.equipItem(nw, CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR)
+        }
+
         const sSizeConst = 'CREATURE_SIZE_' + (oBlueprint.size || 'medium').toUpperCase()
         if (sSizeConst in CONSTS) {
             csm.setSize({ value: sSizeConst })
@@ -178,8 +183,16 @@ class EntityFactory {
         return oCreature
     }
 
-    createEntity (sResRef) {
-        const oBlueprint = this._am.blueprints[sResRef]
+    createEntity (ref) {
+        const bObj = typeof ref === 'object'
+        const bStr = typeof ref === 'string'
+        if (bObj) {
+            this.assetManager.validateBlueprint(ref)
+        }
+        const oBlueprint = bStr
+            ? this._am.blueprints[ref]
+            : ref
+        const sResRef = bStr ? ref : ''
         if (!oBlueprint) {
             throw new Error('ERR_BLUEPRINT_INVALID: ' + sResRef)
         }

@@ -123,6 +123,24 @@ class AssetManager {
         return this._assets.scripts
     }
 
+    validateBlueprint (oBlueprint) {
+        switch (oBlueprint.entityType) {
+            case CONSTS.ENTITY_TYPE_ITEM: {
+                this.validator.validate(oBlueprint, 'blueprint-item')
+                break
+            }
+
+            case CONSTS.ENTITY_TYPE_ACTOR: {
+                this.validator.validate(oBlueprint, 'blueprint-actor')
+                break
+            }
+
+            default: {
+                throw new Error('ERR_INVALID_BLUEPRINT: entityType missing')
+            }
+        }
+    }
+
     /**
      * Ajoute un blueprint d'item
      * @param sId {string}

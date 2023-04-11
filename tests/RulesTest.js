@@ -2,6 +2,7 @@ const Rules = require('../src/Rules')
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
 const EffectProcessor = require('../src/EffectProcessor')
+const IP = require('../src/item-properties')
 
 describe('instanciation', function () {
     it('should instanciate with no error', function () {
@@ -409,5 +410,78 @@ describe('check skills on additionnal modules like "classic"', function () {
             disadvantage: false,
             details: { advantages: ['REFLEX'], disadvantages: [] }
         })
+    })
+})
+
+describe('damage immunity', function () {
+    fit('should not be damage by fire when having fire immunity', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-soldier')
+        const w = r.createEntity('wpn-angurvadal')
+        c1.equipItem(w)
+        const m1 = r.createEntity({
+            "entityType": "ENTITY_TYPE_ACTOR",
+            "class": "monster",
+            "level": 5,
+            "abilities": {
+                "strength": 8,
+                "dexterity": 12,
+                "constitution": 12,
+                "intelligence": 7,
+                "wisdom": 10,
+                "charisma": 10
+            },
+            "size": "small",
+            "specie": "elemental",
+            "speed": 30,
+            "equipment": [
+                {
+                    "entityType": "ENTITY_TYPE_ITEM",
+                    "itemType": "ITEM_TYPE_ARMOR",
+                    "armorType": "armor-type-natural",
+                    "properties": [
+                        {
+                            "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+                            "data": {
+                                "type": "DAMAGE_TYPE_FIRE"
+                            }
+                        },{
+                            "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+                            "data": {
+                                "type": "DAMAGE_TYPE_POISON"
+                            }
+                        },{
+                            "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
+                            "data": {
+                                "type": "DAMAGE_TYPE_COLD"
+                            }
+                        },{
+                            "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+                            "data": {
+                                "condition": "CONDITION_POISONED"
+                            }
+                        }
+                    ],
+                    "material": "MATERIAL_UNKNOWN"
+                }
+            ]
+        })
+        expect(m1.store.getters.getDamageMitigation).toEqual({
+            DAMAGE_TYPE_FIRE: {
+                reduction: 0,
+                resistance: false,
+                vulnerability: false,
+                immunity: true,
+                factor: 0
+            },
+            DAMAGE_TYPE_COLD: { reduction: 0, resistance: false, vulnerability: true, immunity: false, factor: 2 },
+            DAMAGE_TYPE_POISON: { reduction: 0, resistance: false, vulnerability: false, immunity: true, factor: 0 }
+        })
+        expect(m1.store.getters.getHitPoints).toBe(27)
+        const eDamF = m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_FIRE))
+        expect(m1.store.getters.getHitPoints).toBe(27)
+        const eDamC = m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_ACID))
+        expect(m1.store.getters.getHitPoints).toBe(22)
     })
 })

@@ -1,5 +1,7 @@
 const CONSTS = require('../../../consts')
 
+
+
 /**
  * Nombre maximum de points de vie
  * @param state
@@ -16,11 +18,14 @@ module.exports = (state, getters, externals) => {
     for (const [ ref, levels ] of Object.entries(oClasses)) {
         const sClassName = 'class-' + ref
         const oClassData = DATA[sClassName]
-        const nHD = oClassData.hitDice
+        if (!oClassData) {
+            throw new Error('this class is undefined : "' + ref + '"')
+        }
+        const nHD = 'hitDice' in oClassData ? oClassData.hitDice : DATA['creature-sizes'][getters.getSize].hitDice
         const nHitPointsPerLevel = Math.floor(nHD / 2) + 1 + nConModifier
         const nLevel = levels
         if (bFirstLevel) {
-            nMaxHitPoints += (nLevel - 1) * nHitPointsPerLevel + nHD
+            nMaxHitPoints += (nLevel - 1) * nHitPointsPerLevel + nHD + nConModifier
             bFirstLevel = false
         } else {
             nMaxHitPoints += nLevel * nHitPointsPerLevel

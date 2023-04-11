@@ -10,9 +10,9 @@ const DISTANCE_MELEE = 4
 const DISTANCE_REACH = 9
 const DISTANCE_RANGED = 30
 
-beforeEach(function () {
+beforeAll(function () {
     Error.stackTraceLimit = Infinity
-    warmup()
+    //warmup()
 })
 
 describe('basic instanciation', function () {
@@ -711,53 +711,53 @@ describe('damage mitigation', function () {
             10
         )
         expect(c.store.getters.getDamageMitigation)
-            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 1, factor: 1, vulnerability: false, resistance: false }})
+            .toEqual({ DAMAGE_TYPE_FIRE: { immunity: false, reduction: 1, factor: 1, vulnerability: false, resistance: false }})
     })
     it ('should have fire damage resistance when one effect of DAMAGE_RESIST fire is applied', function () {
         const c = new Creature()
         c.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, CONSTS.DAMAGE_TYPE_FIRE),
             10
         )
         expect(c.store.getters.getDamageMitigation)
-            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 0.5, vulnerability: false, resistance: true }})
+            .toEqual({ DAMAGE_TYPE_FIRE: { immunity: false, reduction: 0, factor: 0.5, vulnerability: false, resistance: true }})
     })
     it ('should have fire damage vulnerability when one effect of DAMAGE_VULNERABILITY fire is applied', function () {
         const c = new Creature()
         c.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, CONSTS.DAMAGE_TYPE_FIRE),
             10
         )
         expect(c.store.getters.getDamageMitigation)
-            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 2, vulnerability: true, resistance: false }})
+            .toEqual({ DAMAGE_TYPE_FIRE: { immunity: false, reduction: 0, factor: 2, vulnerability: true, resistance: false }})
     })
     it ('should have fire damage mitig. factor 1 when both DAMAGE_VULNERABILITY fire  DAMAGE_RESISTANCE fire are applied', function () {
         const c = new Creature()
         c.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, CONSTS.DAMAGE_TYPE_FIRE),
             10
         )
         c.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, CONSTS.DAMAGE_TYPE_FIRE),
             10
         )
         expect(c.store.getters.getDamageMitigation)
-            .toEqual({ DAMAGE_TYPE_FIRE: { reduction: 0, factor: 1, vulnerability: true, resistance: true }})
+            .toEqual({ DAMAGE_TYPE_FIRE: { immunity: false, reduction: 0, factor: 1, vulnerability: true, resistance: true }})
     })
     it ('should have fire and cold damage mitig. factor 0.5 for fire, factor 2 for fire', function () {
         const c = new Creature()
         c.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, 0, CONSTS.DAMAGE_TYPE_COLD),
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, CONSTS.DAMAGE_TYPE_COLD),
             10
         )
         c.applyEffect(
-            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, 0, CONSTS.DAMAGE_TYPE_FIRE),
+            EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, CONSTS.DAMAGE_TYPE_FIRE),
             10
         )
         expect(c.store.getters.getDamageMitigation)
             .toEqual({
-                DAMAGE_TYPE_FIRE: { reduction: 0, factor: 0.5, vulnerability: false, resistance: true },
-                DAMAGE_TYPE_COLD: { reduction: 0, factor: 2, vulnerability: true, resistance: false }
+                DAMAGE_TYPE_FIRE: { immunity: false, reduction: 0, factor: 0.5, vulnerability: false, resistance: true },
+                DAMAGE_TYPE_COLD: { immunity: false, reduction: 0, factor: 2, vulnerability: true, resistance: false }
             })
     })
 })
