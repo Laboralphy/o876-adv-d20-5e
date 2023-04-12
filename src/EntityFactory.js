@@ -75,6 +75,12 @@ class EntityFactory {
         return this.mixData(oBlueprint, oWeaponData, [slot])
     }
 
+    createItemNaturalWeapon (oBlueprint) {
+        return this.mixData(oBlueprint, {
+            versatile: ""
+        }, [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON])
+    }
+
     createItemAmmo (oBlueprint) {
         const oAmmoData = this._am.data[oBlueprint.ammoType]
         if (!oAmmoData) {
@@ -95,7 +101,10 @@ class EntityFactory {
                 return this.createItemArmor(oBlueprint)
             }
 
-            case CONSTS.ITEM_TYPE_NATURAL_WEAPON:
+            case CONSTS.ITEM_TYPE_NATURAL_WEAPON: {
+                return this.createItemNaturalWeapon(oBlueprint)
+            }
+
             case CONSTS.ITEM_TYPE_WEAPON: {
                 return this.createItemWeapon(oBlueprint)
             }

@@ -12,8 +12,15 @@
   "additionalProperties": false,
   "properties": {
     "proficiency": {
-      "type": "string",
-      "pattern": "^PROFICIENCY_WEAPON_"
+      "oneOf": [
+        {
+          "$ref": "const-empty-string"
+        },
+        {
+          "type": "string",
+          "pattern": "^PROFICIENCY_WEAPON_"
+        }
+      ]
     },
     "damage": {
       "type": "string"

@@ -347,7 +347,7 @@ describe('saving throw bonus effects', function () {
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_SPELL), 10)
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_MIND_SPELL), 10)
         c1.dice.debug(true, 0.000001)
-        const roll = c1.rollSavingThrow(CONSTS.ABILITY_WISDOM, [CONSTS.THREAT_TYPE_SPELL, CONSTS.THREAT_TYPE_MIND_SPELL])
+        const roll = c1.rollSavingThrow(CONSTS.ABILITY_WISDOM, [CONSTS.THREAT_TYPE_SPELL, CONSTS.THREAT_TYPE_MIND_SPELL]).value
         // bonus : 1 (wis) + 3 (spell) +3 (mind spell) ; roll 1 ; TOTAL: 8
         expect(roll).toBe(8)
     })
@@ -414,7 +414,7 @@ describe('check skills on additionnal modules like "classic"', function () {
 })
 
 describe('damage immunity', function () {
-    fit('should not be damage by fire when having fire immunity', function () {
+    it('should not be damage by fire when having fire immunity', function () {
         const r = new Rules()
         r.init()
         const c1 = r.createEntity('c-soldier')
@@ -436,6 +436,27 @@ describe('damage immunity', function () {
             "specie": "elemental",
             "speed": 30,
             "equipment": [
+                {
+                    "entityType": "ENTITY_TYPE_ITEM",
+                    "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+                    "damage": "1d4+1",
+                    "damageType": "DAMAGE_TYPE_SLASHING",
+                    "attributes": [],
+                    "properties": [
+                        {
+                            "property": "ITEM_PROPERTY_ATTACK_BONUS",
+                            "amp": 3,
+                            "data": {}
+                        },
+                        {
+                            "property": "ITEM_PROPERTY_DAMAGE_BONUS",
+                            "amp": "1d4",
+                            "data": {
+                                "type": "DAMAGE_TYPE_FIRE"
+                            }
+                        }
+                    ]
+                },
                 {
                     "entityType": "ENTITY_TYPE_ITEM",
                     "itemType": "ITEM_TYPE_ARMOR",
@@ -461,6 +482,12 @@ describe('damage immunity', function () {
                             "data": {
                                 "condition": "CONDITION_POISONED"
                             }
+                        }, {
+                            "property": "ITEM_PROPERTY_SKILL_BONUS",
+                            "amp": 3,
+                            "data": {
+                                "skill": "SKILL_STEALTH"
+                            }
                         }
                     ],
                     "material": "MATERIAL_UNKNOWN"
@@ -483,5 +510,14 @@ describe('damage immunity', function () {
         expect(m1.store.getters.getHitPoints).toBe(27)
         const eDamC = m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_ACID))
         expect(m1.store.getters.getHitPoints).toBe(22)
+        m1.dice.debug(true, 0.000001)
+        expect(m1.rollSkill('SKILL_STEALTH')).toEqual({
+            bonus: 4,
+            roll: 1,
+            value: 5,
+            ability: 'ABILITY_DEXTERITY',
+            circumstance: 0
+        })
+        console.log(m1.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON])
     })
 })

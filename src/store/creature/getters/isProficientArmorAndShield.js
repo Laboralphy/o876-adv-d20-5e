@@ -9,8 +9,8 @@ const CONSTS = require('../../../consts')
 module.exports = (state, getters) => {
     const oArmor = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_CHEST]
     const oShield = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_SHIELD]
-    const bArmorProficient = oArmor
-        ? (getters.getProficiencies.includes(oArmor.proficiency || getters.getProficiencies.includes(oArmor.armorType)))
+    const bArmorProficient = (oArmor && oArmor.proficiency)
+        ? (getters.getProficiencies.includes(oArmor.proficiency) || getters.getProficiencies.includes(oArmor.armorType))
         : true
     const bShieldProficient = oShield
         ? getters.getProficiencies.includes(CONSTS.PROFICIENCY_SHIELD)

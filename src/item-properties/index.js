@@ -15,6 +15,7 @@ module.exports = {
   [CONSTS.ITEM_PROPERTY_ENHANCEMENT]: require('./enhancement'),
   [CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.ITEM_PROPERTY_REROLL]: require('./reroll'),
-  [CONSTS.ITEM_PROPERTY_SAVING_THROW_BONUS]: require('./saving-throw-bonus')
+  [CONSTS.ITEM_PROPERTY_SAVING_THROW_BONUS]: require('./saving-throw-bonus'),
+  [CONSTS.ITEM_PROPERTY_SKILL_BONUS]: require('./skill-bonus')
 }
 

@@ -368,11 +368,22 @@ class Creature {
          #####      #    #    #   ####    ####   #    #   ####      #    #    #  #    #   ####   ######   ####
      */
 
+    getSkillData (sSkill) {
+        const sSkillDataProp = sSkill.toLowerCase().replace(/_/g, '-')
+        return assetManager.data[sSkillDataProp]
+    }
+
     /**
+     * @typedef D20CircumstancesDetails {string[]}
+     *
+     * @typedef D20Circumstances {object}
+     * @property disadvantage {boolean}
+     * @property advantage {boolean}
+     * @property details {{advnatages: D20CircumstancesDetails, disadvantages: D20CircumstancesDetails}}
      *
      * @param sRollType
      * @param aAbilitySkillThreats
-     * @returns {{disadvantage: *, advantage: *, details: {advantages: (*|string|CSSRuleList), disadvantages: (*|string|CSSRuleList)}}}
+     * @returns {D20Circumstances}
      */
     getCircumstances (sRollType, aAbilitySkillThreats) {
         const oAdvantages = this.store.getters.getAdvantages
@@ -396,8 +407,7 @@ class Creature {
             if (sRollType === CONSTS.ROLL_TYPE_CHECK) {
                 // 1) lire les data du skill pour déterminer le getter du skill
                 const sSkill = ex
-                const sSkillDataProp = ex.toLowerCase().replace(/_/g, '-')
-                const oSkillData = assetManager.data[sSkillDataProp]
+                const oSkillData = this.getSkillData(ex)
                 if (oSkillData) {
                     // 2) lire ce getter
                     const oGetters = oSkillData.getters
@@ -471,18 +481,28 @@ class Creature {
      * pour un jet de sauvegarde on peut indiquer le type de menace (DAMAGE_TYPE_FIRE, SPELL_TYPE_MIND_CONTROL)
      * pour un jet de compétence on peut indiquer la nature de la compétence (SKILL_STEALTH...)
      * certaines créature ont des avantages ou des désavantages spécifiques à certaines situations
-     * @returns {number}
+     * @returns {{ value: number, circumstances: D20Circumstances }}
      */
     rollD20 (sRollType, sAbility, extra = []) {
-        const { advantage, disadvantage } = this.getCircumstances(sRollType, [sAbility, ...extra])
+        const circumstances = this.getCircumstances(sRollType, [sAbility, ...extra])
+        const { advantage, disadvantage } = circumstances
         const r = this._dice.roll(20)
         if (advantage && !disadvantage) {
-            return Math.max(r, this._dice.roll(20))
+            return {
+                value: Math.max(r, this._dice.roll(20)),
+                circumstances
+            }
         }
         if (disadvantage && !advantage) {
-            return Math.min(r, this._dice.roll(20))
+            return {
+                value: Math.min(r, this._dice.roll(20)),
+                circumstances
+            }
         }
-        return r
+        return {
+            value: r,
+            circumstances
+        }
     }
 
     /**
@@ -512,7 +532,7 @@ class Creature {
         const sg = this.store.getters
         const bonus = this.getAttackBonus()
         const sOffensiveAbility = this.store.getters.getOffensiveAbility
-        const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility)
+        const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility).value
         const nCritThreat = sg.getSelectedWeaponCriticalThreat
         const critical = dice >= nCritThreat
         const ac = this.getTarget().store.getters.getArmorClass
@@ -587,9 +607,31 @@ class Creature {
      * On détermine la caractéristique associée à la compétence puis lance un D20
      */
     rollSkill (sSkill) {
-
+        const sg = this.store.getters
+        // données du skill
+        const aSkills = sg.getSkillProficiencies
+        const bProficient = aSkills.has(sSkill)
+        // déterminer les bonus du skill
+        const nSkillBonus = this
+            .aggregateModifiers([CONSTS.ITEM_PROPERTY_SKILL_BONUS], {
+                propFilter: prop => prop.data.skill === sSkill
+            })
+            .sum +
+            (bProficient ? sg.getProficiencyBonus : 0)
+        // déterminer la carac du skill
+        const oSkillData = this.getSkillData(sSkill)
+        const sSkillAbility = oSkillData.ability
+        const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
+        const nTotalBonus = nAbilityBonus + nSkillBonus
+        const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
+        return {
+            bonus: nTotalBonus,
+            roll: value,
+            value: value + nTotalBonus,
+            ability: sSkillAbility,
+            circumstance: this.getCircumstanceNumValue(circumstances)
+        }
     }
-
 
     /**
      * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
@@ -625,9 +667,26 @@ class Creature {
 
     /**
      *
+     * @param oCirc {D20Circumstances}
+     * @return {number}
+     */
+    getCircumstanceNumValue (oCirc) {
+        if (oCirc.advantage && oCirc.disadvantage) {
+            return 0
+        } else if (oCirc.advantage) {
+            return 1
+        } else if (oCirc.disadvantage) {
+            return -1
+        } else {
+            return 0
+        }
+    }
+
+    /**
+     *
      * @param sAbility {string}
      * @param aThreats {string[]}
-     * @returns {number}
+     * @returns {*}
      */
     rollSavingThrow (sAbility, aThreats = []) {
         const st = this.store.getters.getSavingThrowBonus
@@ -637,7 +696,12 @@ class Creature {
         }, 0)
         const nBonus = sta + stt
         const r = this.rollD20(CONSTS.ROLL_TYPE_SAVE, sAbility, aThreats)
-        return r + nBonus
+        return {
+            roll: r.value,
+            bonus: nBonus,
+            value: r.value + nBonus,
+            circumstance: this.getCircumstanceNumValue(r.circumstances)
+        }
     }
 
     /*

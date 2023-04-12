@@ -16,6 +16,21 @@
   "equipment": [
     {
       "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_WEAPON",
+      "weaponType": "weapon-type-natural-slash",
+      "damage": "1d4+1",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_BONUS",
+          "amp": "1d4",
+          "data": {
+            "type": "DAMAGE_TYPE_FIRE"
+          }
+        }
+      ]
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_ARMOR",
       "armorType": "armor-type-natural",
       "properties": [
@@ -24,20 +39,26 @@
           "data": {
             "type": "DAMAGE_TYPE_FIRE"
           }
-        },{
+        }, {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
           "data": {
             "type": "DAMAGE_TYPE_POISON"
           }
-        },{
+        }, {
           "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
           "data": {
             "type": "DAMAGE_TYPE_COLD"
           }
-        },{
+        }, {
           "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
           "data": {
             "condition": "CONDITION_POISONED"
+          }
+        }, {
+          "property": "ITEM_PROPERTY_SKILL_BONUS",
+          "amp": 3,
+          "data": {
+            "skill": "SKILL_STEALTH"
           }
         }
       ],

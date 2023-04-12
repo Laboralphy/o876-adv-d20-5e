@@ -54,6 +54,7 @@
  * @property getShieldMaterial {string}
  * @property getSize {string}
  * @property getSizeProperties {{value: number, hitDice: number, space: number, carryingCapacity}}
+ * @property getSkillProficiencies {Set<string>}
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getSuitableOffensiveSlot {string}
