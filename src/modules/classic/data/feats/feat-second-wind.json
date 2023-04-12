@@ -1,4 +1,4 @@
 {
   "description": "Adds 1d10 + level fighter hp when used",
-  "action": "actionFeatSecondWind"
+  "action": "fa-second-wind"
 }
