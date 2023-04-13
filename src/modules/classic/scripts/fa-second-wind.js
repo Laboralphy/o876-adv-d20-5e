@@ -3,11 +3,11 @@ const CONSTS = require('../../../consts')
 
 /**
  * Récupération de (1d10 + level) point de vie
- * @param creature
+ * @param caster
  */
-module.exports = function (creature) {
-    const nLevel = creature.store.getters.getLevelByClass['fighter']
-    const nHeal = creature.roll('1d10')
+module.exports = function (caster) {
+    const nLevel = caster.store.getters.getLevelByClass['fighter']
+    const nHeal = caster.roll('1d10')
     const eHeal = EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, nHeal + nLevel)
-    creature.applyEffect(eHeal, 0)
+    caster.applyEffect(eHeal, 0)
 }

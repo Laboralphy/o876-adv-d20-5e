@@ -624,13 +624,15 @@ class Creature {
         const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
         const nTotalBonus = nAbilityBonus + nSkillBonus
         const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
-        return {
+        const output = {
             bonus: nTotalBonus,
             roll: value,
             value: value + nTotalBonus,
             ability: sSkillAbility,
             circumstance: this.getCircumstanceNumValue(circumstances)
         }
+        this._events.emit('check-skill', output)
+        return output
     }
 
     /**
@@ -686,7 +688,7 @@ class Creature {
      *
      * @param sAbility {string}
      * @param aThreats {string[]}
-     * @returns {*}
+     * @returns {{ roll, bonus, value, circumstance }}
      */
     rollSavingThrow (sAbility, aThreats = []) {
         const st = this.store.getters.getSavingThrowBonus
@@ -696,12 +698,16 @@ class Creature {
         }, 0)
         const nBonus = sta + stt
         const r = this.rollD20(CONSTS.ROLL_TYPE_SAVE, sAbility, aThreats)
-        return {
+        const output = {
             roll: r.value,
             bonus: nBonus,
             value: r.value + nBonus,
+            ability: sAbility,
+            threats: aThreats,
             circumstance: this.getCircumstanceNumValue(r.circumstances)
         }
+        this._events.emit('saving-throw', output)
+        return output
     }
 
     /*
