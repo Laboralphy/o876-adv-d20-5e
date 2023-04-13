@@ -17,8 +17,10 @@
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_WEAPON",
-      "weaponType": "weapon-type-natural-slash",
-      "damage": "1d4+1",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-claw",
+      "damage": "1d4",
+      "damageType": "DAMAGE_TYPE_SLASHING",
       "properties": [
         {
           "property": "ITEM_PROPERTY_DAMAGE_BONUS",
@@ -64,5 +66,8 @@
       ],
       "material": "MATERIAL_UNKNOWN"
     }
+  ],
+  "actions": [
+      "sla-fire-breath"
   ]
 }

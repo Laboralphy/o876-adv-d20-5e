@@ -347,7 +347,7 @@ describe('saving throw bonus effects', function () {
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_SPELL), 10)
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_MIND_SPELL), 10)
         c1.dice.debug(true, 0.000001)
-        const roll = c1.rollSavingThrow(CONSTS.ABILITY_WISDOM, [CONSTS.THREAT_TYPE_SPELL, CONSTS.THREAT_TYPE_MIND_SPELL]).value
+        const roll = c1.rollSavingThrow(CONSTS.ABILITY_WISDOM, [CONSTS.THREAT_TYPE_SPELL, CONSTS.THREAT_TYPE_MIND_SPELL], 1).value
         // bonus : 1 (wis) + 3 (spell) +3 (mind spell) ; roll 1 ; TOTAL: 8
         expect(roll).toBe(8)
     })
@@ -516,8 +516,9 @@ describe('damage immunity', function () {
             roll: 1,
             value: 5,
             ability: 'ABILITY_DEXTERITY',
+            dc: undefined,
+            success: undefined,
             circumstance: 0
         })
-        console.log(m1.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON])
     })
 })

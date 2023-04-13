@@ -1,4 +1,5 @@
 {
   "description": "Adds 1d10 + level fighter hp when used",
-  "action": "fa-second-wind"
+  "action": "fa-second-wind",
+  "actionType": "ACTION_TYPE_RESTORATION"
 }

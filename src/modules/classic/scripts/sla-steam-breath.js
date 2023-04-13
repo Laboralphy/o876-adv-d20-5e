@@ -9,7 +9,7 @@ module.exports = function (caster) {
     evocationAttack({
         caster,
         target: caster.getTarget(),
-        damage: '1d8',
+        damage: caster.roll('1d8'),
         type: CONSTS.DAMAGE_TYPE_FIRE,
         dc: 10
     })

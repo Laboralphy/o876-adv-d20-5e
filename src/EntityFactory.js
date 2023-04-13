@@ -201,17 +201,21 @@ class EntityFactory {
         const oBlueprint = bStr
             ? this._am.blueprints[ref]
             : ref
-        const sResRef = bStr ? ref : ''
+        const sResRef = bStr ? ref : (oBlueprint.ref || '')
         if (!oBlueprint) {
             throw new Error('ERR_BLUEPRINT_INVALID: ' + sResRef)
         }
         switch (oBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
-                return this.createItem(oBlueprint)
+                const oItem = this.createItem(oBlueprint)
+                oItem.ref = sResRef
+                return oItem
             }
 
             case CONSTS.ENTITY_TYPE_ACTOR: {
-                return this.createCreature(oBlueprint)
+                const oCreature = this.createCreature(oBlueprint)
+                oCreature.ref = sResRef
+                return oCreature
             }
 
             default: {

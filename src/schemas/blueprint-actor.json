@@ -104,6 +104,14 @@
           }
         ]
       }
+    },
+    "actions": {
+      "type": "array",
+      "description": "List of possible actions",
+      "items": {
+        "type": "string",
+        "description": "action reference"
+      }
     }
   }
 }

@@ -349,9 +349,10 @@ class Creature {
      */
 
     applyEffect (oEffect, duration = 0, source = null) {
-        const oAppliedEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
-        this._events.emit('effect-applied', { effect: oEffect })
-        return oAppliedEffect
+        if (oEffect.subtype !== CONSTS.EFFECT_SUBTYPE_WEAPON && oEffect.type === CONSTS.EFFECT_DAMAGE) {
+            this._events.emit('damaged', { type: oEffect.data.type, amount: oEffect.amp, source })
+        }
+        return this._effectProcessor.applyEffect(oEffect, this, duration, source)
     }
 
     processEffects () {
@@ -606,7 +607,7 @@ class Creature {
      * Lance un dé pour déterminer le résultat d'une vérification compétence
      * On détermine la caractéristique associée à la compétence puis lance un D20
      */
-    rollSkill (sSkill) {
+    rollSkill (sSkill, dc = undefined) {
         const sg = this.store.getters
         // données du skill
         const aSkills = sg.getSkillProficiencies
@@ -624,10 +625,13 @@ class Creature {
         const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
         const nTotalBonus = nAbilityBonus + nSkillBonus
         const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
+        const nTotal = value + nTotalBonus
         const output = {
             bonus: nTotalBonus,
             roll: value,
-            value: value + nTotalBonus,
+            value: nTotal,
+            dc,
+            success: dc !== undefined ? nTotal >= dc : undefined,
             ability: sSkillAbility,
             circumstance: this.getCircumstanceNumValue(circumstances)
         }
@@ -688,22 +692,26 @@ class Creature {
      *
      * @param sAbility {string}
      * @param aThreats {string[]}
+     * @param dc {number}
      * @returns {{ roll, bonus, value, circumstance }}
      */
-    rollSavingThrow (sAbility, aThreats = []) {
+    rollSavingThrow (sAbility, aThreats = [], dc) {
         const st = this.store.getters.getSavingThrowBonus
         const sta = sAbility in st ? st[sAbility] : 0
         const stt = aThreats.reduce((prev, sThreat) => {
             return sThreat in st ? prev + st[sThreat] : prev
         }, 0)
-        const nBonus = sta + stt
+        const bonus = sta + stt
         const r = this.rollD20(CONSTS.ROLL_TYPE_SAVE, sAbility, aThreats)
+        const value = r.value + bonus
         const output = {
             roll: r.value,
-            bonus: nBonus,
-            value: r.value + nBonus,
+            bonus,
+            value,
             ability: sAbility,
             threats: aThreats,
+            dc,
+            success: dc !== undefined ? value >= dc : undefined,
             circumstance: this.getCircumstanceNumValue(r.circumstances)
         }
         this._events.emit('saving-throw', output)
@@ -720,6 +728,18 @@ class Creature {
         #     #   ####      #       #     ####   #    #   ####
      */
 
+    doAction (sAction) {
+        this._events.emit('action', {
+            action: sAction
+        })
+        const scriptFunction = assetManager.scripts[sAction]
+        if (!scriptFunction) {
+            throw new Error('ERR_SCRIPT_ACTION_NOT_FOUND: ' + sAction)
+        } else {
+            scriptFunction(this)
+        }
+    }
+
     doFeatAction (sFeat) {
         if (sFeat in assetManager.data) {
             const oFeatData = assetManager.data[sFeat]
@@ -729,7 +749,7 @@ class Creature {
                 }
             }
             if ('action' in oFeatData) {
-                assetManager.scripts[oFeatData.action](this)
+                this.doAction(oFeatData.action)
             } else {
                 throw new Error('ERR_FEAT_HAS_NO_ACTION')
             }
@@ -786,7 +806,9 @@ class Creature {
                 .entries(oDamages)
                 .map(([sType, nValue]) => {
                     amount += nValue
-                    return EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType)
+                    const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType)
+                    eDam.subtype = CONSTS.EFFECT_SUBTYPE_WEAPON
+                    return eDam
                 })
             // appliquer les effets sur la cible
             aDamageEffects.map(d => oTarget.applyEffect(d))

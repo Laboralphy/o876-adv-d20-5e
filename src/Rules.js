@@ -24,7 +24,7 @@ class Rules {
     }
 
     defineCreatureEventHandlers (oCreature) {
-        const aEvents = ['attack', 'target-distance']
+        const aEvents = ['attack', 'action', 'target-distance', 'saving-throw', 'check-skill', 'damaged']
         aEvents.forEach(evName => {
             oCreature.events.on(evName, oPayload => {
                 this._events.emit(evName, {
@@ -69,6 +69,31 @@ class Rules {
             return oAttacker.doAttack()
         } else {
             return oAttacker.createDefaultAttackOutcome()
+        }
+    }
+
+    getCreatureActions (oCreature) {
+        const aActions = this
+            .assetManager
+            .blueprints[oCreature.ref]
+            .actions
+        if (Array.isArray(aActions) && aActions.length === 0) {
+            // on ne renvoie pas de tableau vide
+            return undefined
+        } else {
+            return aActions
+        }
+    }
+
+    /**
+     * Déclenche une action
+     * @param oCreature
+     */
+    action (oCreature) {
+        const aActions = this.getCreatureActions(oCreature)
+        if (aActions && aActions.length > 0) {
+            const sAction = aActions[Math.floor(Math.random() * aActions.length)]
+            oCreature.doAction(sAction)
         }
     }
 

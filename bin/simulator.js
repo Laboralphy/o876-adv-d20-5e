@@ -29,10 +29,14 @@ function explainMiss (name, sDeflector) {
     }
 }
 
+function getDamageStr(sType) {
+    return sType.substring(12).toLowerCase()
+}
+
 function explainDamages (damageTypes) {
     const aDamTypesStr = []
     for (const [sType, nAmount] of Object.entries(damageTypes)) {
-        aDamTypesStr.push(nAmount + ' ' + sType.substring(12).toLowerCase())
+        aDamTypesStr.push(nAmount + ' ' + getDamageStr(sType))
     }
     return aDamTypesStr.join(', ')
 }
@@ -131,6 +135,10 @@ function explainAttack (creature, {
     }
 }
 
+function creatureSavingThrow (oPayload) {
+    console.log('%s saving throw : %d vs. %d : %s', oPayload.creature.name, oPayload.value, oPayload.dc, oPayload.success ? 'SUCCESS' : 'FAILURE')
+}
+
 
 function creatureAttacked ({
                                outcome,
@@ -139,12 +147,25 @@ function creatureAttacked ({
     console.log(explainAttack(creature, outcome).message)
 }
 
+function creatureAction ({ creature, action }) {
+    console.log('%s is doing an action : %s', creature.name, action)
+}
+
+function creatureDamaged ({ creature, amount, type: sDamType, source }) {
+    console.log('%s deals %d points of %s damage on %s', source.name, amount, getDamageStr(sDamType), creature.name)
+}
+
 function assault (rules, atk, def) {
-    rules.attack(atk)
+    if (rules.getCreatureActions(atk) && Math.random() > 0.8) {
+        rules.action(atk)
+    } else {
+        rules.attack(atk)
+    }
     console.log(def.name, 'has', def.store.getters.getHitPoints, 'hp left')
 }
 
 function bonusAction (rules, creature) {
+    // walking
     if (!creature.store.getters.isTargetInWeaponRange) {
         rules.walkToTarget(creature)
         console.log(creature.name, 'is now at', creature.store.getters.getTargetDistance, 'ft. from', creature.getTarget().name)
@@ -170,13 +191,18 @@ function main () {
     const r = new Rules()
     r.init()
     r.events.on('attack', creatureAttacked)
+    r.events.on('action', creatureAction)
+    r.events.on('damaged', creatureDamaged)
+    r.events.on('saving-throw', creatureSavingThrow)
     const c1 = r.createEntity('c-pilgrim')
-    const c2 = r.createEntity('c-street-rogue')
+    const c2 = r.createEntity('c-rogue')
     const c3 = r.createEntity('c-soldier')
+    const c4 = r.createEntity('c-magma-mephit')
     c1.name = 'Alice'
     c2.name = 'Bob'
     c3.name = 'Jorin'
-    fight(r, c3, c2)
+    c4.name = 'Magma Mephit'
+    fight(r, c3, c4)
 }
 
 main()
