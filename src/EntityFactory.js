@@ -76,9 +76,11 @@ class EntityFactory {
     }
 
     createItemNaturalWeapon (oBlueprint) {
-        return this.mixData(oBlueprint, {
-            versatile: ""
-        }, [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON])
+        const oWeaponData = this._am.data[oBlueprint.weaponType]
+        if (!oWeaponData) {
+            throw new Error('This natural weapon blueprint is undefined : ' + oBlueprint.weaponType)
+        }
+        return this.mixData(oBlueprint, oWeaponData, [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON])
     }
 
     createItemAmmo (oBlueprint) {

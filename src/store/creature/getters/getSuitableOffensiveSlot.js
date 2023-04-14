@@ -45,6 +45,7 @@ module.exports = (state, getters, externals) => {
             // On n'a qu'une arme à distance, on l'utilise à bout portant
             return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
         } else if (bHasNatural) {
+            console.log('on choisi natural weapon')
             // On n'a pas d'autre arme que ses points, griffes, crocs
             return CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON
         } else {

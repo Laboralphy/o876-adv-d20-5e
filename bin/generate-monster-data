@@ -1,0 +1,13 @@
+#!/bin/bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+sURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRmsljwbJ0ahQZGx798FU_g7orGb4QWyMjekbsn2SamV2JHSNLL-G0xOWqtjaunSo6TPCJc16UPOsMx/pub?gid=0&single=true&output=csv"
+echo downloading data...
+wget -qO "$SCRIPT_DIR/monsters.csv" "$sURL"
+echo removing previous blueprints...
+mkdir -p "$SCRIPT_DIR"/generated-blueprints
+rm -r "$SCRIPT_DIR"/generated-blueprints/*.json
+echo generating blueprints...
+node "$SCRIPT_DIR/generate-monster-blueprints.js"
+echo copying blueprint...
+cp "$SCRIPT_DIR"/generated-blueprints/*.json "$SCRIPT_DIR"/../src/modules/classic/blueprints/creatures
+echo done.

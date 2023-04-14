@@ -5,11 +5,13 @@ const CONSTS = require('../consts')
  * Inflict damage
  * @param amount {number}
  * @param type {string} DAMAGE_TYPE_
+ * @param material {string} MATERIAL_
  * @returns {D20Effect}
  */
-function create (amount, type) {
+function create (amount, type, material = CONSTS.MATERIAL_UNKNOWN) {
     return createEffect(CONSTS.EFFECT_DAMAGE, amount, {
         type,
+        material,
         appliedAmount: 0
     })
 }

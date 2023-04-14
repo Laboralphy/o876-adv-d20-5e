@@ -439,6 +439,7 @@ describe('damage immunity', function () {
                 {
                     "entityType": "ENTITY_TYPE_ITEM",
                     "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+                    "weaponType": "weapon-type-unarmed",
                     "damage": "1d4+1",
                     "damageType": "DAMAGE_TYPE_SLASHING",
                     "attributes": [],

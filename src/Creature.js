@@ -806,7 +806,7 @@ class Creature {
                 .entries(oDamages)
                 .map(([sType, nValue]) => {
                     amount += nValue
-                    const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType)
+                    const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType, this.store.getters.getSelectedWeaponMaterial)
                     eDam.subtype = CONSTS.EFFECT_SUBTYPE_WEAPON
                     return eDam
                 })

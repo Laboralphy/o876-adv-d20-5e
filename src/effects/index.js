@@ -2,6 +2,7 @@
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
+  [CONSTS.EFFECT_AC_BASE]: require('./ac-base'),
   [CONSTS.EFFECT_AC_BONUS]: require('./ac-bonus'),
   [CONSTS.EFFECT_ADVANTAGE]: require('./advantage'),
   [CONSTS.EFFECT_ATTACK_BONUS]: require('./attack-bonus'),
@@ -21,6 +22,7 @@ module.exports = {
   [CONSTS.EFFECT_HEAL]: require('./heal'),
   [CONSTS.EFFECT_INVISIBILITY]: require('./invisibility'),
   [CONSTS.EFFECT_MASSIVE_CRITICAL]: require('./massive-critical'),
+  [CONSTS.EFFECT_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),
   [CONSTS.EFFECT_MELEE_ATTACK_BONUS]: require('./melee-attack-bonus'),
   [CONSTS.EFFECT_RANGED_ATTACK_BONUS]: require('./ranged-attack-bonus'),
   [CONSTS.EFFECT_REROLL]: require('./reroll'),

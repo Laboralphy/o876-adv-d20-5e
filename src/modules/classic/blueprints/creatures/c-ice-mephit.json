@@ -1,14 +1,14 @@
 {
   "entityType": "ENTITY_TYPE_ACTOR",
   "class": "monster",
-  "level": 5,
+  "level": 6,
   "abilities": {
-    "strength": 8,
-    "dexterity": 12,
-    "constitution": 12,
-    "intelligence": 7,
-    "wisdom": 10,
-    "charisma": 10
+    "strength": 7,
+    "dexterity": 13,
+    "constitution": 10,
+    "intelligence": 9,
+    "wisdom": 11,
+    "charisma": 12
   },
   "size": "small",
   "specie": "elemental",
@@ -18,7 +18,7 @@
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_NATURAL_WEAPON",
       "weaponType": "weapon-type-unarmed",
-      "ref": "nwpn-c-magma-mephit",
+      "ref": "nwpn-c-ice-mephit",
       "damage": "1d4",
       "damageType": "DAMAGE_TYPE_SLASHING",
       "material": "MATERIAL_UNKNOWN",
@@ -27,7 +27,7 @@
           "property": "ITEM_PROPERTY_DAMAGE_BONUS",
           "amp": "1d4",
           "data": {
-            "type": "DAMAGE_TYPE_FIRE"
+            "type": "DAMAGE_TYPE_COLD"
           }
         }
       ]
@@ -37,12 +37,12 @@
       "itemType": "ITEM_TYPE_NATURAL_ARMOR",
       "armorType": "armor-type-natural",
       "material": "MATERIAL_UNKNOWN",
-      "ref": "narm-c-magma-mephit",
+      "ref": "narm-c-ice-mephit",
       "properties": [
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
           "data": {
-            "type": "DAMAGE_TYPE_FIRE"
+            "type": "DAMAGE_TYPE_COLD"
           }
         },
         {
@@ -54,13 +54,13 @@
         {
           "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
           "data": {
-            "type": "DAMAGE_TYPE_COLD"
+            "type": "DAMAGE_TYPE_FIRE"
           }
         },
         {
-          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
           "data": {
-            "condition": "CONDITION_POISONED"
+            "type": "DAMAGE_TYPE_CRUSHING"
           }
         },
         {
@@ -69,11 +69,18 @@
           "data": {
             "skill": "SKILL_STEALTH"
           }
+        },
+        {
+          "property": "ITEM_PROPERTY_SKILL_BONUS",
+          "amp": 2,
+          "data": {
+            "skill": "SKILL_PERCEPTION"
+          }
         }
       ]
     }
   ],
   "actions": [
-    "sla-fire-breath"
+    "sla-frost-breath"
   ]
 }

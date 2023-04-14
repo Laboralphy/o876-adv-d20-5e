@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jasmine ./tests/*Test.js",
-    "generate-index": "./bin/generate-files"
+    "generate-index": "./bin/generate-files",
+    "generate-monster-data": "bin/generate-monster-data"
   },
   "keywords": [
     "rules",
@@ -22,6 +23,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "csv-parse": "^5.3.6",
     "jasmine": "^4.5.0"
   }
 }

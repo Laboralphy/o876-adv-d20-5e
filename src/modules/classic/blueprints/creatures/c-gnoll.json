@@ -1,0 +1,35 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 5,
+  "abilities": {
+    "strength": 14,
+    "dexterity": 12,
+    "constitution": 11,
+    "intelligence": 6,
+    "wisdom": 10,
+    "charisma": 6
+  },
+  "size": "medium",
+  "specie": "humanoid",
+  "speed": 30,
+  "equipment": [
+    "wpn-spear",
+    "wpn-longbow",
+    "ammo-arrow",
+    "arm-hide",
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-c-gnoll",
+      "damage": "1d4",
+      "damageType": "DAMAGE_TYPE_PIERCING",
+      "material": "MATERIAL_UNKNOWN",
+      "properties": []
+    }
+  ],
+  "actions": [
+    "sla-natural-weapon-attack"
+  ]
+}

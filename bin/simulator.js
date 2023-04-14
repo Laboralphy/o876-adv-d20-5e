@@ -197,12 +197,12 @@ function main () {
     const c1 = r.createEntity('c-pilgrim')
     const c2 = r.createEntity('c-rogue')
     const c3 = r.createEntity('c-soldier')
-    const c4 = r.createEntity('c-magma-mephit')
+    const c4 = r.createEntity('c-gnoll')
     c1.name = 'Alice'
     c2.name = 'Bob'
     c3.name = 'Jorin'
-    c4.name = 'Magma Mephit'
-    fight(r, c3, c4)
+    c4.name = 'Gnoll'
+    fight(r, c2, c4)
 }
 
 main()

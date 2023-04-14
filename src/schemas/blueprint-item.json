@@ -45,6 +45,18 @@
       "if": {
         "properties": {
           "itemType": {
+            "const": "ITEM_TYPE_NATURAL_ARMOR"
+          }
+        }
+      },
+      "then": {
+        "$ref": "./def-item-type-natural-armor"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "itemType": {
             "const": "ITEM_TYPE_SHIELD"
           }
         }

@@ -63,11 +63,19 @@ module.exports = (state, getters) => {
         effectSorter: fEffectSorter,
         propSorter: fPropSorter
     })
+    const oMatVulnerability = aggregateModifiers([
+        CONSTS.EFFECT_MATERIAL_VULNERABILITY,
+        CONSTS.ITEM_PROPERTY_MATERIAL_VULNERABILITY
+    ], getters, {
+        effectSorter: fEffectSorter,
+        propSorter: fPropSorter
+    })
     const oMitigation = {}
     addMitigation(oMitigation, oReduction)
     addMitigation(oMitigation, oResistance)
     addMitigation(oMitigation, oVulnerability)
     addMitigation(oMitigation, oImmunity)
+    addMitigation(oMitigation, oMatVulnerability)
     Object
         .entries(oReduction.sorter)
         .forEach(([sDamType, oReg]) => {
@@ -87,6 +95,11 @@ module.exports = (state, getters) => {
         .entries(oImmunity.sorter)
         .forEach(([sDamType, oReg]) => {
             oMitigation[sDamType].immunity ||= oReg.count > 0
+        })
+    Object
+        .entries(oMatVulnerability.sorter)
+        .forEach(([sDamType, oReg]) => {
+            oMitigation[sDamType].vulnerability ||= oReg.count > 0
         })
     Object
         .entries(oMitigation)

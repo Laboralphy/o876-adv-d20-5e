@@ -1,0 +1,86 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 7,
+  "abilities": {
+    "strength": 15,
+    "dexterity": 11,
+    "constitution": 16,
+    "intelligence": 6,
+    "wisdom": 11,
+    "charisma": 7
+  },
+  "size": "medium",
+  "specie": "elemental",
+  "speed": 30,
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-c-gargoyle",
+      "damage": "1d6",
+      "damageType": "DAMAGE_TYPE_SLASHING",
+      "material": "MATERIAL_UNKNOWN",
+      "properties": []
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_ARMOR",
+      "armorType": "armor-type-natural",
+      "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-gargoyle",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "data": {
+            "type": "DAMAGE_TYPE_CRUSHING"
+          }
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "data": {
+            "type": "DAMAGE_TYPE_PIERCING"
+          }
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "data": {
+            "type": "DAMAGE_TYPE_SLASHING"
+          }
+        },
+        {
+          "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",
+          "data": {
+            "type": "MATERIAL_ADAMANTINE"
+          }
+        },
+        {
+          "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",
+          "data": {
+            "type": "MATERIAL_SILVER"
+          }
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "data": {
+            "type": "DAMAGE_TYPE_POISON"
+          }
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "data": {
+            "condition": "CONDITION_POISONED"
+          }
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "data": {
+            "condition": "CONDITION_PETRIFIED"
+          }
+        }
+      ]
+    }
+  ],
+  "actions": []
+}
