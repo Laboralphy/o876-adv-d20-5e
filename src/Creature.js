@@ -554,13 +554,15 @@ class Creature {
         const ammo = sg.isRangedWeaponProperlyLoaded ? sg.getEquippedItems[CONSTS.EQUIPMENT_SLOT_AMMO] : null
         const advantages = sg.getAdvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
         const disadvantages = sg.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
-        const hit = dice >= assetManager.data.variables.ROLL_AUTO_SUCCESS
+        const bCriticalHit = dice >= assetManager.data.variables.ROLL_AUTO_SUCCESS
+        const bCriticalFail = dice <= assetManager.data.variables.ROLL_AUTO_FAIL
+        const hit = bCriticalHit
             ? true
-            : dice <= assetManager.data.variables.ROLL_AUTO_FAIL
+            : bCriticalFail
                 ? false
                 : roll >= ac
         const target = this.getTarget()
-        const deflector = hit ? '' : target.getDeflectingArmorPart(roll, ac).type
+        const deflector = hit ? '' : target.getDeflectingArmorPart(bCriticalFail ? -1 : roll).type
         return {
             ac,
             bonus,
@@ -848,7 +850,7 @@ class Creature {
         return oAtk
     }
 
-    getDeflectingArmorPart (nAttackRoll, ac) {
+    getDeflectingArmorPart (nAttackRoll) {
         const d = this
             .store
             .getters
@@ -864,7 +866,7 @@ class Creature {
                 .store
                 .getters
                 .getArmorClassDetails,
-                nAttackRoll, 'vs', ac)
+                nAttackRoll)
             throw new Error('WTF ' + nAttackRoll + ' not in range')
         }
     }
