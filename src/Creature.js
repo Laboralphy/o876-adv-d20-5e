@@ -140,7 +140,9 @@ class Creature {
             CONSTS.ITEM_PROPERTY_ENHANCEMENT
         ], {
             effectSorter: effect => effect.data.type || sWeaponDamType,
-            propSorter: prop => prop.data.type || sWeaponDamType,
+            propSorter: prop => prop.property === CONSTS.ITEM_PROPERTY_ENHANCEMENT
+                ? sWeaponDamType
+                : prop.data.type,
             effectAmpMapper: eff => ampRndMapper(eff),
             propAmpMapper: prop => ampRndMapper(prop)
         })
@@ -165,7 +167,9 @@ class Creature {
                 CONSTS.ITEM_PROPERTY_ENHANCEMENT,
                 CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL
             ], {
-                propSorter: property => property.data.type || sWeaponDamType,
+                propSorter: prop => prop.property === CONSTS.ITEM_PROPERTY_ENHANCEMENT
+                    ? sWeaponDamType
+                    : prop.data.type,
                 propAmpMapper: prop => ampRndMapper(prop)
             })
             updateResult(amCrit.sorter)
@@ -349,10 +353,16 @@ class Creature {
      */
 
     applyEffect (oEffect, duration = 0, source = null) {
+        const eEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
         if (oEffect.subtype !== CONSTS.EFFECT_SUBTYPE_WEAPON && oEffect.type === CONSTS.EFFECT_DAMAGE) {
-            this._events.emit('damaged', { type: oEffect.data.type, amount: oEffect.amp, source })
+            this._events.emit('damaged', {
+                type: oEffect.data.type,
+                amount: oEffect.amp,
+                source,
+                resisted: oEffect.data.resistedAmount
+            })
         }
-        return this._effectProcessor.applyEffect(oEffect, this, duration, source)
+        return eEffect
     }
 
     processEffects () {
@@ -525,7 +535,7 @@ class Creature {
      * @property ammo {D20Item}
      * @property advantages {D20RuleValue}
      * @property disadvantages {D20RuleValue}
-     * @property damages {amount: number, types: object<string, number>}
+     * @property damages {amount: number, types: object<string, number>, resisted: object<string, number>}
      *
      * @returns {AttackOutcome}
      */
@@ -548,9 +558,9 @@ class Creature {
             ? true
             : dice <= assetManager.data.variables.ROLL_AUTO_FAIL
                 ? false
-                : (dice + bonus) >= ac
+                : roll >= ac
         const target = this.getTarget()
-        const deflector = hit ? '' : target.getDeflectingArmorPart(roll).type
+        const deflector = hit ? '' : target.getDeflectingArmorPart(roll, ac).type
         return {
             ac,
             bonus,
@@ -568,6 +578,7 @@ class Creature {
             disadvantages,
             damages: {
                 amount: 0,
+                resisted: {},
                 types: {}
             }
         }
@@ -597,6 +608,7 @@ class Creature {
             disadvantages: { rules: [], value: false },
             damages: {
                 amount: 0,
+                resisted: {},
                 types: {}
             },
             ...oDefault
@@ -806,12 +818,29 @@ class Creature {
                 .entries(oDamages)
                 .map(([sType, nValue]) => {
                     amount += nValue
-                    const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType, this.store.getters.getSelectedWeaponMaterial)
+                    const eDam = EffectProcessor.createEffect(
+                        CONSTS.EFFECT_DAMAGE,
+                        nValue,
+                        sType,
+                        this.store.getters.getSelectedWeaponMaterial
+                    )
                     eDam.subtype = CONSTS.EFFECT_SUBTYPE_WEAPON
                     return eDam
                 })
             // appliquer les effets sur la cible
-            aDamageEffects.map(d => oTarget.applyEffect(d))
+            const oResisted = {}
+            aDamageEffects.map(d => {
+                oTarget.applyEffect(d)
+                const n = d.data.resistedAmount
+                const sType = d.data.type
+                if (!(sType in oResisted)) {
+                    oResisted[sType] = n
+                } else {
+                    oResisted[sType] += n
+                }
+                return d
+            })
+            oAtk.damages.resisted = oResisted
             oAtk.damages.types = oDamages
             oAtk.damages.amount = amount
         }
@@ -819,7 +848,7 @@ class Creature {
         return oAtk
     }
 
-    getDeflectingArmorPart (nAttackRoll) {
+    getDeflectingArmorPart (nAttackRoll, ac) {
         const d = this
             .store
             .getters
@@ -834,7 +863,8 @@ class Creature {
                 .getArmorClassRanges, this
                 .store
                 .getters
-                .getArmorClassDetails)
+                .getArmorClassDetails,
+                nAttackRoll, 'vs', ac)
             throw new Error('WTF ' + nAttackRoll + ' not in range')
         }
     }

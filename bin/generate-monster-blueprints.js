@@ -137,7 +137,7 @@ function makeBlueprint (data) {
             properties: data.weaponProps
                 ? data.weaponProps.map(wp => ({
                     property: 'ITEM_PROPERTY_' + wp.type.replace(/-/g, '_').toUpperCase(),
-                    amp: wp.amp,
+                    amp: wp.amp || 0,
                     data: searchConstObj(wp.data)
                 }))
                 : []
@@ -153,7 +153,7 @@ function makeBlueprint (data) {
             properties: data.armorProps
                 ? data.armorProps.map(ap => ({
                     property: 'ITEM_PROPERTY_' + ap.property.replace(/-/g, '_').toUpperCase(),
-                    amp: ap.amp,
+                    amp: ap.amp || 0,
                     data: searchConstObj(ap.data)
                 }))
                 : []

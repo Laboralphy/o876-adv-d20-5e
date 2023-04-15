@@ -33,48 +33,56 @@
       "properties": [
         {
           "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
           "data": {
             "type": "DAMAGE_TYPE_CRUSHING"
           }
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
           "data": {
             "type": "DAMAGE_TYPE_PIERCING"
           }
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
           "data": {
             "type": "DAMAGE_TYPE_SLASHING"
           }
         },
         {
           "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",
+          "amp": 0,
           "data": {
             "type": "MATERIAL_ADAMANTINE"
           }
         },
         {
           "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",
+          "amp": 0,
           "data": {
             "type": "MATERIAL_SILVER"
           }
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
           "data": {
             "type": "DAMAGE_TYPE_POISON"
           }
         },
         {
           "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
           "data": {
             "condition": "CONDITION_POISONED"
           }
         },
         {
           "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
           "data": {
             "condition": "CONDITION_PETRIFIED"
           }

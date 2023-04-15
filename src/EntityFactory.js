@@ -16,16 +16,15 @@ class EntityFactory {
         // this.initAssetManager()
     }
 
-    initAssetManager () {
-        const am = new AssetManager()
-        am.init()
-        this._am = am
-    }
-
     mixData(oBlueprint, oData, slots) {
         const properties = [
             ...oBlueprint.properties
         ]
+        properties.forEach(p => {
+            if (!('data' in p)) {
+                p.data = {}
+            }
+        })
         const oBlueprintCopy = {
             ...oBlueprint
         }

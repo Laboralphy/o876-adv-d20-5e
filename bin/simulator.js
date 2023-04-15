@@ -33,10 +33,15 @@ function getDamageStr(sType) {
     return sType.substring(12).toLowerCase()
 }
 
-function explainDamages (damageTypes) {
+function explainDamages (damageTypes, resisted) {
     const aDamTypesStr = []
     for (const [sType, nAmount] of Object.entries(damageTypes)) {
         aDamTypesStr.push(nAmount + ' ' + getDamageStr(sType))
+    }
+    for (const [sType, nAmount] of Object.entries(resisted)) {
+        if (nAmount > 0) {
+            aDamTypesStr.push('resisted: ' + nAmount + ' ' + getDamageStr(sType))
+        }
     }
     return aDamTypesStr.join(', ')
 }
@@ -58,7 +63,8 @@ function explainAttack (creature, {
     weapon,
     damages: {
         amount: damageAmount = 0,
-        types: damageTypes = {}
+        types: damageTypes = {},
+        resisted
     }
 }) {
     if (range < distance) {
@@ -81,7 +87,7 @@ function explainAttack (creature, {
                 roll,
                 ac,
                 damageAmount,
-                explainDamages(damageTypes)
+                explainDamages(damageTypes, resisted)
             )
         }
     } else if (hit) {
@@ -98,7 +104,7 @@ function explainAttack (creature, {
                 roll,
                 ac,
                 damageAmount,
-                explainDamages(damageTypes)
+                explainDamages(damageTypes, resisted)
             )
         }
     } else if (dice === 1) {
@@ -198,11 +204,13 @@ function main () {
     const c2 = r.createEntity('c-rogue')
     const c3 = r.createEntity('c-soldier')
     const c4 = r.createEntity('c-gnoll')
+    const c5 = r.createEntity('c-gargoyle')
     c1.name = 'Alice'
     c2.name = 'Bob'
     c3.name = 'Jorin'
     c4.name = 'Gnoll'
-    fight(r, c2, c4)
+    c5.name = 'Gargoyle'
+    fight(r, c3, c5)
 }
 
 main()

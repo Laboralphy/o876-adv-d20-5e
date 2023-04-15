@@ -12,7 +12,8 @@ function create (amount, type, material = CONSTS.MATERIAL_UNKNOWN) {
     return createEffect(CONSTS.EFFECT_DAMAGE, amount, {
         type,
         material,
-        appliedAmount: 0
+        appliedAmount: 0,
+        resistedAmount: 0
     })
 }
 
@@ -28,7 +29,11 @@ function mutate ({ effect, target }) {
     let amp = effect.amp
     if (sType in oMitigation) {
         const { resistance, vulnerability, factor, reduction } = oMitigation[sType]
-        amp = Math.floor(Math.max(0, (amp - reduction)) * factor)
+        const appliedAmount = Math.floor(Math.max(0, (amp - reduction)) * factor)
+        const resistedAmount = amp - appliedAmount
+        effect.data.appliedAmount = appliedAmount
+        effect.data.resistedAmount = resistedAmount
+        amp = effect.data.appliedAmount
     }
     target.store.mutations.damage({ amount: amp })
 }

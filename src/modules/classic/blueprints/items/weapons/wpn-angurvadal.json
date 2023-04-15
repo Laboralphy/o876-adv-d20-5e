@@ -4,11 +4,13 @@
   "weaponType": "weapon-type-longsword",
   "properties": [{
     "property": "ITEM_PROPERTY_ENHANCEMENT",
-    "value": 4
+    "amp": 4
   }, {
     "property": "ITEM_PROPERTY_DAMAGE",
-    "value": "1",
-    "type": "DAMAGE_TYPE_FIRE"
+    "amp": "1",
+    "data": {
+      "type": "DAMAGE_TYPE_FIRE"
+    }
   }],
-  "material": "MATERIAL_STEEL"
+  "material": "MATERIAL_SILVER"
 }

@@ -1,9 +1,9 @@
 const CONSTS = require('../consts')
 
-module.exports = function ({ value, type: sType }) {
+module.exports = function ({ amp, type: sType }) {
     return {
         property: CONSTS.ITEM_PROPERTY_SAVING_THROW_BONUS,
-        amp: value,
+        amp,
         data: {
             type: sType
         }

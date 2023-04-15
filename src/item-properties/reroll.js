@@ -1,9 +1,9 @@
 const CONSTS = require('../consts')
 
-module.exports = function ({ value, when }) {
+module.exports = function ({ amp, when }) {
     return {
         property: CONSTS.ITEM_PROPERTY_REROLL,
-        amp: value,
+        amp,
         data: {
             when
         }

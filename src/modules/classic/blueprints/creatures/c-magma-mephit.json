@@ -41,24 +41,28 @@
       "properties": [
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
           "data": {
             "type": "DAMAGE_TYPE_FIRE"
           }
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
           "data": {
             "type": "DAMAGE_TYPE_POISON"
           }
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
+          "amp": 0,
           "data": {
             "type": "DAMAGE_TYPE_COLD"
           }
         },
         {
           "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
           "data": {
             "condition": "CONDITION_POISONED"
           }

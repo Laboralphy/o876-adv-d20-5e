@@ -1,9 +1,9 @@
 const CONSTS = require('../consts')
 
-module.exports = function ({ value, skill }) {
+module.exports = function ({ amp, skill }) {
     return {
         property: CONSTS.ITEM_PROPERTY_SKILL_BONUS,
-        amp: value,
+        amp,
         data: {
             skill
         }

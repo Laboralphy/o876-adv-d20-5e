@@ -634,7 +634,7 @@ describe('getDamageBonus', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
         r.init()
         const oSword = r.createEntity('wpn-shortsword')
-        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ amp: 1 }))
         c.store.mutations.equipItem({ item: oSword })
         const db = c.getDamageBonus()
         expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1 })
@@ -650,8 +650,8 @@ describe('getDamageBonus', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
         r.init()
         const oSword = r.createEntity('wpn-shortsword')
-        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
-        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ value: 1, type: CONSTS.DAMAGE_TYPE_FIRE }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ amp: 1 }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ amp: 1, type: CONSTS.DAMAGE_TYPE_FIRE }))
         c.store.mutations.equipItem({ item: oSword })
         const db = c.getDamageBonus()
         expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1, DAMAGE_TYPE_FIRE: 1 })
@@ -668,8 +668,8 @@ describe('getDamageBonus', function () {
         r.init()
         c.dice.debug(true, 0.99999)
         const oSword = r.createEntity('wpn-shortsword')
-        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
-        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ value: '1d4', type: CONSTS.DAMAGE_TYPE_FIRE }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ amp: 1 }))
+        oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ amp: '1d4', type: CONSTS.DAMAGE_TYPE_FIRE }))
         c.store.mutations.equipItem({ item: oSword })
         const db = c.getDamageBonus()
         expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1, DAMAGE_TYPE_FIRE: 4 })
@@ -808,7 +808,11 @@ describe('attack logs', function () {
             },
             weapon: c1.store.getters.getSelectedWeapon,
             ammo: null,
-            damages: { amount: 1, types: { DAMAGE_TYPE_SLASHING: 1 } }
+            damages: {
+                amount: 1,
+                types: { DAMAGE_TYPE_SLASHING: 1 },
+                resisted: { DAMAGE_TYPE_SLASHING: 0 }
+            }
         })
     })
     it('should do 12 dmg when doing attack with a blade of angurvadal and a strength of 10', function () {
@@ -821,8 +825,8 @@ describe('attack logs', function () {
         const oArmor1 = r.createEntity('arm-leather')
         const oArmor2 = r.createEntity('arm-leather')
         c1.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
-        oSword1.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ value: 1 }))
-        oSword1.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ value: '1d4', type: CONSTS.DAMAGE_TYPE_FIRE }))
+        oSword1.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ amp: 1 }))
+        oSword1.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ amp: '1d4', type: CONSTS.DAMAGE_TYPE_FIRE }))
         c1.equipItem(oSword1)
         c1.equipItem(oArmor1)
         c2.equipItem(oSword2)
@@ -859,7 +863,10 @@ describe('attack logs', function () {
             },
             weapon: c1.store.getters.getSelectedWeapon,
             ammo: null,
-            damages: { amount: 12, types: { DAMAGE_TYPE_SLASHING: 8, DAMAGE_TYPE_FIRE: 4 } }
+            damages: {
+                amount: 12,
+                types: { DAMAGE_TYPE_SLASHING: 8, DAMAGE_TYPE_FIRE: 4 },
+                resisted: { DAMAGE_TYPE_SLASHING: 0, DAMAGE_TYPE_FIRE: 0 } }
         })
     })
 })
