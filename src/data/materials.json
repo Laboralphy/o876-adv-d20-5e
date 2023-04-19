@@ -33,5 +33,9 @@
   "MATERIAL_STEEL": {
     "description": "Higher quality non magical material. Need high level of smithing",
     "parent": "MATERIAL_METAL"
+  },
+  "MATERIAL_ADAMANTINE": {
+    "description": "High density metal",
+    "parent": "MATERIAL_METAL"
   }
 }

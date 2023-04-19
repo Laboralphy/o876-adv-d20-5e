@@ -11,7 +11,7 @@ const CONSTS = require('../consts')
 function create (amount, type, material = CONSTS.MATERIAL_UNKNOWN) {
     return createEffect(CONSTS.EFFECT_DAMAGE, amount, {
         type,
-        material,
+        material: Array.isArray(material) ? material : [material],
         originalAmount: amount,
         appliedAmount: 0,
         resistedAmount: 0
@@ -30,12 +30,7 @@ function mutate ({ effect, target }) {
     const aMaterials = effect.data.material
     let bMaterialVulnerable = false
     if (aMaterials) {
-        console.log(aMaterials)
-        aMaterials.forEach(m => {
-            if (oMitigation[m] && oMitigation[m].vulnerability) {
-                bMaterialVulnerable = true
-            }
-        })
+        bMaterialVulnerable = aMaterials.some(m => oMitigation[m] && oMitigation[m].vulnerability)
     }
     let amp = effect.amp
     if (sType in oMitigation) {

@@ -824,7 +824,7 @@ class Creature {
                         CONSTS.EFFECT_DAMAGE,
                         nValue,
                         sType,
-                        this.store.getters.getSelectedWeaponMaterial
+                        [...this.store.getters.getSelectedWeaponMaterial]
                     )
                     eDam.subtype = CONSTS.EFFECT_SUBTYPE_WEAPON
                     const eMitigDam = oTarget.applyEffect(eDam)

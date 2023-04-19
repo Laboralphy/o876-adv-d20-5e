@@ -547,13 +547,19 @@ describe('damage vulnerability', function () {
         r.init()
         const c1 = r.createEntity('c-soldier')
         const w1 = r.createEntity('wpn-silver-dagger')
-        c1.equipItem(w1)
         const c2 = r.createEntity('c-gargoyle')
         c1.dice.debug(true, 0.75)
         c1.setTarget(c2)
         c1.setDistanceToTarget(5)
         const atk = r.attack(c1)
         expect(atk.damages).toEqual({
+            amount: 5,
+            resisted: { DAMAGE_TYPE_SLASHING: 5 },
+            types: { DAMAGE_TYPE_SLASHING: 5 }
+        })
+        c1.equipItem(w1)
+        const atk2 = r.attack(c1)
+        expect(atk2.damages).toEqual({
             amount: 7,
             resisted: { DAMAGE_TYPE_PIERCING: 0 },
             types: { DAMAGE_TYPE_PIERCING: 7 }
