@@ -354,12 +354,12 @@ class Creature {
 
     applyEffect (oEffect, duration = 0, source = null) {
         const eEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
-        if (oEffect.subtype !== CONSTS.EFFECT_SUBTYPE_WEAPON && oEffect.type === CONSTS.EFFECT_DAMAGE) {
+        if (eEffect.subtype !== CONSTS.EFFECT_SUBTYPE_WEAPON && oEffect.type === CONSTS.EFFECT_DAMAGE) {
             this._events.emit('damaged', {
-                type: oEffect.data.type,
-                amount: oEffect.amp,
+                type: eEffect.data.type,
+                amount: eEffect.data.appliedAmount,
                 source,
-                resisted: oEffect.data.resistedAmount
+                resisted: eEffect.data.resistedAmount
             })
         }
         return eEffect
@@ -816,10 +816,10 @@ class Creature {
             })
             // générer les effets de dégâts
             let amount = 0
+            const oResisted = {}
             const aDamageEffects = Object
                 .entries(oDamages)
                 .map(([sType, nValue]) => {
-                    amount += nValue
                     const eDam = EffectProcessor.createEffect(
                         CONSTS.EFFECT_DAMAGE,
                         nValue,
@@ -827,21 +827,18 @@ class Creature {
                         this.store.getters.getSelectedWeaponMaterial
                     )
                     eDam.subtype = CONSTS.EFFECT_SUBTYPE_WEAPON
-                    return eDam
+                    const eMitigDam = oTarget.applyEffect(eDam)
+                    const n = eMitigDam.data.resistedAmount
+                    if (!(sType in oResisted)) {
+                        oResisted[sType] = n
+                    } else {
+                        oResisted[sType] += n
+                    }
+                    amount += eMitigDam.amp
+                    oDamages[sType] -= n
+                    return eMitigDam
                 })
             // appliquer les effets sur la cible
-            const oResisted = {}
-            aDamageEffects.map(d => {
-                oTarget.applyEffect(d)
-                const n = d.data.resistedAmount
-                const sType = d.data.type
-                if (!(sType in oResisted)) {
-                    oResisted[sType] = n
-                } else {
-                    oResisted[sType] += n
-                }
-                return d
-            })
             oAtk.damages.resisted = oResisted
             oAtk.damages.types = oDamages
             oAtk.damages.amount = amount

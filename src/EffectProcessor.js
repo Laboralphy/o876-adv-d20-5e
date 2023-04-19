@@ -102,7 +102,7 @@ class EffectProcessor {
         if (duration > 0) {
             return target.store.mutations.addEffect({ effect: oEffect })
         } else {
-            return null
+            return oEffect
         }
     }
 }

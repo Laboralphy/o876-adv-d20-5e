@@ -14,5 +14,5 @@ module.exports = (state, getters, externals) => {
 
     return oWeapon
         ? getMaterialSuite(new Set(), oWeapon.material, data)
-        : CONSTS.MATERIAL_UNKNOWN
+        : new Set([CONSTS.MATERIAL_UNKNOWN])
 }

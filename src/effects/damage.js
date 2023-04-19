@@ -12,6 +12,7 @@ function create (amount, type, material = CONSTS.MATERIAL_UNKNOWN) {
     return createEffect(CONSTS.EFFECT_DAMAGE, amount, {
         type,
         material,
+        originalAmount: amount,
         appliedAmount: 0,
         resistedAmount: 0
     })
@@ -26,16 +27,24 @@ function mutate ({ effect, target }) {
     // What is the damage resistance, vulnerability, reduction ?
     const oMitigation = target.store.getters.getDamageMitigation
     const sType = effect.data.type
+    const aMaterials = effect.data.material
+    let bMaterialVulnerable = false
+    if (aMaterials) {
+        console.log(aMaterials)
+        aMaterials.forEach(m => {
+            if (oMitigation[m] && oMitigation[m].vulnerability) {
+                bMaterialVulnerable = true
+            }
+        })
+    }
     let amp = effect.amp
     if (sType in oMitigation) {
         const { resistance, vulnerability, factor, reduction } = oMitigation[sType]
-        const appliedAmount = Math.floor(Math.max(0, (amp - reduction)) * factor)
-        const resistedAmount = amp - appliedAmount
-        effect.data.appliedAmount = appliedAmount
-        effect.data.resistedAmount = resistedAmount
-        amp = effect.data.appliedAmount
+        const appliedAmount = Math.ceil(Math.max(0, (amp - reduction)) * factor * (bMaterialVulnerable ? 2 : 1))
+        effect.data.resistedAmount = amp - appliedAmount
+        effect.amp = amp = effect.data.appliedAmount = appliedAmount
     }
-    target.store.mutations.damage({ amount: amp })
+    target.store.mutations.damage({ amount: effect.amp })
 }
 
 module.exports = {

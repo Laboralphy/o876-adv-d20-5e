@@ -32,7 +32,13 @@ function addMitigation(oMitig, am) {
  * @param getters
  * @returns {Object<string, D20OneDamageMitigation>}}
  */
-module.exports = (state, getters) => {
+module.exports = (state, getters, externals) => {
+    const {
+        DAMAGE_FACTOR_IMMUNITY,
+        DAMAGE_FACTOR_RESISTANCE,
+        DAMAGE_FACTOR_NORMAL,
+        DAMAGE_FACTOR_VULNERABILITY
+    } = externals.data['variables']
     const fEffectSorter = eff => eff.data.type
     const fPropSorter = prop => prop.data.type
     const oReduction = aggregateModifiers([
@@ -112,15 +118,15 @@ module.exports = (state, getters) => {
                 case 'ir':
                 case 'iv':
                 case 'irv': {
-                    oReg.factor = 0
+                    oReg.factor = DAMAGE_FACTOR_IMMUNITY
                     break
                 }
                 case 'r': {
-                    oReg.factor = 0.5
+                    oReg.factor = DAMAGE_FACTOR_RESISTANCE
                     break
                 }
                 case 'v': {
-                    oReg.factor = 2
+                    oReg.factor = DAMAGE_FACTOR_VULNERABILITY
                     break
                 }
             }
