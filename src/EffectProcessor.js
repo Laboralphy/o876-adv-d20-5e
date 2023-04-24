@@ -14,6 +14,10 @@ class EffectProcessor {
         return this._events
     }
 
+    get creatures () {
+        return this._creatures
+    }
+
     /**
      * Référence une entité pour un usage futur dans les effect program
      * @param oCreature {Creature}
@@ -59,8 +63,10 @@ class EffectProcessor {
             this.runEffect(eff, oCreature, oSource)
             oCreature.store.mutations.decrementEffectDuration({ effect: eff })
         })
-        this.removeDeadEffects(oCreature)
-        this.flushCreatureRegistry(oCreature)
+        const deff = this.removeDeadEffects(oCreature)
+        if (deff.length > 0) {
+            this.flushCreatureRegistry(oCreature)
+        }
     }
 
     removeDeadEffects (oCreature) {
@@ -74,6 +80,27 @@ class EffectProcessor {
                 this._events.emit('dispose', { effect: eff })
                 this.invokeEffectMethod(eff, 'dispose', oCreature, this.getEffectSource(eff))
             })
+        return aDeadEffects
+    }
+
+    /**
+     * Renvoie la liste des créatures qui ne sont la source d'aucun effet appliqué à d'autre créature
+     * Si une créature qu'on veut supprimer du registre n'est la source d'aucun effet appliqué à une autre
+     * créature qu'elle, on peut la supprimer
+     */
+    getSourceCreatures () {
+        const aSourceCreatures = new Set(Object.keys(this._creatures))
+        for (const [id, oCreature] of Object.keys(this._creatures)) {
+            oCreature
+                .store
+                .getters
+                .getEffectSources
+                .forEach(eff => {
+                    if (eff.source !== id) {
+                        aSourceCreatures.delete(eff.source)
+                    }
+                })
+        }
     }
 
     flushCreatureRegistry (oCreature) {

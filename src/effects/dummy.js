@@ -3,14 +3,10 @@ const CONSTS = require('../consts')
 
 /**
  * This effect does nothing
- * @param amp {number}
- * @param data {{}}
  * @returns {D20Effect}
  */
-function create (amp, data) {
-    return createEffect(CONSTS.EFFECT_DUMMY, amp, {
-        ...data
-    })
+function create () {
+    return createEffect(CONSTS.EFFECT_DUMMY, 0, {})
 }
 
 /**

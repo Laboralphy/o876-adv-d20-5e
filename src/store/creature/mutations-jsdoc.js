@@ -27,4 +27,5 @@
  * @property setSize {function({ value })}
  * @property setSpecie {function({ value })}
  * @property setSpeed {function({ value })}
+ * @property setId {function({ value })}
  */

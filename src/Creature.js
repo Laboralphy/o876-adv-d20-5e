@@ -30,6 +30,7 @@ class Creature {
         this._store = assetManager.createStore('creature')
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
+        this._store.mutations.setId({ value: this._id })
     }
 
     set name (value) {
@@ -52,8 +53,16 @@ class Creature {
         this._dice = value
     }
 
+    get effectProcessor () {
+        return this._effectProcessor
+    }
+
     get id () {
         return this._id
+    }
+
+    set id (value) {
+        this.store.mutations.setId({ value })
     }
 
     get store () {

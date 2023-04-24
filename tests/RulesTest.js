@@ -566,3 +566,30 @@ describe('damage vulnerability', function () {
         })
     })
 })
+
+describe('EffectProcessor Garbage collector', function () {
+
+    function appEff (cTarget, cSource) {
+        cTarget.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DUMMY), 10, cSource)
+    }
+
+    function createBatch () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        const c3 = new Creature()
+        const c4 = new Creature()
+        const c5 = new Creature()
+        c1.id = 'c1'
+        c2.id = 'c2'
+        c3.id = 'c3'
+        c4.id = 'c4'
+        c5.id = 'c5'
+        return { c1, c2, c3, c4, c5 }
+    }
+
+    it('should remove c2 from c1 sources when applied effects ends', function () {
+        const { c1, c2, c3, c4, c5 } = createBatch()
+        appEff(c1, c2)
+        expect(Object.keys(c1.effectProcessor.creatures).length).toBe(2)
+    })
+})

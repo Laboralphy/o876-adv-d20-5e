@@ -24,6 +24,7 @@
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantagePropEffects {Object<string, string>}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
+ * @property getEffectSources {string[]}
  * @property getEffects {[]}
  * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
