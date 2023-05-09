@@ -42,7 +42,7 @@ describe('strike', function () {
         c1.name = 'Burnasse'
         const c2 = new Creature()
         c2.name = 'Mr.X'
-        r.defineCreatureEventHandlers(c1)
+        r._defineCreatureEventHandlers(c1)
         const aLog = []
         r.events.on('attack', ({ creature, attack }) => {
             const weapon = creature.store.getters.getSelectedWeapon

@@ -9,21 +9,12 @@ class Rules {
         this._events = new Events()
     }
 
-    get events () {
-        return this._events
-    }
-
-    init () {
-        const ef = new EntityFactory()
-        ef.init()
-        this._ef = ef
-    }
-
-    get assetManager () {
-        return this._ef.assetManager
-    }
-
-    defineCreatureEventHandlers (oCreature) {
+    /**
+     * Définition des handlers d'évènement pour une créature nouvellement créée
+     * @param oCreature {Creature}
+     * @private
+     */
+    _defineCreatureEventHandlers (oCreature) {
         const aEvents = ['attack', 'action', 'target-distance', 'saving-throw', 'check-skill', 'damaged']
         aEvents.forEach(evName => {
             oCreature.events.on(evName, oPayload => {
@@ -35,10 +26,40 @@ class Rules {
         })
     }
 
+    /**
+     * instance du gestionaire d'évènements
+     * @returns {module:events.EventEmitter}
+     */
+    get events () {
+        return this._events
+    }
+
+    /**
+     * Instance de l'asset manager
+     * @returns {AssetManager}
+     */
+    get assetManager () {
+        return this._ef.assetManager
+    }
+
+    /**
+     * Initialisation de l'instance à faire dès l'instantiation
+     */
+    init () {
+        const ef = new EntityFactory()
+        ef.init()
+        this._ef = ef
+    }
+
+    /**
+     * Creation d'une entité (créature ou item)
+     * @param sResRef {string}
+     * @returns {Creature|D20Item}
+     */
     createEntity (sResRef) {
         const oEntity = this._ef.createEntity(sResRef)
         if (oEntity instanceof Creature) {
-            this.defineCreatureEventHandlers(oEntity)
+            this._defineCreatureEventHandlers(oEntity)
         }
         return oEntity
     }
@@ -57,11 +78,15 @@ class Rules {
     }
 
     /**
-     * Effectue une attaque de melee contre la cible.
+     * Effectue une attaque physique melee ou distance contre la cible.
      * Si la cible n'est pas à portée l'attaque échoue
      * @param oAttacker {Creature}
+     * @param [oTarget] {Creature}
      */
-    attack (oAttacker) {
+    attack (oAttacker, oTarget = undefined) {
+        if (oTarget) {
+            oAttacker.setTarget(oTarget)
+        }
         const asg = oAttacker.store.getters
         const sBetterSlot = asg.getSuitableOffensiveSlot
         if (sBetterSlot !== '') {
@@ -72,34 +97,14 @@ class Rules {
         }
     }
 
-    getCreatureActions (oCreature) {
-        const aActions = this
+    getCreatureData (oCreature) {
+        const actions = this
             .assetManager
             .blueprints[oCreature.ref]
             .actions
-        if (Array.isArray(aActions) && aActions.length === 0) {
-            // on ne renvoie pas de tableau vide
-            return undefined
-        } else {
-            return aActions
+        return {
+            actions
         }
-    }
-
-    /**
-     * Déclenche une action
-     * @param oCreature
-     */
-    action (oCreature) {
-        const aActions = this.getCreatureActions(oCreature)
-        if (aActions && aActions.length > 0) {
-            const sAction = aActions[Math.floor(Math.random() * aActions.length)]
-            oCreature.doAction(sAction)
-        }
-    }
-
-    walkToTarget (oAttacker) {
-        const nDistance = oAttacker.store.getters.getTargetDistance - oAttacker.store.getters.getSpeed
-        oAttacker.setDistanceToTarget(nDistance)
     }
 }
 

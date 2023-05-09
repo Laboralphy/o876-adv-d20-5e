@@ -13,6 +13,7 @@ let LAST_ID = 0
 class Creature {
     constructor () {
         this._id = uuidv4({}, null, 0)
+        this._ref = ''
         this._name = this._id
         this._dice = new Dice()
         this._target = {
@@ -37,6 +38,22 @@ class Creature {
         this._name = value
     }
 
+    /**
+     * Définie la reférence du blueprint qui a servit à construire la creature
+     * @param value {string}
+     */
+    set ref (value) {
+        this._ref = value
+    }
+
+    /**
+     * Renvoie la référence du blueprint qui a servit a construre la creature
+     * @returns {string}
+     */
+    get ref () {
+        return this._ref
+    }
+
     get name () {
         return this._name
     }
@@ -56,7 +73,6 @@ class Creature {
     get effectProcessor () {
         return this._effectProcessor
     }
-
     get id () {
         return this._id
     }
@@ -240,14 +256,15 @@ class Creature {
                 if (!bRecursed) {
                     oTarget.setDistanceToTarget(n, true)
                 }
-                this.store.mutations.setTargetDistance({ value: n })
-                this._events.emit('target-distance', { value: n })
+                const oEventPayload = { value: n, creature: this, target: oTarget }
+                this._events.emit('target-distance', oEventPayload)
+                this.store.mutations.setTargetDistance({ value: oEventPayload.value })
             }
         }
     }
 
     /**
-     *
+     * envoie la cible de la cible
      * @returns {Creature|null}
      */
     getTargetTarget () {
@@ -268,7 +285,10 @@ class Creature {
             this.clearTarget()
             this._target.creature = oCreature
             this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
-            this.store.mutations.updateTargetConditions({ id: oCreature.id, conditions: this._target.creature.store.getters.getConditionSources })
+            this.store.mutations.updateTargetConditions({
+                id: oCreature.id,
+                conditions: this._target.creature.store.getters.getConditionSources
+            })
             oCreature.store.events.on('mutation', this._target.handler)
             this.initializeDistanceToTarget(this.dice.roll(6, 6))
         }

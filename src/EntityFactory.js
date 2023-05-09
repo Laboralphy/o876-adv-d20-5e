@@ -13,7 +13,6 @@ class EntityFactory {
 
     init () {
         warmup()
-        // this.initAssetManager()
     }
 
     mixData(oBlueprint, oData, slots) {

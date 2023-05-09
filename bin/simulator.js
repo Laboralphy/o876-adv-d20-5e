@@ -161,19 +161,32 @@ function creatureDamaged ({ creature, amount, type: sDamType, source }) {
     console.log('%s deals %d points of %s damage on %s', source.name, amount, getDamageStr(sDamType), creature.name)
 }
 
+function action (rules, oCreature) {
+    const aActions = rules.getCreatureData(oCreature).actions
+    if (aActions && aActions.length > 0) {
+        const sAction = aActions[Math.floor(Math.random() * aActions.length)]
+        oCreature.doAction(sAction)
+    }
+}
+
 function assault (rules, atk, def) {
     if (rules.getCreatureActions(atk) && Math.random() > 0.8) {
-        rules.action(atk)
+        action(rules, atk)
     } else {
         rules.attack(atk)
     }
     console.log(def.name, 'has', def.store.getters.getHitPoints, 'hp left')
 }
 
+function walkToTarget (oAttacker) {
+    const nDistance = oAttacker.store.getters.getTargetDistance - oAttacker.store.getters.getSpeed
+    oAttacker.setDistanceToTarget(nDistance)
+}
+
 function bonusAction (rules, creature) {
     // walking
     if (!creature.store.getters.isTargetInWeaponRange) {
-        rules.walkToTarget(creature)
+        walkToTarget(creature)
         console.log(creature.name, 'is now at', creature.store.getters.getTargetDistance, 'ft. from', creature.getTarget().name)
     }
 }
