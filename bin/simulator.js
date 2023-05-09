@@ -147,9 +147,9 @@ function creatureSavingThrow (oPayload) {
 
 
 function creatureAttacked ({
-                               outcome,
-                               creature
-                           }) {
+    outcome,
+    creature
+}) {
     console.log(explainAttack(creature, outcome).message)
 }
 
@@ -161,8 +161,12 @@ function creatureDamaged ({ creature, amount, type: sDamType, source }) {
     console.log('%s deals %d points of %s damage on %s', source.name, amount, getDamageStr(sDamType), creature.name)
 }
 
+function creatureDied ({ creature, killer }) {
+    console.log('%s killed %s', killer.name, creature.name)
+}
+
 function action (rules, oCreature) {
-    const aActions = rules.getCreatureData(oCreature).actions
+    const aActions = rules.getData(oCreature).actions
     if (aActions && aActions.length > 0) {
         const sAction = aActions[Math.floor(Math.random() * aActions.length)]
         oCreature.doAction(sAction)
@@ -170,7 +174,7 @@ function action (rules, oCreature) {
 }
 
 function assault (rules, atk, def) {
-    if (rules.getCreatureActions(atk) && Math.random() > 0.8) {
+    if (rules.getData(atk).actions.length > 0 && Math.random() > 0.8) {
         action(rules, atk)
     } else {
         rules.attack(atk)
@@ -213,6 +217,7 @@ function main () {
     r.events.on('action', creatureAction)
     r.events.on('damaged', creatureDamaged)
     r.events.on('saving-throw', creatureSavingThrow)
+    r.events.on('death', creatureDied)
     const c1 = r.createEntity('c-pilgrim')
     const c2 = r.createEntity('c-rogue')
     const c3 = r.createEntity('c-soldier')

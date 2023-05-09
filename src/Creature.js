@@ -34,6 +34,10 @@ class Creature {
         this._store.mutations.setId({ value: this._id })
     }
 
+    get entityType () {
+        return CONSTS.ENTITY_TYPE_ACTOR
+    }
+
     set name (value) {
         this._name = value
     }
@@ -363,6 +367,12 @@ class Creature {
         }
     }
 
+    notifyAttack (oAggressor, oOutcome) {
+        if (this.store.getters.getHitPoints <= 0) {
+            this._events.emit('death', { killer: oAggressor })
+        }
+    }
+
     /*
         #######
         #        ######  ######  ######   ####    #####
@@ -390,6 +400,9 @@ class Creature {
                 source,
                 resisted: eEffect.data.resistedAmount
             })
+            if (this.store.getters.getHitPoints <= 0) {
+                this.events.emit('death', { killer: source })
+            }
         }
         return eEffect
     }
@@ -635,6 +648,7 @@ class Creature {
             roll: 0,
             target,
             weapon,
+            kill: false,
             advantages: { rules: [], value: false },
             disadvantages: { rules: [], value: false },
             damages: {
@@ -829,6 +843,7 @@ class Creature {
         if (!oTarget) {
             throw new Error('ERR_TARGET_INVALID')
         }
+        oTarget.setAggressor(this)
         // Déterminer si on est à portée
         if (!this.store.getters.isTargetInWeaponRange) {
             // hors de portee
@@ -873,6 +888,7 @@ class Creature {
             oAtk.damages.amount = amount
         }
         this._events.emit('attack', { outcome: oAtk })
+        oTarget.notifyAttack(this, oAtk)
         return oAtk
     }
 

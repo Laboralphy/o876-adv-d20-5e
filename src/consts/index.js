@@ -42,6 +42,7 @@
  * @typedef D20WeaponData {object}
  * @property damage {string}
  * @property damageType {string}
+ * @property versatileDamage {string}
  * @property attributes {string[]}
  * @property proficiency {string}
  * @property weight {number}
