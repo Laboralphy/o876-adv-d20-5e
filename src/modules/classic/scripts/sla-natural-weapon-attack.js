@@ -1,5 +1,5 @@
 const CONSTS = require('../../../consts')
-const { evocationAttack } = require('../common/evocation-attack')
+const { evocationAttack } = require('../common/spell-helper')
 
 /**
  * Si la cible est a portée : morsure de gnoll

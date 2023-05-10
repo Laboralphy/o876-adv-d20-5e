@@ -1,5 +1,5 @@
 const CONSTS = require('../../../consts')
-const { evocationAttack } = require('../common/evocation-attack')
+const { evocationAttack } = require('../common/spell-helper')
 
 /**
  * Tire un projectile de feu sur la cible pour 2d6 de feu avec save dex dc 11
