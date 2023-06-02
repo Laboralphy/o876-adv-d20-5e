@@ -37,22 +37,34 @@ module.exports = (state, getters, externals) => {
     // L'arme équipée est trop lourde pour le personnage
     const HEAVY_WEAPON = getters.isWeildingNonLightWeapon && CREATURE_IS_SMALL
 
-    // La créature subit la condition poison
+    // La créature subit la condition "poison"
     const POISONED = myConditions.has(CONSTS.CONDITION_POISONED)
+
+    // La créature subit la condition "terreur"
     const FRIGHTENED = myConditions.has(CONSTS.CONDITION_FRIGHTENED)
+
+    // La créature subit la condition "restriction de mouvement"
     const RESTRAINED = myConditions.has(CONSTS.CONDITION_RESTRAINED)
+
+    // La créature est à terre
+    const PRONE = myConditions.has(CONSTS.CONDITION_PRONE)
 
     // La créature est encombrée
     const LIGHTLY_ENCUMBERED = getters.getEncumbranceLevel === 1
+
+    // La créature est lourdement encombrée
     const HEAVILY_ENCUMBERED = getters.getEncumbranceLevel >= 2
 
     // La créature est sous l'eau et n'a pas de capacité sous-marine
-    // La créature est dans une pièce obscure sans capacité de vision nocturne
     const af = getters.getAreaFlags
     const AREA_UNDERWATER = af.has(CONSTS.AREA_FLAG_UNDERWATER)
 
+    // La créature est dans une pièce obscure sans capacité de vision nocturne
+
+    // La cible de la créature est trop proche lorsque l'on possède une arme à distance
     const TARGET_TOO_CLOSE = getters.isWeildingRangedWeapon && getters.isTargetInMeleeWeaponRange
-    const PRONE = myConditions.has(CONSTS.CONDITION_PRONE)
+
+    // La cible de la créature est à terre mais, loin... l'attaquer avec une arme à distance constitue un désavantage.
     const TARGET_PRONE_AND_FAR = targetConditions.has(CONSTS.CONDITION_PRONE) && !getters.isTargetInMeleeWeaponRange
 
 
