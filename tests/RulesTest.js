@@ -593,3 +593,17 @@ describe('EffectProcessor Garbage collector', function () {
         expect(Object.keys(c1.effectProcessor.creatures).length).toBe(2)
     })
 })
+
+describe('obtention d\'information', function () {
+    it('should retrieve epee court data when asking for shortsword name in fr', function () {
+        const r = new Rules()
+        r.init()
+        expect(r.assetManager.strings.fr.weaponType['weapon-type-shortsword']).toBe('Epée courte')
+    })
+    it('should retrieve 1d6 data when asking for shortsword damage output', function () {
+        const r = new Rules()
+        r.init()
+        expect(r.assetManager.data['weapon-type-shortsword'].damage).toBe('1d4')
+        console.log(r.assetManager.publicAssets)
+    })
+})

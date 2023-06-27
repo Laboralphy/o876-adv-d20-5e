@@ -1,0 +1,24 @@
+{
+  "ammoType": {
+    "ammo-type-energy-cell-i": "Petite cellule d'énergie",
+    "ammo-type-energy-cell-ii": "Grande cellule d'énergie"
+  },
+  "armorType": {
+    "armor-type-flight-suit": "Combinaison de vol",
+    "armor-type-heavy-combat-armor": "Armure de combat lourde",
+    "armor-type-light-combat-armor": "Armure de combat légère",
+    "armor-type-medium-combat-armor": "Armure de combat intermédiaire"
+  },
+  "weaponType": {
+    "weapon-type-concussion-rod": "Matraque électrique",
+    "weapon-type-beam-sword": "Sabre laser",
+    "weapon-type-disrupt-pistol": "Pistolet perturbateur",
+    "weapon-type-laser-pistol": "Pistolet laser",
+    "weapon-type-concussion-rifle": "Fusil percutant",
+    "weapon-type-cryonic-rifle": "Fusil cryogénique",
+    "weapon-type-disrupt-rifle": "Fusil perturbateur",
+    "weapon-type-laser-rifle": "Fusil laser",
+    "weapon-type-plasma-rifle": "Fusil à plasma",
+    "weapon-type-rail-gun": "Canon accélérateur"
+  }
+}

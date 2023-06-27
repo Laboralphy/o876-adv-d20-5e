@@ -3,13 +3,17 @@ const TreeSync = require('../libs/tree-sync')
 const path = require('path')
 const SchemaValidator = require("./SchemaValidator")
 const StoreManager = require('./StoreManager')
+const deepMerge = require('../libs/deep-merge')
+const deepClone = require('../libs/deep-clone')
+const deepFreeze = require('../libs/deep-freeze')
 
 class AssetManager {
     constructor () {
         this._assets = {
             blueprints: {},
             data: {},
-            scripts: {}
+            scripts: {},
+            strings: {}
         }
         this._validator = new SchemaValidator()
         this._storeManagers = {
@@ -79,6 +83,11 @@ class AssetManager {
                 break
             }
 
+            case 'strings': {
+                deepMerge(this._assets.strings, d)
+                break
+            }
+
             default: {
                 throw new Error('ERR_ASSET_TYPE_INVALID: ' + sType)
             }
@@ -92,6 +101,7 @@ class AssetManager {
         this.loadPath(path.join(sPath, 'store', 'creature', 'state'), 'state/creature')
         this.loadPath(path.join(sPath, 'store', 'creature', 'mutations'), 'mutations/creature')
         this.loadPath(path.join(sPath, 'scripts'), 'script')
+        this.loadPath(path.join(sPath, 'strings'), 'strings')
     }
 
     init () {
@@ -121,6 +131,32 @@ class AssetManager {
 
     get scripts () {
         return this._assets.scripts
+    }
+
+    get strings () {
+        return this._assets.strings
+    }
+
+    get publicAssets () {
+        const filterData = f => {
+            const o = {}
+            Object
+                .entries(this.data)
+                .filter(([k, v]) => k.startsWith(f))
+                .forEach(([k, v]) => {
+                    o[k] = deepClone(v)
+                })
+            return o
+        }
+        return {
+            strings: deepClone(this.strings),
+            items: {
+                weapons: filterData('weapon-type-'),
+                armors: filterData('armor-type-'),
+                shields: filterData('shield-type-'),
+                ammunitions: filterData('ammo-type-')
+            }
+        }
     }
 
     validateBlueprint (oBlueprint) {
