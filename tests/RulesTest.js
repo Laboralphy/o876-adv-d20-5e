@@ -598,7 +598,7 @@ describe('obtention d\'information', function () {
     it('should retrieve epee court data when asking for shortsword name in fr', function () {
         const r = new Rules()
         r.init()
-        expect(r.assetManager.strings.fr.weaponType['weapon-type-shortsword']).toBe('Epée courte')
+        expect(r.assetManager.strings.weaponType['weapon-type-shortsword']).toBe('Epée courte')
     })
     it('should retrieve 1d6 data when asking for shortsword damage output', function () {
         const r = new Rules()

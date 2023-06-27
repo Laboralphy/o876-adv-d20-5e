@@ -6,14 +6,18 @@ const StoreManager = require('./StoreManager')
 const deepMerge = require('../libs/deep-merge')
 const deepClone = require('../libs/deep-clone')
 const deepFreeze = require('../libs/deep-freeze')
+const STRINGS = {
+    fr: require('./strings/fr.json')
+}
 
 class AssetManager {
     constructor () {
+        this._lang = 'fr'
         this._assets = {
             blueprints: {},
             data: {},
             scripts: {},
-            strings: {}
+            strings: STRINGS
         }
         this._validator = new SchemaValidator()
         this._storeManagers = {
@@ -27,6 +31,14 @@ class AssetManager {
                 }
             })
         }
+    }
+
+    set lang (value) {
+        this._lang = value
+    }
+
+    get lang () {
+        return this._lang
     }
 
     get storeManagers () {
@@ -134,7 +146,7 @@ class AssetManager {
     }
 
     get strings () {
-        return this._assets.strings
+        return this._assets.strings[this.lang]
     }
 
     get publicAssets () {
@@ -150,11 +162,11 @@ class AssetManager {
         }
         return {
             strings: deepClone(this.strings),
-            items: {
-                weapons: filterData('weapon-type-'),
-                armors: filterData('armor-type-'),
-                shields: filterData('shield-type-'),
-                ammunitions: filterData('ammo-type-')
+            data: {
+                weaponType: filterData('weapon-type-'),
+                armorType: filterData('armor-type-'),
+                shieldType: filterData('shield-type-'),
+                ammoType: filterData('ammo-type-')
             }
         }
     }

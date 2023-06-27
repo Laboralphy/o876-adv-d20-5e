@@ -78,9 +78,12 @@
     "MATERIAL_UNKNOWN": "Inconnu",
     "MATERIAL_WOOD": "Bois",
     "MATERIAL_LEATHER": "Cuir",
+    "MATERIAL_FABRIC": "Tissu",
+    "MATERIAL_STONE": "Pierre",
     "MATERIAL_METAL": "Métal",
     "MATERIAL_IRON": "Fer",
     "MATERIAL_SILVER": "Argent",
+    "MATERIAL_STEEL": "Acier",
     "MATERIAL_ADAMANTINE": "Adamantine"
   }
 }
