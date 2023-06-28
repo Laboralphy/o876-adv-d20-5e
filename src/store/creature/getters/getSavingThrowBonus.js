@@ -23,7 +23,7 @@ module.exports = (state, getters) => {
     const ab = getters.getAbilityModifiers
 
     const ag = aggregateModifiers(
-        [CONSTS.EFFECT_SAVING_THROW_BONUS],
+        [CONSTS.EFFECT_SAVING_THROW_BONUS, CONSTS.ITEM_PROPERTY_SAVING_THROW_BONUS],
         getters,
         {
             effectAmpMapper: eff => ampMapper(eff.amp, getters),

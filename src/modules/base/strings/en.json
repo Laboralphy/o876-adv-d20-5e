@@ -1,0 +1,17 @@
+{
+  "class": {
+    "monster": "Monster",
+    "tourist": "Tourist"
+  },
+  "armorType": {
+    "armor-type-natural": "Natural armor"
+  },
+  "skill": {
+    "skill-perception": "Perception",
+    "skill-unlock": "Unlock"
+  },
+  "weaponType": {
+    "weapon-type-improvised": "Improvised weapon",
+    "weapon-type-unarmed": "Unarmed"
+  }
+}

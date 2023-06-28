@@ -6,11 +6,9 @@
     "property": "ITEM_PROPERTY_ENHANCEMENT",
     "amp": 4
   }, {
-    "property": "ITEM_PROPERTY_DAMAGE",
+    "property": "ITEM_PROPERTY_DAMAGE_BONUS",
     "amp": "1",
-    "data": {
-      "type": "DAMAGE_TYPE_FIRE"
-    }
+    "type": "DAMAGE_TYPE_FIRE"
   }],
   "material": "MATERIAL_ADAMANTINE"
 }

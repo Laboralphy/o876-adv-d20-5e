@@ -1,11 +1,13 @@
 const Creature = require('../src/Creature')
 const Rules = require('../src/Rules')
-const EffectProcessor = require('../src/EffectProcessor')
 const CONSTS = require('../src/consts')
-const { warmup } = require('../src/assets')
+const AssetManager = require("../src/AssetManager");
 
 beforeAll(function () {
-    warmup()
+    Error.stackTraceLimit = Infinity
+    const am = new AssetManager()
+    am.init()
+    Creature.AssetManager = am
 })
 
 describe('feat-fighting-style-archery', function () {

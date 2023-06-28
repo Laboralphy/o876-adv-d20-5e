@@ -34,37 +34,27 @@
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
           "amp": 0,
-          "data": {
-            "type": "DAMAGE_TYPE_POISON"
-          }
+          "type": "DAMAGE_TYPE_POISON"
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
           "amp": 0,
-          "data": {
-            "type": "DAMAGE_TYPE_FIRE"
-          }
+          "type": "DAMAGE_TYPE_FIRE"
         },
         {
           "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
           "amp": 0,
-          "data": {
-            "condition": "CONDITION_POISONED"
-          }
+          "condition": "CONDITION_POISONED"
         },
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",
           "amp": 2,
-          "data": {
-            "skill": "SKILL_STEALTH"
-          }
+          "skill": "SKILL_STEALTH"
         },
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",
           "amp": 2,
-          "data": {
-            "skill": "SKILL_PERCEPTION"
-          }
+          "skill": "SKILL_PERCEPTION"
         }
       ]
     }

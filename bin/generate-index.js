@@ -24,7 +24,9 @@ function camelCase (s) {
 }
 
 function renderExport (s) {
-    return `/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY */
+    const d = new Date()
+    const sDate = d.toLocaleString()
+    return `/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: ${sDate} */
 const CONSTS = require('../consts')
 module.exports = ${s}
 `
@@ -110,6 +112,29 @@ function checkConstAndData (sConstFile, sDataFile) {
     })
 }
 
+function generateItemPropertyParams () {
+    const PATH = './src/item-properties'
+    const ips = ls(PATH)
+    return Object.fromEntries(ips.map(ipFile => {
+        const sName = 'ITEM_PROPERTY_' + ipFile.toUpperCase().replace(/-/g, '_')
+        const oParams = Object.fromEntries(fs
+            .readFileSync(path.join(PATH, ipFile + '.js'))
+            .toString()
+            .split('\n')
+            .map(s => s.trim().match(/\*\s+@param\s+([a-z]+)\s+\{(.*)}\s*(\S*)$/i))
+            .filter(a => Array.isArray(a))
+            .map(a => a.slice(1))
+            .map(a => ([ a[0], a[2] || a[1] ])))
+        return [sName, oParams]
+    }))
+}
+
+function generatePublicAssets () {
+    const a = new AssetManager()
+    a.init()
+    return a.publicAssets
+}
+
 function main (sType) {
     switch (sType) {
         // item property index
@@ -145,6 +170,16 @@ function main (sType) {
             break
         }
 
+        case 'ipdoc': {
+            console.log(JSON.stringify(generateItemPropertyParams(), null, '  '))
+            break
+        }
+
+        case 'pa': {
+            // console.log(JSON.stringify(generatePublicAssets()), null, '  ')
+            break
+        }
+
         default: {
             console.log('available options: ii, ei, ic, ec, g')
             break
@@ -153,3 +188,4 @@ function main (sType) {
 }
 
 main(process.argv[2])
+

@@ -1,7 +1,7 @@
 {
   "entityType": "ENTITY_TYPE_ITEM",
   "itemType": "ITEM_TYPE_WEAPON",
-  "weaponType": "strings.weaponType",
-  "properties": [],
-  "material": "strings.material"
+  "weaponType": "weaponType",
+  "properties": ["itemProperty"],
+  "material": "material"
 }

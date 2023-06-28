@@ -7,11 +7,13 @@ const deepMerge = require('../libs/deep-merge')
 const deepClone = require('../libs/deep-clone')
 const deepFreeze = require('../libs/deep-freeze')
 const STRINGS = {
-    fr: require('./strings/fr.json')
+    fr: require('./strings/fr.json'),
+    en: require('./strings/en.json')
 }
 
 class AssetManager {
     constructor () {
+        this._initialized = false
         this._lang = 'fr'
         this._assets = {
             blueprints: {},
@@ -31,6 +33,10 @@ class AssetManager {
                 }
             })
         }
+    }
+
+    get initialized () {
+        return this._initialized
     }
 
     set lang (value) {
@@ -117,14 +123,17 @@ class AssetManager {
     }
 
     init () {
-        this._validator.init()
-        const oBaseData = TreeSync.recursiveRequire(path.resolve(__dirname, 'data'), true)
-        for (const [sId, data] of Object.entries(oBaseData)) {
-            this.addData(sId, data)
+        if (!this._initialized) {
+            this._validator.init()
+            const oBaseData = TreeSync.recursiveRequire(path.resolve(__dirname, 'data'), true)
+            for (const [sId, data] of Object.entries(oBaseData)) {
+                this.addData(sId, data)
+            }
+            this.loadModule(path.resolve(__dirname, 'modules', 'base'))
+            this.loadModule(path.resolve(__dirname, 'modules', 'classic'))
+            this.loadModule(path.resolve(__dirname, 'modules', 'modern'))
+            this._initialized = true
         }
-        this.loadModule(path.resolve(__dirname, 'modules', 'base'))
-        this.loadModule(path.resolve(__dirname, 'modules', 'classic'))
-        this.loadModule(path.resolve(__dirname, 'modules', 'modern'))
     }
 
     /**
@@ -160,14 +169,16 @@ class AssetManager {
                 })
             return o
         }
+        const data = {
+            weaponType: filterData('weapon-type-'),
+            armorType: filterData('armor-type-'),
+            shieldType: filterData('shield-type-'),
+            ammoType: filterData('ammo-type-'),
+            itemProperty: require('./templates/item-properties.json')
+        }
         return {
             strings: deepClone(this.strings),
-            data: {
-                weaponType: filterData('weapon-type-'),
-                armorType: filterData('armor-type-'),
-                shieldType: filterData('shield-type-'),
-                ammoType: filterData('ammo-type-')
-            }
+            data
         }
     }
 

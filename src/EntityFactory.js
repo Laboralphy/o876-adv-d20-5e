@@ -1,10 +1,11 @@
 const CONSTS = require("./consts")
-const { warmup, assetManager } = require('./assets')
+const AssetManager = require('./AssetManager')
 const Creature = require('./Creature')
+const itemProperties = require('./item-properties')
 
 class EntityFactory {
     constructor () {
-        this._am = assetManager
+        this._am = null
     }
 
     get assetManager () {
@@ -12,13 +13,14 @@ class EntityFactory {
     }
 
     init () {
-        warmup()
+        const assetManager = new AssetManager()
+        assetManager.init()
+        this._am = assetManager
+        Creature.AssetManager = this._am
     }
 
     mixData(oBlueprint, oData, slots) {
-        const properties = [
-            ...oBlueprint.properties
-        ]
+        const properties = oBlueprint.properties.map(ip => itemProperties[ip.property](ip))
         properties.forEach(p => {
             if (!('data' in p)) {
                 p.data = {}

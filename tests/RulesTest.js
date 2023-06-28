@@ -447,14 +447,11 @@ describe('damage immunity', function () {
                         {
                             "property": "ITEM_PROPERTY_ATTACK_BONUS",
                             "amp": 3,
-                            "data": {}
                         },
                         {
                             "property": "ITEM_PROPERTY_DAMAGE_BONUS",
                             "amp": "1d4",
-                            "data": {
-                                "type": "DAMAGE_TYPE_FIRE"
-                            }
+                            "type": "DAMAGE_TYPE_FIRE"
                         }
                     ]
                 },
@@ -465,30 +462,20 @@ describe('damage immunity', function () {
                     "properties": [
                         {
                             "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
-                            "data": {
-                                "type": "DAMAGE_TYPE_FIRE"
-                            }
+                            "type": "DAMAGE_TYPE_FIRE"
                         },{
                             "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
-                            "data": {
-                                "type": "DAMAGE_TYPE_POISON"
-                            }
+                            "type": "DAMAGE_TYPE_POISON"
                         },{
                             "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
-                            "data": {
-                                "type": "DAMAGE_TYPE_COLD"
-                            }
+                            "type": "DAMAGE_TYPE_COLD"
                         },{
                             "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
-                            "data": {
-                                "condition": "CONDITION_POISONED"
-                            }
+                            "condition": "CONDITION_POISONED"
                         }, {
                             "property": "ITEM_PROPERTY_SKILL_BONUS",
                             "amp": 3,
-                            "data": {
-                                "skill": "SKILL_STEALTH"
-                            }
+                            "skill": "SKILL_STEALTH"
                         }
                     ],
                     "material": "MATERIAL_UNKNOWN"
@@ -600,10 +587,11 @@ describe('obtention d\'information', function () {
         r.init()
         expect(r.assetManager.strings.weaponType['weapon-type-shortsword']).toBe('Epée courte')
     })
-    it('should retrieve 1d6 data when asking for shortsword damage output', function () {
+    it('should retrieve 1d4 data when asking for shortsword damage output', function () {
         const r = new Rules()
         r.init()
         expect(r.assetManager.data['weapon-type-shortsword'].damage).toBe('1d4')
+        r.assetManager.lang = 'en'
         console.log(r.assetManager.publicAssets)
     })
 })

@@ -3,7 +3,7 @@ const Rules = require('../src/Rules')
 const EffectProcessor = require('../src/EffectProcessor')
 const ItemProperties = require('../src/item-properties')
 const CONSTS = require('../src/consts')
-const { warmup } = require('../src/assets')
+const AssetManager = require('../src/AssetManager')
 const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
 
 const DISTANCE_MELEE = 4
@@ -12,7 +12,9 @@ const DISTANCE_RANGED = 30
 
 beforeAll(function () {
     Error.stackTraceLimit = Infinity
-    //warmup()
+    const am = new AssetManager()
+    am.init()
+    Creature.AssetManager = am
 })
 
 describe('basic instanciation', function () {

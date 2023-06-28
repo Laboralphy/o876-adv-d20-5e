@@ -26,9 +26,7 @@
         {
           "property": "ITEM_PROPERTY_DAMAGE_BONUS",
           "amp": "1d4",
-          "data": {
-            "type": "DAMAGE_TYPE_COLD"
-          }
+          "type": "DAMAGE_TYPE_COLD"
         }
       ]
     },
@@ -42,44 +40,32 @@
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
           "amp": 0,
-          "data": {
-            "type": "DAMAGE_TYPE_COLD"
-          }
+          "type": "DAMAGE_TYPE_COLD"
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
           "amp": 0,
-          "data": {
-            "type": "DAMAGE_TYPE_POISON"
-          }
+          "type": "DAMAGE_TYPE_POISON"
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
           "amp": 0,
-          "data": {
-            "type": "DAMAGE_TYPE_FIRE"
-          }
+          "type": "DAMAGE_TYPE_FIRE"
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
           "amp": 0,
-          "data": {
-            "type": "DAMAGE_TYPE_CRUSHING"
-          }
+          "type": "DAMAGE_TYPE_CRUSHING"
         },
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",
           "amp": 2,
-          "data": {
-            "skill": "SKILL_STEALTH"
-          }
+          "skill": "SKILL_STEALTH"
         },
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",
           "amp": 2,
-          "data": {
-            "skill": "SKILL_PERCEPTION"
-          }
+          "skill": "SKILL_PERCEPTION"
         }
       ]
     }

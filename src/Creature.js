@@ -5,10 +5,7 @@ const { v4: uuidv4 } = require('uuid')
 const Events = require('events')
 
 // Store
-const { assetManager } = require('./assets')
 const { aggregateModifiers } = require("./store/creature/common/aggregate-modifiers");
-
-let LAST_ID = 0
 
 class Creature {
     constructor () {
@@ -24,14 +21,28 @@ class Creature {
             handler: null,
             creature: null
         }
+        if (!Creature.AssetManager) {
+            throw new Error('AssetManager not declared')
+        }
+        if (!Creature.AssetManager.initialized) {
+            throw new Error('AssetManager not initialized')
+        }
         /**
          * @type {D20CreatureStore}
          * @private
          */
-        this._store = assetManager.createStore('creature')
+        this._store = Creature.AssetManager.createStore('creature')
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
         this._store.mutations.setId({ value: this._id })
+    }
+
+    static set AssetManager (value) {
+        Creature._AssetManager = value
+    }
+
+    static get AssetManager () {
+        return Creature._AssetManager
     }
 
     get entityType () {
@@ -423,7 +434,7 @@ class Creature {
 
     getSkillData (sSkill) {
         const sSkillDataProp = sSkill.toLowerCase().replace(/_/g, '-')
-        return assetManager.data[sSkillDataProp]
+        return Creature.AssetManager.data[sSkillDataProp]
     }
 
     /**
@@ -596,8 +607,8 @@ class Creature {
         const ammo = sg.isRangedWeaponProperlyLoaded ? sg.getEquippedItems[CONSTS.EQUIPMENT_SLOT_AMMO] : null
         const advantages = sg.getAdvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
         const disadvantages = sg.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
-        const bCriticalHit = dice >= assetManager.data.variables.ROLL_AUTO_SUCCESS
-        const bCriticalFail = dice <= assetManager.data.variables.ROLL_AUTO_FAIL
+        const bCriticalHit = dice >= Creature.AssetManager.data.variables.ROLL_AUTO_SUCCESS
+        const bCriticalFail = dice <= Creature.AssetManager.data.variables.ROLL_AUTO_FAIL
         const hit = bCriticalHit
             ? true
             : bCriticalFail
@@ -703,7 +714,7 @@ class Creature {
      */
     rollWeaponDamage ({ critical = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
-        const n = critical ? assetManager.data.variables.CRITICAL_FACTOR : 1
+        const n = critical ? Creature.AssetManager.data.variables.CRITICAL_FACTOR : 1
         let nDamage = 0
         const nRerollThreshold = this
             .aggregateModifiers(
@@ -789,7 +800,7 @@ class Creature {
         this._events.emit('action', {
             action: sAction
         })
-        const scriptFunction = assetManager.scripts[sAction]
+        const scriptFunction = Creature.AssetManager.scripts[sAction]
         if (!scriptFunction) {
             throw new Error('ERR_SCRIPT_ACTION_NOT_FOUND: ' + sAction)
         } else {
@@ -798,8 +809,8 @@ class Creature {
     }
 
     doFeatAction (sFeat) {
-        if (sFeat in assetManager.data) {
-            const oFeatData = assetManager.data[sFeat]
+        if (sFeat in Creature.AssetManager.data) {
+            const oFeatData = Creature.AssetManager.data[sFeat]
             if ('when' in oFeatData) {
                 if (!this.store.getters[oFeatData.when]) {
                     throw new Error('ERR_FEAT_ACTION_NOT_AVAILABLE')

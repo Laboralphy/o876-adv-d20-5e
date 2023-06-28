@@ -1,0 +1,24 @@
+{
+  "ammoType": {
+    "ammo-type-energy-cell-i": "Small energy cell",
+    "ammo-type-energy-cell-ii": "Large energy cell"
+  },
+  "armorType": {
+    "armor-type-flight-suit": "Light suit",
+    "armor-type-heavy-combat-armor": "Heavy combat armor",
+    "armor-type-light-combat-armor": "Light combat armor",
+    "armor-type-medium-combat-armor": "Medium combat armor"
+  },
+  "weaponType": {
+    "weapon-type-concussion-rod": "Concussion rod",
+    "weapon-type-beam-sword": "Beam sword",
+    "weapon-type-disrupt-pistol": "Disrupt pistol",
+    "weapon-type-laser-pistol": "Laser pistol",
+    "weapon-type-concussion-rifle": "Concussion rifle",
+    "weapon-type-cryonic-rifle": "Cryonic rifle",
+    "weapon-type-disrupt-rifle": "Disrupt rifle",
+    "weapon-type-laser-rifle": "Laser rifle",
+    "weapon-type-plasma-rifle": "Plasma rifle",
+    "weapon-type-rail-gun": "Rail gun"
+  }
+}
