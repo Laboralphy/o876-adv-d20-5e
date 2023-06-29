@@ -51,6 +51,7 @@
   "ITEM_PROPERTY_MATERIAL_VULNERABILITY": {
     "type": "material"
   },
+  "ITEM_PROPERTY_PHARMA": {},
   "ITEM_PROPERTY_REROLL": {
     "amp": "number",
     "when": "getter"

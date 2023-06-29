@@ -64,6 +64,18 @@
       "then": {
         "$ref": "./def-item-type-shield"
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "itemType": {
+            "const": "ITEM_TYPE_AMMO"
+          }
+        }
+      },
+      "then": {
+        "$ref": "./def-item-type-ammo"
+      }
     }
   ]
 }

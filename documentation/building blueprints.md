@@ -2,14 +2,19 @@
 
 ## Fichier public-assets
 
-Ce fichier est fait référence de nombreuse fois, il contient tous
+Ce fichier sera fait référence à plusieurs repris, il contient tous
 les renseignements nécessaires à la création de blueprints.
 
-il sera désigné sous le termes __public-assets__.
+Il sera désigné sous le termes __public-assets__.
+
+Il est disponible dans src/public-assets/public-assets.[lang].json (où [lang] peut être remplacé par "fr" ou "en")?
 
 ## Une arme
 
 ### Format du blueprint
+
+Un blueprint d'arme à cet aspect :
+
 ```json
 {
   "entityType": "ENTITY_TYPE_ITEM",
@@ -20,16 +25,20 @@ il sera désigné sous le termes __public-assets__.
 }
 ```
 
+Ce JSON est disponible dans __public-assets.templates.weapon__.
+
 #### entityType
-Constante valant toujours "ENTITY_TYPE_ITEM"
+Constante valant toujours "ENTITY_TYPE_ITEM".
 
 #### itemType
-Constante valant toujours "ITEM_TYPE_WEAPON"
+Constante valant toujours "ITEM_TYPE_WEAPON".
 
 #### weaponType
 Consulter l'objet __public-assets.strings.weaponType__, dont les clés représentent 
-les valeurs valides pour la propriété, tandis que les valeurs de cet objet sont des versions
-affichables pouvant aider à concevoir une liste déroulante dans un formulaire. 
+les valeurs valides pour la propriété weaponType (par exemple _weapon-type-dagger_), 
+tandis que les valeurs de cet objet sont des versions
+affichables pouvant aider à concevoir une liste déroulante dans un formulaire 
+(pour _weapon-type-dagger_ : "dague"). 
 
 #### material
 Type de matériau à sélectionner parmi les clés de l'objet __public-assets.strings.material__.
@@ -38,9 +47,6 @@ Type de matériau à sélectionner parmi les clés de l'objet __public-assets.st
 C'est une liste de définitions de propriété.
 Consulter __public-assets.strings.itemProperty__ pour déterminer les différentes item properties 
 disponible.
-
-__public-assets.data.itemProperty__
-
 
 ### Exemple de blueprint
 
@@ -129,6 +135,42 @@ cela donnera :
 }
 ```
 
+#### Aspect final du formulaire
+
+```
+Type d'entité
+[X] Objet         [ ] Créature
+
+Type d'objet :
+[ Arme ...................+]
+
+Type d'arme :
+[ Epée longue ............+] 
+
+Materiau :
+[ Adamantium .............+]
+
+Propriétés :
+
+Propriété 1 :                    [suppr.]
+   [ Bonus aux dégâts ........+]
+
+   amp: (amplitude)
+   [ 1d6+2.................... ]
+
+   type: (damageType)
+   [ Feu .....................+]
+
+Propriété 2 :                    [suppr.]
+   [ Bonus aux dégâts ........+]
+
+   amp: (amplitude)
+   [ 4........................ ]
+
+[ Ajouter propriété ]
+```
+
+
 #### Blueprint final :
 
 En combinant toutes les parties on obtient le blueprint complet :
@@ -151,3 +193,16 @@ En combinant toutes les parties on obtient le blueprint complet :
 ```
 
 Ce blueprint peut être intégré aux data du blueprint PLASMUD.
+
+
+## Colliers
+
+### Format du blueprint
+
+```json
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_NECKLACE",
+  
+}
+```

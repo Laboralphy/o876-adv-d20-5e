@@ -1,0 +1,11 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_NECKLACE",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_ABILITY_BONUS",
+      "ability": "ABILITY_CONSTITUTION",
+      "amp": 2
+    }
+  ]
+}

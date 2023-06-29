@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 28/06/2023 21:57:05 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 29/06/2023, 17:01:38 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.ITEM_PROPERTY_ABILITY_BONUS]: require('./ability-bonus'),
@@ -16,6 +16,7 @@ module.exports = {
   [CONSTS.ITEM_PROPERTY_ENHANCEMENT]: require('./enhancement'),
   [CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.ITEM_PROPERTY_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),
+  [CONSTS.ITEM_PROPERTY_PHARMA]: require('./pharma'),
   [CONSTS.ITEM_PROPERTY_REROLL]: require('./reroll'),
   [CONSTS.ITEM_PROPERTY_SAVING_THROW_BONUS]: require('./saving-throw-bonus'),
   [CONSTS.ITEM_PROPERTY_SKILL_BONUS]: require('./skill-bonus')

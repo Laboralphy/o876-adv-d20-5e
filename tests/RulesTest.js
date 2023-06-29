@@ -592,6 +592,34 @@ describe('obtention d\'information', function () {
         r.init()
         expect(r.assetManager.data['weapon-type-shortsword'].damage).toBe('1d4')
         r.assetManager.lang = 'en'
-        console.log(r.assetManager.publicAssets)
+        expect(r.assetManager.publicAssets.strings.weaponType['weapon-type-dagger']).toBe('Dagger')
+        r.assetManager.lang = 'fr'
+        expect(r.assetManager.publicAssets.strings.weaponType['weapon-type-dagger']).toBe('Dague')
+    })
+})
+
+describe('effect pharma', function () {
+    it('should heal 100% more when having pharma effect', function () {
+        const r = new Rules()
+        r.init()
+        const soldier = r.createEntity('c-soldier')
+        expect(soldier.store.getters.getHitPoints).toBe(44)
+        soldier.store.mutations.damage({ amount: 20 })
+        expect(soldier.store.getters.getHitPoints).toBe(24)
+        soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, 2))
+        expect(soldier.store.getters.getHitPoints).toBe(26)
+        const m1 = soldier.store.getters.getHealMitigation
+        expect(m1).toEqual({
+            pharma: false,
+            factor: 1
+        })
+        soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_PHARMA), 10)
+        const m2 = soldier.store.getters.getHealMitigation
+        expect(m2).toEqual({
+            pharma: true,
+            factor: 2
+        })
+        soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, 5))
+        expect(soldier.store.getters.getHitPoints).toBe(36)
     })
 })

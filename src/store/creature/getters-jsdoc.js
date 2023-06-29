@@ -34,6 +34,7 @@
  * @property getEquippedItems {{[slot: string]: D20Item}}
  * @property getExhaustionLevel {number}
  * @property getFeatReport {FeatReport[]}
+ * @property getHealMitigation {{pharma: boolean, factor: number}}
  * @property getHitPoints {number}
  * @property getId {number}
  * @property getLevel {number}
