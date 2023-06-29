@@ -178,7 +178,13 @@ class AssetManager {
         }
         return {
             strings: deepClone(this.strings),
-            data
+            data,
+            templates: {
+                ammo: require('./templates/ammo.json'),
+                armor: require('./templates/armor.json'),
+                shield: require('./templates/shield.json'),
+                weapon: require('./templates/weapon.json'),
+            }
         }
     }
 

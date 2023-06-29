@@ -14,7 +14,7 @@ node ./bin/generate-index g > ./src/store/creature/getters-jsdoc.js
 echo "generate ./src/templates/item-properties.json"
 node ./bin/generate-index ipdoc > ./src/templates/item-properties.json
 echo "generate ./src/templates/public-assets.fr.json"
-node ./bin/generate-public-assets fr > ./src/templates/public-assets.fr.json
+node ./bin/generate-public-assets fr > ./src/public-assets/public-assets.fr.json
 echo "generate ./src/templates/public-assets.en.json"
-node ./bin/generate-public-assets en > ./src/templates/public-assets.en.json
+node ./bin/generate-public-assets en > ./src/public-assets/public-assets.en.json
 echo "done"
