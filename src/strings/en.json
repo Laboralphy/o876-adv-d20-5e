@@ -156,6 +156,7 @@
     "ITEM_PROPERTY_ENHANCEMENT": "Enhancement",
     "ITEM_PROPERTY_MASSIVE_CRITICAL": "Massive critical",
     "ITEM_PROPERTY_MATERIAL_VULNERABILITY": "Material vulnerability",
+    "ITEM_PROPERTY_PHARMA": "Augmented received healing",
     "ITEM_PROPERTY_REROLL": "Reroll",
     "ITEM_PROPERTY_SAVING_THROW_BONUS": "Saving throw bonus",
     "ITEM_PROPERTY_SKILL_BONUS": "Skill bonus"

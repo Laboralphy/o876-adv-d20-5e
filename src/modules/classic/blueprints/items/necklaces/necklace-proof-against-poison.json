@@ -1,0 +1,14 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_NECKLACE",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+      "type": "DAMAGE_TYPE_POISON"
+    },
+    {
+      "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+      "condition": "CONDITION_POISONED"
+    }
+  ]
+}
