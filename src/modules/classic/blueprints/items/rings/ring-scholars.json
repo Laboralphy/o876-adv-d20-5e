@@ -1,0 +1,21 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_RING",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_INSIGHT",
+      "amp": 5
+    },
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_HISTORY",
+      "amp": 5
+    },
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_RELIGION",
+      "amp": 5
+    }
+  ]
+}

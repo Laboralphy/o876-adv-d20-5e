@@ -91,6 +91,14 @@ class EntityFactory {
         return this.mixData(oBlueprint, oAmmoData, [CONSTS.EQUIPMENT_SLOT_AMMO])
     }
 
+    createItemNecklace (oBlueprint) {
+        const oEqItemData = this._am.data[oBlueprint.ammoType]
+        if (!oAmmoData) {
+            throw new Error('This ammo blueprint is undefined : ' + oBlueprint.ammoType)
+        }
+        return this.mixData(oBlueprint, oAmmoData, [CONSTS.EQUIPMENT_SLOT_AMMO])
+    }
+
     /**
      * creation d'un item
      * @param oBlueprint
@@ -117,6 +125,19 @@ class EntityFactory {
 
             case CONSTS.ITEM_TYPE_AMMO: {
                 return this.createItemAmmo(oBlueprint)
+            }
+
+            case CONSTS.ITEM_TYPE_HELM:
+            case CONSTS.ITEM_TYPE_NECKLACE:
+            case CONSTS.ITEM_TYPE_CLOAK:
+            case CONSTS.ITEM_TYPE_BRACER:
+            case CONSTS.ITEM_TYPE_GLOVES:
+            case CONSTS.ITEM_TYPE_RING:
+            case CONSTS.ITEM_TYPE_BELT:
+            case CONSTS.ITEM_TYPE_BOOTS:
+            case CONSTS.ITEM_TYPE_TORCH: {
+                const { slots } = this.assetManager.data['item-types'][oBlueprint.itemType]
+                return this.mixData(oBlueprint, {}, slots)
             }
 
             default: {

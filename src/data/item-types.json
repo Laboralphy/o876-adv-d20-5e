@@ -1,0 +1,107 @@
+{
+  "ITEM_TYPE_NATURAL_ARMOR": {
+    "slots": ["EQUIPMENT_SLOT_NATURAL_ARMOR"]
+  },
+  "ITEM_TYPE_NATURAL_WEAPON": {
+    "slots": ["EQUIPMENT_SLOT_NATURAL_WEAPON"]
+  },
+  "ITEM_TYPE_WEAPON": {
+    "slots": ["EQUIPMENT_SLOT_WEAPON_MELEE", "EQUIPMENT_SLOT_WEAPON_RANGED"]
+  },
+  "ITEM_TYPE_AMMO": {
+    "slots": ["EQUIPMENT_SLOT_AMMO"]
+  },
+  "ITEM_TYPE_ARMOR": {
+    "slots": ["EQUIPMENT_SLOT_CHEST"]
+  },
+  "ITEM_TYPE_SHIELD": {
+    "slots": ["EQUIPMENT_SLOT_SHIELD"]
+  },
+  "ITEM_TYPE_HELM": {
+    "slots": ["EQUIPMENT_SLOT_HEAD"]
+  },
+  "ITEM_TYPE_NECKLACE": {
+    "slots": ["EQUIPMENT_SLOT_NECK"]
+  },
+  "ITEM_TYPE_CLOAK": {
+    "slots": ["EQUIPMENT_SLOT_BACK"]
+  },
+  "ITEM_TYPE_BRACER": {
+    "slots": ["EQUIPMENT_SLOT_ARMS"]
+  },
+  "ITEM_TYPE_GLOVES": {
+    "slots": ["EQUIPMENT_SLOT_ARMS"]
+  },
+  "ITEM_TYPE_RING": {
+    "slots": ["EQUIPMENT_SLOT_LEFT_FINGER", "EQUIPMENT_SLOT_RIGHT_FINGER"]
+  },
+  "ITEM_TYPE_BELT": {
+    "slots": ["EQUIPMENT_SLOT_WAIST"]
+  },
+  "ITEM_TYPE_BOOTS": {
+    "slots": ["EQUIPMENT_SLOT_FEET"]
+  },
+  "ITEM_TYPE_TORCH": {
+    "slots": ["EQUIPMENT_SLOT_SHIELD"]
+  },
+  "ITEM_TYPE_HEALERSKIT": {
+    "slots": []
+  },
+  "ITEM_TYPE_MAGICROD": {
+    "slots": []
+  },
+  "ITEM_TYPE_MAGICWAND": {
+    "slots": []
+  },
+  "ITEM_TYPE_POTION": {
+    "slots": []
+  },
+  "ITEM_TYPE_THIEVESTOOLS": {
+    "slots": []
+  },
+  "ITEM_TYPE_DISARMKIT": {
+    "slots": []
+  },
+  "ITEM_TYPE_KEY": {
+    "slots": []
+  },
+  "ITEM_TYPE_BOX": {
+    "slots": []
+  },
+  "ITEM_TYPE_BAG": {
+    "slots": []
+  },
+  "ITEM_TYPE_BOOK": {
+    "slots": []
+  },
+  "ITEM_TYPE_SCROLL": {
+    "slots": []
+  },
+  "ITEM_TYPE_GOLD": {
+    "slots": []
+  },
+  "ITEM_TYPE_GEM": {
+    "slots": []
+  },
+  "ITEM_TYPE_GRENADE": {
+    "slots": []
+  },
+  "ITEM_TYPE_ENCAMPMENT": {
+    "slots": []
+  },
+  "ITEM_TYPE_CREATUREITEM": {
+    "slots": []
+  },
+  "ITEM_TYPE_CRAFTMATERIAL": {
+    "slots": []
+  },
+  "ITEM_TYPE_MISCSMALL": {
+    "slots": []
+  },
+  "ITEM_TYPE_MISCMEDIUM": {
+    "slots": []
+  },
+  "ITEM_TYPE_MISCLARGE": {
+    "slots": []
+  }
+}

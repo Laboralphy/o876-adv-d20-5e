@@ -1,0 +1,31 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_NECKLACE",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_DISARM_TRAP",
+      "amp": 2
+    },
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_PERSUASION",
+      "amp": 2
+    },
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_PERCEPTION",
+      "amp": 2
+    },
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_UNLOCK",
+      "amp": 2
+    },
+    {
+      "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+      "type": "THREAT_TYPE_SPELL",
+      "amp": 2
+    }
+  ]
+}

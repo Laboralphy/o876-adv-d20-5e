@@ -162,7 +162,7 @@ Propriété 1 :                    [suppr.]
    [ Feu .....................+]
 
 Propriété 2 :                    [suppr.]
-   [ Bonus aux dégâts ........+]
+   [ Altération ..............+]
 
    amp: (amplitude)
    [ 4........................ ]

@@ -158,6 +158,7 @@
       "ITEM_PROPERTY_MASSIVE_CRITICAL": "Critiques massifs",
       "ITEM_PROPERTY_MATERIAL_VULNERABILITY": "Vulnérabilité au matériau",
       "ITEM_PROPERTY_PHARMA": "Soins reçus augmentés",
+      "ITEM_PROPERTY_REGEN": "Régénération",
       "ITEM_PROPERTY_REROLL": "Relancer le dé",
       "ITEM_PROPERTY_SAVING_THROW_BONUS": "Bonus au jet de sauvegarde",
       "ITEM_PROPERTY_SKILL_BONUS": "Bonus de compétence"
@@ -1234,9 +1235,12 @@
         "type": "material"
       },
       "ITEM_PROPERTY_PHARMA": {},
+      "ITEM_PROPERTY_REGEN": {
+        "amp": "number"
+      },
       "ITEM_PROPERTY_REROLL": {
         "amp": "number",
-        "when": "getter"
+        "when": "rollType"
       },
       "ITEM_PROPERTY_SAVING_THROW_BONUS": {
         "amp": "number",

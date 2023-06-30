@@ -1234,9 +1234,12 @@
         "type": "material"
       },
       "ITEM_PROPERTY_PHARMA": {},
+      "ITEM_PROPERTY_REGEN": {
+        "amp": "number"
+      },
       "ITEM_PROPERTY_REROLL": {
         "amp": "number",
-        "when": "getter"
+        "when": "rollType"
       },
       "ITEM_PROPERTY_SAVING_THROW_BONUS": {
         "amp": "number",
