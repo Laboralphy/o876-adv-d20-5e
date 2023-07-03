@@ -9,5 +9,5 @@ rm -r "$SCRIPT_DIR"/generated-blueprints/*.json
 echo generating blueprints...
 node "$SCRIPT_DIR/generate-monster-blueprints.js"
 echo copying blueprint...
-cp "$SCRIPT_DIR"/generated-blueprints/*.json "$SCRIPT_DIR"/../src/modules/classic/blueprints/creatures
+cp "$SCRIPT_DIR"/generated-blueprints/*.json "$SCRIPT_DIR"/../src/modules/classic/blueprints/creatures/monsters
 echo done.

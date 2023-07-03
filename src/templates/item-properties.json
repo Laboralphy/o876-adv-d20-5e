@@ -7,6 +7,8 @@
     "amp": "number"
   },
   "ITEM_PROPERTY_ADVANTAGE": {
+    "rollType": "rollType",
+    "abilitiy": "ability",
     "rollTypes": "rollType[]",
     "abilities": "ability[]",
     "origin": "string"
@@ -59,7 +61,8 @@
     "amp": "number"
   },
   "ITEM_PROPERTY_REGEN": {
-    "amp": "number"
+    "amp": "number",
+    "vulnerabilities": "damageType[]"
   },
   "ITEM_PROPERTY_REROLL": {
     "amp": "number",

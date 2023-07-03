@@ -39,6 +39,7 @@ function mutate ({ effect, target }) {
         effect.data.resistedAmount = amp - appliedAmount
         effect.amp = amp = effect.data.appliedAmount = appliedAmount
     }
+    target.store.mutations.addRecentDamageType({ amount: effect.amp, type: sType })
     target.store.mutations.damage({ amount: effect.amp })
 }
 

@@ -1,14 +1,14 @@
 {
   "entityType": "ENTITY_TYPE_ACTOR",
   "class": "monster",
-  "level": 5,
+  "level": 6,
   "abilities": {
     "strength": 5,
-    "dexterity": 14,
+    "dexterity": 11,
     "constitution": 10,
-    "intelligence": 9,
-    "wisdom": 11,
-    "charisma": 10
+    "intelligence": 11,
+    "wisdom": 10,
+    "charisma": 12
   },
   "size": "small",
   "specie": "elemental",
@@ -18,48 +18,44 @@
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_NATURAL_WEAPON",
       "weaponType": "weapon-type-unarmed",
-      "ref": "nwpn-c-dust-mephit",
+      "ref": "nwpn-c-mephit-steam",
       "damage": "1d4",
       "damageType": "DAMAGE_TYPE_SLASHING",
       "material": "MATERIAL_UNKNOWN",
-      "properties": []
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_BONUS",
+          "amp": "1d4",
+          "type": "DAMAGE_TYPE_FIRE"
+        }
+      ]
     },
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_NATURAL_ARMOR",
       "armorType": "armor-type-natural",
       "material": "MATERIAL_UNKNOWN",
-      "ref": "narm-c-dust-mephit",
+      "ref": "narm-c-mephit-steam",
       "properties": [
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_FIRE"
+        },
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
           "amp": 0,
           "type": "DAMAGE_TYPE_POISON"
         },
         {
-          "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
-          "amp": 0,
-          "type": "DAMAGE_TYPE_FIRE"
-        },
-        {
           "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
           "amp": 0,
           "condition": "CONDITION_POISONED"
-        },
-        {
-          "property": "ITEM_PROPERTY_SKILL_BONUS",
-          "amp": 2,
-          "skill": "SKILL_STEALTH"
-        },
-        {
-          "property": "ITEM_PROPERTY_SKILL_BONUS",
-          "amp": 2,
-          "skill": "SKILL_PERCEPTION"
         }
       ]
     }
   ],
   "actions": [
-    "sla-blinding-breath"
+    "sla-steam-breath"
   ]
 }

@@ -623,3 +623,26 @@ describe('effect pharma', function () {
         expect(soldier.store.getters.getHitPoints).toBe(36)
     })
 })
+
+describe('Troll regeneration', function () {
+    it('should regain 10 hp when wounded by non acid weapon', function () {
+        const r = new Rules()
+        r.init()
+        const troll = r.createEntity('c-troll')
+        expect(troll.store.getters.getHitPoints).toBe(92)
+        troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(troll.store.getters.getHitPoints).toBe(72)
+        troll.processEffects()
+        expect(troll.store.getters.getHitPoints).toBe(82)
+
+        troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_FIRE))
+        expect(troll.store.getters.getHitPoints).toBe(62)
+        troll.processEffects()
+        expect(troll.store.getters.getHitPoints).toBe(62)
+
+        troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(troll.store.getters.getHitPoints).toBe(42)
+        troll.processEffects()
+        expect(troll.store.getters.getHitPoints).toBe(52)
+    })
+})

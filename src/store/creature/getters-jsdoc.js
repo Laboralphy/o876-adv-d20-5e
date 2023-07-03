@@ -47,6 +47,7 @@
  * @property getOffensiveSlot {string}
  * @property getProficiencies {string[]}
  * @property getProficiencyBonus {number}
+ * @property getRecentDamageTypes {{ type: string, amount: number }}
  * @property getSavingThrowBonus {{}}
  * @property getSelectedWeapon {D20Item}
  * @property getSelectedWeaponCriticalThreat {number}

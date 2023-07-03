@@ -418,6 +418,19 @@ class Creature {
         return eEffect
     }
 
+    processRegenEffects () {
+        const rdt = new Set(Object.keys(this.store.getters.getRecentDamageTypes))
+        const ag = this.aggregateModifiers([
+            CONSTS.ITEM_PROPERTY_REGEN
+        ], {
+            propFilter: prop => !prop.data.vulnerabilities.some(dt => rdt.has(dt))
+        })
+        // Health Regeneration
+        if (ag.sum > 0) {
+            this.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, ag.sum))
+        }
+    }
+
     /**
      * Dans un contexte comme un MUD, les combats s'effectuent en temps réel,
      * Un round s'effectue en 6 seconde par exemple.
@@ -425,19 +438,8 @@ class Creature {
      */
     processEffects () {
         this._effectProcessor.processCreatureEffects(this)
-        // Process item properties over time
-        const ag = this.aggregateModifiers([
-            CONSTS.ITEM_PROPERTY_REGEN
-        ], {
-            effectSorter: effect => effect.type,
-            propSorter: prop => prop.property
-        })
-        const ags = ag.sorter
-
-        // Health Regeneration
-        if (CONSTS.ITEM_PROPERTY_REGEN in ags) {
-            this.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, ags[CONSTS.ITEM_PROPERTY_REGEN].sum))
-        }
+        this.processRegenEffects()
+        this.store.mutations.clearRecentDamageTypes()
     }
 
     /*

@@ -49,7 +49,10 @@ function createContext () {
      * @param obj
      */
     function kv (obj) {
-        obj[oContext._prevValue] = oContext.value
+        const sTrimmedValue = oContext.value.trim()
+        const c0 = sTrimmedValue.charAt(0)
+        const sSigns = '[{"\''
+        obj[oContext._prevValue] = sSigns.includes(c0) ? JSON.parse(sTrimmedValue) : sTrimmedValue
     }
 
     function last (arr) {
@@ -96,6 +99,9 @@ function run (aRow, aScripts, oContext) {
 }
 
 function searchConst (sSearch) {
+    if (Array.isArray(sSearch)) {
+        return sSearch.map(s => searchConst(s))
+    }
     const sSearchUpper = '_' + sSearch.replace(/-/g, '_').toUpperCase()
     const sFound = Object.values(CONSTS).find(s => s.endsWith(sSearchUpper))
     return sFound === undefined ? sSearch : sFound
@@ -138,7 +144,7 @@ function makeBlueprint (data) {
                 ? data.weaponProps.map(wp => ({
                     property: 'ITEM_PROPERTY_' + wp.type.replace(/-/g, '_').toUpperCase(),
                     amp: wp.amp || 0,
-                    data: searchConstObj(wp.data)
+                    ...searchConstObj(wp.data)
                 }))
                 : []
         })
@@ -154,7 +160,7 @@ function makeBlueprint (data) {
                 ? data.armorProps.map(ap => ({
                     property: 'ITEM_PROPERTY_' + ap.property.replace(/-/g, '_').toUpperCase(),
                     amp: ap.amp || 0,
-                    data: searchConstObj(ap.data)
+                    ...searchConstObj(ap.data)
                 }))
                 : []
         })

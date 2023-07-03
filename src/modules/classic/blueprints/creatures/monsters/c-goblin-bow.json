@@ -15,13 +15,15 @@
   "speed": 30,
   "equipment": [
     "wpn-scimitar",
-    "arm-shield",
+    "wpn-shortbow",
     "arm-leather",
+    "ammo-arrow",
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_NATURAL_ARMOR",
       "armorType": "armor-type-natural",
       "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-goblin-bow",
       "properties": [
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",

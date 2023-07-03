@@ -157,7 +157,9 @@
       "ITEM_PROPERTY_ENHANCEMENT": "Altération",
       "ITEM_PROPERTY_MASSIVE_CRITICAL": "Critiques massifs",
       "ITEM_PROPERTY_MATERIAL_VULNERABILITY": "Vulnérabilité au matériau",
+      "ITEM_PROPERTY_MELLE_ATTACK_BONUS": "Bonus au jet d'attaque au contact",
       "ITEM_PROPERTY_PHARMA": "Soins reçus augmentés",
+      "ITEM_PROPERTY_RANGED_ATTACK_BONUS": "Bonus au jet d'attaque à distance",
       "ITEM_PROPERTY_REGEN": "Régénération",
       "ITEM_PROPERTY_REROLL": "Relancer le dé",
       "ITEM_PROPERTY_SAVING_THROW_BONUS": "Bonus au jet de sauvegarde",
@@ -1190,6 +1192,8 @@
         "amp": "number"
       },
       "ITEM_PROPERTY_ADVANTAGE": {
+        "rollType": "rollType",
+        "abilitiy": "ability",
         "rollTypes": "rollType[]",
         "abilities": "ability[]",
         "origin": "string"
@@ -1242,7 +1246,8 @@
         "amp": "number"
       },
       "ITEM_PROPERTY_REGEN": {
-        "amp": "number"
+        "amp": "number",
+        "vulnerabilities": "damageType[]"
       },
       "ITEM_PROPERTY_REROLL": {
         "amp": "number",
