@@ -1,0 +1,11 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_RING",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_ABILITY_BONUS",
+      "ability": "ABILITY_STRENGTH",
+      "amp": 4
+    }
+  ]
+}

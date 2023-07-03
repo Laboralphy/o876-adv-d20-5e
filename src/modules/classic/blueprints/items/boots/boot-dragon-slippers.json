@@ -1,0 +1,24 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_BOOTS",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_ABILITY_BONUS",
+      "ability": "ABILITY_DEXTERITY",
+      "amp": 2
+    },
+    {
+      "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+      "condition": "CONDITION_FEAR"
+    },
+    {
+      "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+      "condition": "CONDITION_PRONE"
+    },
+    {
+      "property": "ITEM_PROPERTY_ADVANTAGE",
+      "rollTypes": ["ROLL_TYPE_SAVE"],
+      "abilities": ["THREAT_SPELL"]
+    }
+  ]
+}

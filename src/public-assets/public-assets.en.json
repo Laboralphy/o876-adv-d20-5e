@@ -1233,7 +1233,13 @@
       "ITEM_PROPERTY_MATERIAL_VULNERABILITY": {
         "type": "material"
       },
+      "ITEM_PROPERTY_MELEE_ATTACK_BONUS": {
+        "amp": "number"
+      },
       "ITEM_PROPERTY_PHARMA": {},
+      "ITEM_PROPERTY_RANGED_ATTACK_BONUS": {
+        "amp": "number"
+      },
       "ITEM_PROPERTY_REGEN": {
         "amp": "number"
       },

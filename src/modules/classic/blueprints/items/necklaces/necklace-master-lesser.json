@@ -23,9 +23,9 @@
       "amp": 2
     },
     {
-      "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
-      "type": "THREAT_TYPE_SPELL",
-      "amp": 2
+      "property": "ITEM_PROPERTY_ADVANTAGE",
+      "rollTypes": ["ROLL_TYPE_SAVE"],
+      "abilities": ["THREAT_SPELL"]
     }
   ]
 }

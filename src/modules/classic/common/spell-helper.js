@@ -4,13 +4,13 @@ const EffectProcessor = require('../../../EffectProcessor')
 /**
  * Pattern de sortilège.
  * Applique une condition à la cible si celle-ci rate son jet de sauvegarde
- * @param caster
- * @param target
- * @param condition {string}
- * @param duration {string}
- * @param savingAbility {string}
- * @param [threats] {string[]}
- * @param dc
+ * @param caster {Creature} creature qui lance le sort
+ * @param target {Creature} creature ciblée par le sort
+ * @param condition {string} condition appliquée si le sort réussi
+ * @param duration {string} durée de la condition
+ * @param savingAbility {string} caractéristique utilisée pour le jet de sauvegarde
+ * @param [threats] {string[]} liste optionnel des menace qui peuvent influencer le jet de sauvegarde
+ * @param dc {number} difficulté du jet de sauvegarde
  */
 function conditionAttack ({
                               caster,
@@ -34,11 +34,11 @@ function conditionAttack ({
  * Effectue une attaque d'évocation typique : une attaque qui touche automatiquement la cible
  * Avec possibilité de jet de sauvegarde basé sur la dextérité
  * Si le jet de sauvegarde échoue, la totalité des dégâts spécifés est appliquée sinon, la moitié seulement est appliquée
- * @param caster
- * @param target
- * @param damage
- * @param sType
- * @param dc
+ * @param caster {Creature} creature qui lance le sort
+ * @param target {Creature} creature ciblée par le sort
+ * @param damage {number} quantité de dégât
+ * @param sType {string} type de dégâts (DAMAGE_TYPE_*)
+ * @param dc {number} difficulté du jet de sauvegarde
  */
 function evocationAttack ({
                               caster,

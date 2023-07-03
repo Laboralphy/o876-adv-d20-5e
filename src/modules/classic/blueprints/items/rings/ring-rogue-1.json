@@ -1,0 +1,21 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_RING",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_ABILITY_BONUS",
+      "ability": "ABILITY_DEXTERITY",
+      "amp": 1
+    },
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_UNLOCK",
+      "amp": 1
+    },
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_DISARM_TRAP",
+      "amp": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_GLOVES",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_DAMAGE_REDUCTION",
+      "amp": 2,
+      "type": "DAMAGE_TYPE_COLD"
+    }
+  ]
+}
