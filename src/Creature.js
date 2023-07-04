@@ -160,9 +160,10 @@ class Creature {
      * Inclue les effets appliqués à la créature qui peuvent influencer les dégats
      * Inclue les effets et propriété de l'arme
      * Inclue le bonus de caractéristique offensive
+     * @param critical {boolean}
      * @return {Object<string, number>}
      */
-    getDamageBonus (bCritical = false) {
+    getDamageBonus ({ critical = false } = {}) {
         // Effect & Props damageBonus
         // Effect enhancement
         // offensive ability modifier
@@ -201,7 +202,7 @@ class Creature {
         // Les bonus fixes
         updateResult(am.sorter)
         // les bonus randoms
-        if (bCritical) {
+        if (critical) {
             const amCrit = this.aggregateModifiers([
                 CONSTS.ITEM_PROPERTY_DAMAGE_BONUS,
                 CONSTS.ITEM_PROPERTY_ENHANCEMENT,
@@ -614,12 +615,13 @@ class Creature {
      */
     rollAttack () {
         const sg = this.store.getters
+        const oTarget = this.getTarget()
         const bonus = this.getAttackBonus()
         const sOffensiveAbility = this.store.getters.getOffensiveAbility
         const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility).value
-        const nCritThreat = sg.getSelectedWeaponCriticalThreat
-        const critical = dice >= nCritThreat
-        const ac = this.getTarget().store.getters.getArmorClass
+        const bTargetParalyzed = oTarget.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)
+        const critical = dice >= sg.getSelectedWeaponCriticalThreat
+        const ac = oTarget.store.getters.getArmorClass
         const roll = dice + bonus
         const distance = sg.getTargetDistance
         const range = sg.getSelectedWeaponRange
@@ -639,7 +641,7 @@ class Creature {
         return {
             ac,
             bonus,
-            critical,
+            critical: critical || (hit && bTargetParalyzed),
             deflector,
             dice,
             distance,
@@ -729,19 +731,19 @@ class Creature {
 
     /**
      * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
-     * La valeur renvoyer ne fait pas intervenir des bonus liés aux effets de la créature ou à ses caractéristiques
+     * La valeur renvoyée ne fait pas intervenir des bonus liés aux effets de la créature ou à ses caractéristiques
      * @param critical {boolean} si true alors le coup est critique et tous les jets de dé doivent être doublés
+     * @param dice {Dice} dé à utiliser
+     * return {Object<string, number>}
      */
     rollWeaponDamage ({ critical = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
-        const sSize = this.store.getters.getSize
-        const n = critical ? Creature.AssetManager.data.variables.CRITICAL_FACTOR : 1
+        const nExtraDamageDice = this.store.getters.isWieldingHeavyMeleeWeapon
+            ? this.store.getters.getSizeProperties.extraMeleeDamageDice
+            : 0
+        const n = (critical ? Creature.AssetManager.data.variables.CRITICAL_FACTOR : 1) + nExtraDamageDice
         let nDamage = 0
-        const nRerollThreshold = this
-            .aggregateModifiers(
-                [CONSTS.EFFECT_REROLL],
-                { effectFilter: f => f.data.when === CONSTS.ROLL_TYPE_DAMAGE }
-            ).max
+        const nRerollThreshold = this.store.getters.getDamageRerollThreshold
         let bRerolled = false
         for (let i = 0; i < n; ++i) {
             let nRoll = this.roll(oWeapon.damage)
@@ -751,7 +753,7 @@ class Creature {
             }
             nDamage += nRoll
         }
-        const oDamageBonus = this.getDamageBonus(critical)
+        const oDamageBonus = this.getDamageBonus({ critical })
         if (!(oWeapon.damageType in oDamageBonus)) {
             oDamageBonus[oWeapon.damageType] = Math.max(1, nDamage)
         } else {
@@ -918,6 +920,24 @@ class Creature {
             oAtk.damages.resisted = oResisted
             oAtk.damages.types = oDamages
             oAtk.damages.amount = amount
+
+            // application d'effets on hit
+            if (amount > 0) {
+                const aApplicableConditions = this.store.getters.getSelectedWeaponApplicableConditions
+                if (aApplicableConditions.length > 0) {
+                    const aNewlyAppliedConditions = new Set()
+                    const aConditions = oTarget.store.getters.getConditions
+                    aApplicableConditions.forEach(({ condition, dc, ability, duration }) => {
+                        if (!aNewlyAppliedConditions.has(condition) && !aConditions.has(condition)) {
+                            const { success } = oTarget.rollSavingThrow(ability, [], dc)
+                            if (!success) {
+                                oTarget.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition), duration, this)
+                                aNewlyAppliedConditions.add(condition)
+                            }
+                        }
+                    })
+                }
+            }
         }
         this._events.emit('attack', { outcome: oAtk })
         oTarget.notifyAttack(this, oAtk)

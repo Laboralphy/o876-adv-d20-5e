@@ -35,7 +35,7 @@ module.exports = (state, getters, externals) => {
     const CREATURE_IS_SMALL = getters.getSizeProperties.value < externals.data['creature-sizes'][CONSTS.CREATURE_SIZE_MEDIUM].value
 
     // L'arme équipée est trop lourde pour le personnage
-    const HEAVY_WEAPON = getters.isWeildingNonLightWeapon && CREATURE_IS_SMALL
+    const HEAVY_WEAPON = getters.isWieldingNonLightWeapon && CREATURE_IS_SMALL
 
     // La créature subit la condition "poison"
     const POISONED = myConditions.has(CONSTS.CONDITION_POISONED)
@@ -62,7 +62,7 @@ module.exports = (state, getters, externals) => {
     // La créature est dans une pièce obscure sans capacité de vision nocturne
 
     // La cible de la créature est trop proche lorsque l'on possède une arme à distance
-    const TARGET_TOO_CLOSE = getters.isWeildingRangedWeapon && getters.isTargetInMeleeWeaponRange
+    const TARGET_TOO_CLOSE = getters.isWieldingRangedWeapon && getters.isTargetInMeleeWeaponRange
 
     // La cible de la créature est à terre mais, loin... l'attaquer avec une arme à distance constitue un désavantage.
     const TARGET_PRONE_AND_FAR = targetConditions.has(CONSTS.CONDITION_PRONE) && !getters.isTargetInMeleeWeaponRange

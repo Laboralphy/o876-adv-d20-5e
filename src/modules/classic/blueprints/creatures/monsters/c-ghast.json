@@ -1,0 +1,38 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 8,
+  "abilities": {
+    "strength": 16,
+    "dexterity": 17,
+    "constitution": 10,
+    "intelligence": 11,
+    "wisdom": 10,
+    "charisma": 8
+  },
+  "size": "medium",
+  "specie": "undead",
+  "speed": 30,
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-c-ghast",
+      "damage": "2d6",
+      "damageType": "DAMAGE_TYPE_SLASHING",
+      "material": "MATERIAL_UNKNOWN",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_ON_HIT_APPLY_CONDITION",
+          "amp": 0,
+          "condition": "CONDITION_PARALYZED",
+          "dc": 10,
+          "ability": "ABILITY_CONSTITUTION",
+          "duration": 2
+        }
+      ]
+    }
+  ],
+  "actions": []
+}

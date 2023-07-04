@@ -567,7 +567,8 @@
         "damageType": "DAMAGE_TYPE_CRUSHING",
         "weight": 10,
         "attributes": [
-          "WEAPON_ATTRIBUTE_TWO_HANDED"
+          "WEAPON_ATTRIBUTE_TWO_HANDED",
+          "WEAPON_ATTRIBUTE_HEAVY"
         ]
       },
       "weapon-type-handaxe": {
@@ -1237,6 +1238,13 @@
       },
       "ITEM_PROPERTY_MELEE_ATTACK_BONUS": {
         "amp": "number"
+      },
+      "ITEM_PROPERTY_ON_HIT_APPLY_CONDITION": {
+        "condition": "condition",
+        "dc": "number",
+        "ability": "ability",
+        "duration": "number",
+        "chance": "number"
       },
       "ITEM_PROPERTY_PHARMA": {},
       "ITEM_PROPERTY_RANGED_ATTACK_BONUS": {

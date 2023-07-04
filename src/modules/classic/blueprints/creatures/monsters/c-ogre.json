@@ -1,0 +1,21 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 7,
+  "abilities": {
+    "strength": 19,
+    "dexterity": 18,
+    "constitution": 16,
+    "intelligence": 5,
+    "wisdom": 7,
+    "charisma": 7
+  },
+  "size": "large",
+  "specie": "giant",
+  "speed": 40,
+  "equipment": [
+    "wpn-greatclub",
+    "arm-hide"
+  ],
+  "actions": []
+}

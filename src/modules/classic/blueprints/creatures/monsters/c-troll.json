@@ -19,7 +19,7 @@
       "itemType": "ITEM_TYPE_NATURAL_WEAPON",
       "weaponType": "weapon-type-unarmed",
       "ref": "nwpn-c-troll",
-      "damage": "2d6+4",
+      "damage": "2d6",
       "damageType": "DAMAGE_TYPE_SLASHING",
       "material": "MATERIAL_UNKNOWN",
       "properties": []

@@ -49,6 +49,10 @@ function createContext () {
      * @param obj
      */
     function kv (obj) {
+        if (typeof oContext.value === "number") {
+            obj[oContext._prevValue] = oContext.value
+            return
+        }
         const sTrimmedValue = oContext.value.trim()
         const c0 = sTrimmedValue.charAt(0)
         const sSigns = '[{"\''
@@ -101,6 +105,9 @@ function run (aRow, aScripts, oContext) {
 function searchConst (sSearch) {
     if (Array.isArray(sSearch)) {
         return sSearch.map(s => searchConst(s))
+    }
+    if (typeof sSearch === "number") {
+        return sSearch
     }
     const sSearchUpper = '_' + sSearch.replace(/-/g, '_').toUpperCase()
     const sFound = Object.values(CONSTS).find(s => s.endsWith(sSearchUpper))

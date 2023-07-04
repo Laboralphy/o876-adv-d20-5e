@@ -1,0 +1,21 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 2,
+  "abilities": {
+    "strength": 16,
+    "dexterity": 12,
+    "constitution": 16,
+    "intelligence": 7,
+    "wisdom": 11,
+    "charisma": 10
+  },
+  "size": "medium",
+  "specie": "humanoid",
+  "speed": 60,
+  "equipment": [
+    "wpn-greataxe",
+    "arm-hide"
+  ],
+  "actions": []
+}

@@ -20,6 +20,7 @@
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
+ * @property getDamageRerollThreshold {[]}
  * @property getDeadEffects {[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantagePropEffects {Object<string, string>}
@@ -50,13 +51,14 @@
  * @property getRecentDamageTypes {{ type: string, amount: number }}
  * @property getSavingThrowBonus {{}}
  * @property getSelectedWeapon {D20Item}
+ * @property getSelectedWeaponApplicableConditions {{condition: string, dc: number, ability: number, duration: number}[]}
  * @property getSelectedWeaponCriticalThreat {number}
  * @property getSelectedWeaponMaterial {string}
  * @property getSelectedWeaponProperties {array}
  * @property getSelectedWeaponRange {number}
  * @property getShieldMaterial {string}
  * @property getSize {string}
- * @property getSizeProperties {{value: number, hitDice: number, space: number, carryingCapacity}}
+ * @property getSizeProperties {{value: number, hitDice: number, space: number, carryingCapacity: number, extraMeleeDamageDice: number }}
  * @property getSkillProficiencies {Set<string>}
  * @property getSpecie {string}
  * @property getSpeed {number}
@@ -72,8 +74,9 @@
  * @property isTargetInMeleeWeaponRange {boolean}
  * @property isTargetInWeaponRange {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
- * @property isWeildingNonLightWeapon {boolean}
- * @property isWeildingRangedWeapon {boolean}
+ * @property isWieldingHeavyMeleeWeapon {boolean}
+ * @property isWieldingNonLightWeapon {boolean}
+ * @property isWieldingRangedWeapon {boolean}
  * @property getClassicSkillAdvantages {D20AdvantagesOrDisadvantages}
  * @property getClassicSkillDisadvantages {*}
  * @property getProficiencyHalfBonus {number}
