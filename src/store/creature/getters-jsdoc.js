@@ -1,5 +1,7 @@
 /**
  * @typedef D20CreatureStoreGetters {object}
+ * @property canApproachTarget {boolean}
+ * @property canMove {boolean}
  * @property getAbilityBaseValues {D20AbilityNumberRegistry}
  * @property getAbilityBonus {D20AbilityNumberRegistry}
  * @property getAbilityList {string[]}
