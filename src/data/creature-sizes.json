@@ -3,36 +3,42 @@
     "value": 1,
     "hitDice": 4,
     "space": 2.5,
-    "carryingCapacity": 0.25
+    "carryingCapacity": 0.25,
+    "meleeDamageBonus": 1
   },
   "CREATURE_SIZE_SMALL": {
     "value": 2,
     "hitDice": 6,
     "space": 5,
-    "carryingCapacity": 0.5
+    "carryingCapacity": 0.5,
+    "meleeDiceDamage": 1
   },
   "CREATURE_SIZE_MEDIUM": {
     "value": 3,
     "hitDice": 8,
     "space": 5,
-    "carryingCapacity": 1
+    "carryingCapacity": 1,
+    "meleeDiceDamage": 1
   },
   "CREATURE_SIZE_LARGE": {
     "value": 4,
     "hitDice": 10,
     "space": 10,
-    "carryingCapacity": 2
+    "carryingCapacity": 2,
+    "meleeDiceDamage": 2
   },
   "CREATURE_SIZE_HUGE": {
     "value": 5,
     "hitDice": 12,
     "space": 15,
-    "carryingCapacity": 4
+    "carryingCapacity": 4,
+    "meleeDiceDamage": 3
   },
   "CREATURE_SIZE_GARGANTUAN": {
     "value": 6,
     "hitDice": 20,
     "space": 20,
-    "carryingCapacity": 8
+    "carryingCapacity": 8,
+    "meleeDiceDamage": 4
   }
 }

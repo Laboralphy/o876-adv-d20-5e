@@ -734,6 +734,7 @@ class Creature {
      */
     rollWeaponDamage ({ critical = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
+        const sSize = this.store.getters.getSize
         const n = critical ? Creature.AssetManager.data.variables.CRITICAL_FACTOR : 1
         let nDamage = 0
         const nRerollThreshold = this
