@@ -264,6 +264,11 @@ class Creature {
         }
     }
 
+    /**
+     * Définit la distance entre la creature et sa cible ET RECIPROQUEMENT
+     * @param n {number} nouvelle distance
+     * @param bRecursed {boolean} indique que la fonction a été appelée recursivement
+     */
     setDistanceToTarget (n, bRecursed = false) {
         const oTarget = this.getTarget()
         if (oTarget) {
@@ -306,7 +311,7 @@ class Creature {
                 conditions: this._target.creature.store.getters.getConditionSources
             })
             oCreature.store.events.on('mutation', this._target.handler)
-            this.initializeDistanceToTarget(this.dice.roll(6, 6))
+            this.initializeDistanceToTarget(Creature.AssetManager.data.variables.DEFAULT_TARGET_DISTANCE)
         }
     }
 
@@ -379,12 +384,6 @@ class Creature {
         }
     }
 
-    notifyAttack (oAggressor, oOutcome) {
-        if (this.store.getters.getHitPoints <= 0) {
-            this._events.emit('death', { killer: oAggressor })
-        }
-    }
-
     /*
         #######
         #        ######  ######  ######   ####    #####
@@ -405,6 +404,7 @@ class Creature {
 
     applyEffect (oEffect, duration = 0, source = null) {
         const eEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
+        this._events.emit('effect-applied', { effect: eEffect })
         if (eEffect.subtype !== CONSTS.EFFECT_SUBTYPE_WEAPON && oEffect.type === CONSTS.EFFECT_DAMAGE) {
             this._events.emit('damaged', {
                 type: eEffect.data.type,
@@ -432,6 +432,31 @@ class Creature {
         }
     }
 
+    processTargetAuraEffects () {
+        const oTarget = this.getTarget()
+        if (!oTarget) {
+            return
+        }
+        const d = this.store.getters.getTargetDistance
+        oTarget.aggregateModifiers([
+            CONSTS.ITEM_PROPERTY_AURA_CONDITION
+        ], {
+            propFilter: prop => prop.data.radius >= d,
+            propForEach: prop => {
+                switch (prop.property) {
+                    case CONSTS.ITEM_PROPERTY_AURA_CONDITION: {
+                        const { condition, dc, ability, duration } = prop.data
+                        const rt = this.rollSavingThrow(ability, [], dc)
+                        if (!rt.success) {
+                            this.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition), duration, this)
+                        }
+                        break
+                    }
+                }
+            }
+        })
+    }
+
     /**
      * Dans un contexte comme un MUD, les combats s'effectuent en temps réel,
      * Un round s'effectue en 6 seconde par exemple.
@@ -440,6 +465,7 @@ class Creature {
     processEffects () {
         this._effectProcessor.processCreatureEffects(this)
         this.processRegenEffects()
+        this.processTargetAuraEffects()
         this.store.mutations.clearRecentDamageTypes()
     }
 
@@ -619,7 +645,6 @@ class Creature {
         const bonus = this.getAttackBonus()
         const sOffensiveAbility = this.store.getters.getOffensiveAbility
         const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility).value
-        const bTargetParalyzed = oTarget.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)
         const critical = dice >= sg.getSelectedWeaponCriticalThreat
         const ac = oTarget.store.getters.getArmorClass
         const roll = dice + bonus
@@ -641,7 +666,7 @@ class Creature {
         return {
             ac,
             bonus,
-            critical: critical || (hit && bTargetParalyzed),
+            critical: critical || this.store.getters.isTargetAutoCritical,
             deflector,
             dice,
             distance,
@@ -682,6 +707,8 @@ class Creature {
             target,
             weapon,
             kill: false,
+            failed: false,
+            failure: '',
             advantages: { rules: [], value: false },
             disadvantages: { rules: [], value: false },
             damages: {
@@ -784,7 +811,7 @@ class Creature {
      * @param sAbility {string}
      * @param aThreats {string[]}
      * @param dc {number}
-     * @returns {{ roll, bonus, value, circumstance }}
+     * @returns {{ roll, bonus, value, circumstance, success }}
      */
     rollSavingThrow (sAbility, aThreats = [], dc) {
         const st = this.store.getters.getSavingThrowBonus
@@ -867,24 +894,46 @@ class Creature {
     }
 
     /**
+     * Se précipite vers la cible, pour se mettre à portée de l'arme
+     */
+    doRushToTarget () {
+        const nDistance = this.store.getters.getTargetDistance
+        this.setDistanceToTarget(Math.max(1, nDistance - this.store.getters.getSpeed))
+    }
+
+    /**
      * Effectue une attaque contre la cible actuelle
      * @returns {AttackOutcome|false}
-     *
      */
     doAttack () {
         // On a vraiment une cible
         const oTarget = this.getTarget()
         if (!oTarget) {
-            throw new Error('ERR_TARGET_INVALID')
+            const outcome = this.createDefaultAttackOutcome({
+                failed: true,
+                failure: CONSTS.ATTACK_OUTCOME_NO_TARGET,
+            })
+            this._events.emit('attack', { outcome })
+            return outcome
         }
-        oTarget.setAggressor(this)
+        if (!this.store.getters.canAttackTarget) {
+            const outcome = this.createDefaultAttackOutcome({
+                failed: true,
+                failure: CONSTS.ATTACK_OUTCOME_CONDITION,
+            })
+            this._events.emit('attack', { outcome })
+            return outcome
+        }
         // Déterminer si on est à portée
         if (!this.store.getters.isTargetInWeaponRange) {
-            // hors de portee
-            const oOutcome = this.createDefaultAttackOutcome()
-            this._events.emit('attack', { outcome: oOutcome })
-            return oOutcome
+            const outcome = this.createDefaultAttackOutcome({
+                failed: true,
+                failure: CONSTS.ATTACK_OUTCOME_UNREACHABLE,
+            })
+            this._events.emit('attack', { outcome })
+            return outcome
         }
+        oTarget.setAggressor(this)
         // jet d'attaque
         const oAtk = this.rollAttack()
         // si ça touche, calculer les dégâts
@@ -940,7 +989,6 @@ class Creature {
             }
         }
         this._events.emit('attack', { outcome: oAtk })
-        oTarget.notifyAttack(this, oAtk)
         return oAtk
     }
 

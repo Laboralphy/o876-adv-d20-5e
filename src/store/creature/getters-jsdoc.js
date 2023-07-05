@@ -1,6 +1,7 @@
 /**
  * @typedef D20CreatureStoreGetters {object}
  * @property canApproachTarget {boolean}
+ * @property canAttackTarget {boolean}
  * @property canMove {boolean}
  * @property getAbilityBaseValues {D20AbilityNumberRegistry}
  * @property getAbilityBonus {D20AbilityNumberRegistry}
@@ -12,6 +13,7 @@
  * @property getAggressor {{ condition: Object.<string, boolean>}}
  * @property getAggressorConditionSources {{}}
  * @property getAggressorConditions {Set}
+ * @property getApproachToTargetTurns {number}
  * @property getAreaFlags {Set<string>}
  * @property getArmorClass {number}
  * @property getArmorClassDetails {{armor: number, dexterity: number, shield: number, effects: number, props: number}}
@@ -24,6 +26,7 @@
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
  * @property getDamageRerollThreshold {[]}
  * @property getDeadEffects {[]}
+ * @property getDefensiveApplicableConditions {{condition: string, dc: number, ability: number, duration: number}[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantagePropEffects {Object<string, string>}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
@@ -73,6 +76,7 @@
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
  * @property isRangedWeaponProperlyLoaded {boolean}
+ * @property isTargetAutoCritical {boolean}
  * @property isTargetInMeleeWeaponRange {boolean}
  * @property isTargetInWeaponRange {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}

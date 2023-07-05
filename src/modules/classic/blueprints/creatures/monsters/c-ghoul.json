@@ -1,14 +1,14 @@
 {
   "entityType": "ENTITY_TYPE_ACTOR",
   "class": "monster",
-  "level": 8,
+  "level": 5,
   "abilities": {
-    "strength": 16,
-    "dexterity": 17,
+    "strength": 13,
+    "dexterity": 15,
     "constitution": 10,
-    "intelligence": 11,
+    "intelligence": 7,
     "wisdom": 10,
-    "charisma": 8
+    "charisma": 6
   },
   "size": "medium",
   "specie": "undead",
@@ -18,8 +18,8 @@
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_NATURAL_WEAPON",
       "weaponType": "weapon-type-unarmed",
-      "ref": "nwpn-c-ghast",
-      "damage": "2d6",
+      "ref": "nwpn-c-ghoul",
+      "damage": "2d4",
       "damageType": "DAMAGE_TYPE_SLASHING",
       "material": "MATERIAL_UNKNOWN",
       "properties": [
@@ -38,22 +38,8 @@
       "itemType": "ITEM_TYPE_NATURAL_ARMOR",
       "armorType": "armor-type-natural",
       "material": "MATERIAL_UNKNOWN",
-      "ref": "narm-c-ghast",
+      "ref": "narm-c-ghoul",
       "properties": [
-        {
-          "property": "ITEM_PROPERTY_AURA_CONDITION",
-          "amp": 0,
-          "condition": "CONDITION_POISONED",
-          "dc": 10,
-          "ability": "ABILITY_CONSTITUTION",
-          "duration": 2,
-          "radius": 5
-        },
-        {
-          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
-          "amp": 0,
-          "type": "DAMAGE_TYPE_WITHERING"
-        },
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
           "amp": 0,

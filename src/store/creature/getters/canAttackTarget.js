@@ -1,21 +1,21 @@
 CONSTS = require('../../../consts')
 /**
- * Une créature effrayée ne peut pas approcher la source de sa terreur
+ * Une creature ne peut attaquer sa cible que si celle-ci n'est pas la source de son charme
  * @param state
  * @param getters {D20CreatureStoreGetters}
  * @return {boolean}
  */
 module.exports = (state, getters) => {
     const cond = getters.getConditions
-    if (!getters.canMove) {
+    const target = getters.getTarget
+    if (cond.has(CONSTS.CONDITION_INCAPACITATED)) {
         return false
     }
-    const target = getters.getTarget
-    if (cond.has(CONSTS.CONDITION_FRIGHTENED)) {
-        // déterminer les source de l'effet fright
+    if (cond.has(CONSTS.CONDITION_CHARMED)) {
+        // déterminer les source de l'effet charm
         return !getters.getEffects.some(eff =>
             eff.type === CONSTS.EFFECT_CONDITION &&
-            eff.data.condition === CONSTS.CONDITION_FRIGHTENED &&
+            eff.data.condition === CONSTS.CONDITION_CHARMED &&
             eff.source === target.id
         )
     }

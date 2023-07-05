@@ -15,7 +15,21 @@
   "speed": 60,
   "equipment": [
     "wpn-greataxe",
-    "arm-hide"
+    "arm-hide",
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_ARMOR",
+      "armorType": "armor-type-natural",
+      "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-orc",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_SKILL_BONUS",
+          "amp": 2,
+          "skill": "SKILL_INTIMIDATION"
+        }
+      ]
+    }
   ],
   "actions": []
 }

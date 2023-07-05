@@ -21,9 +21,11 @@ function rollRandomEffects (aEffects) {
  * @param effectFilter {function}
  * @param effectAmpMapper {function}
  * @param effectSorter {function}
+ * @param effectForEach {function}
  * @param propFilter {function}
  * @param propAmpMapper {function}
  * @param propSorter {function}
+ * @param propForEach {function}
  * @returns {{sorter: {Object}, max: number, sum: number, count: number, effects: number, ip: number }}
  */
 function aggregateModifiers (aTags, getters, {
@@ -32,7 +34,9 @@ function aggregateModifiers (aTags, getters, {
     effectAmpMapper = null,
     propAmpMapper = null,
     effectSorter = null,
-    propSorter = null
+    propSorter = null,
+    effectForEach = null,
+    propForEach = null
 } = {}) {
     const aTypeSet = new Set(
         Array.isArray(aTags)
@@ -49,6 +53,9 @@ function aggregateModifiers (aTags, getters, {
             ...eff,
             amp: effectAmpMapper ? effectAmpMapper(eff) : eff.amp
         }))
+    if (effectForEach) {
+        aFilteredEffects.forEach(effectForEach)
+    }
     const aFilteredItemProperties = getters
         .getEquipmentItemProperties
         .filter(ip =>
@@ -59,6 +66,9 @@ function aggregateModifiers (aTags, getters, {
             ...prop,
             amp: propAmpMapper ? propAmpMapper(prop) : prop.amp
         }))
+    if (propForEach) {
+        aFilteredItemProperties.forEach(propForEach)
+    }
     const oSorter = {}
     const rdisc = sDisc => {
         if (typeof sDisc !== 'string') {

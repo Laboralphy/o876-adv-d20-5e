@@ -1,10 +1,11 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 05/07/2023 01:22:03 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 05/07/2023, 20:13:52 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.ITEM_PROPERTY_ABILITY_BONUS]: require('./ability-bonus'),
   [CONSTS.ITEM_PROPERTY_AC_BONUS]: require('./ac-bonus'),
   [CONSTS.ITEM_PROPERTY_ADVANTAGE]: require('./advantage'),
   [CONSTS.ITEM_PROPERTY_ATTACK_BONUS]: require('./attack-bonus'),
+  [CONSTS.ITEM_PROPERTY_AURA_CONDITION]: require('./aura-condition'),
   [CONSTS.ITEM_PROPERTY_CONDITION_IMMUNITY]: require('./condition-immunity'),
   [CONSTS.ITEM_PROPERTY_CRITICAL_THREAT]: require('./critical-threat'),
   [CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]: require('./damage-bonus'),

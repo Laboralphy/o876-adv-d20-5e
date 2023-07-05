@@ -1199,6 +1199,13 @@
       "ITEM_PROPERTY_ATTACK_BONUS": {
         "amp": "number"
       },
+      "ITEM_PROPERTY_AURA_CONDITION": {
+        "condition": "condition",
+        "dc": "number",
+        "ability": "ability",
+        "duration": "number",
+        "radius": "number"
+      },
       "ITEM_PROPERTY_CONDITION_IMMUNITY": {
         "condition": "condition"
       },
@@ -1243,8 +1250,7 @@
         "condition": "condition",
         "dc": "number",
         "ability": "ability",
-        "duration": "number",
-        "chance": "number"
+        "duration": "number"
       },
       "ITEM_PROPERTY_PHARMA": {},
       "ITEM_PROPERTY_RANGED_ATTACK_BONUS": {
