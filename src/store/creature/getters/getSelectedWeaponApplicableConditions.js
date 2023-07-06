@@ -6,7 +6,7 @@ const CONSTS = require("../../../consts");
  * Un jet de sauvegarde est autorisé
  * @param state {*}
  * @param getters
- * @returns {{condition: string, dc: number, ability: number, duration: number}[]}
+ * @returns {{condition: string, dc: number, saveAbility: number, duration: number}[]}
  */
 module.exports = (state, getters) => {
     return getters

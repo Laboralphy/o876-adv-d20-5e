@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 05/07/2023, 20:13:52 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 06/07/2023, 18:09:15 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
@@ -21,14 +21,15 @@ module.exports = {
   [CONSTS.EFFECT_GROUP]: require('./group'),
   [CONSTS.EFFECT_HEAL]: require('./heal'),
   [CONSTS.EFFECT_INVISIBILITY]: require('./invisibility'),
+  [CONSTS.EFFECT_LIFE_DRAIN]: require('./life-drain'),
   [CONSTS.EFFECT_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.EFFECT_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),
   [CONSTS.EFFECT_MELEE_ATTACK_BONUS]: require('./melee-attack-bonus'),
   [CONSTS.EFFECT_PHARMA]: require('./pharma'),
+  [CONSTS.EFFECT_POISON]: require('./poison'),
   [CONSTS.EFFECT_RANGED_ATTACK_BONUS]: require('./ranged-attack-bonus'),
   [CONSTS.EFFECT_REROLL]: require('./reroll'),
   [CONSTS.EFFECT_SAVING_THROW_BONUS]: require('./saving-throw-bonus'),
-  [CONSTS.EFFECT_TRUE_SIGHT]: require('./true-sight'),
-  [CONSTS.EFFECT_WEAK_EFFECT]: require('./weak-effect')
+  [CONSTS.EFFECT_TRUE_SIGHT]: require('./true-sight')
 }
 

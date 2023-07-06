@@ -1249,7 +1249,21 @@
       "ITEM_PROPERTY_ON_HIT_APPLY_CONDITION": {
         "condition": "condition",
         "dc": "number",
-        "ability": "ability",
+        "saveAbility": "ability",
+        "duration": "number"
+      },
+      "ITEM_PROPERTY_ON_HIT_LIFE_DRAIN": {
+        "amp": "number",
+        "poison": "ability",
+        "dc": "number",
+        "saveCount": "number",
+        "duration": "number"
+      },
+      "ITEM_PROPERTY_ON_HIT_POISON": {
+        "damage": "dice",
+        "dc": "number",
+        "dot": "dice",
+        "saveCount": "number",
         "duration": "number"
       },
       "ITEM_PROPERTY_PHARMA": {},

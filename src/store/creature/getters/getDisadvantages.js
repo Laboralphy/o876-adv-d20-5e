@@ -37,7 +37,7 @@ module.exports = (state, getters, externals) => {
     // L'arme équipée est trop lourde pour le personnage
     const HEAVY_WEAPON = getters.isWieldingNonLightWeapon && CREATURE_IS_SMALL
 
-    // La créature subit la condition "poison"
+    // La créature subit la condition "poison-wyvern.json"
     const POISONED = myConditions.has(CONSTS.CONDITION_POISONED)
 
     // La créature subit la condition "terreur"

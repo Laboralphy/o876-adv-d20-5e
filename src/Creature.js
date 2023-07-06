@@ -836,6 +836,49 @@ class Creature {
         return output
     }
 
+    /**
+     * Applique les effet de condition à la cible de l'arme
+     * @param oTarget {Creature}
+     */
+    weaponApplyConditions (oTarget) {
+        const aApplicableConditions = this.store.getters.getSelectedWeaponApplicableConditions
+        if (aApplicableConditions.length > 0) {
+            const aNewlyAppliedConditions = new Set()
+            const aConditions = oTarget.store.getters.getConditions
+            aApplicableConditions.forEach(({ condition, dc, saveAbility, duration }) => {
+                if (!aNewlyAppliedConditions.has(condition) && !aConditions.has(condition)) {
+                    const { success } = oTarget.rollSavingThrow(saveAbility, [], dc)
+                    if (!success) {
+                        oTarget.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition), duration, this)
+                        aNewlyAppliedConditions.add(condition)
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * Applique les effets de poison véhiculés par l'arme lorsqu'elle touche une cible
+     * @param oTarget {Creature}
+     */
+    weaponApplyPoisons (oTarget) {
+        const aApplicablePoisons = this.store.getters.getSelectedWeaponApplicablePoisons
+        aApplicablePoisons.forEach(({ damage, dot, dc, saveCount, duration }) => {
+            const amount = this.roll(damage)
+            oTarget.applyEffect(
+                EffectProcessor.createEffect(
+                    CONSTS.EFFECT_POISON,
+                    amount,
+                    dot,
+                    dc,
+                    saveCount
+                ),
+                duration,
+                this
+            )
+        })
+    }
+
     /*
            #
           # #     ####    #####     #     ####   #    #   ####
@@ -972,20 +1015,8 @@ class Creature {
 
             // application d'effets on hit
             if (amount > 0) {
-                const aApplicableConditions = this.store.getters.getSelectedWeaponApplicableConditions
-                if (aApplicableConditions.length > 0) {
-                    const aNewlyAppliedConditions = new Set()
-                    const aConditions = oTarget.store.getters.getConditions
-                    aApplicableConditions.forEach(({ condition, dc, ability, duration }) => {
-                        if (!aNewlyAppliedConditions.has(condition) && !aConditions.has(condition)) {
-                            const { success } = oTarget.rollSavingThrow(ability, [], dc)
-                            if (!success) {
-                                oTarget.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition), duration, this)
-                                aNewlyAppliedConditions.add(condition)
-                            }
-                        }
-                    })
-                }
+                this.weaponApplyConditions(oTarget)
+                this.weaponApplyPoisons(oTarget)
             }
         }
         this._events.emit('attack', { outcome: oAtk })

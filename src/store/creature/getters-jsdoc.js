@@ -56,7 +56,8 @@
  * @property getRecentDamageTypes {{ type: string, amount: number }}
  * @property getSavingThrowBonus {{}}
  * @property getSelectedWeapon {D20Item}
- * @property getSelectedWeaponApplicableConditions {{condition: string, dc: number, ability: number, duration: number}[]}
+ * @property getSelectedWeaponApplicableConditions {{condition: string, dc: number, saveAbility: number, duration: number}[]}
+ * @property getSelectedWeaponApplicablePoisons {{condition: string, dc: number, saveAbility: number, duration: number}[]}
  * @property getSelectedWeaponCriticalThreat {number}
  * @property getSelectedWeaponMaterial {string}
  * @property getSelectedWeaponProperties {array}
