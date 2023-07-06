@@ -857,6 +857,26 @@ class Creature {
         }
     }
 
+    weaponProcessOnHit (oTarget) {
+        const aHitProps = this
+            .store
+            .getters
+            .getSelectedWeaponOnHitProperties
+        const oContext = {
+            target: oTarget,
+            source: this,
+            property: null
+        }
+        const oScripts = Creature.AssetManager.scripts
+        aHitProps.forEach(prop => {
+            const sScript = prop.script
+            oContext.property = prop
+            if (sScript in oScripts) {
+                oScripts[sScript](oContext)
+            }
+        })
+    }
+
     /**
      * Applique les effets de poison véhiculés par l'arme lorsqu'elle touche une cible
      * @param oTarget {Creature}

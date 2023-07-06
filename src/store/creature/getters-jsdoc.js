@@ -60,6 +60,7 @@
  * @property getSelectedWeaponApplicablePoisons {{condition: string, dc: number, saveAbility: number, duration: number}[]}
  * @property getSelectedWeaponCriticalThreat {number}
  * @property getSelectedWeaponMaterial {string}
+ * @property getSelectedWeaponOnHitProperties {{condition: string, dc: number, saveAbility: number, duration: number}[]}
  * @property getSelectedWeaponProperties {array}
  * @property getSelectedWeaponRange {number}
  * @property getShieldMaterial {string}
