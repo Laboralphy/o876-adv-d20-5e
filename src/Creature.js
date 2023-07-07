@@ -857,6 +857,15 @@ class Creature {
         }
     }
 
+    /**
+     * @typedef D20OnHitContext {object}
+     * @property target {Creature} Créature sur laquelle s'applique l'effet de l'itemproperty onhit
+     * @property source {Creature} Créature qui détient l'arme qui a l'itemproperty onhit
+     * @property property {object} ItemProperty
+     * @property data {{}} objet aditionel de sauvegarde d'information enter les appel
+     * @param oTarget
+     */
+
     weaponProcessOnHit (oTarget) {
         const aHitProps = this
             .store
@@ -865,14 +874,17 @@ class Creature {
         const oContext = {
             target: oTarget,
             source: this,
-            property: null
+            property: null,
+            data: {}
         }
         const oScripts = Creature.AssetManager.scripts
         aHitProps.forEach(prop => {
-            const sScript = prop.script
+            const sScript = prop.data.script
             oContext.property = prop
             if (sScript in oScripts) {
                 oScripts[sScript](oContext)
+            } else {
+                throw new Error('Could not find ON HIT script ' + sScript)
             }
         })
     }
@@ -1035,8 +1047,7 @@ class Creature {
 
             // application d'effets on hit
             if (amount > 0) {
-                this.weaponApplyConditions(oTarget)
-                this.weaponApplyPoisons(oTarget)
+                this.weaponProcessOnHit(oTarget)
             }
         }
         this._events.emit('attack', { outcome: oAtk })

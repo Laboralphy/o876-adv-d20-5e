@@ -26,7 +26,7 @@ function rollRandomEffects (aEffects) {
  * @param propAmpMapper {function}
  * @param propSorter {function}
  * @param propForEach {function}
- * @returns {{sorter: {Object}, max: number, sum: number, count: number, effects: number, ip: number }}
+ * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, sum: number, count: number, effects: number, ip: number }}
  */
 function aggregateModifiers (aTags, getters, {
     effectFilter = null,

@@ -9,14 +9,7 @@ const {aggregateModifiers} = require("../common/aggregate-modifiers");
  */
 module.exports = (state, getters) => {
     const aEffects = getters.getEffects
-    const oImmunities = aggregateModifiers([
-        CONSTS.EFFECT_CONDITION_IMMUNITY,
-        CONSTS.ITEM_PROPERTY_CONDITION_IMMUNITY
-    ], getters,{
-        effectSorter: effect => effect.data.condition,
-        propSorter: prop => prop.data.condition
-    })
-    const oImmunitySet = new Set(Object.keys(oImmunities.sorter))
+    const oImmunitySet = getters.getConditionImmunities
     const aTags = aEffects.map(eff => eff.type === CONSTS.EFFECT_CONDITION
         ? ({ type: eff.data.condition, source: eff.source })
         : ({ type: eff.type, source: eff.source }))

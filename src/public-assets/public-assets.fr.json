@@ -1249,25 +1249,10 @@
       "ITEM_PROPERTY_MELEE_ATTACK_BONUS": {
         "amp": "number"
       },
-      "ITEM_PROPERTY_ON_HIT_APPLY_CONDITION": {
-        "condition": "condition",
-        "dc": "number",
-        "saveAbility": "ability",
-        "duration": "number"
-      },
-      "ITEM_PROPERTY_ON_HIT_LIFE_DRAIN": {
-        "amp": "number",
-        "poison": "ability",
-        "dc": "number",
-        "saveCount": "number",
-        "duration": "number"
-      },
-      "ITEM_PROPERTY_ON_HIT_POISON": {
-        "damage": "dice",
-        "dc": "number",
-        "dot": "dice",
-        "saveCount": "number",
-        "duration": "number"
+      "ITEM_PROPERTY_ON_HIT": {
+        "amp": "dice",
+        "script": "string",
+        "data": "unknown"
       },
       "ITEM_PROPERTY_PHARMA": {},
       "ITEM_PROPERTY_RANGED_ATTACK_BONUS": {

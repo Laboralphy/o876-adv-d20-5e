@@ -21,6 +21,7 @@
  * @property getArmorMaterial {string}
  * @property getAttackBonus {number}
  * @property getCarryingCapacity {number}
+ * @property getConditionImmunities {Set<string>}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}

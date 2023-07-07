@@ -1,0 +1,18 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 6,
+  "abilities": {
+    "strength": 15,
+    "dexterity": 14,
+    "constitution": 16,
+    "intelligence": 10,
+    "wisdom": 13,
+    "charisma": 15
+  },
+  "size": "medium",
+  "specie": "undead",
+  "speed": 30,
+  "equipment": [],
+  "actions": []
+}

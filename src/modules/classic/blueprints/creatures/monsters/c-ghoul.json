@@ -24,11 +24,12 @@
       "material": "MATERIAL_UNKNOWN",
       "properties": [
         {
-          "property": "ITEM_PROPERTY_ON_HIT_APPLY_CONDITION",
+          "property": "ITEM_PROPERTY_ON_HIT",
           "amp": 0,
+          "script": "on-hit-condition",
           "condition": "CONDITION_PARALYZED",
           "dc": 10,
-          "ability": "ABILITY_CONSTITUTION",
+          "saveAbility": "ABILITY_CONSTITUTION",
           "duration": 2
         }
       ]
