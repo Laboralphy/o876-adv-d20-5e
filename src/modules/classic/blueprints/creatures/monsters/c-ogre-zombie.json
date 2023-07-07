@@ -38,11 +38,6 @@
           "type": "DAMAGE_TYPE_SLASHING"
         },
         {
-          "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",
-          "amp": 0,
-          "type": "MATERIAL_SILVER"
-        },
-        {
           "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
           "amp": 0,
           "type": "DAMAGE_TYPE_RADIANT"

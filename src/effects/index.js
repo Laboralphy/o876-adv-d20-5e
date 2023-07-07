@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 07/07/2023, 16:30:18 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 07/07/2023, 19:44:35 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
@@ -21,7 +21,6 @@ module.exports = {
   [CONSTS.EFFECT_GROUP]: require('./group'),
   [CONSTS.EFFECT_HEAL]: require('./heal'),
   [CONSTS.EFFECT_INVISIBILITY]: require('./invisibility'),
-  [CONSTS.EFFECT_LIFE_DRAIN]: require('./life-drain'),
   [CONSTS.EFFECT_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.EFFECT_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),
   [CONSTS.EFFECT_MELEE_ATTACK_BONUS]: require('./melee-attack-bonus'),

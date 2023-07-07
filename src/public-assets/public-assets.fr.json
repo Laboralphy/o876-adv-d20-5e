@@ -1202,12 +1202,10 @@
       "ITEM_PROPERTY_ATTACK_BONUS": {
         "amp": "number"
       },
-      "ITEM_PROPERTY_AURA_CONDITION": {
-        "condition": "condition",
-        "dc": "number",
-        "ability": "ability",
-        "duration": "number",
-        "radius": "number"
+      "ITEM_PROPERTY_AURA": {
+        "amp": "dice",
+        "script": "string",
+        "data": "unknown"
       },
       "ITEM_PROPERTY_CONDITION_IMMUNITY": {
         "condition": "condition"

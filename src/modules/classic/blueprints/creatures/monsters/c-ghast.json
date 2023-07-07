@@ -26,7 +26,7 @@
         {
           "property": "ITEM_PROPERTY_ON_HIT",
           "amp": 0,
-          "script": "on-hit-condition",
+          "script": "apply-condition",
           "condition": "CONDITION_PARALYZED",
           "dc": 10,
           "saveAbility": "ABILITY_CONSTITUTION",
@@ -42,11 +42,12 @@
       "ref": "narm-c-ghast",
       "properties": [
         {
-          "property": "ITEM_PROPERTY_AURA_CONDITION",
+          "property": "ITEM_PROPERTY_AURA",
           "amp": 0,
+          "script": "apply-condition",
           "condition": "CONDITION_POISONED",
           "dc": 10,
-          "ability": "ABILITY_CONSTITUTION",
+          "saveAbility": "ABILITY_CONSTITUTION",
           "duration": 2,
           "radius": 5
         },

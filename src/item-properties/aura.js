@@ -1,10 +1,8 @@
 const CONSTS = require('../consts')
 
 /**
- * ITEM_PROPERTY_ON_HIT
- *
- * Provoque un effet spécial sur la cible touchée par l'arme sur laquelle est appliquée cette propriété
- * L'effet est produit par le script spécifié dans l'item-property
+ * ITEM_PROPERTY_AURA
+ * La créature émet une aura qui applique une condition aux créatures situées dans un certain rayon
  *
  * @param amp {number|string} dice
  * @param script {string}
@@ -15,13 +13,13 @@ module.exports = function ({ amp, script, ...data }) {
     const propData = {
         ...data
     }
-    if (propData.property === CONSTS.ITEM_PROPERTY_ON_HIT) {
+    if (propData.property === CONSTS.ITEM_PROPERTY_AURA) {
         delete propData.property
     } else {
-        throw new Error('Invalid item property definition : ITEM_PROPERTY_ON_HIT expected ; got : ' + propData.property)
+        throw new Error('Invalid item property definition : ITEM_PROPERTY_AURA expected ; got : ' + propData.property)
     }
     return {
-        property: CONSTS.ITEM_PROPERTY_ON_HIT,
+        property: CONSTS.ITEM_PROPERTY_AURA,
         amp,
         data: {
             script,
@@ -29,3 +27,4 @@ module.exports = function ({ amp, script, ...data }) {
         }
     }
 }
+

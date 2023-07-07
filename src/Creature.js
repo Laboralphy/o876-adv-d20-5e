@@ -139,9 +139,9 @@ class Creature {
      * Aggrège les effets spécifiés dans la liste, selon un prédicat
      * @param aTags {string[]} liste des effets désirés
      * @param filters {Object} voir la fonction store/creature/common/aggregate-modifiers
-     * @returns {{sorter: {Object}, max: number, sum: number}}
+     * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, sum: number, count: number, effects: number, ip: number}}
      */
-    aggregateModifiers (aTags, filters = {}) {
+    aggregateModifiers (aTags, filters) {
         return aggregateModifiers(aTags, this.store.getters, filters)
     }
 
@@ -432,26 +432,35 @@ class Creature {
         }
     }
 
+    /**
+     * Cette créature inspecte les différentes auras de sa cible.
+     * Une créature qui n'a pas de cible n'est pas sujette à des auras.
+     * Les aura seront donc considérées comme des réactions passives contre un agresseur
+     */
     processTargetAuraEffects () {
         const oTarget = this.getTarget()
         if (!oTarget) {
             return
         }
+        const oContext = {
+            target: this,
+            source: oTarget,
+            property: null,
+            data: {}
+        }
+        const oScripts = Creature.AssetManager.scripts
         const d = this.store.getters.getTargetDistance
         oTarget.aggregateModifiers([
-            CONSTS.ITEM_PROPERTY_AURA_CONDITION
+            CONSTS.ITEM_PROPERTY_AURA
         ], {
             propFilter: prop => prop.data.radius >= d,
             propForEach: prop => {
-                switch (prop.property) {
-                    case CONSTS.ITEM_PROPERTY_AURA_CONDITION: {
-                        const { condition, dc, ability, duration } = prop.data
-                        const rt = this.rollSavingThrow(ability, [], dc)
-                        if (!rt.success) {
-                            this.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition), duration, this)
-                        }
-                        break
-                    }
+                const sScript = prop.data.script
+                oContext.property = prop
+                if (sScript in oScripts) {
+                    oScripts[sScript](oContext)
+                } else {
+                    throw new Error('Could not find ON HIT script ' + sScript)
                 }
             }
         })
@@ -886,28 +895,6 @@ class Creature {
             } else {
                 throw new Error('Could not find ON HIT script ' + sScript)
             }
-        })
-    }
-
-    /**
-     * Applique les effets de poison véhiculés par l'arme lorsqu'elle touche une cible
-     * @param oTarget {Creature}
-     */
-    weaponApplyPoisons (oTarget) {
-        const aApplicablePoisons = this.store.getters.getSelectedWeaponApplicablePoisons
-        aApplicablePoisons.forEach(({ damage, dot, dc, saveCount, duration }) => {
-            const amount = this.roll(damage)
-            oTarget.applyEffect(
-                EffectProcessor.createEffect(
-                    CONSTS.EFFECT_POISON,
-                    amount,
-                    dot,
-                    dc,
-                    saveCount
-                ),
-                duration,
-                this
-            )
         })
     }
 

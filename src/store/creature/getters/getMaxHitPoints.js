@@ -19,7 +19,7 @@ module.exports = (state, getters, externals) => {
         const sClassName = 'class-' + ref
         const oClassData = DATA[sClassName]
         if (!oClassData) {
-            throw new Error('this class is undefined : "' + ref + '"')
+            throw new Error('this character-class is undefined : "' + ref + '"')
         }
         const nHD = 'hitDice' in oClassData ? oClassData.hitDice : DATA['creature-sizes'][getters.getSize].hitDice
         const nHitPointsPerLevel = Math.floor(nHD / 2) + 1 + nConModifier

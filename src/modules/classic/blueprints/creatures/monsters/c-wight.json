@@ -13,6 +13,60 @@
   "size": "medium",
   "specie": "undead",
   "speed": 30,
-  "equipment": [],
+  "equipment": [
+    "wpn-longsword-unholy",
+    "wpn-longbow",
+    "ammo-arrow-unholy",
+    "arm-studded-leather",
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_ARMOR",
+      "armorType": "armor-type-natural",
+      "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-wight",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_WITHERING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_CRUSHING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_PIERCING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_SLASHING"
+        },
+        {
+          "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",
+          "amp": 0,
+          "type": "MATERIAL_SILVER"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_POISON"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_POISONED"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_EXHAUSTED"
+        }
+      ]
+    }
+  ],
   "actions": []
 }
