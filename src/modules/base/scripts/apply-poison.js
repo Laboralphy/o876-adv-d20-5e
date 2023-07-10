@@ -11,7 +11,7 @@ const CONSTS = require("../../../consts");
  * @param saveCount {number}
  * @param duration {number}
  */
-module.exports = function ({ target, source, property: { amp, dot, dc, saveCount, duration } }) {
+module.exports = function ({ target, source, property: { amp, data: { dot, dc, saveCount, duration } } }) {
     const amount = source.roll(amp)
     target.applyEffect(
         EffectProcessor.createEffect(

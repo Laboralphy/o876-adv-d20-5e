@@ -16,7 +16,7 @@ const CONSTS = require("../../../consts");
  * @param saveAbility {string} ability
  * @param duration {number}
  */
-module.exports = function ({ target, source, property: { condition, dc, saveAbility, duration } }) {
+module.exports = function ({ target, source, property: { data: { condition, dc, saveAbility, duration } } }) {
     if (!target.store.getters.getConditions.has(condition)) {
         const st = target.rollSavingThrow(saveAbility, [], dc)
         if (!st.success) {

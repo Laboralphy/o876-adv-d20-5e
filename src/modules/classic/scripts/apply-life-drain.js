@@ -11,7 +11,7 @@ const CONSTS = require("../../../consts");
  * @param amp {number|string} dice
  * @param dc {number}
  */
-module.exports = function ({ target, source, property: { amp, dc } }) {
+module.exports = function ({ target, source, property: { amp, data: { dc } } }) {
     const st = target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [CONSTS.THREAT_TYPE_DEATH], dc)
     if (st.success) {
         return
