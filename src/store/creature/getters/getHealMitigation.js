@@ -6,7 +6,7 @@ const CONSTS = require("../../../consts");
  * @param state
  * @param getters
  * @param externals
- * @returns {{pharma: boolean, factor: number}}
+ * @returns {{pharma: boolean, negateheal: boolean, factor: number}}
  */
 module.exports = (state, getters, externals) => {
     const {

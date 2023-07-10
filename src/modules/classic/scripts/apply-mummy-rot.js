@@ -15,6 +15,12 @@ module.exports = function ({ target, source, property: { data: { dc } } }) {
     if (st.success) {
         return
     }
+    if (target.store.getters.getEffects.find(eff =>
+        eff.type === CONSTS.EFFECT_MUMMY_ROT &&
+        eff.subtype === CONSTS.EFFECT_SUBTYPE_CURSE &&
+        eff.duration === Infinity)) {
+        return
+    }
     const oCurse = EffectProcessor.createEffect(CONSTS.EFFECT_MUMMY_ROT)
     oCurse.subtype = CONSTS.EFFECT_SUBTYPE_CURSE
     target.applyEffect(oCurse, Infinity, source)
