@@ -1,0 +1,118 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 9,
+  "abilities": {
+    "strength": 16,
+    "dexterity": 8,
+    "constitution": 15,
+    "intelligence": 6,
+    "wisdom": 10,
+    "charisma": 12
+  },
+  "size": "medium",
+  "specie": "undead",
+  "speed": 20,
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-c-mummy",
+      "damage": "2d6",
+      "damageType": "DAMAGE_TYPE_CRUSHING",
+      "material": "MATERIAL_UNKNOWN",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_ON_HIT",
+          "amp": 0,
+          "script": "apply-mummy-rot"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_BONUS",
+          "amp": "3d6",
+          "type": "DAMAGE_TYPE_WITHERING"
+        }
+      ]
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_ARMOR",
+      "armorType": "armor-type-natural",
+      "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-mummy",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+          "amp": 2,
+          "type": "ABILITY_WISDOM"
+        },
+        {
+          "property": "ITEM_PROPERTY_AC_BONUS",
+          "amp": 3
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_FIRE"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_CRUSHING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_PIERCING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_SLASHING"
+        },
+        {
+          "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",
+          "amp": 0,
+          "type": "MATERIAL_SILVER"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_WITHERING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_POISON"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_POISONED"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "EFFECT_EXHAUSTION"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_CHARMED"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_PARALYZED"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_FRIGHTENED"
+        }
+      ]
+    }
+  ],
+  "actions": []
+}

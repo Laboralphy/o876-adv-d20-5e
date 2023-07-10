@@ -611,12 +611,14 @@ describe('effect pharma', function () {
         const m1 = soldier.store.getters.getHealMitigation
         expect(m1).toEqual({
             pharma: false,
+            negateheal: false,
             factor: 1
         })
         soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_PHARMA), 10)
         const m2 = soldier.store.getters.getHealMitigation
         expect(m2).toEqual({
             pharma: true,
+            negateheal: false,
             factor: 2
         })
         soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, 5))
@@ -636,6 +638,7 @@ describe('Troll regeneration', function () {
         expect(troll.store.getters.getHitPoints).toBe(82)
 
         troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_FIRE))
+        expect(troll.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_MUMMY_ROT)).toBeDefined()
         expect(troll.store.getters.getHitPoints).toBe(62)
         troll.processEffects()
         expect(troll.store.getters.getHitPoints).toBe(62)
@@ -709,7 +712,6 @@ describe('Ghast', function () {
         const gobJinxed = r.createEntity('c-goblin-shield')
         gobJinxed.dice.debug(true, 0.0)
         const gobLucky = r.createEntity('c-goblin-shield')
-        ghast.events.on('saving-throw', st => console.log(st))
         gobLucky.dice.debug(true, 0.999)
         gobVeryFar.setTarget(ghast)
         gobJinxed.setTarget(ghast)
@@ -744,5 +746,156 @@ describe('Effet de terreur', function () {
         expect(gob1.store.getters.canApproachTarget).toBeTrue()
         gob1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_FRIGHTENED), 10, gob2)
         expect(gob1.store.getters.canApproachTarget).toBeFalse()
+    })
+})
+
+describe('Mummies', function () {
+    it ('should resist to normal weapon', function () {
+        const r = new Rules()
+        r.init()
+        const mummy = r.createEntity('c-mummy')
+        const soldier = r.createEntity('c-soldier')
+        soldier.dice.debug(true, 0.8)
+        soldier.setTarget(mummy)
+        soldier.setDistanceToTarget(5)
+        const atk1 = r.attack(soldier, mummy)
+        expect(atk1.damages).toEqual({
+            amount: 5,
+            resisted: { DAMAGE_TYPE_SLASHING: 5 },
+            types: { DAMAGE_TYPE_SLASHING: 5 }
+        })
+    })
+    it ('should not be damage by poison weapon', function () {
+        const r = new Rules()
+        r.init()
+        const mummy = r.createEntity('c-mummy')
+        const soldier = r.createEntity('c-soldier')
+        const flamingPoisonedSword = r.createEntity('wpn-longsword')
+        r.addItemProperty(flamingPoisonedSword, CONSTS.ITEM_PROPERTY_DAMAGE_BONUS, { type: CONSTS.DAMAGE_TYPE_POISON, amp: '1d6' })
+        r.addItemProperty(flamingPoisonedSword, CONSTS.ITEM_PROPERTY_DAMAGE_BONUS, { type: CONSTS.DAMAGE_TYPE_FIRE, amp: '1d6' })
+        soldier.equipItem(flamingPoisonedSword)
+        soldier.dice.debug(true, 0.8)
+        soldier.setTarget(mummy)
+        soldier.setDistanceToTarget(5)
+        const atk1 = r.attack(soldier, mummy)
+        expect(atk1.damages).toEqual({
+            amount: 15,
+            resisted: {
+                DAMAGE_TYPE_SLASHING: 5,
+                DAMAGE_TYPE_POISON: 5,
+                DAMAGE_TYPE_FIRE: -5
+            },
+            types: {
+                DAMAGE_TYPE_SLASHING: 5,
+                DAMAGE_TYPE_POISON: 0,
+                DAMAGE_TYPE_FIRE: 10
+            }
+        })
+    })
+    it ('should not be damage by poison weapon', function () {
+        const r = new Rules()
+        r.init()
+        const mummy = r.createEntity('c-mummy')
+        const soldier = r.createEntity('c-soldier')
+        const flamingPoisonedSilverSword = r.createEntity('wpn-longsword')
+        r.addItemProperty(flamingPoisonedSilverSword, CONSTS.ITEM_PROPERTY_DAMAGE_BONUS, { type: CONSTS.DAMAGE_TYPE_POISON, amp: '1d6' })
+        r.addItemProperty(flamingPoisonedSilverSword, CONSTS.ITEM_PROPERTY_DAMAGE_BONUS, { type: CONSTS.DAMAGE_TYPE_FIRE, amp: '1d6' })
+        flamingPoisonedSilverSword.material = CONSTS.MATERIAL_SILVER
+        soldier.equipItem(flamingPoisonedSilverSword)
+        soldier.dice.debug(true, 0.8)
+        soldier.setTarget(mummy)
+        soldier.setDistanceToTarget(5)
+        const atk1 = r.attack(soldier, mummy)
+        expect(atk1.damages).toEqual({
+            amount: 20,
+            resisted: {
+                DAMAGE_TYPE_SLASHING: 0,
+                DAMAGE_TYPE_POISON: 5,
+                DAMAGE_TYPE_FIRE: -5
+            },
+            types: {
+                DAMAGE_TYPE_SLASHING: 10, // pas de resistance au slash
+                DAMAGE_TYPE_POISON: 0, // toujour invulnerable au poison
+                DAMAGE_TYPE_FIRE: 10 // vulnerabilité normale au feu de la momie (pas de double malus du au matériaux)
+            }
+        })
+    })
+    it ('mummy lord should not be damaged by normal weapon, but damaged by silver weapon', function () {
+        const r = new Rules()
+        r.init()
+        const mummy = r.createEntity('c-mummy')
+        const soldier = r.createEntity('c-soldier')
+        const silverSword = r.createEntity('wpn-longsword')
+        silverSword.material = CONSTS.MATERIAL_SILVER
+        soldier.equipItem(silverSword)
+        soldier.dice.debug(true, 0.8)
+        soldier.setTarget(mummy)
+        soldier.setDistanceToTarget(5)
+        const atk1 = r.attack(soldier, mummy)
+        expect(atk1.damages).toEqual({
+            amount: 10,
+            resisted: { DAMAGE_TYPE_SLASHING: 0 },
+            types: { DAMAGE_TYPE_SLASHING: 10 }
+        })
+    })
+
+    it('should be advantaged on spells', function () {
+        const r = new Rules()
+        r.init()
+        const mummy = r.createEntity('c-mummy-lord') // J'avais créé un c-mummy, au lieu d'un c-mummy-lord
+        expect(mummy.store.getters.getEquipmentItemProperties.find(eq => eq.property === CONSTS.ITEM_PROPERTY_ADVANTAGE)).toBeDefined()
+        expect(mummy.aggregateModifiers([CONSTS.ITEM_PROPERTY_ADVANTAGE], {}).count).toBe(1)
+        const st = mummy.rollSavingThrow(CONSTS.ABILITY_WISDOM, [CONSTS.THREAT_TYPE_SPELL], 20)
+        expect(st.circumstance).toBe(1)
+    })
+})
+
+describe('zombie', function () {
+    it('should not kill zombie when using non radiant damage', function () {
+        const r = new Rules()
+        r.init()
+        const zombie = r.createEntity('c-zombie')
+        expect(zombie.store.getters.getHitPoints).toBe(27)
+        zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 25, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(zombie.store.getters.getHitPoints).toBe(2)
+        zombie.dice.debug(true, 0.8)
+        const eDam1 = zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 3, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(zombie.store.getters.getHitPoints).toBe(1)
+        expect(eDam1.amp).toBe(1)
+        expect(eDam1.data.resistedAmount).toBe(2)
+    })
+    it('should kill zombie when using non radiant damage but fail save', function () {
+        const r = new Rules()
+        r.init()
+        const zombie = r.createEntity('c-zombie')
+        expect(zombie.store.getters.getHitPoints).toBe(27)
+        zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 25, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(zombie.store.getters.getHitPoints).toBe(2)
+        zombie.dice.debug(true, 0.2)
+        const eDam1 = zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 30, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(zombie.store.getters.getHitPoints).toBe(-28)
+        expect(eDam1.amp).toBe(30)
+        expect(eDam1.data.resistedAmount).toBe(0)
+    })
+    it('should kill zombie when using radiant damage', function () {
+        const r = new Rules()
+        r.init()
+        const zombie = r.createEntity('c-zombie')
+        expect(zombie.store.getters.getHitPoints).toBe(27)
+        zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(zombie.store.getters.getHitPoints).toBe(7)
+        const eDam1 = zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_RADIANT))
+        expect(zombie.store.getters.getHitPoints).toBeLessThanOrEqual(0)
+    })
+    it('should kill zombie when delivering critical', function () {
+        const r = new Rules()
+        r.init()
+        const zombie = r.createEntity('c-zombie')
+        expect(zombie.store.getters.getHitPoints).toBe(27)
+        zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(zombie.store.getters.getHitPoints).toBe(7)
+        const eDam1 = zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_SLASHING, CONSTS.MATERIAL_STEEL, true))
+        expect(eDam1.data.critical).toBeTrue()
+        expect(zombie.store.getters.getHitPoints).toBeLessThanOrEqual(0)
     })
 })

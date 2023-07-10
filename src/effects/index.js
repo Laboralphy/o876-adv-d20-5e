@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 07/07/2023, 19:44:35 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 10/07/2023, 19:00:25 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
@@ -24,6 +24,7 @@ module.exports = {
   [CONSTS.EFFECT_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.EFFECT_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),
   [CONSTS.EFFECT_MELEE_ATTACK_BONUS]: require('./melee-attack-bonus'),
+  [CONSTS.EFFECT_MUMMY_ROT]: require('./mummy-rot'),
   [CONSTS.EFFECT_PHARMA]: require('./pharma'),
   [CONSTS.EFFECT_POISON]: require('./poison'),
   [CONSTS.EFFECT_RANGED_ATTACK_BONUS]: require('./ranged-attack-bonus'),

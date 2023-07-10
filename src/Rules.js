@@ -2,6 +2,7 @@ const EntityFactory = require('./EntityFactory')
 const CONSTS = require('./consts')
 const Events = require('events')
 const Creature = require('./Creature')
+const itemProperties = require('./item-properties')
 
 class Rules {
     constructor () {
@@ -75,6 +76,19 @@ class Rules {
                 oCreature.equipItem(oItem, slot)
             }
         }
+    }
+
+    /**
+     * Ajoute une propriété d'item, à un item
+     * @param oItem {D20ItemDataStruct}
+     * @param sItemProperty {string}
+     * @param data {{}}
+     * @returns {{}}
+     */
+    addItemProperty (oItem, sItemProperty, data) {
+        const ip = itemProperties[sItemProperty](data)
+        oItem.properties.push(ip)
+        return ip
     }
 
     /**
