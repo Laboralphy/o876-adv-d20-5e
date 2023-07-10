@@ -1,0 +1,14 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_AMMO",
+  "ammoType": "ammo-type-arrow",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_ON_HIT",
+      "amp": "1d2",
+      "script": "apply-life-drain",
+      "dc": 13
+    }
+  ],
+  "material": "MATERIAL_IRON"
+}

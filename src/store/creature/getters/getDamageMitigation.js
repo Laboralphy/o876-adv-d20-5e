@@ -7,6 +7,7 @@ function addMitigationType (oMitig, sType) {
             reduction: 0,
             resistance: false,
             vulnerability: false,
+            immunity: false,
             factor: 1
         }
     }
@@ -31,10 +32,14 @@ function addMitigation(oMitig, am) {
  * @param getters
  * @returns {Object<string, D20OneDamageMitigation>}}
  */
-module.exports = (state, getters) => {
-    const fEffectSorter = eff => {
-        return eff.data.type
-    }
+module.exports = (state, getters, externals) => {
+    const {
+        DAMAGE_FACTOR_IMMUNITY,
+        DAMAGE_FACTOR_RESISTANCE,
+        DAMAGE_FACTOR_NORMAL,
+        DAMAGE_FACTOR_VULNERABILITY
+    } = externals.data['variables']
+    const fEffectSorter = eff => eff.data.type
     const fPropSorter = prop => prop.data.type
     const oReduction = aggregateModifiers([
         CONSTS.EFFECT_DAMAGE_REDUCTION,
@@ -57,10 +62,26 @@ module.exports = (state, getters) => {
         effectSorter: fEffectSorter,
         propSorter: fPropSorter
     })
+    const oImmunity = aggregateModifiers([
+        CONSTS.EFFECT_DAMAGE_IMMUNITY,
+        CONSTS.ITEM_PROPERTY_DAMAGE_IMMUNITY
+    ], getters, {
+        effectSorter: fEffectSorter,
+        propSorter: fPropSorter
+    })
+    const oMatVulnerability = aggregateModifiers([
+        CONSTS.EFFECT_MATERIAL_VULNERABILITY,
+        CONSTS.ITEM_PROPERTY_MATERIAL_VULNERABILITY
+    ], getters, {
+        effectSorter: fEffectSorter,
+        propSorter: fPropSorter
+    })
     const oMitigation = {}
     addMitigation(oMitigation, oReduction)
     addMitigation(oMitigation, oResistance)
     addMitigation(oMitigation, oVulnerability)
+    addMitigation(oMitigation, oImmunity)
+    addMitigation(oMitigation, oMatVulnerability)
     Object
         .entries(oReduction.sorter)
         .forEach(([sDamType, oReg]) => {
@@ -77,17 +98,35 @@ module.exports = (state, getters) => {
             oMitigation[sDamType].vulnerability ||= oReg.count > 0
         })
     Object
+        .entries(oImmunity.sorter)
+        .forEach(([sDamType, oReg]) => {
+            oMitigation[sDamType].immunity ||= oReg.count > 0
+        })
+    Object
+        .entries(oMatVulnerability.sorter)
+        .forEach(([sDamType, oReg]) => {
+            oMitigation[sDamType].vulnerability ||= oReg.count > 0
+        })
+    Object
         .entries(oMitigation)
         .forEach(([sDamType, oReg]) => {
+            const i = oReg.immunity ? 'i': ''
             const r = oReg.resistance ? 'r' : ''
             const v = oReg.vulnerability ? 'v' : ''
-            switch (r + v) {
+            switch (i + r + v) {
+                case 'i':
+                case 'ir':
+                case 'iv':
+                case 'irv': {
+                    oReg.factor = DAMAGE_FACTOR_IMMUNITY
+                    break
+                }
                 case 'r': {
-                    oReg.factor = 0.5
+                    oReg.factor = DAMAGE_FACTOR_RESISTANCE
                     break
                 }
                 case 'v': {
-                    oReg.factor = 2
+                    oReg.factor = DAMAGE_FACTOR_VULNERABILITY
                     break
                 }
             }

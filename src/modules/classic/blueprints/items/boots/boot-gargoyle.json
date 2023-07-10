@@ -1,0 +1,15 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_BOOTS",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_AC_BONUS",
+      "amp": 2
+    },
+    {
+      "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+      "ability": "ABILITY_CONSTITUTION",
+      "amp": 3
+    }
+  ]
+}

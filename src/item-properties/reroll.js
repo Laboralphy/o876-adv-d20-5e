@@ -1,9 +1,15 @@
 const CONSTS = require('../consts')
 
-module.exports = function ({ value, when }) {
+/**
+ * ITEM_PROPERTY_REROLL
+ * @param amp {number}
+ * @param when {string} rollType
+ * @returns {{data: {when}, amp, property: (string|*)}}
+ */
+module.exports = function ({ amp, when }) {
     return {
         property: CONSTS.ITEM_PROPERTY_REROLL,
-        amp: value,
+        amp,
         data: {
             when
         }

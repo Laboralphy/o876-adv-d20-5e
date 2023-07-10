@@ -5,14 +5,12 @@ const { v4: uuidv4 } = require('uuid')
 const Events = require('events')
 
 // Store
-const { assetManager } = require('./assets')
 const { aggregateModifiers } = require("./store/creature/common/aggregate-modifiers");
-
-let LAST_ID = 0
 
 class Creature {
     constructor () {
         this._id = uuidv4({}, null, 0)
+        this._ref = ''
         this._name = this._id
         this._dice = new Dice()
         this._target = {
@@ -23,17 +21,52 @@ class Creature {
             handler: null,
             creature: null
         }
+        if (!Creature.AssetManager) {
+            throw new Error('AssetManager not declared')
+        }
+        if (!Creature.AssetManager.initialized) {
+            throw new Error('AssetManager not initialized')
+        }
         /**
          * @type {D20CreatureStore}
          * @private
          */
-        this._store = assetManager.createStore('creature')
+        this._store = Creature.AssetManager.createStore('creature')
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
+        this._store.mutations.setId({ value: this._id })
+    }
+
+    static set AssetManager (value) {
+        Creature._AssetManager = value
+    }
+
+    static get AssetManager () {
+        return Creature._AssetManager
+    }
+
+    get entityType () {
+        return CONSTS.ENTITY_TYPE_ACTOR
     }
 
     set name (value) {
         this._name = value
+    }
+
+    /**
+     * Définie la reférence du blueprint qui a servit à construire la creature
+     * @param value {string}
+     */
+    set ref (value) {
+        this._ref = value
+    }
+
+    /**
+     * Renvoie la référence du blueprint qui a servit a construre la creature
+     * @returns {string}
+     */
+    get ref () {
+        return this._ref
     }
 
     get name () {
@@ -52,8 +85,15 @@ class Creature {
         this._dice = value
     }
 
+    get effectProcessor () {
+        return this._effectProcessor
+    }
     get id () {
         return this._id
+    }
+
+    set id (value) {
+        this.store.mutations.setId({ value })
     }
 
     get store () {
@@ -99,9 +139,9 @@ class Creature {
      * Aggrège les effets spécifiés dans la liste, selon un prédicat
      * @param aTags {string[]} liste des effets désirés
      * @param filters {Object} voir la fonction store/creature/common/aggregate-modifiers
-     * @returns {{sorter: {Object}, max: number, sum: number}}
+     * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, sum: number, count: number, effects: number, ip: number}}
      */
-    aggregateModifiers (aTags, filters = {}) {
+    aggregateModifiers (aTags, filters) {
         return aggregateModifiers(aTags, this.store.getters, filters)
     }
 
@@ -120,9 +160,10 @@ class Creature {
      * Inclue les effets appliqués à la créature qui peuvent influencer les dégats
      * Inclue les effets et propriété de l'arme
      * Inclue le bonus de caractéristique offensive
+     * @param critical {boolean}
      * @return {Object<string, number>}
      */
-    getDamageBonus (bCritical = false) {
+    getDamageBonus ({ critical = false } = {}) {
         // Effect & Props damageBonus
         // Effect enhancement
         // offensive ability modifier
@@ -140,7 +181,9 @@ class Creature {
             CONSTS.ITEM_PROPERTY_ENHANCEMENT
         ], {
             effectSorter: effect => effect.data.type || sWeaponDamType,
-            propSorter: prop => prop.data.type || sWeaponDamType,
+            propSorter: prop => prop.property === CONSTS.ITEM_PROPERTY_ENHANCEMENT
+                ? sWeaponDamType
+                : prop.data.type,
             effectAmpMapper: eff => ampRndMapper(eff),
             propAmpMapper: prop => ampRndMapper(prop)
         })
@@ -159,13 +202,15 @@ class Creature {
         // Les bonus fixes
         updateResult(am.sorter)
         // les bonus randoms
-        if (bCritical) {
+        if (critical) {
             const amCrit = this.aggregateModifiers([
                 CONSTS.ITEM_PROPERTY_DAMAGE_BONUS,
                 CONSTS.ITEM_PROPERTY_ENHANCEMENT,
                 CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL
             ], {
-                propSorter: property => property.data.type || sWeaponDamType,
+                propSorter: prop => prop.property === CONSTS.ITEM_PROPERTY_ENHANCEMENT
+                    ? sWeaponDamType
+                    : prop.data.type,
                 propAmpMapper: prop => ampRndMapper(prop)
             })
             updateResult(amCrit.sorter)
@@ -219,6 +264,11 @@ class Creature {
         }
     }
 
+    /**
+     * Définit la distance entre la creature et sa cible ET RECIPROQUEMENT
+     * @param n {number} nouvelle distance
+     * @param bRecursed {boolean} indique que la fonction a été appelée recursivement
+     */
     setDistanceToTarget (n, bRecursed = false) {
         const oTarget = this.getTarget()
         if (oTarget) {
@@ -227,14 +277,15 @@ class Creature {
                 if (!bRecursed) {
                     oTarget.setDistanceToTarget(n, true)
                 }
-                this.store.mutations.setTargetDistance({ value: n })
-                this._events.emit('target-distance', { value: n })
+                const oEventPayload = { value: n, creature: this, target: oTarget }
+                this._events.emit('target-distance', oEventPayload)
+                this.store.mutations.setTargetDistance({ value: oEventPayload.value })
             }
         }
     }
 
     /**
-     *
+     * envoie la cible de la cible
      * @returns {Creature|null}
      */
     getTargetTarget () {
@@ -255,9 +306,12 @@ class Creature {
             this.clearTarget()
             this._target.creature = oCreature
             this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
-            this.store.mutations.updateTargetConditions({ id: oCreature.id, conditions: this._target.creature.store.getters.getConditionSources })
+            this.store.mutations.updateTargetConditions({
+                id: oCreature.id,
+                conditions: this._target.creature.store.getters.getConditionSources
+            })
             oCreature.store.events.on('mutation', this._target.handler)
-            this.initializeDistanceToTarget(this.dice.roll(6, 6))
+            this.initializeDistanceToTarget(Creature.AssetManager.data.variables.DEFAULT_TARGET_DISTANCE)
         }
     }
 
@@ -349,13 +403,79 @@ class Creature {
      */
 
     applyEffect (oEffect, duration = 0, source = null) {
-        const oAppliedEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
-        this._events.emit('effect-applied', { effect: oEffect })
-        return oAppliedEffect
+        const eEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
+        this._events.emit('effect-applied', { effect: eEffect })
+        if (eEffect.subtype !== CONSTS.EFFECT_SUBTYPE_WEAPON && oEffect.type === CONSTS.EFFECT_DAMAGE) {
+            this._events.emit('damaged', {
+                type: eEffect.data.type,
+                amount: eEffect.data.appliedAmount,
+                source,
+                resisted: eEffect.data.resistedAmount
+            })
+            if (this.store.getters.getHitPoints <= 0) {
+                this.events.emit('death', { killer: source })
+            }
+        }
+        return eEffect
     }
 
+    processRegenEffects () {
+        const rdt = new Set(Object.keys(this.store.getters.getRecentDamageTypes))
+        const ag = this.aggregateModifiers([
+            CONSTS.ITEM_PROPERTY_REGEN
+        ], {
+            propFilter: prop => !prop.data.vulnerabilities.some(dt => rdt.has(dt))
+        })
+        // Health Regeneration
+        if (ag.sum > 0) {
+            this.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, ag.sum))
+        }
+    }
+
+    /**
+     * Cette créature inspecte les différentes auras de sa cible.
+     * Une créature qui n'a pas de cible n'est pas sujette à des auras.
+     * Les aura seront donc considérées comme des réactions passives contre un agresseur
+     */
+    processTargetAuraEffects () {
+        const oTarget = this.getTarget()
+        if (!oTarget) {
+            return
+        }
+        const oContext = {
+            target: this,
+            source: oTarget,
+            property: null,
+            data: {}
+        }
+        const oScripts = Creature.AssetManager.scripts
+        const d = this.store.getters.getTargetDistance
+        oTarget.aggregateModifiers([
+            CONSTS.ITEM_PROPERTY_AURA
+        ], {
+            propFilter: prop => prop.data.radius >= d,
+            propForEach: prop => {
+                const sScript = prop.data.script
+                oContext.property = prop
+                if (sScript in oScripts) {
+                    oScripts[sScript](oContext)
+                } else {
+                    throw new Error('Could not find ON HIT script ' + sScript)
+                }
+            }
+        })
+    }
+
+    /**
+     * Dans un contexte comme un MUD, les combats s'effectuent en temps réel,
+     * Un round s'effectue en 6 seconde par exemple.
+     * Hors combat le processEffects s'effectue lorsque l'entité change de pièce
+     */
     processEffects () {
         this._effectProcessor.processCreatureEffects(this)
+        this.processRegenEffects()
+        this.processTargetAuraEffects()
+        this.store.mutations.clearRecentDamageTypes()
     }
 
     /*
@@ -368,11 +488,22 @@ class Creature {
          #####      #    #    #   ####    ####   #    #   ####      #    #    #  #    #   ####   ######   ####
      */
 
+    getSkillData (sSkill) {
+        const sSkillDataProp = sSkill.toLowerCase().replace(/_/g, '-')
+        return Creature.AssetManager.data[sSkillDataProp]
+    }
+
     /**
+     * @typedef D20CircumstancesDetails {string[]}
+     *
+     * @typedef D20Circumstances {object}
+     * @property disadvantage {boolean}
+     * @property advantage {boolean}
+     * @property details {{advnatages: D20CircumstancesDetails, disadvantages: D20CircumstancesDetails}}
      *
      * @param sRollType
      * @param aAbilitySkillThreats
-     * @returns {{disadvantage: *, advantage: *, details: {advantages: (*|string|CSSRuleList), disadvantages: (*|string|CSSRuleList)}}}
+     * @returns {D20Circumstances}
      */
     getCircumstances (sRollType, aAbilitySkillThreats) {
         const oAdvantages = this.store.getters.getAdvantages
@@ -396,8 +527,7 @@ class Creature {
             if (sRollType === CONSTS.ROLL_TYPE_CHECK) {
                 // 1) lire les data du skill pour déterminer le getter du skill
                 const sSkill = ex
-                const sSkillDataProp = ex.toLowerCase().replace(/_/g, '-')
-                const oSkillData = assetManager.data[sSkillDataProp]
+                const oSkillData = this.getSkillData(ex)
                 if (oSkillData) {
                     // 2) lire ce getter
                     const oGetters = oSkillData.getters
@@ -471,18 +601,28 @@ class Creature {
      * pour un jet de sauvegarde on peut indiquer le type de menace (DAMAGE_TYPE_FIRE, SPELL_TYPE_MIND_CONTROL)
      * pour un jet de compétence on peut indiquer la nature de la compétence (SKILL_STEALTH...)
      * certaines créature ont des avantages ou des désavantages spécifiques à certaines situations
-     * @returns {number}
+     * @returns {{ value: number, circumstances: D20Circumstances }}
      */
     rollD20 (sRollType, sAbility, extra = []) {
-        const { advantage, disadvantage } = this.getCircumstances(sRollType, [sAbility, ...extra])
+        const circumstances = this.getCircumstances(sRollType, [sAbility, ...extra])
+        const { advantage, disadvantage } = circumstances
         const r = this._dice.roll(20)
         if (advantage && !disadvantage) {
-            return Math.max(r, this._dice.roll(20))
+            return {
+                value: Math.max(r, this._dice.roll(20)),
+                circumstances
+            }
         }
         if (disadvantage && !advantage) {
-            return Math.min(r, this._dice.roll(20))
+            return {
+                value: Math.min(r, this._dice.roll(20)),
+                circumstances
+            }
         }
-        return r
+        return {
+            value: r,
+            circumstances
+        }
     }
 
     /**
@@ -504,18 +644,18 @@ class Creature {
      * @property ammo {D20Item}
      * @property advantages {D20RuleValue}
      * @property disadvantages {D20RuleValue}
-     * @property damages {amount: number, types: object<string, number>}
+     * @property damages {amount: number, types: object<string, number>, resisted: object<string, number>}
      *
      * @returns {AttackOutcome}
      */
     rollAttack () {
         const sg = this.store.getters
+        const oTarget = this.getTarget()
         const bonus = this.getAttackBonus()
         const sOffensiveAbility = this.store.getters.getOffensiveAbility
-        const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility)
-        const nCritThreat = sg.getSelectedWeaponCriticalThreat
-        const critical = dice >= nCritThreat
-        const ac = this.getTarget().store.getters.getArmorClass
+        const dice = this.rollD20(CONSTS.ROLL_TYPE_ATTACK, sOffensiveAbility).value
+        const critical = dice >= sg.getSelectedWeaponCriticalThreat
+        const ac = oTarget.store.getters.getArmorClass
         const roll = dice + bonus
         const distance = sg.getTargetDistance
         const range = sg.getSelectedWeaponRange
@@ -523,17 +663,19 @@ class Creature {
         const ammo = sg.isRangedWeaponProperlyLoaded ? sg.getEquippedItems[CONSTS.EQUIPMENT_SLOT_AMMO] : null
         const advantages = sg.getAdvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
         const disadvantages = sg.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
-        const hit = dice >= assetManager.data.variables.ROLL_AUTO_SUCCESS
+        const bCriticalHit = dice >= Creature.AssetManager.data.variables.ROLL_AUTO_SUCCESS
+        const bCriticalFail = dice <= Creature.AssetManager.data.variables.ROLL_AUTO_FAIL
+        const hit = bCriticalHit
             ? true
-            : dice <= assetManager.data.variables.ROLL_AUTO_FAIL
+            : bCriticalFail
                 ? false
-                : (dice + bonus) >= ac
+                : roll >= ac
         const target = this.getTarget()
-        const deflector = hit ? '' : target.getDeflectingArmorPart(roll).type
+        const deflector = hit ? '' : target.getDeflectingArmorPart(bCriticalFail ? -1 : roll).type
         return {
             ac,
             bonus,
-            critical,
+            critical: critical || this.store.getters.isTargetAutoCritical,
             deflector,
             dice,
             distance,
@@ -547,6 +689,7 @@ class Creature {
             disadvantages,
             damages: {
                 amount: 0,
+                resisted: {},
                 types: {}
             }
         }
@@ -572,10 +715,14 @@ class Creature {
             roll: 0,
             target,
             weapon,
+            kill: false,
+            failed: false,
+            failure: '',
             advantages: { rules: [], value: false },
             disadvantages: { rules: [], value: false },
             damages: {
                 amount: 0,
+                resisted: {},
                 types: {}
             },
             ...oDefault
@@ -586,25 +733,53 @@ class Creature {
      * Lance un dé pour déterminer le résultat d'une vérification compétence
      * On détermine la caractéristique associée à la compétence puis lance un D20
      */
-    rollSkill (sSkill) {
-
+    rollSkill (sSkill, dc = undefined) {
+        const sg = this.store.getters
+        // données du skill
+        const aSkills = sg.getSkillProficiencies
+        const bProficient = aSkills.has(sSkill)
+        // déterminer les bonus du skill
+        const nSkillBonus = this
+            .aggregateModifiers([CONSTS.ITEM_PROPERTY_SKILL_BONUS], {
+                propFilter: prop => prop.data.skill === sSkill
+            })
+            .sum +
+            (bProficient ? sg.getProficiencyBonus : 0)
+        // déterminer la carac du skill
+        const oSkillData = this.getSkillData(sSkill)
+        const sSkillAbility = oSkillData.ability
+        const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
+        const nTotalBonus = nAbilityBonus + nSkillBonus
+        const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
+        const nTotal = value + nTotalBonus
+        const output = {
+            bonus: nTotalBonus,
+            roll: value,
+            value: nTotal,
+            dc,
+            success: dc !== undefined ? nTotal >= dc : undefined,
+            ability: sSkillAbility,
+            circumstance: this.getCircumstanceNumValue(circumstances)
+        }
+        this._events.emit('check-skill', output)
+        return output
     }
-
 
     /**
      * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
-     * La valeur renvoyer ne fait pas intervenir des bonus liés aux effets de la créature ou à ses caractéristiques
+     * La valeur renvoyée ne fait pas intervenir des bonus liés aux effets de la créature ou à ses caractéristiques
      * @param critical {boolean} si true alors le coup est critique et tous les jets de dé doivent être doublés
+     * @param dice {Dice} dé à utiliser
+     * return {Object<string, number>}
      */
     rollWeaponDamage ({ critical = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
-        const n = critical ? assetManager.data.variables.CRITICAL_FACTOR : 1
+        const nExtraDamageDice = this.store.getters.isWieldingHeavyMeleeWeapon
+            ? this.store.getters.getSizeProperties.extraMeleeDamageDice
+            : 0
+        const n = (critical ? Creature.AssetManager.data.variables.CRITICAL_FACTOR : 1) + nExtraDamageDice
         let nDamage = 0
-        const nRerollThreshold = this
-            .aggregateModifiers(
-                [CONSTS.EFFECT_REROLL],
-                { effectFilter: f => f.data.when === CONSTS.ROLL_TYPE_DAMAGE }
-            ).max
+        const nRerollThreshold = this.store.getters.getDamageRerollThreshold
         let bRerolled = false
         for (let i = 0; i < n; ++i) {
             let nRoll = this.roll(oWeapon.damage)
@@ -614,7 +789,7 @@ class Creature {
             }
             nDamage += nRoll
         }
-        const oDamageBonus = this.getDamageBonus(critical)
+        const oDamageBonus = this.getDamageBonus({ critical })
         if (!(oWeapon.damageType in oDamageBonus)) {
             oDamageBonus[oWeapon.damageType] = Math.max(1, nDamage)
         } else {
@@ -625,19 +800,102 @@ class Creature {
 
     /**
      *
+     * @param oCirc {D20Circumstances}
+     * @return {number}
+     */
+    getCircumstanceNumValue (oCirc) {
+        if (oCirc.advantage && oCirc.disadvantage) {
+            return 0
+        } else if (oCirc.advantage) {
+            return 1
+        } else if (oCirc.disadvantage) {
+            return -1
+        } else {
+            return 0
+        }
+    }
+
+    /**
+     *
      * @param sAbility {string}
      * @param aThreats {string[]}
-     * @returns {number}
+     * @param dc {number}
+     * @returns {{ roll, bonus, value, circumstance, success }}
      */
-    rollSavingThrow (sAbility, aThreats = []) {
+    rollSavingThrow (sAbility, aThreats = [], dc) {
         const st = this.store.getters.getSavingThrowBonus
         const sta = sAbility in st ? st[sAbility] : 0
         const stt = aThreats.reduce((prev, sThreat) => {
             return sThreat in st ? prev + st[sThreat] : prev
         }, 0)
-        const nBonus = sta + stt
+        const bonus = sta + stt
         const r = this.rollD20(CONSTS.ROLL_TYPE_SAVE, sAbility, aThreats)
-        return r + nBonus
+        const value = r.value + bonus
+        const output = {
+            roll: r.value,
+            bonus,
+            value,
+            ability: sAbility,
+            threats: aThreats,
+            dc,
+            success: dc !== undefined ? value >= dc : undefined,
+            circumstance: this.getCircumstanceNumValue(r.circumstances)
+        }
+        this._events.emit('saving-throw', output)
+        return output
+    }
+
+    /**
+     * Applique les effet de condition à la cible de l'arme
+     * @param oTarget {Creature}
+     */
+    weaponApplyConditions (oTarget) {
+        const aApplicableConditions = this.store.getters.getSelectedWeaponApplicableConditions
+        if (aApplicableConditions.length > 0) {
+            const aNewlyAppliedConditions = new Set()
+            const aConditions = oTarget.store.getters.getConditions
+            aApplicableConditions.forEach(({ condition, dc, saveAbility, duration }) => {
+                if (!aNewlyAppliedConditions.has(condition) && !aConditions.has(condition)) {
+                    const { success } = oTarget.rollSavingThrow(saveAbility, [], dc)
+                    if (!success) {
+                        oTarget.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition), duration, this)
+                        aNewlyAppliedConditions.add(condition)
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * @typedef D20OnHitContext {object}
+     * @property target {Creature} Créature sur laquelle s'applique l'effet de l'itemproperty onhit
+     * @property source {Creature} Créature qui détient l'arme qui a l'itemproperty onhit
+     * @property property {object} ItemProperty
+     * @property data {{}} objet aditionel de sauvegarde d'information enter les appel
+     * @param oTarget
+     */
+
+    weaponProcessOnHit (oTarget) {
+        const aHitProps = this
+            .store
+            .getters
+            .getSelectedWeaponOnHitProperties
+        const oContext = {
+            target: oTarget,
+            source: this,
+            property: null,
+            data: {}
+        }
+        const oScripts = Creature.AssetManager.scripts
+        aHitProps.forEach(prop => {
+            const sScript = prop.data.script
+            oContext.property = prop
+            if (sScript in oScripts) {
+                oScripts[sScript](oContext)
+            } else {
+                throw new Error('Could not find ON HIT script ' + sScript)
+            }
+        })
     }
 
     /*
@@ -650,16 +908,28 @@ class Creature {
         #     #   ####      #       #     ####   #    #   ####
      */
 
+    doAction (sAction) {
+        this._events.emit('action', {
+            action: sAction
+        })
+        const scriptFunction = Creature.AssetManager.scripts[sAction]
+        if (!scriptFunction) {
+            throw new Error('ERR_SCRIPT_ACTION_NOT_FOUND: ' + sAction)
+        } else {
+            scriptFunction(this)
+        }
+    }
+
     doFeatAction (sFeat) {
-        if (sFeat in assetManager.data) {
-            const oFeatData = assetManager.data[sFeat]
+        if (sFeat in Creature.AssetManager.data) {
+            const oFeatData = Creature.AssetManager.data[sFeat]
             if ('when' in oFeatData) {
                 if (!this.store.getters[oFeatData.when]) {
                     throw new Error('ERR_FEAT_ACTION_NOT_AVAILABLE')
                 }
             }
             if ('action' in oFeatData) {
-                assetManager.scripts[oFeatData.action](this)
+                this.doAction(oFeatData.action)
             } else {
                 throw new Error('ERR_FEAT_HAS_NO_ACTION')
             }
@@ -686,23 +956,46 @@ class Creature {
     }
 
     /**
+     * Se précipite vers la cible, pour se mettre à portée de l'arme
+     */
+    doRushToTarget () {
+        const nDistance = this.store.getters.getTargetDistance
+        this.setDistanceToTarget(Math.max(1, nDistance - this.store.getters.getSpeed))
+    }
+
+    /**
      * Effectue une attaque contre la cible actuelle
      * @returns {AttackOutcome|false}
-     *
      */
     doAttack () {
         // On a vraiment une cible
         const oTarget = this.getTarget()
         if (!oTarget) {
-            throw new Error('ERR_TARGET_INVALID')
+            const outcome = this.createDefaultAttackOutcome({
+                failed: true,
+                failure: CONSTS.ATTACK_OUTCOME_NO_TARGET,
+            })
+            this._events.emit('attack', { outcome })
+            return outcome
+        }
+        if (!this.store.getters.canAttackTarget) {
+            const outcome = this.createDefaultAttackOutcome({
+                failed: true,
+                failure: CONSTS.ATTACK_OUTCOME_CONDITION,
+            })
+            this._events.emit('attack', { outcome })
+            return outcome
         }
         // Déterminer si on est à portée
         if (!this.store.getters.isTargetInWeaponRange) {
-            // hors de portee
-            const oOutcome = this.createDefaultAttackOutcome()
-            this._events.emit('attack', { outcome: oOutcome })
-            return oOutcome
+            const outcome = this.createDefaultAttackOutcome({
+                failed: true,
+                failure: CONSTS.ATTACK_OUTCOME_UNREACHABLE,
+            })
+            this._events.emit('attack', { outcome })
+            return outcome
         }
+        oTarget.setAggressor(this)
         // jet d'attaque
         const oAtk = this.rollAttack()
         // si ça touche, calculer les dégâts
@@ -712,16 +1005,37 @@ class Creature {
             })
             // générer les effets de dégâts
             let amount = 0
+            const oResisted = {}
             const aDamageEffects = Object
                 .entries(oDamages)
                 .map(([sType, nValue]) => {
-                    amount += nValue
-                    return EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nValue, sType)
+                    const eDam = EffectProcessor.createEffect(
+                        CONSTS.EFFECT_DAMAGE,
+                        nValue,
+                        sType,
+                        [...this.store.getters.getSelectedWeaponMaterial]
+                    )
+                    eDam.subtype = CONSTS.EFFECT_SUBTYPE_WEAPON
+                    const eMitigDam = oTarget.applyEffect(eDam)
+                    const n = eMitigDam.data.resistedAmount
+                    if (!(sType in oResisted)) {
+                        oResisted[sType] = n
+                    } else {
+                        oResisted[sType] += n
+                    }
+                    amount += eMitigDam.amp
+                    oDamages[sType] -= n
+                    return eMitigDam
                 })
             // appliquer les effets sur la cible
-            aDamageEffects.map(d => oTarget.applyEffect(d))
+            oAtk.damages.resisted = oResisted
             oAtk.damages.types = oDamages
             oAtk.damages.amount = amount
+
+            // application d'effets on hit
+            if (amount > 0) {
+                this.weaponProcessOnHit(oTarget)
+            }
         }
         this._events.emit('attack', { outcome: oAtk })
         return oAtk
@@ -742,7 +1056,8 @@ class Creature {
                 .getArmorClassRanges, this
                 .store
                 .getters
-                .getArmorClassDetails)
+                .getArmorClassDetails,
+                nAttackRoll)
             throw new Error('WTF ' + nAttackRoll + ' not in range')
         }
     }

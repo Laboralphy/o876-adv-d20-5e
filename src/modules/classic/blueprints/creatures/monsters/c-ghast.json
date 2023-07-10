@@ -1,0 +1,83 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 8,
+  "abilities": {
+    "strength": 16,
+    "dexterity": 17,
+    "constitution": 10,
+    "intelligence": 11,
+    "wisdom": 10,
+    "charisma": 8
+  },
+  "size": "medium",
+  "specie": "undead",
+  "speed": 30,
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-c-ghast",
+      "damage": "2d6",
+      "damageType": "DAMAGE_TYPE_SLASHING",
+      "material": "MATERIAL_UNKNOWN",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_ON_HIT",
+          "amp": 0,
+          "script": "apply-condition",
+          "condition": "CONDITION_PARALYZED",
+          "dc": 10,
+          "saveAbility": "ABILITY_CONSTITUTION",
+          "duration": 2
+        }
+      ]
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_ARMOR",
+      "armorType": "armor-type-natural",
+      "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-ghast",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_AURA",
+          "amp": 0,
+          "script": "apply-condition",
+          "condition": "CONDITION_POISONED",
+          "dc": 10,
+          "saveAbility": "ABILITY_CONSTITUTION",
+          "duration": 2,
+          "radius": 5
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_WITHERING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_POISON"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_POISONED"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_EXHAUSTED"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_CHARMED"
+        }
+      ]
+    }
+  ],
+  "actions": []
+}

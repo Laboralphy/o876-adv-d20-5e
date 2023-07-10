@@ -42,6 +42,8 @@ module.exports = function () {
         gauges: {
             damage: 0
         },
+        recentDamageTypes: {
+        },
         target: {
             id: '',
             active: false,

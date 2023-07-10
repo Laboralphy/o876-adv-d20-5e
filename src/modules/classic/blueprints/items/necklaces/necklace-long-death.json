@@ -1,0 +1,16 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_NECKLACE",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_ABILITY_BONUS",
+      "ability": "ABILITY_CONSTITUTION",
+      "amp": 1
+    },
+    {
+      "property": "ITEM_PROPERTY_ADVANTAGE",
+      "rollTypes": ["ROLL_TYPE_SAVE"],
+      "abilities": ["THREAT_SPELL"]
+    }
+  ]
+}

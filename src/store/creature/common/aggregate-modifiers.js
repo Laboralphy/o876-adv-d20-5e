@@ -21,10 +21,12 @@ function rollRandomEffects (aEffects) {
  * @param effectFilter {function}
  * @param effectAmpMapper {function}
  * @param effectSorter {function}
+ * @param effectForEach {function}
  * @param propFilter {function}
  * @param propAmpMapper {function}
  * @param propSorter {function}
- * @returns {{sorter: {Object}, max: number, sum: number, count: number, effects: number, ip: number }}
+ * @param propForEach {function}
+ * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, sum: number, count: number, effects: number, ip: number }}
  */
 function aggregateModifiers (aTags, getters, {
     effectFilter = null,
@@ -32,7 +34,9 @@ function aggregateModifiers (aTags, getters, {
     effectAmpMapper = null,
     propAmpMapper = null,
     effectSorter = null,
-    propSorter = null
+    propSorter = null,
+    effectForEach = null,
+    propForEach = null
 } = {}) {
     const aTypeSet = new Set(
         Array.isArray(aTags)
@@ -49,6 +53,9 @@ function aggregateModifiers (aTags, getters, {
             ...eff,
             amp: effectAmpMapper ? effectAmpMapper(eff) : eff.amp
         }))
+    if (effectForEach) {
+        aFilteredEffects.forEach(effectForEach)
+    }
     const aFilteredItemProperties = getters
         .getEquipmentItemProperties
         .filter(ip =>
@@ -59,10 +66,13 @@ function aggregateModifiers (aTags, getters, {
             ...prop,
             amp: propAmpMapper ? propAmpMapper(prop) : prop.amp
         }))
+    if (propForEach) {
+        aFilteredItemProperties.forEach(propForEach)
+    }
     const oSorter = {}
     const rdisc = sDisc => {
         if (typeof sDisc !== 'string') {
-            throw new Error('invalid sorting key for aggregateModifiers prop/effect sorter"' + sDisc + '"')
+            throw new Error('invalid sorting key for aggregateModifiers prop/effect sorter "' + sDisc + '"')
         }
         if (!(sDisc in oSorter)) {
             oSorter[sDisc] = {
@@ -90,7 +100,7 @@ function aggregateModifiers (aTags, getters, {
         aFilteredItemProperties.forEach(f => {
             const sDisc = propSorter(f)
             const sd = rdisc(sDisc)
-            const amp = f.amp
+            const amp = f.amp || 0
             sd.max = Math.max(sd.max, amp)
             sd.sum += amp
             ++sd.count

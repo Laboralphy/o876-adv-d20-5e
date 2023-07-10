@@ -1,0 +1,11 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_BELT",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_DAMAGE_REDUCTION",
+      "type": "DAMAGE_TYPE_PIERCING",
+      "amp": 5
+    }
+  ]
+}

@@ -5,6 +5,7 @@
   "damageType": "DAMAGE_TYPE_CRUSHING",
   "weight": 10,
   "attributes": [
-    "WEAPON_ATTRIBUTE_TWO_HANDED"
+    "WEAPON_ATTRIBUTE_TWO_HANDED",
+    "WEAPON_ATTRIBUTE_HEAVY"
   ]
 }

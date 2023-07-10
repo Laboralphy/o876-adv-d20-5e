@@ -2,6 +2,7 @@ const Rules = require('../src/Rules')
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
 const EffectProcessor = require('../src/EffectProcessor')
+const IP = require('../src/item-properties')
 
 describe('instanciation', function () {
     it('should instanciate with no error', function () {
@@ -41,7 +42,7 @@ describe('strike', function () {
         c1.name = 'Burnasse'
         const c2 = new Creature()
         c2.name = 'Mr.X'
-        r.defineCreatureEventHandlers(c1)
+        r._defineCreatureEventHandlers(c1)
         const aLog = []
         r.events.on('attack', ({ creature, attack }) => {
             const weapon = creature.store.getters.getSelectedWeapon
@@ -346,7 +347,7 @@ describe('saving throw bonus effects', function () {
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_SPELL), 10)
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_MIND_SPELL), 10)
         c1.dice.debug(true, 0.000001)
-        const roll = c1.rollSavingThrow(CONSTS.ABILITY_WISDOM, [CONSTS.THREAT_TYPE_SPELL, CONSTS.THREAT_TYPE_MIND_SPELL])
+        const roll = c1.rollSavingThrow(CONSTS.ABILITY_WISDOM, [CONSTS.THREAT_TYPE_SPELL, CONSTS.THREAT_TYPE_MIND_SPELL], 1).value
         // bonus : 1 (wis) + 3 (spell) +3 (mind spell) ; roll 1 ; TOTAL: 8
         expect(roll).toBe(8)
     })
@@ -409,5 +410,339 @@ describe('check skills on additionnal modules like "classic"', function () {
             disadvantage: false,
             details: { advantages: ['REFLEX'], disadvantages: [] }
         })
+    })
+})
+
+describe('damage immunity', function () {
+    it('should not be damage by fire when having fire immunity', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-soldier')
+        const w = r.createEntity('wpn-angurvadal')
+        c1.equipItem(w)
+        const m1 = r.createEntity({
+            "entityType": "ENTITY_TYPE_ACTOR",
+            "class": "monster",
+            "level": 5,
+            "abilities": {
+                "strength": 8,
+                "dexterity": 12,
+                "constitution": 12,
+                "intelligence": 7,
+                "wisdom": 10,
+                "charisma": 10
+            },
+            "size": "small",
+            "specie": "elemental",
+            "speed": 30,
+            "equipment": [
+                {
+                    "entityType": "ENTITY_TYPE_ITEM",
+                    "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+                    "weaponType": "weapon-type-unarmed",
+                    "damage": "1d4+1",
+                    "damageType": "DAMAGE_TYPE_SLASHING",
+                    "attributes": [],
+                    "properties": [
+                        {
+                            "property": "ITEM_PROPERTY_ATTACK_BONUS",
+                            "amp": 3,
+                        },
+                        {
+                            "property": "ITEM_PROPERTY_DAMAGE_BONUS",
+                            "amp": "1d4",
+                            "type": "DAMAGE_TYPE_FIRE"
+                        }
+                    ]
+                },
+                {
+                    "entityType": "ENTITY_TYPE_ITEM",
+                    "itemType": "ITEM_TYPE_ARMOR",
+                    "armorType": "armor-type-natural",
+                    "properties": [
+                        {
+                            "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+                            "type": "DAMAGE_TYPE_FIRE"
+                        },{
+                            "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+                            "type": "DAMAGE_TYPE_POISON"
+                        },{
+                            "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
+                            "type": "DAMAGE_TYPE_COLD"
+                        },{
+                            "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+                            "condition": "CONDITION_POISONED"
+                        }, {
+                            "property": "ITEM_PROPERTY_SKILL_BONUS",
+                            "amp": 3,
+                            "skill": "SKILL_STEALTH"
+                        }
+                    ],
+                    "material": "MATERIAL_UNKNOWN"
+                }
+            ]
+        })
+        expect(m1.store.getters.getDamageMitigation).toEqual({
+            DAMAGE_TYPE_FIRE: {
+                reduction: 0,
+                resistance: false,
+                vulnerability: false,
+                immunity: true,
+                factor: 0
+            },
+            DAMAGE_TYPE_COLD: { reduction: 0, resistance: false, vulnerability: true, immunity: false, factor: 2 },
+            DAMAGE_TYPE_POISON: { reduction: 0, resistance: false, vulnerability: false, immunity: true, factor: 0 }
+        })
+        expect(m1.store.getters.getHitPoints).toBe(27)
+        const eDamF = m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_FIRE))
+        expect(m1.store.getters.getHitPoints).toBe(27)
+        const eDamC = m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_ACID))
+        expect(m1.store.getters.getHitPoints).toBe(22)
+        m1.dice.debug(true, 0.000001)
+        expect(m1.rollSkill('SKILL_STEALTH')).toEqual({
+            bonus: 4,
+            roll: 1,
+            value: 5,
+            ability: 'ABILITY_DEXTERITY',
+            dc: undefined,
+            success: undefined,
+            circumstance: 0
+        })
+    })
+})
+
+describe('damage vulnerability', function () {
+    it('should be resistant to slashing weapon damage when not having damage vulnerability', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-soldier')
+        const w1 = r.createEntity('wpn-angurvadal')
+        // c1.equipItem(w1)
+        const c2 = r.createEntity('c-gargoyle')
+        c1.dice.debug(true, 0.75)
+        c1.setTarget(c2)
+        c1.setDistanceToTarget(5)
+        const atk = r.attack(c1)
+        expect(atk.damages).toEqual({
+            amount: 5,
+            resisted: { DAMAGE_TYPE_SLASHING: 5 },
+            types: { DAMAGE_TYPE_SLASHING: 5 }
+        })
+    })
+    it('should not be resistant to slashing weapon damage when having damage vulnerability to silver', function () {
+        const r = new Rules()
+        r.init()
+        const c1 = r.createEntity('c-soldier')
+        const w1 = r.createEntity('wpn-silver-dagger')
+        const c2 = r.createEntity('c-gargoyle')
+        c1.dice.debug(true, 0.75)
+        c1.setTarget(c2)
+        c1.setDistanceToTarget(5)
+        const atk = r.attack(c1)
+        expect(atk.damages).toEqual({
+            amount: 5,
+            resisted: { DAMAGE_TYPE_SLASHING: 5 },
+            types: { DAMAGE_TYPE_SLASHING: 5 }
+        })
+        c1.equipItem(w1)
+        const atk2 = r.attack(c1)
+        expect(atk2.damages).toEqual({
+            amount: 7,
+            resisted: { DAMAGE_TYPE_PIERCING: 0 },
+            types: { DAMAGE_TYPE_PIERCING: 7 }
+        })
+    })
+})
+
+describe('EffectProcessor Garbage collector', function () {
+
+    function appEff (cTarget, cSource) {
+        cTarget.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DUMMY), 10, cSource)
+    }
+
+    function createBatch () {
+        const c1 = new Creature()
+        const c2 = new Creature()
+        const c3 = new Creature()
+        const c4 = new Creature()
+        const c5 = new Creature()
+        c1.id = 'c1'
+        c2.id = 'c2'
+        c3.id = 'c3'
+        c4.id = 'c4'
+        c5.id = 'c5'
+        return { c1, c2, c3, c4, c5 }
+    }
+
+    it('should remove c2 from c1 sources when applied effects ends', function () {
+        const { c1, c2, c3, c4, c5 } = createBatch()
+        appEff(c1, c2)
+        expect(Object.keys(c1.effectProcessor.creatures).length).toBe(2)
+    })
+})
+
+describe('obtention d\'information', function () {
+    it('should retrieve epee court data when asking for shortsword name in fr', function () {
+        const r = new Rules()
+        r.init()
+        expect(r.assetManager.strings.weaponType['weapon-type-shortsword']).toBe('Epée courte')
+    })
+    it('should retrieve 1d4 data when asking for shortsword damage output', function () {
+        const r = new Rules()
+        r.init()
+        expect(r.assetManager.data['weapon-type-shortsword'].damage).toBe('1d4')
+        r.assetManager.lang = 'en'
+        expect(r.assetManager.publicAssets.strings.weaponType['weapon-type-dagger']).toBe('Dagger')
+        r.assetManager.lang = 'fr'
+        expect(r.assetManager.publicAssets.strings.weaponType['weapon-type-dagger']).toBe('Dague')
+    })
+})
+
+describe('effect pharma', function () {
+    it('should heal 100% more when having pharma effect', function () {
+        const r = new Rules()
+        r.init()
+        const soldier = r.createEntity('c-soldier')
+        expect(soldier.store.getters.getHitPoints).toBe(44)
+        soldier.store.mutations.damage({ amount: 20 })
+        expect(soldier.store.getters.getHitPoints).toBe(24)
+        soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, 2))
+        expect(soldier.store.getters.getHitPoints).toBe(26)
+        const m1 = soldier.store.getters.getHealMitigation
+        expect(m1).toEqual({
+            pharma: false,
+            factor: 1
+        })
+        soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_PHARMA), 10)
+        const m2 = soldier.store.getters.getHealMitigation
+        expect(m2).toEqual({
+            pharma: true,
+            factor: 2
+        })
+        soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, 5))
+        expect(soldier.store.getters.getHitPoints).toBe(36)
+    })
+})
+
+describe('Troll regeneration', function () {
+    it('should regain 10 hp when wounded by non acid weapon', function () {
+        const r = new Rules()
+        r.init()
+        const troll = r.createEntity('c-troll')
+        expect(troll.store.getters.getHitPoints).toBe(92)
+        troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(troll.store.getters.getHitPoints).toBe(72)
+        troll.processEffects()
+        expect(troll.store.getters.getHitPoints).toBe(82)
+
+        troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_FIRE))
+        expect(troll.store.getters.getHitPoints).toBe(62)
+        troll.processEffects()
+        expect(troll.store.getters.getHitPoints).toBe(62)
+
+        troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_SLASHING))
+        expect(troll.store.getters.getHitPoints).toBe(42)
+        troll.processEffects()
+        expect(troll.store.getters.getHitPoints).toBe(52)
+    })
+
+    it('should have a max damage of 2d8 instead of 1d8 when having greatclub', function () {
+        const r = new Rules()
+        r.init()
+        const ogre = r.createEntity('c-ogre')
+        ogre.dice.debug(true, 0)
+        const minDamages = ogre.rollWeaponDamage()
+        ogre.dice.debug(true, 0.999999)
+        const maxDamages = ogre.rollWeaponDamage()
+        expect(maxDamages.DAMAGE_TYPE_CRUSHING).toBe(20)
+        expect(minDamages.DAMAGE_TYPE_CRUSHING).toBe(6)
+    })
+})
+
+describe('Ogre', function () {
+    it('should have a max damage of 2d8+4 instead of 1d8+4 when having greatclub', function () {
+        const r = new Rules()
+        r.init()
+        const ogre = r.createEntity('c-ogre')
+        ogre.dice.debug(true, 0)
+        const minDamages = ogre.rollWeaponDamage()
+        ogre.dice.debug(true, 0.999999)
+        const maxDamages = ogre.rollWeaponDamage()
+        expect(maxDamages.DAMAGE_TYPE_CRUSHING).toBe(20)
+        expect(minDamages.DAMAGE_TYPE_CRUSHING).toBe(6)
+    })
+})
+
+describe('Ghast', function () {
+    it('should apply paralyzed condition', function () {
+        const r = new Rules()
+        r.init()
+        const ghast = r.createEntity('c-ghast')
+        ghast.dice.debug(true, 0.75)
+        const goblin = r.createEntity('c-goblin-bow')
+        goblin.dice.debug(true, 0.0)
+        ghast.setTarget(goblin)
+        ghast.setDistanceToTarget(4.5)
+        const atk1 = r.attack(ghast, goblin)
+        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeTrue()
+        ghast.processEffects()
+        goblin.processEffects()
+        const atk2 = r.attack(ghast, goblin)
+        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeTrue()
+        expect(atk2.dice).toBe(16)
+        expect(ghast.store.getters.isTargetInMeleeWeaponRange).toBeTrue()
+        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeTrue()
+        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_UNCONSCIOUS)).toBeFalse()
+        expect(ghast.store.getters.isTargetAutoCritical).toBeTrue()
+        expect(atk2.critical).toBeTrue()
+        ghast.processEffects()
+        goblin.processEffects()
+        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeFalse()
+    })
+    it('should be poisonned when approachin ghast within 5 ft', function () {
+        const r = new Rules()
+        r.init()
+        const ghast = r.createEntity('c-ghast')
+        ghast.dice.debug(true, 0.75)
+        const gobVeryFar = r.createEntity('c-goblin-bow')
+        gobVeryFar.dice.debug(true, 0.0)
+        const gobJinxed = r.createEntity('c-goblin-shield')
+        gobJinxed.dice.debug(true, 0.0)
+        const gobLucky = r.createEntity('c-goblin-shield')
+        ghast.events.on('saving-throw', st => console.log(st))
+        gobLucky.dice.debug(true, 0.999)
+        gobVeryFar.setTarget(ghast)
+        gobJinxed.setTarget(ghast)
+        gobLucky.setTarget(ghast)
+        gobVeryFar.setDistanceToTarget(60)
+        gobJinxed.setDistanceToTarget(5)
+        gobLucky.setDistanceToTarget(5)
+        ghast.processEffects()
+        gobVeryFar.processEffects()
+        gobJinxed.processEffects()
+        gobLucky.processEffects()
+        expect(gobVeryFar.store.getters.getConditions.has(CONSTS.CONDITION_POISONED)).toBeFalse()
+        expect(ghast.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR]).toBeDefined()
+        expect(ghast.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR].properties[0].property).toBe('ITEM_PROPERTY_AURA')
+        expect(ghast.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR].properties.find(({ property }) => property === CONSTS.ITEM_PROPERTY_AURA)).toBeDefined()
+        expect(ghast.store.getters.getEquipmentItemProperties.find(({ property }) => property === CONSTS.ITEM_PROPERTY_AURA)).toBeDefined()
+        expect(gobJinxed.store.getters.getConditions.has(CONSTS.CONDITION_POISONED)).toBeTrue()
+        expect(gobLucky.store.getters.getConditions.has(CONSTS.CONDITION_POISONED)).toBeFalse()
+    })
+})
+
+describe('Effet de terreur', function () {
+    it('should not be able to approach target when frightened by id', function () {
+        const r = new Rules()
+        r.init()
+        const gob1 = r.createEntity('c-goblin-shield')
+        const gob2 = r.createEntity('c-goblin-shield')
+        const gob3 = r.createEntity('c-goblin-shield')
+        gob1.setTarget(gob2)
+        gob2.setTarget(gob1)
+        gob1.setDistanceToTarget(50)
+        expect(gob1.store.getters.canApproachTarget).toBeTrue()
+        gob1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_FRIGHTENED), 10, gob2)
+        expect(gob1.store.getters.canApproachTarget).toBeFalse()
     })
 })

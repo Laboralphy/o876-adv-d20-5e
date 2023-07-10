@@ -1,0 +1,26 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_RING",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_DAMAGE_REDUCTION",
+      "type": "DAMAGE_TYPE_FIRE",
+      "amp": 15
+    },
+    {
+      "property": "ITEM_PROPERTY_DAMAGE_REDUCTION",
+      "type": "DAMAGE_TYPE_COLD",
+      "amp": 15
+    },
+    {
+      "property": "ITEM_PROPERTY_DAMAGE_REDUCTION",
+      "type": "DAMAGE_TYPE_ELECTRICITY",
+      "amp": 15
+    },
+    {
+      "property": "ITEM_PROPERTY_DAMAGE_REDUCTION",
+      "type": "DAMAGE_TYPE_ACID",
+      "amp": 15
+    }
+  ]
+}

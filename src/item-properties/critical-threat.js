@@ -1,9 +1,14 @@
 const CONSTS = require('../consts')
 
-module.exports = function ({ value }) {
+/**
+ * ITEM_PROPERTY_CRITICAL_THREAT
+ * @param amp {number}
+ * @returns {{data: {}, amp, property: (string|*)}}
+ */
+module.exports = function ({ amp }) {
     return {
         property: CONSTS.ITEM_PROPERTY_CRITICAL_THREAT,
-        amp: value,
+        amp,
         data: {}
     }
 }

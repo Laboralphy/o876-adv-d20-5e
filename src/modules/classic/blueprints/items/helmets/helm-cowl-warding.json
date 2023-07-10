@@ -1,0 +1,15 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_HELM",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+      "type": "CONDITION_RESTRAINED"
+    },
+    {
+      "property": "ITEM_PROPERTY_ADVANTAGE",
+      "rollTypes": ["ROLL_TYPE_SAVE"],
+      "abilities": ["THREAT_MIND_SPELL"]
+    }
+  ]
+}

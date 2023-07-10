@@ -95,7 +95,22 @@
     "equipment": {
       "type": "array",
       "items": {
-        "type": "string"
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "/blueprint-item"
+          }
+        ]
+      }
+    },
+    "actions": {
+      "type": "array",
+      "description": "List of possible actions",
+      "items": {
+        "type": "string",
+        "description": "action reference"
       }
     }
   }

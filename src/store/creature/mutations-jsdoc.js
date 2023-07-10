@@ -2,6 +2,8 @@
  * @typedef D20CreatureStoreMutations {object}
  * @property addClass {function({ ref: string, levels: number })}
  * @property addEffect {function({ effect: D20Effect })}
+ * @property addRecentDamageType {function({ effect: D20Effect, type: string, amount: number })}
+ * @property clearRecentDamageTypes{function({ effect: D20Effect })}
  * @property removeEffect {function({ effect: D20Effect })}
  * @property removeEffectIndex {function({ index: number })}
  * @property patchEffect {function({ effect: D20Effect })}
@@ -27,4 +29,5 @@
  * @property setSize {function({ value })}
  * @property setSpecie {function({ value })}
  * @property setSpeed {function({ value })}
+ * @property setId {function({ value })}
  */

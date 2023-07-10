@@ -1,9 +1,15 @@
 const CONSTS = require('../consts')
 
-module.exports = function ({ value, type = '' }) {
+/**
+ * ITEM_PROPERTY_DAMAGE_REDUCTION
+ * @param amp {number}
+ * @param type {string} damageType
+ * @returns {{data: {type: string}, amp, property: (string|*)}}
+ */
+module.exports = function ({ amp, type = '' }) {
     return {
-        property: CONSTS.ITEM_PROPERTY_DAMAGE_RE,
-        amp: value,
+        property: CONSTS.ITEM_PROPERTY_DAMAGE_REDUCTION,
+        amp,
         data: {
             type
         }

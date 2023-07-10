@@ -1,10 +1,11 @@
 const CONSTS = require("./consts")
-const { warmup, assetManager } = require('./assets')
+const AssetManager = require('./AssetManager')
 const Creature = require('./Creature')
+const itemProperties = require('./item-properties')
 
 class EntityFactory {
     constructor () {
-        this._am = assetManager
+        this._am = null
     }
 
     get assetManager () {
@@ -12,20 +13,19 @@ class EntityFactory {
     }
 
     init () {
-        warmup()
-        // this.initAssetManager()
-    }
-
-    initAssetManager () {
-        const am = new AssetManager()
-        am.init()
-        this._am = am
+        const assetManager = new AssetManager()
+        assetManager.init()
+        this._am = assetManager
+        Creature.AssetManager = this._am
     }
 
     mixData(oBlueprint, oData, slots) {
-        const properties = [
-            ...oBlueprint.properties
-        ]
+        const properties = oBlueprint.properties.map(ip => itemProperties[ip.property](ip))
+        properties.forEach(p => {
+            if (!('data' in p)) {
+                p.data = {}
+            }
+        })
         const oBlueprintCopy = {
             ...oBlueprint
         }
@@ -75,8 +75,24 @@ class EntityFactory {
         return this.mixData(oBlueprint, oWeaponData, [slot])
     }
 
+    createItemNaturalWeapon (oBlueprint) {
+        const oWeaponData = this._am.data[oBlueprint.weaponType]
+        if (!oWeaponData) {
+            throw new Error('This natural weapon blueprint is undefined : ' + oBlueprint.weaponType)
+        }
+        return this.mixData(oBlueprint, oWeaponData, [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON])
+    }
+
     createItemAmmo (oBlueprint) {
         const oAmmoData = this._am.data[oBlueprint.ammoType]
+        if (!oAmmoData) {
+            throw new Error('This ammo blueprint is undefined : ' + oBlueprint.ammoType)
+        }
+        return this.mixData(oBlueprint, oAmmoData, [CONSTS.EQUIPMENT_SLOT_AMMO])
+    }
+
+    createItemNecklace (oBlueprint) {
+        const oEqItemData = this._am.data[oBlueprint.ammoType]
         if (!oAmmoData) {
             throw new Error('This ammo blueprint is undefined : ' + oBlueprint.ammoType)
         }
@@ -95,7 +111,10 @@ class EntityFactory {
                 return this.createItemArmor(oBlueprint)
             }
 
-            case CONSTS.ITEM_TYPE_NATURAL_WEAPON:
+            case CONSTS.ITEM_TYPE_NATURAL_WEAPON: {
+                return this.createItemNaturalWeapon(oBlueprint)
+            }
+
             case CONSTS.ITEM_TYPE_WEAPON: {
                 return this.createItemWeapon(oBlueprint)
             }
@@ -106,6 +125,19 @@ class EntityFactory {
 
             case CONSTS.ITEM_TYPE_AMMO: {
                 return this.createItemAmmo(oBlueprint)
+            }
+
+            case CONSTS.ITEM_TYPE_HELM:
+            case CONSTS.ITEM_TYPE_NECKLACE:
+            case CONSTS.ITEM_TYPE_CLOAK:
+            case CONSTS.ITEM_TYPE_BRACER:
+            case CONSTS.ITEM_TYPE_GLOVES:
+            case CONSTS.ITEM_TYPE_RING:
+            case CONSTS.ITEM_TYPE_BELT:
+            case CONSTS.ITEM_TYPE_BOOTS:
+            case CONSTS.ITEM_TYPE_TORCH: {
+                const { slots } = this.assetManager.data['item-types'][oBlueprint.itemType]
+                return this.mixData(oBlueprint, {}, slots)
             }
 
             default: {
@@ -162,6 +194,11 @@ class EntityFactory {
             oCreature.equipItem(nw, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON)
         }
 
+        if (!oCreature.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR]) {
+            const nw = this.createEntity('narm-base-properties')
+            oCreature.equipItem(nw, CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR)
+        }
+
         const sSizeConst = 'CREATURE_SIZE_' + (oBlueprint.size || 'medium').toUpperCase()
         if (sSizeConst in CONSTS) {
             csm.setSize({ value: sSizeConst })
@@ -178,18 +215,30 @@ class EntityFactory {
         return oCreature
     }
 
-    createEntity (sResRef) {
-        const oBlueprint = this._am.blueprints[sResRef]
+    createEntity (ref) {
+        const bObj = typeof ref === 'object'
+        const bStr = typeof ref === 'string'
+        if (bObj) {
+            this.assetManager.validateBlueprint(ref)
+        }
+        const oBlueprint = bStr
+            ? this._am.blueprints[ref]
+            : ref
+        const sResRef = bStr ? ref : (oBlueprint.ref || '')
         if (!oBlueprint) {
             throw new Error('ERR_BLUEPRINT_INVALID: ' + sResRef)
         }
         switch (oBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
-                return this.createItem(oBlueprint)
+                const oItem = this.createItem(oBlueprint)
+                oItem.ref = sResRef
+                return oItem
             }
 
             case CONSTS.ENTITY_TYPE_ACTOR: {
-                return this.createCreature(oBlueprint)
+                const oCreature = this.createCreature(oBlueprint)
+                oCreature.ref = sResRef
+                return oCreature
             }
 
             default: {

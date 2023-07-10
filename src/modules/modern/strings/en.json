@@ -1,0 +1,39 @@
+{
+  "ammoType": {
+    "ammo-type-cartridge-high-rof": "Cartridge high ROF",
+    "ammo-type-cartridge-long-range": "Cartridge long range",
+    "ammo-type-cartridge-small": "Cartridge small",
+    "ammo-type-slug": "Slug"
+  },
+  "weaponType": {
+    "armor-type-concealable-vest": "Concealable vest",
+    "armor-type-forced-entry-unit": "Forced entry unit",
+    "armor-type-leather-jacket": "Leather jacket",
+    "armor-type-light-duty-vest": "Light duty vest",
+    "armor-type-light-undercover-shirt": "Light undercover shirt",
+    "armor-type-special-response-vest": "Special response vest",
+    "armor-type-tactical-vest": "Tactical vest",
+    "armor-type-undercover-vest": "Undercover vest"
+  },
+  "armorType": {
+    "weapon-type-anti-material-sniper-rifle": "Anti material sniper rifle",
+    "weapon-type-anti-personnel-sniper-rifle": "Anti personnel sniper rifle",
+    "weapon-type-assault-rifle": "Assault rifle",
+    "weapon-type-heavy-machine-gun": "Heavy machine gun",
+    "weapon-type-hunting-rifle": "Hunting rifle",
+    "weapon-type-pump-action-shotgun": "Pump action shotgun",
+    "weapon-type-sawed-off-shotgun": "Sawed off shotgun",
+    "weapon-type-semiautomatic-shotgun": "Semiautomatic shotgun",
+    "weapon-type-submachine-gun": "Submachine gun",
+    "weapon-type-baton": "Baton",
+    "weapon-type-cleaver": "Cleaver",
+    "weapon-type-machete": "Machete",
+    "weapon-type-chain": "Chain",
+    "weapon-type-chainsaw": "Chainsaw",
+    "weapon-type-autoloader": "Autoloader",
+    "weapon-type-holdout-pistol": "Holdout pistol",
+    "weapon-type-large-caliber-autoloader": "Large caliber autoloader",
+    "weapon-type-machine-pistol": "Machine pistol",
+    "weapon-type-revolver": "Revolver"
+  }
+}

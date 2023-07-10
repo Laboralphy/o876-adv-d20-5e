@@ -3,13 +3,23 @@ const TreeSync = require('../libs/tree-sync')
 const path = require('path')
 const SchemaValidator = require("./SchemaValidator")
 const StoreManager = require('./StoreManager')
+const deepMerge = require('../libs/deep-merge')
+const deepClone = require('../libs/deep-clone')
+const deepFreeze = require('../libs/deep-freeze')
+const STRINGS = {
+    fr: require('./strings/fr.json'),
+    en: require('./strings/en.json')
+}
 
 class AssetManager {
     constructor () {
+        this._initialized = false
+        this._lang = 'fr'
         this._assets = {
             blueprints: {},
             data: {},
-            scripts: {}
+            scripts: {},
+            strings: STRINGS
         }
         this._validator = new SchemaValidator()
         this._storeManagers = {
@@ -23,6 +33,18 @@ class AssetManager {
                 }
             })
         }
+    }
+
+    get initialized () {
+        return this._initialized
+    }
+
+    set lang (value) {
+        this._lang = value
+    }
+
+    get lang () {
+        return this._lang
     }
 
     get storeManagers () {
@@ -79,6 +101,11 @@ class AssetManager {
                 break
             }
 
+            case 'strings': {
+                deepMerge(this._assets.strings, d)
+                break
+            }
+
             default: {
                 throw new Error('ERR_ASSET_TYPE_INVALID: ' + sType)
             }
@@ -92,17 +119,21 @@ class AssetManager {
         this.loadPath(path.join(sPath, 'store', 'creature', 'state'), 'state/creature')
         this.loadPath(path.join(sPath, 'store', 'creature', 'mutations'), 'mutations/creature')
         this.loadPath(path.join(sPath, 'scripts'), 'script')
+        this.loadPath(path.join(sPath, 'strings'), 'strings')
     }
 
     init () {
-        this._validator.init()
-        const oBaseData = TreeSync.recursiveRequire(path.resolve(__dirname, 'data'), true)
-        for (const [sId, data] of Object.entries(oBaseData)) {
-            this.addData(sId, data)
+        if (!this._initialized) {
+            this._validator.init()
+            const oBaseData = TreeSync.recursiveRequire(path.resolve(__dirname, 'data'), true)
+            for (const [sId, data] of Object.entries(oBaseData)) {
+                this.addData(sId, data)
+            }
+            this.loadModule(path.resolve(__dirname, 'modules', 'base'))
+            this.loadModule(path.resolve(__dirname, 'modules', 'classic'))
+            this.loadModule(path.resolve(__dirname, 'modules', 'modern'))
+            this._initialized = true
         }
-        this.loadModule(path.resolve(__dirname, 'modules', 'base'))
-        this.loadModule(path.resolve(__dirname, 'modules', 'classic'))
-        this.loadModule(path.resolve(__dirname, 'modules', 'modern'))
     }
 
     /**
@@ -121,6 +152,58 @@ class AssetManager {
 
     get scripts () {
         return this._assets.scripts
+    }
+
+    get strings () {
+        return this._assets.strings[this.lang]
+    }
+
+    get publicAssets () {
+        const filterData = f => {
+            const o = {}
+            Object
+                .entries(this.data)
+                .filter(([k, v]) => k.startsWith(f))
+                .forEach(([k, v]) => {
+                    o[k] = deepClone(v)
+                })
+            return o
+        }
+        const data = {
+            weaponType: filterData('weapon-type-'),
+            armorType: filterData('armor-type-'),
+            shieldType: filterData('shield-type-'),
+            ammoType: filterData('ammo-type-'),
+            itemProperty: require('./templates/item-properties.json')
+        }
+        return {
+            strings: deepClone(this.strings),
+            data,
+            templates: {
+                ammo: require('./templates/ammo.json'),
+                armor: require('./templates/armor.json'),
+                shield: require('./templates/shield.json'),
+                weapon: require('./templates/weapon.json'),
+            }
+        }
+    }
+
+    validateBlueprint (oBlueprint) {
+        switch (oBlueprint.entityType) {
+            case CONSTS.ENTITY_TYPE_ITEM: {
+                this.validator.validate(oBlueprint, 'blueprint-item')
+                break
+            }
+
+            case CONSTS.ENTITY_TYPE_ACTOR: {
+                this.validator.validate(oBlueprint, 'blueprint-actor')
+                break
+            }
+
+            default: {
+                throw new Error('ERR_INVALID_BLUEPRINT: entityType missing')
+            }
+        }
     }
 
     /**

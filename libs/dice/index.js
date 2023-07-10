@@ -1,6 +1,10 @@
 const REGEX_XDY = /^([-+]?) *(\d+) *d *(\d+) *(([-+]) *(\d+))?$/
 
 class Dice {
+  constructor () {
+    this._cachexdy = {}
+  }
+
   /**
    * Permet de forcer un valeur random, utile pour les tests
    * @param bEnabled {boolean} active/desactive le forçage du random
@@ -47,8 +51,12 @@ class Dice {
    * @param value
    * @returns {{count: number, sides: number}}
    */
-  static xdy (value) {
-    if (typeof value === 'string' && isNaN(value)) {
+  xdy (value) {
+    const bString = typeof value === 'string'
+    if (bString && (value in this._cachexdy)) {
+      return this._cachexdy[value]
+    }
+    if (bString && isNaN(value)) {
       const r = value.trim().match(REGEX_XDY)
       if (!r) {
         throw new Error('This dice formula is invalid : "' + value + '"')
@@ -60,7 +68,7 @@ class Dice {
         ? 0
         : parseInt(sModifier) * (sModifierSign === '-' ? -1 : 1)
       if (r) {
-        return {
+        return this._cachexdy[value] = {
           sides,
           count,
           modifier
@@ -73,7 +81,7 @@ class Dice {
     if (isNaN(nModifier)) {
       throw new Error('an error occured while evaluating "' + value + '"')
     }
-    return {
+    return this._cachexdy[value] = {
       sides: 0,
       count: 0,
       modifier: parseInt(value)
@@ -93,7 +101,7 @@ class Dice {
       const { sides, count, modifier } = value
       return this.roll(sides, count, modifier)
     } else {
-      return this.evaluate(Dice.xdy(value))
+      return this.evaluate(this.xdy(value))
     }
   }
 }

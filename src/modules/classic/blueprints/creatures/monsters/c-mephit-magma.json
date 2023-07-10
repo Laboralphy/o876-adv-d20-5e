@@ -1,0 +1,71 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 5,
+  "abilities": {
+    "strength": 8,
+    "dexterity": 12,
+    "constitution": 12,
+    "intelligence": 7,
+    "wisdom": 10,
+    "charisma": 10
+  },
+  "size": "small",
+  "specie": "elemental",
+  "speed": 30,
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-c-mephit-magma",
+      "damage": "1d4",
+      "damageType": "DAMAGE_TYPE_SLASHING",
+      "material": "MATERIAL_UNKNOWN",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_BONUS",
+          "amp": "1d4",
+          "type": "DAMAGE_TYPE_FIRE"
+        }
+      ]
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_ARMOR",
+      "armorType": "armor-type-natural",
+      "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-mephit-magma",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_FIRE"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_POISON"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_COLD"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_POISONED"
+        },
+        {
+          "property": "ITEM_PROPERTY_SKILL_BONUS",
+          "amp": 2,
+          "skill": "SKILL_STEALTH"
+        }
+      ]
+    }
+  ],
+  "actions": [
+    "sla-fire-breath"
+  ]
+}

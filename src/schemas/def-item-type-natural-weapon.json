@@ -2,8 +2,7 @@
   "type": "object",
   "required": [
     "damage",
-    "damageType",
-    "attributes"
+    "damageType"
   ],
   "properties": {
     "damage": {

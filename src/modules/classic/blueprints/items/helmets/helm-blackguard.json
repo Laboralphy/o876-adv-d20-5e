@@ -1,0 +1,16 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_HELM",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+      "amp": 3,
+      "type": "THREAT_MIND_SPELL"
+    },
+    {
+      "property": "ITEM_PROPERTY_DAMAGE_REDUCTION",
+      "amp": 3,
+      "type": "DAMAGE_TYPE_THUNDER"
+    }
+  ]
+}

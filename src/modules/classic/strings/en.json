@@ -1,0 +1,83 @@
+{
+  "ammoType": {
+    "ammo-type-arrow": "Arrow",
+    "ammo-type-bolt": "Bolt"
+  },
+  "class": {
+    "fighter": "Fighter",
+    "rogue": "Rogue"
+  },
+  "shieldType": {
+    "shield-type-heavy": "Heavy shield"
+  },
+  "skill": {
+    "skill-acrobatics": "Acrobatics",
+    "skill-animal-handling": "Animal handling",
+    "skill-arcana":  "Arcana",
+    "skill-athletics": "Athletics",
+    "skill-deception": "Deception",
+    "skill-disarm-trap": "Disarm",
+    "skill-history": "History",
+    "skill-insight": "Insight",
+    "skill-intimidation": "Intimidation",
+    "skill-investigation": "Investigation",
+    "skill-medicine": "Medicine",
+    "skill-nature": "Nature",
+    "skill-performance": "Performance",
+    "skill-persuasion": "Persuasion",
+    "skill-religion": "Religion",
+    "skill-sleight-of-hand": "Sleight of hand",
+    "skill-stealth": "Stealth",
+    "skill-survival": "Survival"
+  },
+  "armorType": {
+    "armor-type-breastplate": "Breastplate",
+    "armor-type-chain-mail": "Chain mail",
+    "armor-type-chain-shirt": "Chain shirt",
+    "armor-type-clothing": "Clothing",
+    "armor-type-half-plate": "Half plate armor",
+    "armor-type-hide": "Hide armor",
+    "armor-type-leather": "Leather vest",
+    "armor-type-padded": "Padded armor",
+    "armor-type-plate": "Full plate armor",
+    "armor-type-ring-mail": "Ring mail armor",
+    "armor-type-scale-mail": "Scale mail armor",
+    "armor-type-splint": "Splinted mail",
+    "armor-type-studded-leather": "Studded leather armor"
+  },
+  "weaponType": {
+    "weapon-type-battleaxe": "Battleaxe",
+    "weapon-type-blowgun": "Blowgun",
+    "weapon-type-flail": "Flail",
+    "weapon-type-glaive": "Glaive",
+    "weapon-type-greataxe": "Greataxe",
+    "weapon-type-greatsword": "Greatsword",
+    "weapon-type-halberd": "Halberd",
+    "weapon-type-lance": "Lance",
+    "weapon-type-longsword": "Longsword",
+    "weapon-type-maul": "Maul",
+    "weapon-type-morningstar": "Morningstar",
+    "weapon-type-pike": "Pike",
+    "weapon-type-rapier": "Rapier",
+    "weapon-type-scimitar": "Scimitar",
+    "weapon-type-shortsword": "Shortsword",
+    "weapon-type-trident": "Trident",
+    "weapon-type-war-pick": "War pick",
+    "weapon-type-warhammer": "Warhammer",
+    "weapon-type-whip": "Whip",
+    "weapon-type-heavy-crossbow": "Heavy crossbow",
+    "weapon-type-longbow": "Longbow",
+    "weapon-type-club": "Club",
+    "weapon-type-dagger": "Dagger",
+    "weapon-type-greatclub": "Great club",
+    "weapon-type-handaxe": "Handaxe",
+    "weapon-type-javelin": "Javelin",
+    "weapon-type-light-hammer": "Light hammer",
+    "weapon-type-mace": "Mace",
+    "weapon-type-quaterstaff": "Quaterstaff",
+    "weapon-type-sickle": "Sickle",
+    "weapon-type-spear": "Spear",
+    "weapon-type-light-crossbow": "Light crossbow",
+    "weapon-type-shortbow": "Shortbow"
+  }
+}

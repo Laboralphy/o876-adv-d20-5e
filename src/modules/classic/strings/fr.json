@@ -1,0 +1,83 @@
+{
+  "ammoType": {
+    "ammo-type-arrow": "Flèche",
+    "ammo-type-bolt": "Carreau"
+  },
+  "class": {
+    "fighter": "Guerrier",
+    "rogue": "Roublard"
+  },
+  "shieldType": {
+    "shield-type-heavy": "Grand bouclier"
+  },
+  "skill": {
+    "skill-acrobatics":  "Acrobatie",
+    "skill-animal-handling": "Empathie avec les animaux",
+    "skill-arcana":  "Arcanes",
+    "skill-athletics": "Athlétisme",
+    "skill-deception": "Tromperie",
+    "skill-disarm-trap": "Désamorçage",
+    "skill-history": "Histoire",
+    "skill-insight": "Connaissances",
+    "skill-intimidation": "Intimidation",
+    "skill-investigation": "Investigation",
+    "skill-medicine": "Médecine",
+    "skill-nature": "Nature",
+    "skill-performance": "Interprétation",
+    "skill-persuasion": "Persuasion",
+    "skill-religion": "Religion",
+    "skill-sleight-of-hand": "Vol à la tire",
+    "skill-stealth": "Furtivité",
+    "skill-survival": "Survie"
+  },
+  "armorType": {
+    "armor-type-breastplate": "Cuirasse",
+    "armor-type-chain-mail": "Cotte de maille",
+    "armor-type-chain-shirt": "Chemise de maille",
+    "armor-type-clothing": "Vêtement",
+    "armor-type-half-plate": "Armure de plaques",
+    "armor-type-hide": "Armure de peaux",
+    "armor-type-leather": "Armure de cuir",
+    "armor-type-padded": "Armure matelassée",
+    "armor-type-plate": "Harnois",
+    "armor-type-ring-mail": "Crevisse",
+    "armor-type-scale-mail": "Armure d'écailles",
+    "armor-type-splint": "Clibanion",
+    "armor-type-studded-leather": "Armure de cuir cloutée"
+  },
+  "weaponType": {
+    "weapon-type-battleaxe": "Hache de guerre",
+    "weapon-type-blowgun": "Sarbacane",
+    "weapon-type-flail":  "Fléau",
+    "weapon-type-glaive": "Guisarme",
+    "weapon-type-greataxe":  "Grande hache",
+    "weapon-type-greatsword": "Epée à deux mains",
+    "weapon-type-halberd":  "Halebarde",
+    "weapon-type-lance": "Lance de tournois",
+    "weapon-type-longsword":  "Epée longue",
+    "weapon-type-maul": "Marteau à deux mains",
+    "weapon-type-morningstar":  "Etoile du matin",
+    "weapon-type-pike": "Pique",
+    "weapon-type-rapier":  "Rapière",
+    "weapon-type-scimitar": "Cimeterre",
+    "weapon-type-shortsword":  "Epée courte",
+    "weapon-type-trident": "trident",
+    "weapon-type-war-pick":  "Piolet de guerre",
+    "weapon-type-warhammer": "Marteau de guerre",
+    "weapon-type-whip":  "Fouet",
+    "weapon-type-heavy-crossbow": "Arbalète lourde",
+    "weapon-type-longbow": "Arc long",
+    "weapon-type-club":  "Gourdin",
+    "weapon-type-dagger": "Dague",
+    "weapon-type-greatclub":  "Gourdin à deux main",
+    "weapon-type-handaxe": "Hachette",
+    "weapon-type-javelin":  "Javeline",
+    "weapon-type-light-hammer": "Marteau léger",
+    "weapon-type-mace":  "Masse",
+    "weapon-type-quaterstaff": "Bâton",
+    "weapon-type-sickle":  "Faucille",
+    "weapon-type-spear": "Lance courte",
+    "weapon-type-light-crossbow": "Arbalète légère",
+    "weapon-type-shortbow": "Arc court"
+  }
+}

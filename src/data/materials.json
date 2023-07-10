@@ -19,7 +19,11 @@
     "parent": ""
   },
   "MATERIAL_STONE": {
-    "description": "Cutted stone or other rocky material",
+    "description": "Cutted stone or other rocky material.",
+    "parent": ""
+  },
+  "MATERIAL_CRYSTAL": {
+    "description": "Cutted stone or other rocky material.",
     "parent": ""
   },
   "MATERIAL_SILVER": {
@@ -33,5 +37,13 @@
   "MATERIAL_STEEL": {
     "description": "Higher quality non magical material. Need high level of smithing",
     "parent": "MATERIAL_METAL"
+  },
+  "MATERIAL_ADAMANTINE": {
+    "description": "High density metal",
+    "parent": "MATERIAL_METAL"
+  },
+  "MATERIAL_POLYMER": {
+    "description": "Non conductive material made out of oil or resin, requires modern and heavy industry, resistant to fire, cold, acid, electricity",
+    "parent": ""
   }
 }

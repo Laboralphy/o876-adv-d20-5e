@@ -1,0 +1,17 @@
+{
+  "class": {
+    "monster": "Monstre",
+    "tourist": "Touriste"
+  },
+  "armorType": {
+    "armor-type-natural": "Armure naturelle"
+  },
+  "skill": {
+    "skill-perception": "Perception",
+    "skill-unlock": "Crochetage"
+  },
+  "weaponType": {
+    "weapon-type-improvised": "Arme improvisée",
+    "weapon-type-unarmed": "Mains nues"
+  }
+}

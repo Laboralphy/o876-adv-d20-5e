@@ -10,7 +10,7 @@ const CONSTS = require('../consts')
 function create (effects, tag) {
     // GROUP_TYPE_MAGICAL : les effets de ce groupe peuvent être dissipés
     // GROUP_TYPE
-    return createEffect(CONSTS.EFFECT_GROUP, 0, { effects, applied: false }, tag)
+    return createEffect(CONSTS.EFFECT_GROUP, 0, { effects, applied: false, appliedEffects: [] }, tag)
 }
 
 /**
@@ -24,20 +24,21 @@ function mutate ({ effect, target, source }, oEffectProcessor) {
     if (!effect.data.applied) {
         effect.data.applied = true
         const duration = effect.duration
-        effect
+        effect.data.appliedEffects = effect
             .data
             .effects
-            .forEach(eff => {
-                oEffectProcessor.applyEffect(eff, target, duration, source)
-            })
+            .map(eff => oEffectProcessor.applyEffect(eff, target, duration, source))
+    } else {
+        if (effect.data.appliedEffects.every(eff => eff.duration <= 0)) {
+            target.store.mutations.dispellEffect({ effect })
+        }
     }
 }
 
-function dispose ({ target }, oEffectProcessor) {
-    target
-        .store
-        .getters
-        .getEffects
+function dispose ({ effect, target }, oEffectProcessor) {
+    effect
+        .data
+        .appliedEffects
         .forEach(eff => {
             target.store.mutations.dispellEffect({ effect: eff })
         })

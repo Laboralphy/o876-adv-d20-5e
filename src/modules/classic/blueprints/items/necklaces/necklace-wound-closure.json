@@ -1,0 +1,9 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_NECKLACE",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_PHARMA"
+    }
+  ]
+}

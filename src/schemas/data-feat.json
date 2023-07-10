@@ -27,6 +27,14 @@
           }
         ]
       }
+    },
+    "action": {
+      "type": "string",
+      "description": "Script à lancer lorsque le feat est utilisé en tant qu'action"
+    },
+    "actionType": {
+      "type": "string",
+      "description": "Type de l'action (utilisée par les IA)"
     }
   }
 }

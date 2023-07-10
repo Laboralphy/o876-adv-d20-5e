@@ -13,7 +13,7 @@ module.exports = (state, getters, externals) => {
     if (isNaN(nDistance)) {
         return false
     }
-    if (getters.isWeildingRangedWeapon) {
+    if (getters.isWieldingRangedWeapon) {
         // on a une arme à distance, mais il faut déterminer si on tire à bout portant
         return nDistance <= externals.data['weapon-ranges'].WEAPON_RANGE_MELEE
     } else {

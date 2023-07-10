@@ -29,10 +29,19 @@ function explainMiss (name, sDeflector) {
     }
 }
 
-function explainDamages (damageTypes) {
+function getDamageStr(sType) {
+    return sType.substring(12).toLowerCase()
+}
+
+function explainDamages (damageTypes, resisted) {
     const aDamTypesStr = []
     for (const [sType, nAmount] of Object.entries(damageTypes)) {
-        aDamTypesStr.push(nAmount + ' ' + sType.substring(12).toLowerCase())
+        aDamTypesStr.push(nAmount + ' ' + getDamageStr(sType))
+    }
+    for (const [sType, nAmount] of Object.entries(resisted)) {
+        if (nAmount > 0) {
+            aDamTypesStr.push('resisted: ' + nAmount + ' ' + getDamageStr(sType))
+        }
     }
     return aDamTypesStr.join(', ')
 }
@@ -54,7 +63,8 @@ function explainAttack (creature, {
     weapon,
     damages: {
         amount: damageAmount = 0,
-        types: damageTypes = {}
+        types: damageTypes = {},
+        resisted
     }
 }) {
     if (range < distance) {
@@ -77,7 +87,7 @@ function explainAttack (creature, {
                 roll,
                 ac,
                 damageAmount,
-                explainDamages(damageTypes)
+                explainDamages(damageTypes, resisted)
             )
         }
     } else if (hit) {
@@ -94,7 +104,7 @@ function explainAttack (creature, {
                 roll,
                 ac,
                 damageAmount,
-                explainDamages(damageTypes)
+                explainDamages(damageTypes, resisted)
             )
         }
     } else if (dice === 1) {
@@ -131,22 +141,56 @@ function explainAttack (creature, {
     }
 }
 
+function creatureSavingThrow (oPayload) {
+    console.log('%s saving throw : %d vs. %d : %s', oPayload.creature.name, oPayload.value, oPayload.dc, oPayload.success ? 'SUCCESS' : 'FAILURE')
+}
+
 
 function creatureAttacked ({
-                               outcome,
-                               creature
-                           }) {
+    outcome,
+    creature
+}) {
     console.log(explainAttack(creature, outcome).message)
 }
 
+function creatureAction ({ creature, action }) {
+    console.log('%s is doing an action : %s', creature.name, action)
+}
+
+function creatureDamaged ({ creature, amount, type: sDamType, source }) {
+    console.log('%s deals %d points of %s damage on %s', source.name, amount, getDamageStr(sDamType), creature.name)
+}
+
+function creatureDied ({ creature, killer }) {
+    console.log('%s killed %s', killer.name, creature.name)
+}
+
+function action (rules, oCreature) {
+    const aActions = rules.getData(oCreature).actions
+    if (aActions && aActions.length > 0) {
+        const sAction = aActions[Math.floor(Math.random() * aActions.length)]
+        oCreature.doAction(sAction)
+    }
+}
+
 function assault (rules, atk, def) {
-    rules.attack(atk)
+    if (rules.getData(atk).actions.length > 0 && Math.random() > 0.8) {
+        action(rules, atk)
+    } else {
+        rules.attack(atk)
+    }
     console.log(def.name, 'has', def.store.getters.getHitPoints, 'hp left')
 }
 
+function walkToTarget (oAttacker) {
+    const nDistance = oAttacker.store.getters.getTargetDistance - oAttacker.store.getters.getSpeed
+    oAttacker.setDistanceToTarget(nDistance)
+}
+
 function bonusAction (rules, creature) {
+    // walking
     if (!creature.store.getters.isTargetInWeaponRange) {
-        rules.walkToTarget(creature)
+        walkToTarget(creature)
         console.log(creature.name, 'is now at', creature.store.getters.getTargetDistance, 'ft. from', creature.getTarget().name)
     }
 }
@@ -170,13 +214,21 @@ function main () {
     const r = new Rules()
     r.init()
     r.events.on('attack', creatureAttacked)
+    r.events.on('action', creatureAction)
+    r.events.on('damaged', creatureDamaged)
+    r.events.on('saving-throw', creatureSavingThrow)
+    r.events.on('death', creatureDied)
     const c1 = r.createEntity('c-pilgrim')
-    const c2 = r.createEntity('c-street-rogue')
+    const c2 = r.createEntity('c-rogue')
     const c3 = r.createEntity('c-soldier')
+    const c4 = r.createEntity('c-gnoll')
+    const c5 = r.createEntity('c-gargoyle')
     c1.name = 'Alice'
     c2.name = 'Bob'
     c3.name = 'Jorin'
-    fight(r, c3, c2)
+    c4.name = 'Gnoll'
+    c5.name = 'Gargoyle'
+    fight(r, c3, c5)
 }
 
 main()

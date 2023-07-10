@@ -42,6 +42,7 @@
  * @typedef D20WeaponData {object}
  * @property damage {string}
  * @property damageType {string}
+ * @property versatileDamage {string}
  * @property attributes {string[]}
  * @property proficiency {string}
  * @property weight {number}
@@ -72,6 +73,7 @@
 
 module.exports = {
     ...require('./abilities.json'),
+    ...require('./attack-outcomes.json'),
     ...require('./actions.json'),
     ...require('./against-type.json'),
     ...require('./alignments.json'),

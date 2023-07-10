@@ -16,7 +16,8 @@ function create (amount) {
  * @param target
  */
 function mutate ({ effect, target }) {
-    target.store.mutations.heal({ amount: effect.amp })
+    const { factor } = target.store.getters.getHealMitigation
+    target.store.mutations.heal({ amount: Math.floor(effect.amp * factor) })
 }
 
 module.exports = {

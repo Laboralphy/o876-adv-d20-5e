@@ -1,0 +1,14 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_WEAPON",
+  "weaponType": "weapon-type-longsword",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_ON_HIT",
+      "amp": "1d2",
+      "script": "apply-life-drain",
+      "dc": 13
+    }
+  ],
+  "material": "MATERIAL_STEEL"
+}

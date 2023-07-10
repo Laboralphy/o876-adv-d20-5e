@@ -1,9 +1,14 @@
 const CONSTS = require('../consts')
 
-module.exports = function ({ value }) {
+/**
+ * ITEM_PROPERTY_ATTACK_BONUS
+ * @param amp {number}
+ * @returns {{data: {}, amp, property: (string|*)}}
+ */
+module.exports = function ({ amp }) {
     return {
         property: CONSTS.ITEM_PROPERTY_ATTACK_BONUS,
-        amp: value,
+        amp,
         data: {}
     }
 }

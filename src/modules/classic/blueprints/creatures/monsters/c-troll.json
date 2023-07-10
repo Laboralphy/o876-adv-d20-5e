@@ -1,0 +1,61 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 8,
+  "abilities": {
+    "strength": 18,
+    "dexterity": 13,
+    "constitution": 20,
+    "intelligence": 7,
+    "wisdom": 9,
+    "charisma": 7
+  },
+  "size": "large",
+  "specie": "giant",
+  "speed": 30,
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-c-troll",
+      "damage": "2d6",
+      "damageType": "DAMAGE_TYPE_SLASHING",
+      "material": "MATERIAL_UNKNOWN",
+      "properties": []
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_ARMOR",
+      "armorType": "armor-type-natural",
+      "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-troll",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_ADVANTAGE",
+          "amp": 0,
+          "rollTypes": [
+            "ROLL_TYPE_CHECK"
+          ],
+          "abilities": [
+            "ABILITY_WISDOM"
+          ]
+        },
+        {
+          "property": "ITEM_PROPERTY_REGEN",
+          "amp": 10,
+          "vulnerabilities": [
+            "DAMAGE_TYPE_ACID",
+            "DAMAGE_TYPE_FIRE"
+          ]
+        },
+        {
+          "property": "ITEM_PROPERTY_SKILL_BONUS",
+          "amp": 2,
+          "skill": "SKILL_PERCEPTION"
+        }
+      ]
+    }
+  ],
+  "actions": []
+}
