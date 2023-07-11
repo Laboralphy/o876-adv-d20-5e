@@ -1,7 +1,7 @@
 {
-  "name": "o876-adv-rules-0x14",
+  "name": "adv-dd5e-ogl-impl",
   "version": "1.0.0",
-  "description": "A set of rules loosely based on various RPGs.",
+  "description": "A set of rules loosely based on the Open Gaming License version of Dungeons and Dragons 5e.",
   "main": "index.js",
   "scripts": {
     "test": "jasmine ./tests/*Test.js",
@@ -12,8 +12,9 @@
     "rules",
     "rpg",
     "adventure",
-    "role-playing-game",
-    "dungeons and dragons"
+    "role playing game",
+    "dungeons and dragons",
+    "open gamin license"
   ],
   "author": "",
   "license": "ISC",

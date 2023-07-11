@@ -8,19 +8,24 @@ const CONSTS = require("../../../consts");
  *
  * @param target {Creature}
  * @param source {Creature}
- * @param amp {number|string} dice
  * @param dc {number}
+ * @param attackOutcome {AttackOutcome}
  */
-module.exports = function ({ target, source, property: { amp, data: { dc } } }) {
+module.exports = function ({ target, source, attackOutcome, property: { data: { dc } } }) {
     const st = target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [CONSTS.THREAT_TYPE_DEATH], dc)
     if (st.success) {
         return
     }
-    const amount = source.roll(amp)
-    const oCurse = EffectProcessor.createEffect(
-        CONSTS.EFFECT_ABILITY_BONUS,
-        -amount,
-    )
-    oCurse.subtype = CONSTS.EFFECT_SUBTYPE_CURSE
-    target.applyEffect(oCurse, Infinity, source)
+    const amount = attackOutcome.damages.amount
+    if (amount > 0) {
+        const oCurse = EffectProcessor.createEffect(
+            CONSTS.EFFECT_HP_BONUS,
+            -amount,
+        )
+        oCurse.subtype = CONSTS.EFFECT_SUBTYPE_CURSE
+        target.applyEffect(oCurse, Infinity, source)
+        target.store.mutations.heal({ amount })
+    } else {
+        console.log('no damage amount')
+    }
 }

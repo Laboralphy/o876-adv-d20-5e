@@ -1238,6 +1238,9 @@
       "ITEM_PROPERTY_ENHANCEMENT": {
         "amp": "number"
       },
+      "ITEM_PROPERTY_HP_BONUS": {
+        "amp": "number"
+      },
       "ITEM_PROPERTY_MASSIVE_CRITICAL": {
         "amp": "number"
       },
@@ -1246,6 +1249,12 @@
       },
       "ITEM_PROPERTY_MELEE_ATTACK_BONUS": {
         "amp": "number"
+      },
+      "ITEM_PROPERTY_MUMMY_ROT": {},
+      "ITEM_PROPERTY_ON_DAMAGED": {
+        "amp": "dice",
+        "script": "string",
+        "data": "unknown"
       },
       "ITEM_PROPERTY_ON_HIT": {
         "amp": "dice",
@@ -1257,8 +1266,7 @@
         "amp": "number"
       },
       "ITEM_PROPERTY_REGEN": {
-        "amp": "number",
-        "vulnerabilities": "damageType[]"
+        "amp": "number"
       },
       "ITEM_PROPERTY_REROLL": {
         "amp": "number",

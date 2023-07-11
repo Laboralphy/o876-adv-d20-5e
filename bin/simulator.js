@@ -1,10 +1,6 @@
 const Rules = require('../src/Rules')
-const CONSTS = require('../src/consts')
 const util = require('util')
 
-function choose (aStrings) {
-    return aStrings[Math.floor(Math.random() * aStrings.length)]
-}
 
 function explainMiss (name, sDeflector) {
     switch (sDeflector) {
@@ -169,7 +165,7 @@ function action (rules, oCreature) {
     const aActions = rules.getData(oCreature).actions
     if (aActions && aActions.length > 0) {
         const sAction = aActions[Math.floor(Math.random() * aActions.length)]
-        oCreature.doAction(sAction)
+        oCreature.action(sAction)
     }
 }
 

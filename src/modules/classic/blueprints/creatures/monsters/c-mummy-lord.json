@@ -1,0 +1,143 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 13,
+  "abilities": {
+    "strength": 18,
+    "dexterity": 10,
+    "constitution": 17,
+    "intelligence": 11,
+    "wisdom": 18,
+    "charisma": 16
+  },
+  "size": "medium",
+  "specie": "undead",
+  "speed": 20,
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-c-mummy-lord",
+      "damage": "3d6",
+      "damageType": "DAMAGE_TYPE_CRUSHING",
+      "material": "MATERIAL_UNKNOWN",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_ON_HIT",
+          "amp": 0,
+          "script": "apply-mummy-rot"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_BONUS",
+          "amp": "6d6",
+          "type": "DAMAGE_TYPE_WITHERING"
+        }
+      ]
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_ARMOR",
+      "armorType": "armor-type-natural",
+      "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-mummy-lord",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+          "amp": 8,
+          "type": "ABILITY_CONSTITUTION"
+        },
+        {
+          "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+          "amp": 5,
+          "type": "ABILITY_INTELLIGENCE"
+        },
+        {
+          "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+          "amp": 9,
+          "type": "ABILITY_WISDOM"
+        },
+        {
+          "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+          "amp": 8,
+          "type": "ABILITY_CHARISMA"
+        },
+        {
+          "property": "ITEM_PROPERTY_AC_BONUS",
+          "amp": 3
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_FIRE"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_CRUSHING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_PIERCING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_SLASHING"
+        },
+        {
+          "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",
+          "amp": 0,
+          "type": "MATERIAL_SILVER"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_WITHERING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_POISON"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_POISONED"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "EFFECT_EXHAUSTION"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_CHARMED"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_PARALYZED"
+        },
+        {
+          "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+          "amp": 0,
+          "condition": "CONDITION_FRIGHTENED"
+        },
+        {
+          "property": "ITEM_PROPERTY_ADVANTAGE",
+          "amp": 0,
+          "rollTypes": [
+            "ROLL_TYPE_SAVE"
+          ],
+          "abilities": [
+            "THREAT_TYPE_SPELL"
+          ]
+        }
+      ]
+    }
+  ],
+  "actions": []
+}

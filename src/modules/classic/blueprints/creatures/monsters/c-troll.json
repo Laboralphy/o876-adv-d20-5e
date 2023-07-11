@@ -43,16 +43,17 @@
         },
         {
           "property": "ITEM_PROPERTY_REGEN",
-          "amp": 10,
-          "vulnerabilities": [
-            "DAMAGE_TYPE_ACID",
-            "DAMAGE_TYPE_FIRE"
-          ]
+          "amp": 10
         },
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",
           "amp": 2,
           "skill": "SKILL_PERCEPTION"
+        },
+        {
+          "property": "ITEM_PROPERTY_ON_DAMAGED",
+          "amp": 0,
+          "script": "apply-troll-regen"
         }
       ]
     }

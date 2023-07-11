@@ -5,15 +5,12 @@ const CONSTS = require('../consts')
  * Régénération d'un certain nombre de points de vie chaque tour.
  * Sauf si la créature est endommagée par un certain type de dégâts (vulnerabilities)
  * @param amp {number}
- * @param vulnerabilities {string[]} damageType[]
  * @returns {{data: {}, amp, property: (string|*)}}
  */
-module.exports = function ({ amp, vulnerabilities = [] }) {
+module.exports = function ({ amp }) {
     return {
         property: CONSTS.ITEM_PROPERTY_REGEN,
         amp,
-        data: {
-            vulnerabilities
-        }
+        data: {}
     }
 }

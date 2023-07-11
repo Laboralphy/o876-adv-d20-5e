@@ -1,4 +1,4 @@
-module.exports = ({ state }, { ref, levels = 1 }) => {
+module.exports = ({ state, getters }, { ref, levels = 1 }) => {
     if (ref === undefined) {
         throw new Error('The "addClass" mutation requires a { ref } property in the payload')
     }

@@ -2,6 +2,7 @@ const EntityFactory = require('./EntityFactory')
 const CONSTS = require('./consts')
 const Events = require('events')
 const Creature = require('./Creature')
+const itemProperties = require('./item-properties')
 
 class Rules {
     constructor () {
@@ -65,7 +66,7 @@ class Rules {
     }
 
     createInventoryItems (oCreature, oInventory) {
-        for (const [sSlot, item] of Object.entries(oInventory)) {
+        for (const [, item] of Object.entries(oInventory)) {
             if (typeof item === 'string') {
                 const oItem = this.createEntity(item)
                 oCreature.equipItem(oItem)
@@ -75,6 +76,19 @@ class Rules {
                 oCreature.equipItem(oItem, slot)
             }
         }
+    }
+
+    /**
+     * Ajoute une propriété d'item, à un item
+     * @param oItem {D20ItemDataStruct}
+     * @param sItemProperty {string}
+     * @param data {{}}
+     * @returns {{}}
+     */
+    addItemProperty (oItem, sItemProperty, data) {
+        const ip = itemProperties[sItemProperty](data)
+        oItem.properties.push(ip)
+        return ip
     }
 
     /**
@@ -91,7 +105,7 @@ class Rules {
         const sBetterSlot = asg.getSuitableOffensiveSlot
         if (sBetterSlot !== '') {
             oAttacker.useOffensiveSlot(sBetterSlot)
-            return oAttacker.doAttack()
+            return oAttacker.attack()
         } else {
             return oAttacker.createDefaultAttackOutcome()
         }
@@ -232,7 +246,7 @@ class Rules {
             classes: Object
                 .entries(oCreature.store.getters.getLevelByClass)
                 .sort((a, b) => b[1] - a[1])
-                .map(([sClass, nLevel]) => sClass),
+                .map(([sClass]) => sClass),
             level: {
                 value: oCreature.store.getters.getLevel,
                 classes: oCreature.store.getters.getLevelByClass

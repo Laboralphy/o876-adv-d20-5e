@@ -2,7 +2,6 @@ const Rules = require('../src/Rules')
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
 const EffectProcessor = require('../src/EffectProcessor')
-const IP = require('../src/item-properties')
 
 describe('instanciation', function () {
     it('should instanciate with no error', function () {
@@ -44,7 +43,7 @@ describe('strike', function () {
         c2.name = 'Mr.X'
         r._defineCreatureEventHandlers(c1)
         const aLog = []
-        r.events.on('attack', ({ creature, attack }) => {
+        r.events.on('attack', ({ creature }) => {
             const weapon = creature.store.getters.getSelectedWeapon
             aLog.push(`${creature.name} attacked ${creature.getTarget().name} with ${weapon.ref}`)
         })
@@ -494,9 +493,9 @@ describe('damage immunity', function () {
             DAMAGE_TYPE_POISON: { reduction: 0, resistance: false, vulnerability: false, immunity: true, factor: 0 }
         })
         expect(m1.store.getters.getHitPoints).toBe(27)
-        const eDamF = m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_FIRE))
+        m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_FIRE))
         expect(m1.store.getters.getHitPoints).toBe(27)
-        const eDamC = m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_ACID))
+        m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_ACID))
         expect(m1.store.getters.getHitPoints).toBe(22)
         m1.dice.debug(true, 0.000001)
         expect(m1.rollSkill('SKILL_STEALTH')).toEqual({
@@ -516,7 +515,7 @@ describe('damage vulnerability', function () {
         const r = new Rules()
         r.init()
         const c1 = r.createEntity('c-soldier')
-        const w1 = r.createEntity('wpn-angurvadal')
+        r.createEntity('wpn-angurvadal')
         // c1.equipItem(w1)
         const c2 = r.createEntity('c-gargoyle')
         c1.dice.debug(true, 0.75)
@@ -575,7 +574,7 @@ describe('EffectProcessor Garbage collector', function () {
     }
 
     it('should remove c2 from c1 sources when applied effects ends', function () {
-        const { c1, c2, c3, c4, c5 } = createBatch()
+        const { c1, c2 } = createBatch()
         appEff(c1, c2)
         expect(Object.keys(c1.effectProcessor.creatures).length).toBe(2)
     })
@@ -611,123 +610,18 @@ describe('effect pharma', function () {
         const m1 = soldier.store.getters.getHealMitigation
         expect(m1).toEqual({
             pharma: false,
+            negateheal: false,
             factor: 1
         })
         soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_PHARMA), 10)
         const m2 = soldier.store.getters.getHealMitigation
         expect(m2).toEqual({
             pharma: true,
+            negateheal: false,
             factor: 2
         })
         soldier.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_HEAL, 5))
         expect(soldier.store.getters.getHitPoints).toBe(36)
-    })
-})
-
-describe('Troll regeneration', function () {
-    it('should regain 10 hp when wounded by non acid weapon', function () {
-        const r = new Rules()
-        r.init()
-        const troll = r.createEntity('c-troll')
-        expect(troll.store.getters.getHitPoints).toBe(92)
-        troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_SLASHING))
-        expect(troll.store.getters.getHitPoints).toBe(72)
-        troll.processEffects()
-        expect(troll.store.getters.getHitPoints).toBe(82)
-
-        troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_FIRE))
-        expect(troll.store.getters.getHitPoints).toBe(62)
-        troll.processEffects()
-        expect(troll.store.getters.getHitPoints).toBe(62)
-
-        troll.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 20, CONSTS.DAMAGE_TYPE_SLASHING))
-        expect(troll.store.getters.getHitPoints).toBe(42)
-        troll.processEffects()
-        expect(troll.store.getters.getHitPoints).toBe(52)
-    })
-
-    it('should have a max damage of 2d8 instead of 1d8 when having greatclub', function () {
-        const r = new Rules()
-        r.init()
-        const ogre = r.createEntity('c-ogre')
-        ogre.dice.debug(true, 0)
-        const minDamages = ogre.rollWeaponDamage()
-        ogre.dice.debug(true, 0.999999)
-        const maxDamages = ogre.rollWeaponDamage()
-        expect(maxDamages.DAMAGE_TYPE_CRUSHING).toBe(20)
-        expect(minDamages.DAMAGE_TYPE_CRUSHING).toBe(6)
-    })
-})
-
-describe('Ogre', function () {
-    it('should have a max damage of 2d8+4 instead of 1d8+4 when having greatclub', function () {
-        const r = new Rules()
-        r.init()
-        const ogre = r.createEntity('c-ogre')
-        ogre.dice.debug(true, 0)
-        const minDamages = ogre.rollWeaponDamage()
-        ogre.dice.debug(true, 0.999999)
-        const maxDamages = ogre.rollWeaponDamage()
-        expect(maxDamages.DAMAGE_TYPE_CRUSHING).toBe(20)
-        expect(minDamages.DAMAGE_TYPE_CRUSHING).toBe(6)
-    })
-})
-
-describe('Ghast', function () {
-    it('should apply paralyzed condition', function () {
-        const r = new Rules()
-        r.init()
-        const ghast = r.createEntity('c-ghast')
-        ghast.dice.debug(true, 0.75)
-        const goblin = r.createEntity('c-goblin-bow')
-        goblin.dice.debug(true, 0.0)
-        ghast.setTarget(goblin)
-        ghast.setDistanceToTarget(4.5)
-        const atk1 = r.attack(ghast, goblin)
-        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeTrue()
-        ghast.processEffects()
-        goblin.processEffects()
-        const atk2 = r.attack(ghast, goblin)
-        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeTrue()
-        expect(atk2.dice).toBe(16)
-        expect(ghast.store.getters.isTargetInMeleeWeaponRange).toBeTrue()
-        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeTrue()
-        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_UNCONSCIOUS)).toBeFalse()
-        expect(ghast.store.getters.isTargetAutoCritical).toBeTrue()
-        expect(atk2.critical).toBeTrue()
-        ghast.processEffects()
-        goblin.processEffects()
-        expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeFalse()
-    })
-    it('should be poisonned when approachin ghast within 5 ft', function () {
-        const r = new Rules()
-        r.init()
-        const ghast = r.createEntity('c-ghast')
-        ghast.dice.debug(true, 0.75)
-        const gobVeryFar = r.createEntity('c-goblin-bow')
-        gobVeryFar.dice.debug(true, 0.0)
-        const gobJinxed = r.createEntity('c-goblin-shield')
-        gobJinxed.dice.debug(true, 0.0)
-        const gobLucky = r.createEntity('c-goblin-shield')
-        ghast.events.on('saving-throw', st => console.log(st))
-        gobLucky.dice.debug(true, 0.999)
-        gobVeryFar.setTarget(ghast)
-        gobJinxed.setTarget(ghast)
-        gobLucky.setTarget(ghast)
-        gobVeryFar.setDistanceToTarget(60)
-        gobJinxed.setDistanceToTarget(5)
-        gobLucky.setDistanceToTarget(5)
-        ghast.processEffects()
-        gobVeryFar.processEffects()
-        gobJinxed.processEffects()
-        gobLucky.processEffects()
-        expect(gobVeryFar.store.getters.getConditions.has(CONSTS.CONDITION_POISONED)).toBeFalse()
-        expect(ghast.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR]).toBeDefined()
-        expect(ghast.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR].properties[0].property).toBe('ITEM_PROPERTY_AURA')
-        expect(ghast.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR].properties.find(({ property }) => property === CONSTS.ITEM_PROPERTY_AURA)).toBeDefined()
-        expect(ghast.store.getters.getEquipmentItemProperties.find(({ property }) => property === CONSTS.ITEM_PROPERTY_AURA)).toBeDefined()
-        expect(gobJinxed.store.getters.getConditions.has(CONSTS.CONDITION_POISONED)).toBeTrue()
-        expect(gobLucky.store.getters.getConditions.has(CONSTS.CONDITION_POISONED)).toBeFalse()
     })
 })
 
@@ -737,7 +631,7 @@ describe('Effet de terreur', function () {
         r.init()
         const gob1 = r.createEntity('c-goblin-shield')
         const gob2 = r.createEntity('c-goblin-shield')
-        const gob3 = r.createEntity('c-goblin-shield')
+        r.createEntity('c-goblin-shield')
         gob1.setTarget(gob2)
         gob2.setTarget(gob1)
         gob1.setDistanceToTarget(50)

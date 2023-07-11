@@ -5,8 +5,8 @@
   "properties": [
     {
       "property": "ITEM_PROPERTY_ON_HIT",
-      "amp": "1d2",
-      "script": "apply-life-drain",
+      "amp": 0,
+      "script": "apply-wight-life-drain",
       "dc": 13
     }
   ],

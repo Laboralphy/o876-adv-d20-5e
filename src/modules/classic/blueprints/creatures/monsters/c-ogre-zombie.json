@@ -23,24 +23,9 @@
       "ref": "narm-c-ogre-zombie",
       "properties": [
         {
-          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "property": "ITEM_PROPERTY_ON_DAMAGED",
           "amp": 0,
-          "type": "DAMAGE_TYPE_CRUSHING"
-        },
-        {
-          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
-          "amp": 0,
-          "type": "DAMAGE_TYPE_PIERCING"
-        },
-        {
-          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
-          "amp": 0,
-          "type": "DAMAGE_TYPE_SLASHING"
-        },
-        {
-          "property": "ITEM_PROPERTY_DAMAGE_VULNERABILITY",
-          "amp": 0,
-          "type": "DAMAGE_TYPE_RADIANT"
+          "script": "apply-undead-fortitude"
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
