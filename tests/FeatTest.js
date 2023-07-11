@@ -86,8 +86,8 @@ describe('feat-fighting-style-dueling', function () {
         const oSword = r.createEntity('wpn-shortsword')
         const oDagger = r.createEntity('wpn-dagger')
         const oStaff = r.createEntity('wpn-quaterstaff')
-        const oShield = r.createEntity('arm-shield')
-        const oArmor = r.createEntity('arm-leather')
+        r.createEntity('arm-shield');
+        r.createEntity('arm-leather');
         c.store.mutations.equipItem({ item: oSword })
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
         expect(c.store.getters.has1HWeaponNoShield).toBeTrue()
@@ -147,7 +147,7 @@ describe('feat-second-wind', function () {
         c.store.mutations.setHitPoints({ value: 34 - 1 })
         expect(c.store.getters.getHitPoints).toBe(1)
         c.dice.debug(true, 0.999999)
-        c.doFeatAction('feat-second-wind')
+        c.featAction('feat-second-wind')
         expect(c.store.getters.getHitPoints).toBe(1 + 10 + 5)
     })
 })

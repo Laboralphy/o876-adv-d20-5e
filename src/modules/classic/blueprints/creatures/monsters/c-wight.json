@@ -16,7 +16,7 @@
   "equipment": [
     "wpn-longsword-unholy",
     "wpn-longbow",
-    "ammo-arrow-unholy",
+    "ammo-arrow",
     "arm-studded-leather",
     {
       "entityType": "ENTITY_TYPE_ITEM",

@@ -20,6 +20,7 @@
  * @property getArmorClassRanges {{type: string, min: number, max: number}[]}
  * @property getArmorMaterial {string}
  * @property getAttackBonus {number}
+ * @property getBreakableEffects undefined
  * @property getCarryingCapacity {number}
  * @property getConditionImmunities {Set<string>}
  * @property getConditionSources {D20ConditionBooleanRegistry}
@@ -32,7 +33,7 @@
  * @property getDisadvantagePropEffects {Object<string, string>}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
  * @property getEffectSources {string[]}
- * @property getEffects {[]}
+ * @property getEffects {D20Effect[]}
  * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
  * @property getEntropyType {string}
@@ -41,7 +42,7 @@
  * @property getEquippedItems {{[slot: string]: D20Item}}
  * @property getExhaustionLevel {number}
  * @property getFeatReport {FeatReport[]}
- * @property getHealMitigation {{pharma: boolean, factor: number}}
+ * @property getHealMitigation {{pharma: boolean, negateheal: boolean, factor: number}}
  * @property getHitPoints {number}
  * @property getId {number}
  * @property getLevel {number}

@@ -2,3 +2,4 @@ node_modules
 bin/*.csv
 bin/generated-blueprints
 .idea
+.env

@@ -1,6 +1,5 @@
 const CONSTS = require('../../../consts')
-
-
+const {aggregateModifiers} = require("../common/aggregate-modifiers");
 
 /**
  * Nombre maximum de points de vie
@@ -14,6 +13,10 @@ module.exports = (state, getters, externals) => {
     const oClasses = getters.getLevelByClass
     let bFirstLevel = true
     let nMaxHitPoints = 0
+    const { sum: nHPBonus } = aggregateModifiers([
+        CONSTS.EFFECT_HP_BONUS,
+        CONSTS.ITEM_PROPERTY_HP_BONUS
+    ], getters, {})
     const nConModifier = getters.getAbilityModifiers[CONSTS.ABILITY_CONSTITUTION]
     for (const [ ref, levels ] of Object.entries(oClasses)) {
         const sClassName = 'class-' + ref
@@ -31,5 +34,5 @@ module.exports = (state, getters, externals) => {
             nMaxHitPoints += nLevel * nHitPointsPerLevel
         }
     }
-    return nMaxHitPoints
+    return nMaxHitPoints + nHPBonus
 }

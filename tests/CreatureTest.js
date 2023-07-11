@@ -346,7 +346,7 @@ describe('getTarget', function () {
     it('la target est initialement invisible', function () {
         const c1 = new Creature()
         const c2 = new Creature()
-        const eInvis = EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY)
+        EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY);
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
@@ -680,7 +680,6 @@ describe('getDamageBonus', function () {
 
 describe('aggregateModifier with randomn amp', function () {
     it('should return amp 1 when applying effect with amplitude 1d6 and random fixed to 0', function () {
-        const r = new Rules()
         const c = new Creature()
         c.dice.debug(true, 0.000001) // almost 0
         c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
@@ -690,7 +689,6 @@ describe('aggregateModifier with randomn amp', function () {
         expect(am).toEqual({ sum: 1, max: 1, sorter: {}, count: 1, effects: 1, ip: 0 })
     })
     it('should return amp 6 when applying effect with amplitude 1d6 and random fixed to 1', function () {
-        const r = new Rules()
         const c = new Creature()
         c.dice.debug(true, 0.999999) // almost 1
         c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
@@ -788,7 +786,7 @@ describe('attack logs', function () {
         })
         c1.dice.debug(true, 0.75)
         c1.setDistanceToTarget(DISTANCE_MELEE)
-        c1.doAttack()
+        c1.attack()
         expect(oLastAttack).toEqual( {
             ac: 6,
             distance: 5,
@@ -843,7 +841,7 @@ describe('attack logs', function () {
         })
         c1.dice.debug(true, 0.75)
         c1.setDistanceToTarget(DISTANCE_MELEE)
-        c1.doAttack()
+        c1.attack()
         expect(oLastAttack).toEqual( {
             ac: 6,
             distance: 5,
@@ -1001,8 +999,8 @@ describe('prone condition test', function () {
         const c1 = new Creature()
         const c2 = new Creature()
         const oBow1 = r.createEntity('wpn-longbow')
-        const oSword1 = r.createEntity('wpn-longsword')
-        const oHalberd1 = r.createEntity('wpn-halberd')
+        r.createEntity('wpn-longsword');
+        r.createEntity('wpn-halberd');
         c1.store.mutations.equipItem({ item: oBow1 })
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         c1.setTarget(c2)

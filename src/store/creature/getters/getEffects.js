@@ -1,7 +1,7 @@
 /**
  * Liste des effets actifs sur la créature
  * @param state
- * @returns {[]}
+ * @returns {D20Effect[]}
  */
 module.exports = state =>
         state

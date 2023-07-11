@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 10/07/2023, 19:00:25 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 11/07/2023, 17:31:51 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
@@ -20,6 +20,7 @@ module.exports = {
   [CONSTS.EFFECT_EXHAUSTION]: require('./exhaustion'),
   [CONSTS.EFFECT_GROUP]: require('./group'),
   [CONSTS.EFFECT_HEAL]: require('./heal'),
+  [CONSTS.EFFECT_HP_BONUS]: require('./hp-bonus'),
   [CONSTS.EFFECT_INVISIBILITY]: require('./invisibility'),
   [CONSTS.EFFECT_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.EFFECT_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),

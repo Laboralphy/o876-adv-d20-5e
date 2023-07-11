@@ -1,0 +1,89 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "class": "monster",
+  "level": 17,
+  "abilities": {
+    "strength": 18,
+    "dexterity": 18,
+    "constitution": 18,
+    "intelligence": 17,
+    "wisdom": 15,
+    "charisma": 18
+  },
+  "size": "medium",
+  "specie": "undead",
+  "speed": 30,
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_WEAPON",
+      "weaponType": "weapon-type-unarmed",
+      "ref": "nwpn-c-vampire",
+      "damage": "1d8",
+      "damageType": "DAMAGE_TYPE_CRUSHING",
+      "material": "MATERIAL_UNKNOWN",
+      "properties": []
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_NATURAL_ARMOR",
+      "armorType": "armor-type-natural",
+      "material": "MATERIAL_UNKNOWN",
+      "ref": "narm-c-vampire",
+      "properties": [
+        {
+          "property": "ITEM_PROPERTY_REGEN",
+          "amp": 20
+        },
+        {
+          "property": "ITEM_PROPERTY_ON_DAMAGED",
+          "amp": 0,
+          "script": "apply-vampire-regen"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_CRUSHING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_PIERCING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_SLASHING"
+        },
+        {
+          "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
+          "amp": 0,
+          "type": "DAMAGE_TYPE_WITHERING"
+        },
+        {
+          "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",
+          "amp": 0,
+          "type": "MATERIAL_SILVER"
+        },
+        {
+          "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+          "amp": 9,
+          "type": "ABILITY_DEXTERITY"
+        },
+        {
+          "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+          "amp": 7,
+          "type": "ABILITY_WISDOM"
+        },
+        {
+          "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+          "amp": 9,
+          "type": "ABILITY_CHARISMA"
+        }
+      ]
+    }
+  ],
+  "actions": [
+    "sla-vampire-charm"
+  ]
+}

@@ -420,9 +420,9 @@ class Creature {
                 source,
                 resisted: eEffect.data.resistedAmount
             })
-            if (this.store.getters.getHitPoints <= 0) {
-                this.events.emit('death', { killer: source })
-            }
+        }
+        if (this.store.getters.getHitPoints <= 0) {
+            this.events.emit('death', { killer: source })
         }
 
         return eEffect
@@ -855,36 +855,17 @@ class Creature {
     }
 
     /**
-     * Applique les effet de condition à la cible de l'arme
-     * @param oTarget {Creature}
-     */
-    weaponApplyConditions (oTarget) {
-        const aApplicableConditions = this.store.getters.getSelectedWeaponApplicableConditions
-        if (aApplicableConditions.length > 0) {
-            const aNewlyAppliedConditions = new Set()
-            const aConditions = oTarget.store.getters.getConditions
-            aApplicableConditions.forEach(({ condition, dc, saveAbility, duration }) => {
-                if (!aNewlyAppliedConditions.has(condition) && !aConditions.has(condition)) {
-                    const { success } = oTarget.rollSavingThrow(saveAbility, [], dc)
-                    if (!success) {
-                        oTarget.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition), duration, this)
-                        aNewlyAppliedConditions.add(condition)
-                    }
-                }
-            })
-        }
-    }
-
-    /**
      * @typedef D20OnHitContext {object}
      * @property target {Creature} Créature sur laquelle s'applique l'effet de l'itemproperty onhit
      * @property source {Creature} Créature qui détient l'arme qui a l'itemproperty onhit
      * @property property {object} ItemProperty
      * @property data {{}} objet aditionel de sauvegarde d'information enter les appel
-     * @param oTarget
+     *
+     * @param oTarget {Creature}
+     * @param oAttackOutcome {AttackOutcome}
      */
 
-    weaponProcessOnHit (oTarget) {
+    processOnHit (oTarget, oAttackOutcome) {
         const aHitProps = this
             .store
             .getters
@@ -893,6 +874,7 @@ class Creature {
             target: oTarget,
             source: this,
             property: null,
+            attackOutcome: oAttackOutcome,
             data: {}
         }
         const oScripts = Creature.AssetManager.scripts
@@ -925,9 +907,12 @@ class Creature {
                 if (sScript in oScripts) {
                     oScripts[sScript](oContext)
                 } else {
-                    throw new Error('Could not find ON HIT script ' + sScript)
+                    throw new Error('Could not find ON DAMAGE script ' + sScript)
                 }
             }
+        })
+        this.store.getters.getBreakableEffects.forEach(eff => {
+            eff.duration = 0
         })
     }
 
@@ -941,7 +926,7 @@ class Creature {
         #     #   ####      #       #     ####   #    #   ####
      */
 
-    doAction (sAction) {
+    action (sAction) {
         this._events.emit('action', {
             action: sAction
         })
@@ -953,7 +938,7 @@ class Creature {
         }
     }
 
-    doFeatAction (sFeat) {
+    featAction (sFeat) {
         if (sFeat in Creature.AssetManager.data) {
             const oFeatData = Creature.AssetManager.data[sFeat]
             if ('when' in oFeatData) {
@@ -962,7 +947,7 @@ class Creature {
                 }
             }
             if ('action' in oFeatData) {
-                this.doAction(oFeatData.action)
+                this.action(oFeatData.action)
             } else {
                 throw new Error('ERR_FEAT_HAS_NO_ACTION')
             }
@@ -991,17 +976,21 @@ class Creature {
     /**
      * Se précipite vers la cible, pour se mettre à portée de l'arme
      */
-    doRushToTarget () {
+    rushToTarget () {
         const nDistance = this.store.getters.getTargetDistance
         this.setDistanceToTarget(Math.max(1, nDistance - this.store.getters.getSpeed))
     }
 
     /**
      * Effectue une attaque contre la cible actuelle
+     * @param target {Creature} définit une nouvelle cible
      * @returns {AttackOutcome|false}
      */
-    doAttack () {
+    attack (target = null) {
         // On a vraiment une cible
+        if (target) {
+            this.setTarget(target)
+        }
         const oTarget = this.getTarget()
         if (!oTarget) {
             const outcome = this.createDefaultAttackOutcome({
@@ -1039,9 +1028,9 @@ class Creature {
             // générer les effets de dégâts
             let amount = 0
             const oResisted = {}
-            const aDamageEffects = Object
+            Object
                 .entries(oDamages)
-                .map(([sType, nValue]) => {
+                .forEach(([sType, nValue]) => {
                     const aDamageEffectMaterials = PHYSICAL_DAMAGE_TYPES.includes(sType)
                         ? [...this.store.getters.getSelectedWeaponMaterial]
                         : undefined
@@ -1072,7 +1061,7 @@ class Creature {
 
             // application d'effets on hit
             if (amount > 0) {
-                this.weaponProcessOnHit(oTarget)
+                this.processOnHit(oTarget, oAtk)
             }
         }
         this._events.emit('attack', { outcome: oAtk })

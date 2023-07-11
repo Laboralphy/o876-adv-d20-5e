@@ -7,10 +7,11 @@ const EffectProcessor = require('../../../EffectProcessor')
  * @param caster {Creature} creature qui lance le sort
  * @param target {Creature} creature ciblée par le sort
  * @param condition {string} condition appliquée si le sort réussi
- * @param duration {string} durée de la condition
+ * @param duration {number} durée de la condition
  * @param savingAbility {string} caractéristique utilisée pour le jet de sauvegarde
  * @param [threats] {string[]} liste optionnel des menace qui peuvent influencer le jet de sauvegarde
  * @param dc {number} difficulté du jet de sauvegarde
+ * @param subtype {string} sous type de l'effet
  */
 function conditionAttack ({
                               caster,
@@ -19,12 +20,16 @@ function conditionAttack ({
                               duration,
                               savingAbility,
                               threats = [],
-                              dc
+                              dc,
+                              subtype = CONSTS.EFFECT_SUBTYPE_MAGICAL
                           }) {
     const { success } = target.rollSavingThrow(savingAbility, [CONSTS.THREAT_TYPE_SPELL, ...threats], dc)
-    if (success) {
-        const eCond = EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, 0, condition)
-        target.applyEffect(eCond, duration, caster)
+    if (!success) {
+        const eCond = EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition)
+        eCond.subtype = subtype
+        return target.applyEffect(eCond, duration, caster)
+    } else {
+        return null
     }
 }
 
