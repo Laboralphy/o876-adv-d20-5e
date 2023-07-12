@@ -1,4 +1,4 @@
-const Rules = require('../src/Rules')
+const Rules = require('../src/Manager')
 const util = require('util')
 
 

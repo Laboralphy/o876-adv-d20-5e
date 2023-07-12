@@ -1,4 +1,4 @@
-const Rules = require('../src/Rules')
+const Manager = require('../src/Manager')
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
 const EffectProcessor = require('../src/EffectProcessor')
@@ -6,7 +6,7 @@ const EffectProcessor = require('../src/EffectProcessor')
 describe('instanciation', function () {
     it('should instanciate with no error', function () {
         expect(() => {
-            const r = new Rules()
+            const r = new Manager()
             r.init()
         }).not.toThrow()
     })
@@ -14,19 +14,19 @@ describe('instanciation', function () {
 
 describe('createEntity', function () {
     it('should produce a weapon with a type of "weapon-type-dagger" when creating an entity using a weapon blueprint based on dagger', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const w = r.createEntity('wpn-dagger')
         expect(w.weaponType).toBe('weapon-type-dagger')
     })
     it('should produce an armor with a type of "armor-type-leather" when creating an entity using an armor blueprint based on leather armor', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const w = r.createEntity('arm-leather')
         expect(w.armorType).toBe('armor-type-leather')
     })
     it('item should have a ref when created by createItem', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const w = r.createEntity('arm-leather')
         expect(w.ref).toBe('arm-leather')
@@ -35,7 +35,7 @@ describe('createEntity', function () {
 
 describe('strike', function () {
     it ('should log an attack when using strike', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = new Creature()
         c1.name = 'Burnasse'
@@ -57,14 +57,14 @@ describe('strike', function () {
         c1.equipItem(w)
         c1.setTarget(c2)
         c1.setDistanceToTarget(4)
-        r.attack(c1)
+        c1.attack()
         expect(aLog[aLog.length - 1]).toEqual('Burnasse attacked Mr.X with wpn-longsword')
     })
 })
 
 describe('create entity with blueprint', function () {
     it('should create a fully equipped street rogue when creating a c-rogue', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c = r.createEntity('c-rogue')
         expect(c.store.getters.getAbilityValues).toEqual({
@@ -82,7 +82,7 @@ describe('create entity with blueprint', function () {
 
 describe('isWeaponProperlyLoaded', function () {
     it('should return true when shortbow and arrow are equipped', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c = r.createEntity('c-rogue')
         const oBow = r.createEntity('wpn-shortbow')
@@ -92,7 +92,7 @@ describe('isWeaponProperlyLoaded', function () {
         expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeTrue()
     })
     it('should return false when shortbow and bolts are equipped', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c = r.createEntity('c-rogue')
         const oBow = r.createEntity('wpn-shortbow')
@@ -102,7 +102,7 @@ describe('isWeaponProperlyLoaded', function () {
         expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeFalse()
     })
     it('should return false when short sword equipped with arrows', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c = r.createEntity('c-rogue')
         const oAmmo = r.createEntity('ammo-arrow')
@@ -110,7 +110,7 @@ describe('isWeaponProperlyLoaded', function () {
         expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeFalse()
     })
     it('should return false when shortbow equipped with no ammo', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c = r.createEntity('c-rogue')
         const oBow = r.createEntity('wpn-shortbow')
@@ -122,7 +122,7 @@ describe('isWeaponProperlyLoaded', function () {
 describe('getSuitableOffensiveSlot', function () {
     describe('when equipped with melee weapon only', function () {
         it('should return melee weapon when target is at melee range', function () {
-            const r = new Rules()
+            const r = new Manager()
             r.init()
             const c = r.createEntity('c-rogue')
             const wm = r.createEntity('wpn-shortsword')
@@ -133,7 +133,7 @@ describe('getSuitableOffensiveSlot', function () {
             expect(c.store.getters.getSuitableOffensiveSlot).toEqual(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
         })
         it('should return null when target is not at melee range', function () {
-            const r = new Rules()
+            const r = new Manager()
             r.init()
             const c = r.createEntity('c-rogue')
             const wm = r.createEntity('wpn-shortsword')
@@ -147,7 +147,7 @@ describe('getSuitableOffensiveSlot', function () {
     describe('when equipped with ranged weapon only', function () {
         describe('when correct ammunition is equipped', function () {
             it('should return ranged weapon when target is at ranged range', function () {
-                const r = new Rules()
+                const r = new Manager()
                 r.init()
                 const c = r.createEntity('c-rogue')
                 const wm = r.createEntity('wpn-shortbow')
@@ -161,7 +161,7 @@ describe('getSuitableOffensiveSlot', function () {
                 expect(c.store.getters.getSuitableOffensiveSlot).toEqual(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
             })
             it('should return ranged weapon when target is at melee range', function () {
-                const r = new Rules()
+                const r = new Manager()
                 r.init()
                 const c = r.createEntity('c-rogue')
                 const wm = r.createEntity('wpn-shortbow')
@@ -175,7 +175,7 @@ describe('getSuitableOffensiveSlot', function () {
                 expect(c.store.getters.getSuitableOffensiveSlot).toEqual(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
             })
             it('should return null when target is not at ranged range', function () {
-                const r = new Rules()
+                const r = new Manager()
                 r.init()
                 const c = r.createEntity('c-rogue')
                 const wm = r.createEntity('wpn-shortbow')
@@ -193,7 +193,7 @@ describe('getSuitableOffensiveSlot', function () {
     describe('when equipped with ranged weapon and melee weapon', function () {
         describe('when correct ammunition is equipped', function () {
             it('should return ranged weapon when target is at ranged range', function () {
-                const r = new Rules()
+                const r = new Manager()
                 r.init()
                 const c = r.createEntity('c-rogue')
                 const wr = r.createEntity('wpn-shortbow')
@@ -208,7 +208,7 @@ describe('getSuitableOffensiveSlot', function () {
                 expect(c.store.getters.getSuitableOffensiveSlot).toEqual(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
             })
             it('should return melee weapon when target is at melee range', function () {
-                const r = new Rules()
+                const r = new Manager()
                 r.init()
                 const c = r.createEntity('c-rogue')
                 const wr = r.createEntity('wpn-shortbow')
@@ -223,7 +223,7 @@ describe('getSuitableOffensiveSlot', function () {
                 expect(c.store.getters.getSuitableOffensiveSlot).toEqual(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
             })
             it('should return null when target is not at ranged range', function () {
-                const r = new Rules()
+                const r = new Manager()
                 r.init()
                 const c = r.createEntity('c-rogue')
                 const wr = r.createEntity('wpn-shortbow')
@@ -242,7 +242,7 @@ describe('getSuitableOffensiveSlot', function () {
     describe('when equipped with ranged weapon, shield and melee weapon', function () {
         describe('when correct ammunition is equipped', function () {
             it('should return null when target is not at melee range', function () {
-                const r = new Rules()
+                const r = new Manager()
                 r.init()
                 const c = r.createEntity('c-rogue')
                 const wr = r.createEntity('wpn-shortbow')
@@ -259,7 +259,7 @@ describe('getSuitableOffensiveSlot', function () {
                 expect(c.store.getters.getSuitableOffensiveSlot).toBe('')
             })
             it('should return melee weapon when target is at melee range', function () {
-                const r = new Rules()
+                const r = new Manager()
                 r.init()
                 const c = r.createEntity('c-rogue')
                 const wr = r.createEntity('wpn-shortbow')
@@ -281,7 +281,7 @@ describe('getSuitableOffensiveSlot', function () {
 
 describe('attack outcome disadvantage', function () {
     it('should return disadvantage in attack outcome when fighting at melee distance with ranged weapon', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-rogue')
         const c2 = r.createEntity('c-rogue')
@@ -292,10 +292,10 @@ describe('attack outcome disadvantage', function () {
         const ss = c1.unequipItem(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
         c1.setTarget(c2)
         c1.setDistanceToTarget(5)
-        const a = r.attack(c1)
+        const a = c1.attack()
         expect(a.disadvantages).toEqual({ rules: [ 'TARGET_TOO_CLOSE' ], value: true })
         c1.equipItem(ss)
-        const a2 = r.attack(c1)
+        const a2 = c1.attack()
         expect(a2.disadvantages).toEqual({ rules: [], value: false })
     })
 })
@@ -303,7 +303,7 @@ describe('attack outcome disadvantage', function () {
 
 describe('saving throw bonus effects', function () {
     it('should have a ST bonus in constitution when being fighter', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
         expect(c1.store.getters.getSavingThrowBonus).toEqual({
@@ -340,7 +340,7 @@ describe('saving throw bonus effects', function () {
         )
     })
     it ('should have +6 saving throw bonus agains mind spell when having +3 vs spell + +3 vs mind spell', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_SPELL), 10)
@@ -354,7 +354,7 @@ describe('saving throw bonus effects', function () {
 
 describe('saving throw advantage and disadvantage on specific threats', function () {
     it('should be advantaged against death on saving throw', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ADVANTAGE, [CONSTS.ROLL_TYPE_SAVE], [CONSTS.THREAT_TYPE_DEATH], 'MEME_PAS_MORT'), 10)
@@ -375,7 +375,7 @@ describe('saving throw advantage and disadvantage on specific threats', function
 
 describe('check skills on additionnal modules like "classic"', function () {
     it('should be advantaged in religion when having specific buff effect', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
         const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_RELIGION'])
@@ -393,7 +393,7 @@ describe('check skills on additionnal modules like "classic"', function () {
         })
     })
     it('should be advantaged in any dexterity check when having dexterity advantage buff effect', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
         const circ10 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_UNLOCK'])
@@ -414,7 +414,7 @@ describe('check skills on additionnal modules like "classic"', function () {
 
 describe('damage immunity', function () {
     it('should not be damage by fire when having fire immunity', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
         const w = r.createEntity('wpn-angurvadal')
@@ -512,7 +512,7 @@ describe('damage immunity', function () {
 
 describe('damage vulnerability', function () {
     it('should be resistant to slashing weapon damage when not having damage vulnerability', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
         r.createEntity('wpn-angurvadal')
@@ -521,7 +521,7 @@ describe('damage vulnerability', function () {
         c1.dice.debug(true, 0.75)
         c1.setTarget(c2)
         c1.setDistanceToTarget(5)
-        const atk = r.attack(c1)
+        const atk = c1.attack()
         expect(atk.damages).toEqual({
             amount: 5,
             resisted: { DAMAGE_TYPE_SLASHING: 5 },
@@ -529,7 +529,7 @@ describe('damage vulnerability', function () {
         })
     })
     it('should not be resistant to slashing weapon damage when having damage vulnerability to silver', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
         const w1 = r.createEntity('wpn-silver-dagger')
@@ -537,14 +537,14 @@ describe('damage vulnerability', function () {
         c1.dice.debug(true, 0.75)
         c1.setTarget(c2)
         c1.setDistanceToTarget(5)
-        const atk = r.attack(c1)
+        const atk = c1.attack()
         expect(atk.damages).toEqual({
             amount: 5,
             resisted: { DAMAGE_TYPE_SLASHING: 5 },
             types: { DAMAGE_TYPE_SLASHING: 5 }
         })
         c1.equipItem(w1)
-        const atk2 = r.attack(c1)
+        const atk2 = c1.attack()
         expect(atk2.damages).toEqual({
             amount: 7,
             resisted: { DAMAGE_TYPE_PIERCING: 0 },
@@ -582,12 +582,12 @@ describe('EffectProcessor Garbage collector', function () {
 
 describe('obtention d\'information', function () {
     it('should retrieve epee court data when asking for shortsword name in fr', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         expect(r.assetManager.strings.weaponType['weapon-type-shortsword']).toBe('Epée courte')
     })
     it('should retrieve 1d4 data when asking for shortsword damage output', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         expect(r.assetManager.data['weapon-type-shortsword'].damage).toBe('1d4')
         r.assetManager.lang = 'en'
@@ -599,7 +599,7 @@ describe('obtention d\'information', function () {
 
 describe('effect pharma', function () {
     it('should heal 100% more when having pharma effect', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const soldier = r.createEntity('c-soldier')
         expect(soldier.store.getters.getHitPoints).toBe(44)
@@ -627,7 +627,7 @@ describe('effect pharma', function () {
 
 describe('Effet de terreur', function () {
     it('should not be able to approach target when frightened by id', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const gob1 = r.createEntity('c-goblin-shield')
         const gob2 = r.createEntity('c-goblin-shield')

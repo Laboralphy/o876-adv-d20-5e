@@ -1,5 +1,5 @@
 const Creature = require('../src/Creature')
-const Rules = require('../src/Rules')
+const Manager = require('../src/Manager')
 const CONSTS = require('../src/consts')
 const AssetManager = require("../src/AssetManager");
 
@@ -52,7 +52,7 @@ describe('feat-fighting-style-defense', function () {
     })
     it ('should have +1 AC when having feat and wearing armor', function () {
         const c = new Creature()
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-defense'})
         c.store.mutations.updateFeatEffects()
@@ -80,7 +80,7 @@ describe('feat-fighting-style-dueling', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-dueling'})
         const oSword = r.createEntity('wpn-shortsword')
@@ -110,7 +110,7 @@ describe('feat-fighting-style-great-weapon', function() {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 16 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-great-weapon'})
         const oStaff = r.createEntity('wpn-quaterstaff')
@@ -136,7 +136,7 @@ describe('feat-second-wind', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         c.store.mutations.addFeat({ feat: 'feat-second-wind'})
         c.store.mutations.addClass({ ref: 'fighter', levels: 5 })

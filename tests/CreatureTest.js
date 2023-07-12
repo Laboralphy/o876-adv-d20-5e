@@ -1,5 +1,5 @@
 const Creature = require('../src/Creature')
-const Rules = require('../src/Rules')
+const Manager = require('../src/Manager')
 const EffectProcessor = require('../src/EffectProcessor')
 const ItemProperties = require('../src/item-properties')
 const CONSTS = require('../src/consts')
@@ -626,7 +626,7 @@ describe('groupEffect', function () {
 
 describe('getDamageBonus', function () {
     it('should have damage bonus +1 slashing when equiping sword +1', function () {
-        const r = new Rules()
+        const r = new Manager()
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
@@ -642,7 +642,7 @@ describe('getDamageBonus', function () {
         expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1 })
     })
     it('should have damage bonus +1 slashing +1 fire when equiping sword +1 of flame', function () {
-        const r = new Rules()
+        const r = new Manager()
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
@@ -659,7 +659,7 @@ describe('getDamageBonus', function () {
         expect(db).toEqual({ DAMAGE_TYPE_SLASHING: 1, DAMAGE_TYPE_FIRE: 1 })
     })
     it('blade of angurvadal', function () {
-        const r = new Rules()
+        const r = new Manager()
         const c = new Creature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
@@ -766,7 +766,7 @@ describe('attack logs', function () {
     it('should do at least 1 dmg when doing attack with a shortsword and a strength of 0', function () {
         const c1 = new Creature()
         const c2 = new Creature()
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const oSword1 = r.createEntity('wpn-shortsword')
         const oSword2 = r.createEntity('wpn-shortsword')
@@ -818,7 +818,7 @@ describe('attack logs', function () {
     it('should do 12 dmg when doing attack with a blade of angurvadal and a strength of 10', function () {
         const c1 = new Creature()
         const c2 = new Creature()
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const oSword1 = r.createEntity('wpn-longsword')
         const oSword2 = r.createEntity('wpn-longsword')
@@ -874,13 +874,13 @@ describe('attack logs', function () {
 describe('weapon ranges and target distance', function () {
     it('should have melee range when no weapon is equipped', function () {
         const c1 = new Creature()
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         expect(c1.store.getters.getSelectedWeaponRange).toBe(5) // melee
     })
     it('should have melee range when a long sword is equipped', function () {
         const c1 = new Creature()
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const oSword1 = r.createEntity('wpn-longsword')
         c1.store.mutations.equipItem({ item: oSword1 })
@@ -888,7 +888,7 @@ describe('weapon ranges and target distance', function () {
     })
     it('should have long range when a bow is equipped', function () {
         const c1 = new Creature()
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const oBow1 = r.createEntity('wpn-longbow')
         c1.store.mutations.equipItem({ item: oBow1 })
@@ -901,7 +901,7 @@ describe('weapon ranges and target distance', function () {
     })
     it('should have reach range when a halberd is equipped', function () {
         const c1 = new Creature()
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const oHalberd1 = r.createEntity('wpn-halberd')
         c1.store.mutations.equipItem({ item: oHalberd1 })
@@ -910,7 +910,7 @@ describe('weapon ranges and target distance', function () {
     it('should return a valid range variation when target is moving', function () {
         const c1 = new Creature()
         const c2 = new Creature()
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const oBow1 = r.createEntity('wpn-longbow')
         const oSword1 = r.createEntity('wpn-longsword')
@@ -958,7 +958,7 @@ describe('multiple targets and distances', function () {
 
 describe('getMaterial armor and weapon and shield', function () {
     it('should return only material_metal when testing sword material', function () {
-        const r = new Rules()
+        const r = new Manager()
         const c1 = new Creature()
         r.init()
         const oSword = r.createEntity('wpn-shortsword')
@@ -969,7 +969,7 @@ describe('getMaterial armor and weapon and shield', function () {
         expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
     })
     it('should return material_silver and material_metal when setting material to silver on sword', function () {
-        const r = new Rules()
+        const r = new Manager()
         const c1 = new Creature()
         r.init()
         const oSword = r.createEntity('wpn-shortsword')
@@ -980,7 +980,7 @@ describe('getMaterial armor and weapon and shield', function () {
         expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
     })
     it('should return material_wood and not metal when setting material to wood on sword', function () {
-        const r = new Rules()
+        const r = new Manager()
         const c1 = new Creature()
         r.init()
         const oSword = r.createEntity('wpn-shortsword')
@@ -994,7 +994,7 @@ describe('getMaterial armor and weapon and shield', function () {
 
 describe('prone condition test', function () {
     it('should be disadvantaged when targetting a prone and far target with ranged weapon', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = new Creature()
         const c2 = new Creature()
@@ -1015,7 +1015,7 @@ describe('prone condition test', function () {
         expect(circ2.details.disadvantages).toEqual(['PRONE'])
     })
     it('should not be disadvantaged when targetting a prone and close target with melee weapon', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = new Creature()
         const c2 = new Creature()
@@ -1038,7 +1038,7 @@ describe('prone condition test', function () {
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
     })
     it('should be advantaged when targetting a prone and close target with any weapon', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const c1 = new Creature()
         const c2 = new Creature()
