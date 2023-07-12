@@ -1,5 +1,5 @@
 const Creature = require('../src/Creature')
-const Rules = require('../src/Rules')
+const Manager = require('../src/Manager')
 const CONSTS = require('../src/consts')
 const AssetManager = require("../src/AssetManager");
 
@@ -11,7 +11,7 @@ beforeAll(function () {
 })
 describe('necklace of greater health', function () {
     it ('should have advantage on saving throw against disease when whearing this amulet', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const s = r.createEntity('c-soldier')
         const nl = r.createEntity('necklace-health-greater')

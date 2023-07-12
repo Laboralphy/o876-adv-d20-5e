@@ -981,6 +981,8 @@ class Creature {
         this.setDistanceToTarget(Math.max(1, nDistance - this.store.getters.getSpeed))
     }
 
+
+
     /**
      * Effectue une attaque contre la cible actuelle
      * @param target {Creature} définit une nouvelle cible
@@ -992,6 +994,7 @@ class Creature {
             this.setTarget(target)
         }
         const oTarget = this.getTarget()
+
         if (!oTarget) {
             const outcome = this.createDefaultAttackOutcome({
                 failed: true,
@@ -1000,6 +1003,13 @@ class Creature {
             this._events.emit('attack', { outcome })
             return outcome
         }
+
+        const sBetterSlot = this.store.getters.getSuitableOffensiveSlot
+        if (sBetterSlot === '') {
+            return this.createDefaultAttackOutcome()
+        }
+        this.useOffensiveSlot(sBetterSlot)
+
         if (!this.store.getters.canAttackTarget) {
             const outcome = this.createDefaultAttackOutcome({
                 failed: true,

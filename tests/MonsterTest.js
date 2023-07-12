@@ -1,11 +1,11 @@
-const Rules = require("../src/Rules");
+const Manager = require("../src/Manager");
 const EffectProcessor = require("../src/EffectProcessor");
 const CONSTS = require("../src/consts");
 
 
 describe('Troll regeneration', function () {
     it('should regain 10 hp when wounded by non acid weapon', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const troll = r.createEntity('c-troll')
         expect(troll.store.getters.getHitPoints).toBe(92)
@@ -27,7 +27,7 @@ describe('Troll regeneration', function () {
     })
 
     it('should have a max damage of 2d8 instead of 1d8 when having greatclub', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const ogre = r.createEntity('c-ogre')
         ogre.dice.debug(true, 0)
@@ -41,7 +41,7 @@ describe('Troll regeneration', function () {
 
 describe('Ogre', function () {
     it('should have a max damage of 2d8+4 instead of 1d8+4 when having greatclub', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const ogre = r.createEntity('c-ogre')
         ogre.dice.debug(true, 0)
@@ -55,7 +55,7 @@ describe('Ogre', function () {
 
 describe('Ghast', function () {
     it('should apply paralyzed condition', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const ghast = r.createEntity('c-ghast')
         ghast.dice.debug(true, 0.75)
@@ -63,11 +63,11 @@ describe('Ghast', function () {
         goblin.dice.debug(true, 0.0)
         ghast.setTarget(goblin)
         ghast.setDistanceToTarget(4.5)
-        r.attack(ghast, goblin);
+        ghast.attack(goblin)
         expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeTrue()
         ghast.processEffects()
         goblin.processEffects()
-        const atk2 = r.attack(ghast, goblin)
+        const atk2 = ghast.attack(goblin)
         expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeTrue()
         expect(atk2.dice).toBe(16)
         expect(ghast.store.getters.isTargetInMeleeWeaponRange).toBeTrue()
@@ -80,7 +80,7 @@ describe('Ghast', function () {
         expect(goblin.store.getters.getConditions.has(CONSTS.CONDITION_PARALYZED)).toBeFalse()
     })
     it('should be poisonned when approachin ghast within 5 ft', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const ghast = r.createEntity('c-ghast')
         ghast.dice.debug(true, 0.75)
@@ -113,14 +113,14 @@ describe('Ghast', function () {
 
 describe('Mummies', function () {
     it ('should resist to normal weapon', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const mummy = r.createEntity('c-mummy')
         const soldier = r.createEntity('c-soldier')
         soldier.dice.debug(true, 0.8)
         soldier.setTarget(mummy)
         soldier.setDistanceToTarget(5)
-        const atk1 = r.attack(soldier, mummy)
+        const atk1 = soldier.attack(mummy)
         expect(atk1.damages).toEqual({
             amount: 5,
             resisted: { DAMAGE_TYPE_SLASHING: 5 },
@@ -128,7 +128,7 @@ describe('Mummies', function () {
         })
     })
     it ('should not be damage by poison weapon', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const mummy = r.createEntity('c-mummy')
         const soldier = r.createEntity('c-soldier')
@@ -139,7 +139,7 @@ describe('Mummies', function () {
         soldier.dice.debug(true, 0.8)
         soldier.setTarget(mummy)
         soldier.setDistanceToTarget(5)
-        const atk1 = r.attack(soldier, mummy)
+        const atk1 = soldier.attack(mummy)
         expect(atk1.damages).toEqual({
             amount: 15,
             resisted: {
@@ -155,7 +155,7 @@ describe('Mummies', function () {
         })
     })
     it ('should not be damage by poison weapon', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const mummy = r.createEntity('c-mummy')
         const soldier = r.createEntity('c-soldier')
@@ -167,7 +167,7 @@ describe('Mummies', function () {
         soldier.dice.debug(true, 0.8)
         soldier.setTarget(mummy)
         soldier.setDistanceToTarget(5)
-        const atk1 = r.attack(soldier, mummy)
+        const atk1 = soldier.attack(mummy)
         expect(atk1.damages).toEqual({
             amount: 20,
             resisted: {
@@ -183,7 +183,7 @@ describe('Mummies', function () {
         })
     })
     it ('mummy lord should not be damaged by normal weapon, but damaged by silver weapon', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const mummy = r.createEntity('c-mummy')
         const soldier = r.createEntity('c-soldier')
@@ -193,7 +193,7 @@ describe('Mummies', function () {
         soldier.dice.debug(true, 0.8)
         soldier.setTarget(mummy)
         soldier.setDistanceToTarget(5)
-        const atk1 = r.attack(soldier, mummy)
+        const atk1 = soldier.attack(mummy)
         expect(atk1.damages).toEqual({
             amount: 10,
             resisted: { DAMAGE_TYPE_SLASHING: 0 },
@@ -202,7 +202,7 @@ describe('Mummies', function () {
     })
 
     it('should be advantaged on spells', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const mummy = r.createEntity('c-mummy-lord') // J'avais créé un c-mummy, au lieu d'un c-mummy-lord
         expect(mummy.store.getters.getEquipmentItemProperties.find(eq => eq.property === CONSTS.ITEM_PROPERTY_ADVANTAGE)).toBeDefined()
@@ -216,7 +216,7 @@ describe('Mummies', function () {
 
 describe('zombie', function () {
     it('should not kill zombie when using non radiant damage', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const zombie = r.createEntity('c-zombie')
         expect(zombie.store.getters.getHitPoints).toBe(27)
@@ -229,7 +229,7 @@ describe('zombie', function () {
         expect(eDam1.data.resistedAmount).toBe(2)
     })
     it('should kill zombie when using non radiant damage but fail save', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const zombie = r.createEntity('c-zombie')
         expect(zombie.store.getters.getHitPoints).toBe(27)
@@ -242,7 +242,7 @@ describe('zombie', function () {
         expect(eDam1.data.resistedAmount).toBe(0)
     })
     it('should kill zombie when using radiant damage', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const zombie = r.createEntity('c-zombie')
         expect(zombie.store.getters.getHitPoints).toBe(27)
@@ -252,7 +252,7 @@ describe('zombie', function () {
         expect(zombie.store.getters.getHitPoints).toBeLessThanOrEqual(0)
     })
     it('should kill zombie when delivering critical', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const zombie = r.createEntity('c-zombie')
         expect(zombie.store.getters.getHitPoints).toBe(27)
@@ -266,7 +266,7 @@ describe('zombie', function () {
 
 describe('wight', function () {
     it('should apply life drain', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const wight = r.createEntity('c-wight')
         const soldier = r.createEntity('c-soldier')
@@ -275,16 +275,16 @@ describe('wight', function () {
         wight.setTarget(soldier)
         wight.setDistanceToTarget(0)
         expect(soldier.store.getters.getMaxHitPoints).toBe(44)
-        const oAtk = r.attack(wight)
+        const oAtk = wight.attack()
         expect(oAtk.damages.amount).toBe(9)
         expect(soldier.store.getters.getMaxHitPoints).toBe(35)
         expect(soldier.store.getters.getHitPoints).toBe(35)
-        r.attack(wight)
-        r.attack(wight)
-        r.attack(wight)
+        wight.attack()
+        wight.attack()
+        wight.attack()
         expect(soldier.store.getters.getMaxHitPoints).toBe(8)
         expect(soldier.store.getters.getHitPoints).toBe(8)
-        r.attack(wight)
+        wight.attack()
         expect(soldier.store.getters.getMaxHitPoints).toBe(-1)
         expect(soldier.store.getters.getHitPoints).toBe(-1)
     })
@@ -292,7 +292,7 @@ describe('wight', function () {
 
 describe('vampire', function () {
     it('should not be attacked by charmed targets', function () {
-        const r = new Rules()
+        const r = new Manager()
         r.init()
         const vampire = r.createEntity('c-vampire')
         const soldier = r.createEntity('c-soldier')
@@ -302,11 +302,11 @@ describe('vampire', function () {
         soldier.dice.debug(true, 0.01)
         vampire.action('sla-vampire-charm')
         expect(soldier.store.getters.getConditions.has(CONSTS.CONDITION_CHARMED)).toBeTrue()
-        const a = r.attack(soldier)
+        const a = soldier.attack()
         expect(a.failed).toBeTrue()
         expect(a.failure).toBe('ATTACK_OUTCOME_CONDITION')
         expect(soldier.store.getters.getConditions.has(CONSTS.CONDITION_CHARMED)).toBeTrue()
-        r.attack(vampire)
+        vampire.attack()
         expect(soldier.store.getters.getConditions.has(CONSTS.CONDITION_CHARMED)).toBeFalse()
     })
 })

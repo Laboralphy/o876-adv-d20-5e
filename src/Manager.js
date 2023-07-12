@@ -4,7 +4,7 @@ const Events = require('events')
 const Creature = require('./Creature')
 const itemProperties = require('./item-properties')
 
-class Rules {
+class Manager {
     constructor () {
         this._ef = null
         this._events = new Events()
@@ -98,17 +98,7 @@ class Rules {
      * @param [oTarget] {Creature}
      */
     attack (oAttacker, oTarget = undefined) {
-        if (oTarget) {
-            oAttacker.setTarget(oTarget)
-        }
-        const asg = oAttacker.store.getters
-        const sBetterSlot = asg.getSuitableOffensiveSlot
-        if (sBetterSlot !== '') {
-            oAttacker.useOffensiveSlot(sBetterSlot)
-            return oAttacker.attack()
-        } else {
-            return oAttacker.createDefaultAttackOutcome()
-        }
+        return oAttacker.attack(oTarget)
     }
 
     /**
@@ -276,4 +266,4 @@ class Rules {
     }
 }
 
-module.exports = Rules
+module.exports = Manager
