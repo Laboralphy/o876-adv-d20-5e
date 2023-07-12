@@ -300,6 +300,7 @@ describe('vampire', function () {
         soldier.setTarget(vampire)
         vampire.setDistanceToTarget(5)
         soldier.dice.debug(true, 0.01)
+        vampire.dice.debug(true, 0.9)
         vampire.action('sla-vampire-charm')
         expect(soldier.store.getters.getConditions.has(CONSTS.CONDITION_CHARMED)).toBeTrue()
         const a = soldier.attack()
