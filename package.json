@@ -1,7 +1,7 @@
 {
-  "name": "adv-dd5e-ogl-impl",
-  "version": "1.0.0",
-  "description": "A set of rules loosely based on the Open Gaming License version of Dungeons and Dragons 5e.",
+  "name": "@laboralphy/addv-srd",
+  "version": "0.1.0",
+  "description": "A set of rules based on the System Reference Document of OGL version Dungeons and Dragons 5e. ",
   "main": "index.js",
   "scripts": {
     "test": "jasmine ./tests/*Test.js",

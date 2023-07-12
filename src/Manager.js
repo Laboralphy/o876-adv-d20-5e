@@ -3,11 +3,16 @@ const CONSTS = require('./consts')
 const Events = require('events')
 const Creature = require('./Creature')
 const itemProperties = require('./item-properties')
+const CONFIG = require('./config')
 
 class Manager {
     constructor () {
         this._ef = null
         this._events = new Events()
+    }
+
+    get config () {
+        return CONFIG
     }
 
     /**
@@ -89,16 +94,6 @@ class Manager {
         const ip = itemProperties[sItemProperty](data)
         oItem.properties.push(ip)
         return ip
-    }
-
-    /**
-     * Effectue une attaque physique melee ou distance contre la cible.
-     * Si la cible n'est pas à portée l'attaque échoue
-     * @param oAttacker {Creature}
-     * @param [oTarget] {Creature}
-     */
-    attack (oAttacker, oTarget = undefined) {
-        return oAttacker.attack(oTarget)
     }
 
     /**

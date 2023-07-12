@@ -5,7 +5,7 @@ const SchemaValidator = require("./SchemaValidator")
 const StoreManager = require('./StoreManager')
 const deepMerge = require('../libs/deep-merge')
 const deepClone = require('../libs/deep-clone')
-const deepFreeze = require('../libs/deep-freeze')
+const CONFIG = require('./config')
 const STRINGS = {
     fr: require('./strings/fr.json'),
     en: require('./strings/en.json')
@@ -129,9 +129,11 @@ class AssetManager {
             for (const [sId, data] of Object.entries(oBaseData)) {
                 this.addData(sId, data)
             }
-            this.loadModule(path.resolve(__dirname, 'modules', 'base'))
-            this.loadModule(path.resolve(__dirname, 'modules', 'classic'))
-            this.loadModule(path.resolve(__dirname, 'modules', 'modern'))
+            CONFIG
+                .activeModules
+                .forEach(m => {
+                    this.loadModule(m)
+                })
             this._initialized = true
         }
     }
@@ -163,7 +165,7 @@ class AssetManager {
             const o = {}
             Object
                 .entries(this.data)
-                .filter(([k, v]) => k.startsWith(f))
+                .filter(([k]) => k.startsWith(f))
                 .forEach(([k, v]) => {
                     o[k] = deepClone(v)
                 })
