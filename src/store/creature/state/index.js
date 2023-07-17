@@ -40,8 +40,7 @@ module.exports = function () {
         effects: [],
         classes: [],
         gauges: {
-            damage: 0,
-            hp: 0
+            damage: 0
         },
         recentDamageTypes: {
         },

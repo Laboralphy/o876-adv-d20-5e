@@ -28,6 +28,12 @@ class EffectProcessor {
         }
     }
 
+    unrefCreature (oCreature) {
+        if (oCreature) {
+            delete this._creatures[oCreature.id]
+        }
+    }
+
     static createEffect (sEffect, ...aArgs) {
         return Effects[sEffect].create(...aArgs)
     }
@@ -103,15 +109,41 @@ class EffectProcessor {
         }
     }
 
+    /**
+     * Supprime du registre la créature spécifiée ainsi que tous les effets dont elle est la source.
+     * @param oCreature {Creature} Créature dont on veut que les effets soient purgé
+     * @param oSource {Creature} Créature qu'on veut voir disparaitre
+     */
+    removeCreatureFromRegistry (oCreature, oSource) {
+        const idSource = oSource.id
+        const aEffects = oCreature
+            .store
+            .getters
+            .getEffects
+            .filter(eff => eff.duration > 0 && eff.source === idSource)
+        aEffects.forEach(eff => {
+            eff.duration = 0
+        })
+        this.flushCreatureRegistry(oCreature)
+    }
+
+    /**
+     * Supprime du registre de la créature spécifiée, les creatures qui ne font plus effet sur elle
+     * @param oCreature {Creature} Créature dont on veut faire un vaccuum sur les effet
+     */
     flushCreatureRegistry (oCreature) {
         const aCreatureToDelete = new Set(Object.keys(this._creatures))
         aCreatureToDelete.delete(oCreature.id)
-        const aEffects = oCreature.store.getters.getEffects
+        const aEffects = oCreature
+            .store
+            .getters
+            .getEffects
+            .filter(eff => eff.duration > 0)
         aEffects.forEach(eff => {
             aCreatureToDelete.delete(eff.source)
         })
         aCreatureToDelete.forEach(id => {
-            delete this._creatures[id]
+            this.unrefCreature(this._creatures[id])
         })
     }
 
