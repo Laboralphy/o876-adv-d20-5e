@@ -20,14 +20,14 @@
  * @property getArmorClassRanges {{type: string, min: number, max: number}[]}
  * @property getArmorMaterial {string}
  * @property getAttackBonus {number}
- * @property getBreakableEffects undefined
+ * @property getBreakableEffects {D20Effect[]}
  * @property getCarryingCapacity {number}
  * @property getConditionImmunities {Set<string>}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
  * @property getDamageRerollThreshold {[]}
- * @property getDeadEffects {[]}
+ * @property getDeadEffects {D20Effect[]}
  * @property getDefensiveApplicableConditions {{condition: string, dc: number, ability: number, duration: number}[]}
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantagePropEffects {Object<string, string>}
@@ -41,6 +41,7 @@
  * @property getEquipmentList {D20Item[]}
  * @property getEquippedItems {{[slot: string]: D20Item}}
  * @property getExhaustionLevel {number}
+ * @property getExportedState {{specie: (string|*), classes: ([]|*), equipment: (*|(Object&{id})|null)[], gauges: ({damage: number}|*), version: number, feats: ([]|*), speed: *, abilities: *, skills: ([]|*), effects: (number|[]|*), size, proficiencies: ([]|*), offensiveSlot: (*|string), recentDamageTypes: (*|{}), alignment: ({entropy: number, morality: number}|*)}}
  * @property getFeatReport {FeatReport[]}
  * @property getHealMitigation {{pharma: boolean, negateheal: boolean, factor: number}}
  * @property getHitPoints {number}

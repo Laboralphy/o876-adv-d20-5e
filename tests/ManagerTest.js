@@ -640,3 +640,119 @@ describe('Effet de terreur', function () {
         expect(gob1.store.getters.canApproachTarget).toBeFalse()
     })
 })
+
+describe('Supprimer une creature', function () {
+    it('should remove effects provided by evil creature when evil creature is deleted', function () {
+        const r = new Manager()
+        r.init()
+        const gob1 = r.createEntity('c-goblin-shield')
+        gob1.id = 'gob1'
+        const gob2 = r.createEntity('c-goblin-shield')
+        gob2.id = 'gob2'
+        const evilCreature = r.createEntity('c-goblin-shield')
+        evilCreature.id = 'evilCreature'
+        gob1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_PHARMA), 10, evilCreature)
+        gob1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_AC_BONUS, 1), 10, gob2)
+        gob1.processEffects()
+        gob2.processEffects()
+        expect(gob1
+            .store
+            .getters
+            .getEffects
+            .map(eff => eff.type)
+            .sort((a, b) => a.localeCompare(b))
+            .reduce((prev, curr) => [...prev, curr], [])
+            .join(' ')
+        ).toBe('EFFECT_AC_BONUS EFFECT_PHARMA')
+        expect(gob1
+            .store
+            .getters
+            .getEffects
+            .filter(eff => eff.source === evilCreature.id)
+            .map(eff => eff.type)
+            .sort((a, b) => a.localeCompare(b))
+            .reduce((prev, curr) => [...prev, curr], [])
+            .join(' ')
+        ).toBe('EFFECT_PHARMA')
+        expect(Object
+            .keys(gob1
+                .effectProcessor
+                .creatures
+            )
+            .slice(0)
+            .sort((a, b) => a.localeCompare(b))
+            .join(' ')
+        ).toEqual('evilCreature gob1 gob2')
+        gob1.effectProcessor.removeCreatureFromRegistry(gob1, evilCreature)
+        gob2.effectProcessor.removeCreatureFromRegistry(gob2, evilCreature)
+        gob1.processEffects()
+        gob2.processEffects()
+        expect(gob1
+            .store
+            .getters
+            .getEffects
+            .map(eff => eff.type)
+            .sort((a, b) => a.localeCompare(b))
+            .reduce((prev, curr) => [...prev, curr], [])
+            .join(' ')
+        ).toBe('EFFECT_AC_BONUS')
+        expect(Object
+            .keys(gob1
+                .effectProcessor
+                .creatures
+            )
+            .slice(0)
+            .sort((a, b) => a.localeCompare(b))
+            .join(' ')
+        ).toEqual('gob1 gob2')
+    })
+    it('should remove evil creature from registry when no more effect is active', function () {
+        const r = new Manager()
+        r.init()
+        const gob1 = r.createEntity('c-goblin-shield')
+        gob1.id = 'gob1'
+        const gob2 = r.createEntity('c-goblin-shield')
+        gob2.id = 'gob2'
+        const evilCreature = r.createEntity('c-goblin-shield')
+        evilCreature.id = 'evilCreature'
+        gob1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_PHARMA), 2, evilCreature)
+        gob1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_AC_BONUS, 1), 10, gob2)
+        gob1.processEffects()
+        gob2.processEffects()
+        expect(Object
+            .keys(gob1
+                .effectProcessor
+                .creatures
+            )
+            .slice(0)
+            .sort((a, b) => a.localeCompare(b))
+            .join(' ')
+        ).toEqual('evilCreature gob1 gob2')
+        gob1.processEffects()
+        gob2.processEffects()
+        expect(Object
+            .keys(gob1
+                .effectProcessor
+                .creatures
+            )
+            .slice(0)
+            .sort((a, b) => a.localeCompare(b))
+            .join(' ')
+        ).toEqual('gob1 gob2')
+    })
+})
+
+describe('import/export creature', function () {
+    it('should preserve id in exported state when equipped an item with id', function () {
+        const r = new Manager()
+        r.init()
+        const gob1 = r.createEntity('c-goblin-shield')
+        const daggerx = r.createEntity('wpn-dagger')
+        daggerx.id = 'daggerx'
+        r.addItemProperty(daggerx, CONSTS.ITEM_PROPERTY_ENHANCEMENT, { amp: 1 })
+        gob1.equipItem(daggerx)
+        gob1.id = 'gob1'
+        const s1 = gob1.store.getters.getExportedState
+        expect(s1.equipment.EQUIPMENT_SLOT_WEAPON_MELEE.id).toBe('daggerx')
+    })
+})

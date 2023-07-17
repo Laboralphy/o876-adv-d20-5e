@@ -94,11 +94,20 @@ class Creature {
     }
 
     set id (value) {
+        this._id = value
         this.store.mutations.setId({ value })
     }
 
     get store () {
         return this._store
+    }
+
+    get state () {
+        return this._store.getters.getExportedState
+    }
+
+    set state (state) {
+        this._store.mutations.importCreatureState({ state })
     }
 
     /**
