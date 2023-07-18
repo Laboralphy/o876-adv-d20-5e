@@ -208,6 +208,10 @@ class AssetManager {
         }
     }
 
+    validateImportData (data) {
+        this.validator.validate(data, 'actor-state')
+    }
+
     /**
      * Ajoute un blueprint d'item
      * @param sId {string}

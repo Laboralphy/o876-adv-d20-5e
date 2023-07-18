@@ -1,3 +1,7 @@
+function updateArray(a, a2) {
+    a.splice(0, a.length, ...a2)
+}
+
 module.exports = ({ state }, { state: importState }) => {
     const {
         abilities,
@@ -13,20 +17,24 @@ module.exports = ({ state }, { state: importState }) => {
         recentDamageTypes,
         feats,
         skills,
-        equipment
+        equipment,
+        counters,
+        encumbrance
     } = importState
     state.abilities = abilities
     state.alignment = alignment
     state.specie = specie
     state.size = size
     state.offensiveSlot = offensiveSlot
-    state.proficiencies = proficiencies
+    updateArray(state.proficiencies, proficiencies)
     state.speed = speed
-    state.effects = effects
-    state.classes = classes
+    updateArray(state.effects, effects)
+    updateArray(state.classes, classes)
     state.gauges = gauges
     state.recentDamageTypes = recentDamageTypes
     state.feats = feats
-    state.skills = skills
+    updateArray(state.skills, skills)
     state.equipment = equipment
+    state.counters = counters
+    state.encumbrance = encumbrance
 }
