@@ -70,6 +70,25 @@ class Manager {
         return oEntity
     }
 
+    /**
+     * Importation de données visant à restorer l'état d'une créature
+     * La nouvelle créature est créée, puis son état est restoré
+     * @param data
+     * @returns {Creature|*}
+     */
+    importCreature (data) {
+        return this._ef.importCreature(data)
+    }
+
+    /**
+     * Sauvegarde des donnée d'une créature en vue d'une ré-importation ultérieure
+     * @param oCreature
+     * @returns {*}
+     */
+    exportCreature (oCreature) {
+        return this._ef.exportCreature(oCreature)
+    }
+
     createInventoryItems (oCreature, oInventory) {
         for (const [, item] of Object.entries(oInventory)) {
             if (typeof item === 'string') {

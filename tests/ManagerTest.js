@@ -755,4 +755,163 @@ describe('import/export creature', function () {
         const s1 = gob1.store.getters.getExportedState
         expect(s1.equipment.EQUIPMENT_SLOT_WEAPON_MELEE.id).toBe('daggerx')
     })
+    it('should create a goblin when importing data', function () {
+        const r = new Manager()
+        r.init()
+        const gob0 = r.createEntity('c-goblin-shield')
+        const data = {
+            id: "gob1",
+            name: "gob1",
+            ref: "c-goblin-shield",
+            abilities: {
+                ABILITY_STRENGTH: 15,
+                ABILITY_DEXTERITY: 14,
+                ABILITY_CONSTITUTION: 14,
+                ABILITY_INTELLIGENCE: 12,
+                ABILITY_WISDOM: 10,
+                ABILITY_CHARISMA: 9
+            },
+            alignment: {
+                entropy: 0,
+                morality: 0
+            },
+            specie: "SPECIE_HUMANOID",
+            size: "CREATURE_SIZE_SMALL",
+            offensiveSlot: "EQUIPMENT_SLOT_WEAPON_MELEE",
+            proficiencies: [],
+            speed: 30,
+            effects: [],
+            classes: [
+                {
+                    ref: "monster",
+                    levels: 2
+                }
+            ],
+            gauges: {
+                damage: 0
+            },
+            recentDamageTypes: {},
+            feats: [],
+            skills: [],
+            equipment: {
+                EQUIPMENT_SLOT_HEAD: null,
+                EQUIPMENT_SLOT_NECK: null,
+                EQUIPMENT_SLOT_CHEST: {
+                    properties: [],
+                    proficiency: "PROFICIENCY_ARMOR_LIGHT",
+                    ac: 11,
+                    maxDexterityModifier: false,
+                    minStrengthRequired: 0,
+                    disadvantageStealth: false,
+                    weight: 10,
+                    entityType: "ENTITY_TYPE_ITEM",
+                    itemType: "ITEM_TYPE_ARMOR",
+                    armorType: "armor-type-leather",
+                    material: "MATERIAL_LEATHER",
+                    ref: "arm-leather",
+                    equipmentSlots: [
+                        "EQUIPMENT_SLOT_CHEST"
+                    ]
+                },
+                EQUIPMENT_SLOT_BACK: null,
+                EQUIPMENT_SLOT_ARMS: null,
+                EQUIPMENT_SLOT_WEAPON_MELEE: {
+                    properties: [
+                        {
+                            property: "ITEM_PROPERTY_ENHANCEMENT",
+                            amp: 1,
+                            data: {}
+                        }
+                    ],
+                    proficiency: "PROFICIENCY_WEAPON_SIMPLE",
+                    damage: "1d4",
+                    versatileDamage: "",
+                    damageType: "DAMAGE_TYPE_PIERCING",
+                    weight: 1,
+                    attributes: [
+                        "WEAPON_ATTRIBUTE_FINESSE",
+                        "WEAPON_ATTRIBUTE_LIGHT",
+                        "WEAPON_ATTRIBUTE_THROWN"
+                    ],
+                    entityType: "ENTITY_TYPE_ITEM",
+                    itemType: "ITEM_TYPE_WEAPON",
+                    weaponType: "weapon-type-dagger",
+                    material: "MATERIAL_STEEL",
+                    ref: "wpn-dagger",
+                    equipmentSlots: [
+                        "EQUIPMENT_SLOT_WEAPON_MELEE"
+                    ],
+                    id: "daggerx"
+                },
+                EQUIPMENT_SLOT_WEAPON_RANGED: null,
+                EQUIPMENT_SLOT_SHIELD: {
+                    properties: [],
+                    proficiency: "PROFICIENCY_SHIELD",
+                    ac: 2,
+                    weight: 6,
+                    entityType: "ENTITY_TYPE_ITEM",
+                    itemType: "ITEM_TYPE_SHIELD",
+                    shieldType: "shield-type-heavy",
+                    material: "MATERIAL_WOOD",
+                    ref: "arm-shield",
+                    equipmentSlots: [
+                        "EQUIPMENT_SLOT_SHIELD"
+                    ]
+                },
+                EQUIPMENT_SLOT_LEFT_FINGER: null,
+                EQUIPMENT_SLOT_RIGHT_FINGER: null,
+                EQUIPMENT_SLOT_AMMO: null,
+                EQUIPMENT_SLOT_WAIST: null,
+                EQUIPMENT_SLOT_FEET: null,
+                EQUIPMENT_SLOT_NATURAL_ARMOR: {
+                    properties: [
+                        {
+                            property: "ITEM_PROPERTY_SKILL_BONUS",
+                            amp: 2,
+                            data: {
+                                skill: "SKILL_STEALTH"
+                            }
+                        }
+                    ],
+                    proficiency: "",
+                    ac: 10,
+                    maxDexterityModifier: false,
+                    minStrengthRequired: 0,
+                    disadvantageStealth: false,
+                    weight: 0,
+                    entityType: "ENTITY_TYPE_ITEM",
+                    itemType: "ITEM_TYPE_NATURAL_ARMOR",
+                    armorType: "armor-type-natural",
+                    material: "MATERIAL_UNKNOWN",
+                    ref: "narm-c-goblin-shield",
+                    equipmentSlots: [
+                        "EQUIPMENT_SLOT_NATURAL_ARMOR"
+                    ]
+                },
+                EQUIPMENT_SLOT_NATURAL_WEAPON: {
+                    properties: [],
+                    proficiency: "PROFICIENCY_WEAPON_UNARMED",
+                    damage: "1",
+                    versatileDamage: "",
+                    damageType: "DAMAGE_TYPE_CRUSHING",
+                    weight: 0,
+                    attributes: [],
+                    entityType: "ENTITY_TYPE_ITEM",
+                    itemType: "ITEM_TYPE_NATURAL_WEAPON",
+                    weaponType: "weapon-type-unarmed",
+                    material: "",
+                    ref: "nwpn-unarmed-strike",
+                    equipmentSlots: [
+                        "EQUIPMENT_SLOT_NATURAL_WEAPON"
+                    ]
+                }
+            },
+            counters: {},
+            encumbrance: 0
+        }
+        const gob = r.importCreature(data)
+        expect(gob.name).toBe('gob1')
+        expect(gob.id).toBe('gob1')
+        expect(gob.store.getters.getLevel).toBe(2)
+    })
 })

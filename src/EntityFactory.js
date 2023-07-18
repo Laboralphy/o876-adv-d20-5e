@@ -91,14 +91,6 @@ class EntityFactory {
         return this.mixData(oBlueprint, oAmmoData, [CONSTS.EQUIPMENT_SLOT_AMMO])
     }
 
-    createItemNecklace (oBlueprint) {
-        const oEqItemData = this._am.data[oBlueprint.ammoType]
-        if (!oAmmoData) {
-            throw new Error('This ammo blueprint is undefined : ' + oBlueprint.ammoType)
-        }
-        return this.mixData(oBlueprint, oAmmoData, [CONSTS.EQUIPMENT_SLOT_AMMO])
-    }
-
     /**
      * creation d'un item
      * @param oBlueprint
@@ -245,6 +237,23 @@ class EntityFactory {
                 throw new Error('ERR_ENTITY_TYPE_NOT_SUPPORTED')
             }
         }
+    }
+
+    exportCreature (oCreature) {
+        const c = oCreature.store.getters.getExportedState
+        c.name = oCreature.name
+        c.ref = oCreature.ref
+        return c
+    }
+
+    importCreature (data) {
+        this.assetManager.validateImportData(data)
+        const creature = new Creature()
+        creature.id = data.id
+        creature.ref = data.ref
+        creature.name = data.name
+        creature.store.mutations.importCreatureState({ state: data })
+        return creature
     }
 }
 
