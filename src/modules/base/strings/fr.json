@@ -13,5 +13,22 @@
   "weaponType": {
     "weapon-type-improvised": "Arme improvisée",
     "weapon-type-unarmed": "Mains nues"
+  },
+  "equipmentSlot": {
+    "EQUIPMENT_SLOT_HEAD": "Tête",
+    "EQUIPMENT_SLOT_NECK": "Cou",
+    "EQUIPMENT_SLOT_CHEST": "Torse",
+    "EQUIPMENT_SLOT_BACK": "Dos",
+    "EQUIPMENT_SLOT_ARMS": "Bras",
+    "EQUIPMENT_SLOT_WEAPON_MELEE": "Arme contact",
+    "EQUIPMENT_SLOT_WEAPON_RANGED": "Arme distance",
+    "EQUIPMENT_SLOT_SHIELD": "Bouclier",
+    "EQUIPMENT_SLOT_LEFT_FINGER": "Doigt",
+    "EQUIPMENT_SLOT_RIGHT_FINGER": "Doigt",
+    "EQUIPMENT_SLOT_AMMO": "Munition",
+    "EQUIPMENT_SLOT_WAIST": "Bassin",
+    "EQUIPMENT_SLOT_FEET": "Pieds",
+    "EQUIPMENT_SLOT_NATURAL_ARMOR": "Armure naturelle",
+    "EQUIPMENT_SLOT_NATURAL_WEAPON": "Arme naturelle"
   }
 }
