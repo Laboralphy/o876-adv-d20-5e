@@ -13,5 +13,22 @@
   "weaponType": {
     "weapon-type-improvised": "Improvised weapon",
     "weapon-type-unarmed": "Unarmed"
+  },
+  "equipmentSlot": {
+    "EQUIPMENT_SLOT_HEAD": "Head",
+    "EQUIPMENT_SLOT_NECK": "Neck",
+    "EQUIPMENT_SLOT_CHEST": "Chest",
+    "EQUIPMENT_SLOT_BACK": "Back",
+    "EQUIPMENT_SLOT_ARMS": "Arms",
+    "EQUIPMENT_SLOT_WEAPON_MELEE": "Melee weapon",
+    "EQUIPMENT_SLOT_WEAPON_RANGED": "Ranged weapon",
+    "EQUIPMENT_SLOT_SHIELD": "Shield",
+    "EQUIPMENT_SLOT_LEFT_FINGER": "Finger",
+    "EQUIPMENT_SLOT_RIGHT_FINGER": "Finger",
+    "EQUIPMENT_SLOT_AMMO": "Ammo",
+    "EQUIPMENT_SLOT_WAIST": "Waist",
+    "EQUIPMENT_SLOT_FEET": "Feet",
+    "EQUIPMENT_SLOT_NATURAL_ARMOR": "Natural armor",
+    "EQUIPMENT_SLOT_NATURAL_WEAPON": "Natural weapon"
   }
 }
