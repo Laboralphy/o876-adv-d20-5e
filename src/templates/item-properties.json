@@ -93,5 +93,8 @@
   "ITEM_PROPERTY_SKILL_BONUS": {
     "amp": "number",
     "skill": "skill"
+  },
+  "ITEM_PROPERTY_SPEED_BONUS": {
+    "amp": "number"
   }
 }

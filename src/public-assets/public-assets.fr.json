@@ -48,7 +48,7 @@
       "ITEM_TYPE_HELM": "Casque/Heaume",
       "ITEM_TYPE_NECKLACE": "Collier",
       "ITEM_TYPE_CLOAK": "Manteau",
-      "ITEM_TYPE_BRACER": "Brassard",
+      "ITEM_TYPE_GAUNTLETS": "Gantelets",
       "ITEM_TYPE_GLOVES": "Gants",
       "ITEM_TYPE_RING": "Bague",
       "ITEM_TYPE_BELT": "Ceinture",
@@ -889,6 +889,9 @@
       "ITEM_PROPERTY_SKILL_BONUS": {
         "amp": "number",
         "skill": "skill"
+      },
+      "ITEM_PROPERTY_SPEED_BONUS": {
+        "amp": "number"
       }
     }
   },

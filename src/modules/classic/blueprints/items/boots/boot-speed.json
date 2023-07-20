@@ -1,0 +1,10 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_BOOTS",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_SPEED_BONUS",
+      "amp": 30
+    }
+  ]
+}

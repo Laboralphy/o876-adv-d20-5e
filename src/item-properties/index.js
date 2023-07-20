@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 19/07/2023, 14:18:10 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 20/07/2023 11:40:55 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.ITEM_PROPERTY_ABILITY_BONUS]: require('./ability-bonus'),
@@ -27,6 +27,7 @@ module.exports = {
   [CONSTS.ITEM_PROPERTY_REGEN]: require('./regen'),
   [CONSTS.ITEM_PROPERTY_REROLL]: require('./reroll'),
   [CONSTS.ITEM_PROPERTY_SAVING_THROW_BONUS]: require('./saving-throw-bonus'),
-  [CONSTS.ITEM_PROPERTY_SKILL_BONUS]: require('./skill-bonus')
+  [CONSTS.ITEM_PROPERTY_SKILL_BONUS]: require('./skill-bonus'),
+  [CONSTS.ITEM_PROPERTY_SPEED_BONUS]: require('./speed-bonus')
 }
 

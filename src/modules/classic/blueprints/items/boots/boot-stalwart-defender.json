@@ -1,0 +1,18 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_BOOTS",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
+      "condition": "CONDITION_PRONE"
+    },
+    {
+      "property": "ITEM_PROPERTY_HP_BONUS",
+      "amp": 20
+    },
+    {
+      "property": "ITEM_PROPERTY_REGEN",
+      "amp": 1
+    }
+  ]
+}

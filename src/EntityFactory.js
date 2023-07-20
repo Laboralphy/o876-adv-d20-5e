@@ -122,7 +122,7 @@ class EntityFactory {
             case CONSTS.ITEM_TYPE_HELM:
             case CONSTS.ITEM_TYPE_NECKLACE:
             case CONSTS.ITEM_TYPE_CLOAK:
-            case CONSTS.ITEM_TYPE_BRACER:
+            case CONSTS.ITEM_TYPE_GAUNTLETS:
             case CONSTS.ITEM_TYPE_GLOVES:
             case CONSTS.ITEM_TYPE_RING:
             case CONSTS.ITEM_TYPE_BELT:

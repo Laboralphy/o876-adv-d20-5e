@@ -1,0 +1,21 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_GLOVES",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_UNLOCK",
+      "amp": 2
+    },
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_SLEIGHT_OF_HAND",
+      "amp": 2
+    },
+    {
+      "property": "ITEM_PROPERTY_SKILL_BONUS",
+      "skill": "SKILL_DISARM_TRAP",
+      "amp": 2
+    }
+  ]
+}

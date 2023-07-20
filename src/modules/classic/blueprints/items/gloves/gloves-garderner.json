@@ -1,0 +1,20 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_GLOVES",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_SAVING_THROW_BONUS",
+      "amp": 3,
+      "type": "THREAT_TYPE_POISON"
+    },
+    {
+      "property": "ITEM_PROPERTY_REGEN",
+      "amp": 1
+    },
+    {
+      "property": "ITEM_PROPERTY_DAMAGE_REDUCTION",
+      "type": "DAMAGE_TYPE_ACID",
+      "amp": 5
+    }
+  ]
+}
