@@ -351,7 +351,7 @@ En voici la liste :
 | Casque/chapeau   | ITEM_TYPE_HELM           | EQUIPMENT_SLOT_HEAD |
 | Collier/amulette | ITEM_TYPE_NECKLACE       | EQUIPMENT_SLOT_NECK |
 | Manteau/cape     | ITEM_TYPE_CLOAK          | EQUIPMENT_SLOT_BACK |
-| Brassard         | ITEM_TYPE_BRACER         | EQUIPMENT_SLOT_ARMS |
+| Gantelets         | ITEM_TYPE_GAUNTLETS         | EQUIPMENT_SLOT_ARMS |
 | Gantelet         | ITEM_TYPE_GLOVES         | EQUIPMENT_SLOT_ARMS |
 | Anneau/bague     | ITEM_TYPE_RING           | EQUIPMENT_SLOT_LEFT_FINGER / EQUIPMENT_SLOT_RIGHT_FINGER |
 | Ceinturon        | ITEM_TYPE_BELT           | EQUIPMENT_SLOT_WAIST |

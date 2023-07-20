@@ -1,10 +1,10 @@
 {
   "entityType": "ENTITY_TYPE_ITEM",
-  "itemType": "ITEM_TYPE_BRACERS",
+  "itemType": "ITEM_TYPE_HELM",
   "properties": [
     {
       "property": "ITEM_PROPERTY_AC_BONUS",
-      "amp": 1
+      "amp": 2
     }
   ]
 }

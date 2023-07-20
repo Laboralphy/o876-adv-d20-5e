@@ -1,6 +1,6 @@
 {
   "entityType": "ENTITY_TYPE_ITEM",
-  "itemType": "ITEM_TYPE_BRACERS",
+  "itemType": "ITEM_TYPE_GAUNTLETS",
   "properties": [
     {
       "property": "ITEM_PROPERTY_AC_BONUS",

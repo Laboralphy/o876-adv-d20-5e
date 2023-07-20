@@ -1,11 +1,11 @@
 {
   "entityType": "ENTITY_TYPE_ITEM",
-  "itemType": "ITEM_TYPE_GLOVES",
+  "itemType": "ITEM_TYPE_HELM",
   "properties": [
     {
       "property": "ITEM_PROPERTY_ABILITY_BONUS",
       "amp": 2,
-      "ability": "ABILITY_STRENGTH"
+      "ability": "ABILITY_INTELLIGENCE"
     }
   ]
 }

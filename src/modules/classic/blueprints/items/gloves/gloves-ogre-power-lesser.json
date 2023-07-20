@@ -4,7 +4,7 @@
   "properties": [
     {
       "property": "ITEM_PROPERTY_ABILITY_BONUS",
-      "amp": 2,
+      "amp": 1,
       "ability": "ABILITY_STRENGTH"
     }
   ]

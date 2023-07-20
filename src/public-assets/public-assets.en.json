@@ -48,7 +48,7 @@
       "ITEM_TYPE_HELM": "Helm",
       "ITEM_TYPE_NECKLACE": "Necklace",
       "ITEM_TYPE_CLOAK": "Cloak",
-      "ITEM_TYPE_BRACER": "Bracer",
+      "ITEM_TYPE_GAUNTLETS": "Gauntlets",
       "ITEM_TYPE_GLOVES": "Gloves",
       "ITEM_TYPE_RING": "Ring",
       "ITEM_TYPE_BELT": "Belt",
@@ -886,6 +886,9 @@
       "ITEM_PROPERTY_SKILL_BONUS": {
         "amp": "number",
         "skill": "skill"
+      },
+      "ITEM_PROPERTY_SPEED_BONUS": {
+        "amp": "number"
       }
     }
   },

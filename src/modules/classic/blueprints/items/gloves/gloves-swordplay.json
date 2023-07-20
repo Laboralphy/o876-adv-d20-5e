@@ -1,0 +1,10 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_GAUNTLETS",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_MELEE_ATTACK_BONUS",
+      "amp": 2
+    }
+  ]
+}
