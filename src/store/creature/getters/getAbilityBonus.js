@@ -25,7 +25,7 @@ module.exports = (state, getters) => {
     getters
         .getEquipmentItemProperties
         .forEach(ip => {
-            if (ip.property === CONSTS.EFFECT_ABILITY_BONUS) {
+            if (ip.property === CONSTS.ITEM_PROPERTY_ABILITY_BONUS) {
                 r[ip.data.ability] += ip.amp
             }
         })

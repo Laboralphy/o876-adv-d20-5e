@@ -915,3 +915,33 @@ describe('import/export creature', function () {
         expect(gob.store.getters.getLevel).toBe(2)
     })
 })
+
+describe('bug anneau perspicacité not affecting intelligence', function () {
+    it('should add +1 int when equipping ring of clear thought', function () {
+        const PLAYER_BASE_BLUEPRINT = {
+            "entityType": "ENTITY_TYPE_ACTOR",
+            "class": "tourist",
+            "level": 1,
+            "abilities": {
+                "strength": 10,
+                "dexterity": 10,
+                "constitution": 10,
+                "intelligence": 10,
+                "wisdom": 10,
+                "charisma": 10
+            },
+            "size": "medium",
+            "specie": "humanoid",
+            "speed": 30,
+            "equipment": []
+        }
+        const r = new Manager()
+        r.init()
+        const tourist = r.createEntity(PLAYER_BASE_BLUEPRINT)
+        const ring = r.createEntity('ring-clear-thought')
+        expect(tourist.store.getters.getAbilityValues[CONSTS.ABILITY_INTELLIGENCE]).toBe(10)
+        tourist.equipItem(ring)
+        expect(tourist.store.getters.getAbilityBonus[CONSTS.ABILITY_INTELLIGENCE]).toBe(1)
+        expect(tourist.store.getters.getAbilityValues[CONSTS.ABILITY_INTELLIGENCE]).toBe(11)
+    })
+})
