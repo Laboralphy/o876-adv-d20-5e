@@ -171,6 +171,21 @@
       "ITEM_PROPERTY_SKILL_BONUS": "Skill bonus",
       "ITEM_PROPERTY_SPEED_BONUS": "Moving speed bonus"
     },
+    "weaponAttribute": {
+      "WEAPON_ATTRIBUTE_AMMUNITION": "ammunition",
+      "WEAPON_ATTRIBUTE_FINESSE": "finesse",
+      "WEAPON_ATTRIBUTE_HEAVY": "heavy",
+      "WEAPON_ATTRIBUTE_LIGHT": "light",
+      "WEAPON_ATTRIBUTE_LOADING": "loading",
+      "WEAPON_ATTRIBUTE_SPECIAL": "special",
+      "WEAPON_ATTRIBUTE_THROWN": "thrown",
+      "WEAPON_ATTRIBUTE_TWO_HANDED": "two handed",
+      "WEAPON_ATTRIBUTE_VERSATILE": "versatile",
+      "WEAPON_ATTRIBUTE_REACH": "reach",
+      "WEAPON_ATTRIBUTE_RANGED": "ranged",
+      "WEAPON_ATTRIBUTE_SEMIAUTOMATIC": "semiautomatic",
+      "WEAPON_ATTRIBUTE_SPREAD": "spread"
+    },
     "class": {
       "monster": "Monster",
       "tourist": "Tourist",

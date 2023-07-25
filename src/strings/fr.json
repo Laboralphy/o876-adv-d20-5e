@@ -169,5 +169,20 @@
     "ITEM_PROPERTY_SAVING_THROW_BONUS": "Bonus au jet de sauvegarde",
     "ITEM_PROPERTY_SKILL_BONUS": "Bonus de compétence",
     "ITEM_PROPERTY_SPEED_BONUS": "Bonus vitesse de déplacement"
+  },
+  "weaponAttribute": {
+    "WEAPON_ATTRIBUTE_AMMUNITION": "à munitions",
+    "WEAPON_ATTRIBUTE_FINESSE": "finesse",
+    "WEAPON_ATTRIBUTE_HEAVY": "lourde",
+    "WEAPON_ATTRIBUTE_LIGHT": "légère",
+    "WEAPON_ATTRIBUTE_LOADING": "avec chargeur",
+    "WEAPON_ATTRIBUTE_SPECIAL": "spéciale",
+    "WEAPON_ATTRIBUTE_THROWN": "à lancer",
+    "WEAPON_ATTRIBUTE_TWO_HANDED": "à deux mains",
+    "WEAPON_ATTRIBUTE_VERSATILE": "versatile",
+    "WEAPON_ATTRIBUTE_REACH": "d'hast",
+    "WEAPON_ATTRIBUTE_RANGED": "à distance",
+    "WEAPON_ATTRIBUTE_SEMIAUTOMATIC": "semi-automatique",
+    "WEAPON_ATTRIBUTE_SPREAD": "à dispersion"
   }
 }
