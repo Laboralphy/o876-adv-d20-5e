@@ -172,19 +172,19 @@
       "ITEM_PROPERTY_SPEED_BONUS": "Moving speed bonus"
     },
     "weaponAttribute": {
-      "WEAPON_ATTRIBUTE_AMMUNITION": "Ammunition",
-      "WEAPON_ATTRIBUTE_FINESSE": "Finesse",
-      "WEAPON_ATTRIBUTE_HEAVY": "Heavy",
-      "WEAPON_ATTRIBUTE_LIGHT": "Light",
-      "WEAPON_ATTRIBUTE_LOADING": "Loading",
-      "WEAPON_ATTRIBUTE_SPECIAL": "Special",
-      "WEAPON_ATTRIBUTE_THROWN": "Thrown",
-      "WEAPON_ATTRIBUTE_TWO_HANDED": "Two-handed",
-      "WEAPON_ATTRIBUTE_VERSATILE": "Versatile",
-      "WEAPON_ATTRIBUTE_REACH": "Reach",
-      "WEAPON_ATTRIBUTE_RANGED": "Ranged",
-      "WEAPON_ATTRIBUTE_SEMIAUTOMATIC": "Semiautomatic",
-      "WEAPON_ATTRIBUTE_SPREAD": "Spread"
+      "WEAPON_ATTRIBUTE_AMMUNITION": "ammunition",
+      "WEAPON_ATTRIBUTE_FINESSE": "finesse",
+      "WEAPON_ATTRIBUTE_HEAVY": "heavy",
+      "WEAPON_ATTRIBUTE_LIGHT": "light",
+      "WEAPON_ATTRIBUTE_LOADING": "loading",
+      "WEAPON_ATTRIBUTE_SPECIAL": "special",
+      "WEAPON_ATTRIBUTE_THROWN": "thrown",
+      "WEAPON_ATTRIBUTE_TWO_HANDED": "two handed",
+      "WEAPON_ATTRIBUTE_VERSATILE": "versatile",
+      "WEAPON_ATTRIBUTE_REACH": "reach",
+      "WEAPON_ATTRIBUTE_RANGED": "ranged",
+      "WEAPON_ATTRIBUTE_SEMIAUTOMATIC": "semiautomatic",
+      "WEAPON_ATTRIBUTE_SPREAD": "spread"
     },
     "class": {
       "monster": "Monster",

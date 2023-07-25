@@ -172,19 +172,19 @@
       "ITEM_PROPERTY_SPEED_BONUS": "Bonus vitesse de déplacement"
     },
     "weaponAttribute": {
-      "WEAPON_ATTRIBUTE_AMMUNITION": "À munitions",
-      "WEAPON_ATTRIBUTE_FINESSE": "Finesse",
-      "WEAPON_ATTRIBUTE_HEAVY": "Lourde",
-      "WEAPON_ATTRIBUTE_LIGHT": "Légère",
-      "WEAPON_ATTRIBUTE_LOADING": "Chargeur",
-      "WEAPON_ATTRIBUTE_SPECIAL": "Special",
-      "WEAPON_ATTRIBUTE_THROWN": "À lancer",
-      "WEAPON_ATTRIBUTE_TWO_HANDED": "À deux mains",
-      "WEAPON_ATTRIBUTE_VERSATILE": "Versatile",
-      "WEAPON_ATTRIBUTE_REACH": "Arme d'hast",
-      "WEAPON_ATTRIBUTE_RANGED": "À distance",
-      "WEAPON_ATTRIBUTE_SEMIAUTOMATIC": "Semi-automatique",
-      "WEAPON_ATTRIBUTE_SPREAD": "À dispersion"
+      "WEAPON_ATTRIBUTE_AMMUNITION": "à munitions",
+      "WEAPON_ATTRIBUTE_FINESSE": "finesse",
+      "WEAPON_ATTRIBUTE_HEAVY": "lourde",
+      "WEAPON_ATTRIBUTE_LIGHT": "légère",
+      "WEAPON_ATTRIBUTE_LOADING": "avec chargeur",
+      "WEAPON_ATTRIBUTE_SPECIAL": "spéciale",
+      "WEAPON_ATTRIBUTE_THROWN": "à lancer",
+      "WEAPON_ATTRIBUTE_TWO_HANDED": "à deux mains",
+      "WEAPON_ATTRIBUTE_VERSATILE": "versatile",
+      "WEAPON_ATTRIBUTE_REACH": "d'hast",
+      "WEAPON_ATTRIBUTE_RANGED": "à distance",
+      "WEAPON_ATTRIBUTE_SEMIAUTOMATIC": "semi-automatique",
+      "WEAPON_ATTRIBUTE_SPREAD": "à dispersion"
     },
     "class": {
       "monster": "Monstre",
