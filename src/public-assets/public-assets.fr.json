@@ -171,6 +171,21 @@
       "ITEM_PROPERTY_SKILL_BONUS": "Bonus de compétence",
       "ITEM_PROPERTY_SPEED_BONUS": "Bonus vitesse de déplacement"
     },
+    "weaponAttribute": {
+      "WEAPON_ATTRIBUTE_AMMUNITION": "À munitions",
+      "WEAPON_ATTRIBUTE_FINESSE": "Finesse",
+      "WEAPON_ATTRIBUTE_HEAVY": "Lourde",
+      "WEAPON_ATTRIBUTE_LIGHT": "Légère",
+      "WEAPON_ATTRIBUTE_LOADING": "Chargeur",
+      "WEAPON_ATTRIBUTE_SPECIAL": "Special",
+      "WEAPON_ATTRIBUTE_THROWN": "À lancer",
+      "WEAPON_ATTRIBUTE_TWO_HANDED": "À deux mains",
+      "WEAPON_ATTRIBUTE_VERSATILE": "Versatile",
+      "WEAPON_ATTRIBUTE_REACH": "Arme d'hast",
+      "WEAPON_ATTRIBUTE_RANGED": "À distance",
+      "WEAPON_ATTRIBUTE_SEMIAUTOMATIC": "Semi-automatique",
+      "WEAPON_ATTRIBUTE_SPREAD": "À dispersion"
+    },
     "class": {
       "monster": "Monstre",
       "tourist": "Touriste",
