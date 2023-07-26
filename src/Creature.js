@@ -813,6 +813,52 @@ class Creature {
         return oDamageBonus
     }
 
+    getChallengeRating () {
+        const data = Creature.AssetManager.data['challenge-rating']
+        const getters = this.store.getters
+
+        const half = x => (Math.abs(x) / 2) * Math.sign(x)
+
+        const hp = getters.getMaxHitPoints
+        const ac = getters.getArmorClass
+        const indexDefCR = data.findIndex(({ hpmin, hpmax }) => hpmin <= hp && hp <= hpmax)
+        const oRowDefCR = data[indexDefCR]
+        const nDeltaAC = ac - oRowDefCR.ac
+        const defcr = oRowDefCR.cr + half(nDeltaAC)
+
+        this._dice.debug(true, 0.5)
+        const oAverageDamage = this.rollWeaponDamage({ critical: false })
+        this._dice.debug(false)
+
+        const atk = getters.getAttackBonus
+        const nAverageDamage = Object.values(oAverageDamage).reduce((prev, curr) => prev + curr, 0)
+        const indexOffCR = data.findIndex(({ dmgmin, dmgmax }) => dmgmin <= nAverageDamage && nAverageDamage <= dmgmax)
+        const oRowOffCR = data[indexOffCR]
+        const nDeltaAtk = atk - oRowOffCR.atk
+        const offcr = oRowOffCR.cr + half(nDeltaAtk)
+
+        const cr = Math.round(100 * ((defcr + offcr) / 2)) / 100
+
+        console.log({
+            def: {
+                CR: defcr,
+                AC: ac,
+                refAC: oRowDefCR.ac,
+                deltaAC: nDeltaAC,
+                HP: hp,
+            },
+            off: {
+                CR: offcr,
+                Atk: atk,
+                refAtk: oRowOffCR.atk,
+                deltaAtk: nDeltaAtk,
+                Dmg: nAverageDamage,
+            }
+        })
+
+        return cr
+    }
+
     /**
      * Renvoie un code de circonstance
      * 0 pour : ni avantage, ni désavantage, (ou bien avantage et désavantage)

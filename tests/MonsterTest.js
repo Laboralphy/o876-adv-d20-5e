@@ -311,3 +311,40 @@ describe('vampire', function () {
         expect(soldier.store.getters.getConditions.has(CONSTS.CONDITION_CHARMED)).toBeFalse()
     })
 })
+
+describe('challenge rating', function () {
+    it('should show troll cr is greater than gob cr', function () {
+        const r = new Manager()
+        r.init()
+        const pireCreaturePossible = r.createEntity({
+            "entityType": "ENTITY_TYPE_ACTOR",
+            "class": "tourist",
+            "level": 1,
+            "abilities": {
+                "strength": 1,
+                "dexterity": 1,
+                "constitution": 10,
+                "intelligence": 1,
+                "wisdom": 1,
+                "charisma": 1
+            },
+            "size": "tiny",
+            "specie": "humanoid",
+            "speed": 30,
+            "equipment": []
+        })
+        const vampire = r.createEntity('c-vampire')
+        const soldier = r.createEntity('c-soldier')
+        const troll = r.createEntity('c-troll')
+        const goblin = r.createEntity('c-goblin-shield')
+        const tourist = r.createEntity('c-pilgrim')
+        console.log({
+            pireCreaturePossible: pireCreaturePossible.getChallengeRating(),
+            tourist: tourist.getChallengeRating(),
+            goblin: goblin.getChallengeRating(),
+            troll: troll.getChallengeRating(),
+            soldier: soldier.getChallengeRating(),
+            vampire: vampire.getChallengeRating()
+        })
+    })
+})
