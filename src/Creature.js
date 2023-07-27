@@ -814,26 +814,29 @@ class Creature {
     }
 
     getChallengeRating () {
-        const data = Creature.AssetManager.data['challenge-rating']
+        const data = Creature.AssetManager.data
+        const dataCR = data['challenge-rating']
         const getters = this.store.getters
 
         const half = x => (Math.abs(x) / 2) * Math.sign(x)
 
         const hp = getters.getMaxHitPoints
         const ac = getters.getArmorClass
-        const indexDefCR = data.findIndex(({ hpmin, hpmax }) => hpmin <= hp && hp <= hpmax)
-        const oRowDefCR = data[indexDefCR]
+        const indexDefCR = dataCR.findIndex(({ hpmin, hpmax }) => hpmin <= hp && hp <= hpmax)
+        const oRowDefCR = dataCR[indexDefCR]
         const nDeltaAC = ac - oRowDefCR.ac
         const defcr = oRowDefCR.cr + half(nDeltaAC)
 
         this._dice.debug(true, 0.5)
-        const oAverageDamage = this.rollWeaponDamage({ critical: false })
+        const oAverageNormDamage = this.rollWeaponDamage({ critical: false })
+        const oAverageCritDamage = this.rollWeaponDamage({ critical: true })
         this._dice.debug(false)
 
         const atk = getters.getAttackBonus
-        const nAverageDamage = Object.values(oAverageDamage).reduce((prev, curr) => prev + curr, 0)
-        const indexOffCR = data.findIndex(({ dmgmin, dmgmax }) => dmgmin <= nAverageDamage && nAverageDamage <= dmgmax)
-        const oRowOffCR = data[indexOffCR]
+        const nAverageDamage = Object.values(oAverageNormDamage).reduce((prev, curr) => prev + curr, 0)
+
+        const indexOffCR = dataCR.findIndex(({ dmgmin, dmgmax }) => dmgmin <= nAverageDamage && nAverageDamage <= dmgmax)
+        const oRowOffCR = dataCR[indexOffCR]
         const nDeltaAtk = atk - oRowOffCR.atk
         const offcr = oRowOffCR.cr + half(nDeltaAtk)
 
