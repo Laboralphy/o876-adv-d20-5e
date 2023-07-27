@@ -70,6 +70,10 @@
           "property": "ITEM_PROPERTY_CONDITION_IMMUNITY",
           "amp": 0,
           "condition": "CONDITION_PETRIFIED"
+        },
+        {
+          "property": "ITEM_PROPERTY_EXTRA_ATTACKS",
+          "amp": 1
         }
       ]
     }

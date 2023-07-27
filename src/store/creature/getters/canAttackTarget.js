@@ -1,6 +1,8 @@
 CONSTS = require('../../../consts')
 /**
- * Une creature ne peut attaquer sa cible que si celle-ci n'est pas la source de son charme
+ * Une creature attaquante ne peut attaquer sa cible que si :
+ * - l'attaquante n'est pas hors de combat
+ * - l'attaquant ne subit pas un effet de charme issu de sa cible
  * @param state
  * @param getters {D20CreatureStoreGetters}
  * @return {boolean}

@@ -21,8 +21,6 @@
  * @property addFeat {function({ feat: string })}
  * @property updateFeatEffects {function()}
  * @property dispellEffect {function({ effect })}
- * @property incCounter {function({ counter })}
- * @property resetCounters {function()}
  * @property setHitPoints {function({ value })}
  * @property heal {function({ amount })}
  * @property setTargetDistance {function({ value })}
@@ -32,4 +30,5 @@
  * @property setId {function({ value })}
  * @property importCreatureState {function({ state })}
  * @property dispellEffectFromCreature {function({ creature })}
+ * @property setCounterValue {function({ counter, value, max })}
  */

@@ -668,7 +668,7 @@ describe('getDamageBonus', function () {
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
         r.init()
-        c.dice.debug(true, 0.99999)
+        c.dice.cheat(0.99999)
         const oSword = r.createEntity('wpn-shortsword')
         oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_ENHANCEMENT]({ amp: 1 }))
         oSword.properties.push(ItemProperties[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ amp: '1d4', type: CONSTS.DAMAGE_TYPE_FIRE }))
@@ -681,7 +681,7 @@ describe('getDamageBonus', function () {
 describe('aggregateModifier with randomn amp', function () {
     it('should return amp 1 when applying effect with amplitude 1d6 and random fixed to 0', function () {
         const c = new Creature()
-        c.dice.debug(true, 0.000001) // almost 0
+        c.dice.cheat(0.000001) // almost 0
         c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
             effectAmpMapper: eff => c.roll(eff.amp)
@@ -690,7 +690,7 @@ describe('aggregateModifier with randomn amp', function () {
     })
     it('should return amp 6 when applying effect with amplitude 1d6 and random fixed to 1', function () {
         const c = new Creature()
-        c.dice.debug(true, 0.999999) // almost 1
+        c.dice.cheat(0.999999) // almost 1
         c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
             effectAmpMapper: eff => c.roll(eff.amp)
@@ -784,7 +784,7 @@ describe('attack logs', function () {
         c1.events.on('attack', ({ outcome }) => {
             oLastAttack = outcome
         })
-        c1.dice.debug(true, 0.75)
+        c1.dice.cheat(0.75)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.attack()
         expect(oLastAttack).toEqual( {
@@ -839,7 +839,7 @@ describe('attack logs', function () {
         c1.events.on('attack', ({ outcome }) => {
             oLastAttack = outcome
         })
-        c1.dice.debug(true, 0.75)
+        c1.dice.cheat(0.75)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.attack()
         expect(oLastAttack).toEqual( {

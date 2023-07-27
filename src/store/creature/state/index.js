@@ -60,6 +60,7 @@ module.exports = function () {
         areaFlags: [],
         feats: [],
         skills: [],
-        counters: {}
+        counters: {
+        }
     }
 }

@@ -7,13 +7,27 @@ class Dice {
 
   /**
    * Permet de forcer un valeur random, utile pour les tests
-   * @param bEnabled {boolean} active/desactive le forçage du random
-   * @param value {number} nombre flottant forçant la sortie de la fonction random
+   * @param value {number|boolean} nombre flottant forçant la sortie de la fonction random, false pour désactiver
    */
-  debug (bEnabled, value = 0) {
-    this._DEBUG = bEnabled
-    if (this._DEBUG) {
-      this._FORCE_RANDOM_VALUE = value
+  cheat (value = 0) {
+    const t = typeof value
+    switch (t) {
+      case 'undefined': {
+        this._DEBUG = false
+        break
+      }
+      case 'boolean': {
+        this._DEBUG = value
+        break
+      }
+      case 'number': {
+        this._DEBUG = true
+        this._FORCE_RANDOM_VALUE = Math.max(0, Math.min(1, value))
+        break
+      }
+      default: {
+        throw new Error('Dice cheat value is invalid (floating number 0..1 or boolean required')
+      }
     }
   }
 
@@ -61,7 +75,7 @@ class Dice {
       if (!r) {
         throw new Error('This dice formula is invalid : "' + value + '"')
       }
-      const [filler0, sCountSign, sCount, sSides, filler1, sModifierSign, sModifier] = r
+      const [, sCountSign, sCount, sSides, , sModifierSign, sModifier] = r
       const count = parseInt(sCount) * (sCountSign === '-' ? -1 : 1)
       const sides = parseInt(sSides)
       const modifier = sModifier === undefined

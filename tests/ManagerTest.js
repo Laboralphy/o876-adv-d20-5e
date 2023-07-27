@@ -345,7 +345,7 @@ describe('saving throw bonus effects', function () {
         const c1 = r.createEntity('c-soldier')
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_SPELL), 10)
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_BONUS, 3, CONSTS.THREAT_TYPE_MIND_SPELL), 10)
-        c1.dice.debug(true, 0.000001)
+        c1.dice.cheat(0.000001)
         const roll = c1.rollSavingThrow(CONSTS.ABILITY_WISDOM, [CONSTS.THREAT_TYPE_SPELL, CONSTS.THREAT_TYPE_MIND_SPELL], 1).value
         // bonus : 1 (wis) + 3 (spell) +3 (mind spell) ; roll 1 ; TOTAL: 8
         expect(roll).toBe(8)
@@ -497,7 +497,7 @@ describe('damage immunity', function () {
         expect(m1.store.getters.getHitPoints).toBe(27)
         m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_ACID))
         expect(m1.store.getters.getHitPoints).toBe(22)
-        m1.dice.debug(true, 0.000001)
+        m1.dice.cheat(0.000001)
         expect(m1.rollSkill('SKILL_STEALTH')).toEqual({
             bonus: 4,
             roll: 1,
@@ -518,7 +518,7 @@ describe('damage vulnerability', function () {
         r.createEntity('wpn-angurvadal')
         // c1.equipItem(w1)
         const c2 = r.createEntity('c-gargoyle')
-        c1.dice.debug(true, 0.75)
+        c1.dice.cheat(0.75)
         c1.setTarget(c2)
         c1.setDistanceToTarget(5)
         const atk = c1.attack()
@@ -534,7 +534,7 @@ describe('damage vulnerability', function () {
         const c1 = r.createEntity('c-soldier')
         const w1 = r.createEntity('wpn-silver-dagger')
         const c2 = r.createEntity('c-gargoyle')
-        c1.dice.debug(true, 0.75)
+        c1.dice.cheat(0.75)
         c1.setTarget(c2)
         c1.setDistanceToTarget(5)
         const atk = c1.attack()
@@ -758,7 +758,6 @@ describe('import/export creature', function () {
     it('should create a goblin when importing data', function () {
         const r = new Manager()
         r.init()
-        const gob0 = r.createEntity('c-goblin-shield')
         const data = {
             id: "gob1",
             name: "gob1",
