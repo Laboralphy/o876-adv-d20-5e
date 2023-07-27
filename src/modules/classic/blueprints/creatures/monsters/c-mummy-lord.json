@@ -135,6 +135,10 @@
           "abilities": [
             "THREAT_TYPE_SPELL"
           ]
+        },
+        {
+          "property": "ITEM_PROPERTY_EXTRA_ATTACKS",
+          "amp": 1
         }
       ]
     }

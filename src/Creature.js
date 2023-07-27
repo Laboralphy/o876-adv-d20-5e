@@ -813,52 +813,122 @@ class Creature {
         return oDamageBonus
     }
 
-    getChallengeRating () {
+    getChallengeRating (bDebug = false) {
         const data = Creature.AssetManager.data
         const dataCR = data['challenge-rating']
+        const dataCRM = data['challenge-rating-modifiers']
         const getters = this.store.getters
+        const nAttackCount = getters.getAttackCount
 
-        const half = x => (Math.abs(x) / 2) * Math.sign(x)
+        const half = x => Math.floor(Math.abs(x) / 2) * Math.sign(x)
 
         const hp = getters.getMaxHitPoints
         const ac = getters.getArmorClass
-        const indexDefCR = dataCR.findIndex(({ hpmin, hpmax }) => hpmin <= hp && hp <= hpmax)
-        const oRowDefCR = dataCR[indexDefCR]
-        const nDeltaAC = ac - oRowDefCR.ac
-        const defcr = oRowDefCR.cr + half(nDeltaAC)
-
-        this._dice.debug(true, 0.5)
-        const oAverageNormDamage = this.rollWeaponDamage({ critical: false })
-        const oAverageCritDamage = this.rollWeaponDamage({ critical: true })
-        this._dice.debug(false)
-
         const atk = getters.getAttackBonus
-        const nAverageDamage = Object.values(oAverageNormDamage).reduce((prev, curr) => prev + curr, 0)
 
-        const indexOffCR = dataCR.findIndex(({ dmgmin, dmgmax }) => dmgmin <= nAverageDamage && nAverageDamage <= dmgmax)
-        const oRowOffCR = dataCR[indexOffCR]
-        const nDeltaAtk = atk - oRowOffCR.atk
-        const offcr = oRowOffCR.cr + half(nDeltaAtk)
+        if (hp < 1) {
+            return -10
+        }
 
-        const cr = Math.round(100 * ((defcr + offcr) / 2)) / 100
-
-        console.log({
-            def: {
-                CR: defcr,
-                AC: ac,
-                refAC: oRowDefCR.ac,
-                deltaAC: nDeltaAC,
-                HP: hp,
-            },
-            off: {
-                CR: offcr,
-                Atk: atk,
-                refAtk: oRowOffCR.atk,
-                deltaAtk: nDeltaAtk,
-                Dmg: nAverageDamage,
-            }
+        const agg = this.aggregateModifiers([
+            CONSTS.ITEM_PROPERTY_REGEN,
+            CONSTS.ITEM_PROPERTY_DAMAGE_IMMUNITY,
+            CONSTS.ITEM_PROPERTY_DAMAGE_RESISTANCE,
+            CONSTS.ITEM_PROPERTY_DAMAGE_REDUCTION,
+            CONSTS.ITEM_PROPERTY_CONDITION_IMMUNITY,
+            CONSTS.ITEM_PROPERTY_AURA,
+            CONSTS.ITEM_PROPERTY_ON_HIT
+        ], {
+            propSorter: prop => prop.property
         })
 
+        const ags = agg.sorter
+        const has = x => x in ags && ags[x].count > 0
+
+        const bHasDamageResistance = has(CONSTS.ITEM_PROPERTY_DAMAGE_RESISTANCE)
+        const bHasDamageImmunity = has(CONSTS.ITEM_PROPERTY_DAMAGE_IMMUNITY)
+        const bHasDamageReduction = has(CONSTS.ITEM_PROPERTY_DAMAGE_REDUCTION)
+        const bHasRegen = has(CONSTS.ITEM_PROPERTY_REGEN)
+        const bHasAura = has(CONSTS.ITEM_PROPERTY_AURA)
+        const bHasOnHit = has(CONSTS.ITEM_PROPERTY_ON_HIT)
+        // const bHasConditionImmunity = has(CONSTS.ITEM_PROPERTY_CONDITION_IMMUNITY)
+
+        const getCRRange = crx => {
+            if (crx < 5) {
+                return 0
+            }
+            if (crx < 11) {
+                return 1
+            }
+            if (crx < 17) {
+                return 2
+            }
+            return 3
+        }
+
+        const aDamageResistanceHPMod = dataCRM.damageResistanceHPMod
+        const aDamageImmunityHPMod = dataCRM.damageImmunityHPMod
+        const nRegenHPMod = bHasRegen ? dataCRM.regenFactorHPMod * ags[CONSTS.ITEM_PROPERTY_REGEN].sum : 0
+
+        const defRow = dataCR.find(({ icr, hpmin, hpmax }) => {
+            const crr = getCRRange(icr)
+            const rm = (bHasDamageResistance || bHasDamageReduction) ? aDamageResistanceHPMod[crr] : 1
+            const im = bHasDamageImmunity ? aDamageImmunityHPMod[crr] : 1
+            const hpx = Math.floor(hp * (rm + im) + nRegenHPMod)
+            return hpmin <= hpx && hpx <= hpmax
+        }) || dataCR[dataCR.length - 1]
+        const deltaAC = ac - defRow.ac
+        const defCR =
+            defRow.cr +
+            half(deltaAC) +
+            (bHasAura ? dataCRM.ipAura : 0)
+
+        this._dice.cheat(0.5)
+        const oAverageNormDamage = this.rollWeaponDamage({ critical: false })
+        this._dice.cheat(false)
+        const dmg = nAttackCount * Object
+            .values(oAverageNormDamage)
+            .reduce((prev, curr) => prev + curr, 0)
+
+        if (dmg < 1) {
+            return -10
+        }
+
+        const offRow = dataCR.find(({ dmgmin, dmgmax }) => dmgmin <= dmg && dmg <= dmgmax) || dataCR[dataCR.length - 1]
+        const nDeltaAtk = atk - offRow.atk
+        const offCR =
+            offRow.cr +
+            half(nDeltaAtk) +
+            (bHasOnHit ? dataCRM.ipOnHit : 0)
+
+        const cr = Math.max(0.1, (defCR + offCR) / 2)
+        if (bDebug) {
+            return {
+                def: {
+                    cr: defCR,
+                    refCR: defRow.cr,
+                    bHasDamageResistance,
+                    bHasDamageImmunity,
+                    bHasDamageReduction,
+                    nRegenHPMod,
+                    hp,
+                    refHP: defRow.hpmin,
+                    ac,
+                    refAC: defRow.ac,
+                    deltaAC,
+                    halfDeltaAC: half(deltaAC)
+                },
+                off: {
+                    cr: offCR,
+                    refCR: offRow.cr,
+                    atk,
+                    refAtk: offRow.atk,
+                    deltaAtk: nDeltaAtk,
+                    dmg,
+                    refDmg: offRow.dmgmin
+                }
+            }
+        }
         return cr
     }
 
@@ -1038,8 +1108,6 @@ class Creature {
         const nDistance = this.store.getters.getTargetDistance
         this.setDistanceToTarget(Math.max(1, nDistance - this.store.getters.getSpeed))
     }
-
-
 
     /**
      * Effectue une attaque contre la cible actuelle

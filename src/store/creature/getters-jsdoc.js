@@ -20,6 +20,7 @@
  * @property getArmorClassRanges {{type: string, min: number, max: number}[]}
  * @property getArmorMaterial {string}
  * @property getAttackBonus {number}
+ * @property getAttackCount {number}
  * @property getBreakableEffects {D20Effect[]}
  * @property getCarryingCapacity {number}
  * @property getConditionImmunities {Set<string>}

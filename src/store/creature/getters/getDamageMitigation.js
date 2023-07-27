@@ -27,16 +27,17 @@ function addMitigation(oMitig, am) {
  * @property factor {number}
  * @property resistance {boolean}
  * @property vulnerability {boolean}
+ * @property immunity {boolean}
  *
  * @param state
  * @param getters
+ * @param externals {*}
  * @returns {Object<string, D20OneDamageMitigation>}}
  */
 module.exports = (state, getters, externals) => {
     const {
         DAMAGE_FACTOR_IMMUNITY,
         DAMAGE_FACTOR_RESISTANCE,
-        DAMAGE_FACTOR_NORMAL,
         DAMAGE_FACTOR_VULNERABILITY
     } = externals.data['variables']
     const fEffectSorter = eff => eff.data.type
@@ -109,7 +110,7 @@ module.exports = (state, getters, externals) => {
         })
     Object
         .entries(oMitigation)
-        .forEach(([sDamType, oReg]) => {
+        .forEach(([, oReg]) => {
             const i = oReg.immunity ? 'i': ''
             const r = oReg.resistance ? 'r' : ''
             const v = oReg.vulnerability ? 'v' : ''

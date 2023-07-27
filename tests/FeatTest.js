@@ -146,7 +146,7 @@ describe('feat-second-wind', function () {
         expect(c.store.getters.getHitPoints).toBe(34)
         c.store.mutations.setHitPoints({ value: 34 - 1 })
         expect(c.store.getters.getHitPoints).toBe(1)
-        c.dice.debug(true, 0.999999)
+        c.dice.cheat(0.999999)
         c.featAction('feat-second-wind')
         expect(c.store.getters.getHitPoints).toBe(1 + 10 + 5)
     })

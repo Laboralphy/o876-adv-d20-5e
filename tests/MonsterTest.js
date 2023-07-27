@@ -30,9 +30,9 @@ describe('Troll regeneration', function () {
         const r = new Manager()
         r.init()
         const ogre = r.createEntity('c-ogre')
-        ogre.dice.debug(true, 0)
+        ogre.dice.cheat(0)
         const minDamages = ogre.rollWeaponDamage()
-        ogre.dice.debug(true, 0.999999)
+        ogre.dice.cheat(0.999999)
         const maxDamages = ogre.rollWeaponDamage()
         expect(maxDamages.DAMAGE_TYPE_CRUSHING).toBe(20)
         expect(minDamages.DAMAGE_TYPE_CRUSHING).toBe(6)
@@ -44,9 +44,9 @@ describe('Ogre', function () {
         const r = new Manager()
         r.init()
         const ogre = r.createEntity('c-ogre')
-        ogre.dice.debug(true, 0)
+        ogre.dice.cheat(0)
         const minDamages = ogre.rollWeaponDamage()
-        ogre.dice.debug(true, 0.999999)
+        ogre.dice.cheat(0.999999)
         const maxDamages = ogre.rollWeaponDamage()
         expect(maxDamages.DAMAGE_TYPE_CRUSHING).toBe(20)
         expect(minDamages.DAMAGE_TYPE_CRUSHING).toBe(6)
@@ -58,9 +58,9 @@ describe('Ghast', function () {
         const r = new Manager()
         r.init()
         const ghast = r.createEntity('c-ghast')
-        ghast.dice.debug(true, 0.75)
+        ghast.dice.cheat(0.75)
         const goblin = r.createEntity('c-goblin-bow')
-        goblin.dice.debug(true, 0.0)
+        goblin.dice.cheat(0.0)
         ghast.setTarget(goblin)
         ghast.setDistanceToTarget(4.5)
         ghast.attack(goblin)
@@ -83,13 +83,13 @@ describe('Ghast', function () {
         const r = new Manager()
         r.init()
         const ghast = r.createEntity('c-ghast')
-        ghast.dice.debug(true, 0.75)
+        ghast.dice.cheat(0.75)
         const gobVeryFar = r.createEntity('c-goblin-bow')
-        gobVeryFar.dice.debug(true, 0.0)
+        gobVeryFar.dice.cheat(0.0)
         const gobJinxed = r.createEntity('c-goblin-shield')
-        gobJinxed.dice.debug(true, 0.0)
+        gobJinxed.dice.cheat(0.0)
         const gobLucky = r.createEntity('c-goblin-shield')
-        gobLucky.dice.debug(true, 0.999)
+        gobLucky.dice.cheat(0.999)
         gobVeryFar.setTarget(ghast)
         gobJinxed.setTarget(ghast)
         gobLucky.setTarget(ghast)
@@ -117,7 +117,7 @@ describe('Mummies', function () {
         r.init()
         const mummy = r.createEntity('c-mummy')
         const soldier = r.createEntity('c-soldier')
-        soldier.dice.debug(true, 0.8)
+        soldier.dice.cheat(0.8)
         soldier.setTarget(mummy)
         soldier.setDistanceToTarget(5)
         const atk1 = soldier.attack(mummy)
@@ -136,7 +136,7 @@ describe('Mummies', function () {
         r.addItemProperty(flamingPoisonedSword, CONSTS.ITEM_PROPERTY_DAMAGE_BONUS, { type: CONSTS.DAMAGE_TYPE_POISON, amp: '1d6' })
         r.addItemProperty(flamingPoisonedSword, CONSTS.ITEM_PROPERTY_DAMAGE_BONUS, { type: CONSTS.DAMAGE_TYPE_FIRE, amp: '1d6' })
         soldier.equipItem(flamingPoisonedSword)
-        soldier.dice.debug(true, 0.8)
+        soldier.dice.cheat(0.8)
         soldier.setTarget(mummy)
         soldier.setDistanceToTarget(5)
         const atk1 = soldier.attack(mummy)
@@ -164,7 +164,7 @@ describe('Mummies', function () {
         r.addItemProperty(flamingPoisonedSilverSword, CONSTS.ITEM_PROPERTY_DAMAGE_BONUS, { type: CONSTS.DAMAGE_TYPE_FIRE, amp: '1d6' })
         flamingPoisonedSilverSword.material = CONSTS.MATERIAL_SILVER
         soldier.equipItem(flamingPoisonedSilverSword)
-        soldier.dice.debug(true, 0.8)
+        soldier.dice.cheat(0.8)
         soldier.setTarget(mummy)
         soldier.setDistanceToTarget(5)
         const atk1 = soldier.attack(mummy)
@@ -190,7 +190,7 @@ describe('Mummies', function () {
         const silverSword = r.createEntity('wpn-longsword')
         silverSword.material = CONSTS.MATERIAL_SILVER
         soldier.equipItem(silverSword)
-        soldier.dice.debug(true, 0.8)
+        soldier.dice.cheat(0.8)
         soldier.setTarget(mummy)
         soldier.setDistanceToTarget(5)
         const atk1 = soldier.attack(mummy)
@@ -222,7 +222,7 @@ describe('zombie', function () {
         expect(zombie.store.getters.getHitPoints).toBe(27)
         zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 25, CONSTS.DAMAGE_TYPE_SLASHING))
         expect(zombie.store.getters.getHitPoints).toBe(2)
-        zombie.dice.debug(true, 0.8)
+        zombie.dice.cheat(0.8)
         const eDam1 = zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 3, CONSTS.DAMAGE_TYPE_SLASHING))
         expect(zombie.store.getters.getHitPoints).toBe(1)
         expect(eDam1.amp).toBe(1)
@@ -235,7 +235,7 @@ describe('zombie', function () {
         expect(zombie.store.getters.getHitPoints).toBe(27)
         zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 25, CONSTS.DAMAGE_TYPE_SLASHING))
         expect(zombie.store.getters.getHitPoints).toBe(2)
-        zombie.dice.debug(true, 0.2)
+        zombie.dice.cheat(0.2)
         const eDam1 = zombie.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 30, CONSTS.DAMAGE_TYPE_SLASHING))
         expect(zombie.store.getters.getHitPoints).toBe(-28)
         expect(eDam1.amp).toBe(30)
@@ -270,8 +270,8 @@ describe('wight', function () {
         r.init()
         const wight = r.createEntity('c-wight')
         const soldier = r.createEntity('c-soldier')
-        wight.dice.debug(true, 0.8)
-        soldier.dice.debug(true, 0.01)
+        wight.dice.cheat(0.8)
+        soldier.dice.cheat(0.01)
         wight.setTarget(soldier)
         wight.setDistanceToTarget(0)
         expect(soldier.store.getters.getMaxHitPoints).toBe(44)
@@ -299,8 +299,8 @@ describe('vampire', function () {
         vampire.setTarget(soldier)
         soldier.setTarget(vampire)
         vampire.setDistanceToTarget(5)
-        soldier.dice.debug(true, 0.01)
-        vampire.dice.debug(true, 0.9)
+        soldier.dice.cheat(0.01)
+        vampire.dice.cheat(0.9)
         vampire.action('sla-vampire-charm')
         expect(soldier.store.getters.getConditions.has(CONSTS.CONDITION_CHARMED)).toBeTrue()
         const a = soldier.attack()
@@ -316,35 +316,70 @@ describe('challenge rating', function () {
     it('should show troll cr is greater than gob cr', function () {
         const r = new Manager()
         r.init()
-        const pireCreaturePossible = r.createEntity({
-            "entityType": "ENTITY_TYPE_ACTOR",
-            "class": "tourist",
-            "level": 1,
-            "abilities": {
-                "strength": 1,
-                "dexterity": 1,
-                "constitution": 10,
-                "intelligence": 1,
-                "wisdom": 1,
-                "charisma": 1
-            },
-            "size": "tiny",
-            "specie": "humanoid",
-            "speed": 30,
-            "equipment": []
-        })
-        const vampire = r.createEntity('c-vampire')
-        const soldier = r.createEntity('c-soldier')
-        const troll = r.createEntity('c-troll')
-        const goblin = r.createEntity('c-goblin-shield')
-        const tourist = r.createEntity('c-pilgrim')
-        console.log({
-            pireCreaturePossible: pireCreaturePossible.getChallengeRating(),
-            tourist: tourist.getChallengeRating(),
-            goblin: goblin.getChallengeRating(),
-            troll: troll.getChallengeRating(),
-            soldier: soldier.getChallengeRating(),
-            vampire: vampire.getChallengeRating()
+        const m = [
+            'c-gargoyle',
+            'c-ghast',
+            'c-ghoul',
+            'c-gnoll',
+            'c-goblin-bow',
+            'c-goblin-shield',
+            'c-mephit-dust',
+            'c-mephit-ice',
+            'c-mephit-magma',
+            'c-mephit-steam',
+            'c-minotaur-skeleton',
+            'c-mummy',
+            'c-mummy-lord',
+            'c-ogre',
+            'c-ogre-zombie',
+            'c-orc',
+            'c-skeleton',
+            'c-troll',
+            'c-vampire',
+            'c-wight',
+            'c-wraith',
+            'c-zombie',
+            'c-pilgrim',
+            'c-rogue',
+            'c-soldier',
+            'c-thug'
+        ]
+        const soldierAngurvadal = r.createEntity('c-soldier')
+        const angurvadal = r.createEntity('wpn-angurvadal')
+        soldierAngurvadal.equipItem(angurvadal)
+        expect(
+            {
+                ...Object.fromEntries(m.map(s => [s.substring(2), r.createEntity(s).getChallengeRating()])),
+                soldierAngurvadal: soldierAngurvadal.getChallengeRating()
+            }
+        ).toEqual({
+            gargoyle: 2.5,
+            ghast: 3,
+            ghoul: 1.5,
+            gnoll: 0.5,
+            'goblin-bow': 0.3125,
+            'goblin-shield': 0.8125,
+            'mephit-dust': 0.75,
+            'mephit-ice': 0.1,
+            'mephit-magma': 0.1,
+            'mephit-steam': 0.1,
+            'minotaur-skeleton': 4,
+            mummy: 6.5,
+            'mummy-lord': 11.5,
+            ogre: 3,
+            'ogre-zombie': 3.5,
+            orc: 0.625,
+            skeleton: 0.25,
+            troll: 6,
+            vampire: 11.5,
+            wight: 2.5,
+            wraith: 5.5,
+            zombie: 0.1,
+            pilgrim: 0.1,
+            rogue: 0.8125,
+            soldier: 2.25,
+            thug: 1.5,
+            soldierAngurvadal: 3.5
         })
     })
 })

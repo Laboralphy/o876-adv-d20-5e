@@ -52,6 +52,9 @@
   "ITEM_PROPERTY_ENHANCEMENT": {
     "amp": "number"
   },
+  "ITEM_PROPERTY_EXTRA_ATTACKS": {
+    "amp": "number"
+  },
   "ITEM_PROPERTY_HP_BONUS": {
     "amp": "number"
   },

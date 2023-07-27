@@ -54,6 +54,10 @@
           "property": "ITEM_PROPERTY_ON_DAMAGED",
           "amp": 0,
           "script": "apply-troll-regen"
+        },
+        {
+          "property": "ITEM_PROPERTY_EXTRA_ATTACKS",
+          "amp": 2
         }
       ]
     }
