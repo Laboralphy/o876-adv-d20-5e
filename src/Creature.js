@@ -978,7 +978,7 @@ class Creature {
             success: dc !== undefined ? value >= dc : undefined,
             circumstance: this.getCircumstanceNumValue(r.circumstances)
         }
-        this._events.emit('saving-throw', output)
+        this._events.emit('saving-throw', { output })
         return output
     }
 
@@ -1132,7 +1132,12 @@ class Creature {
 
         const sBetterSlot = this.store.getters.getSuitableOffensiveSlot
         if (sBetterSlot === '') {
-            return this.createDefaultAttackOutcome()
+            const outcome = this.createDefaultAttackOutcome({
+                failed: true,
+                failure: CONSTS.ATTACK_OUTCOME_UNREACHABLE
+            })
+            this._events.emit('attack', { outcome })
+            return outcome
         }
         this.useOffensiveSlot(sBetterSlot)
 
