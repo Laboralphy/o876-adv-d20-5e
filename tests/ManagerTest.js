@@ -944,3 +944,24 @@ describe('bug anneau perspicacité not affecting intelligence', function () {
         expect(tourist.store.getters.getAbilityValues[CONSTS.ABILITY_INTELLIGENCE]).toBe(11)
     })
 })
+
+describe('Bug: les évènements fonctionnent ils ?', function () {
+    it('should fire attack event when 2 melee creatures fight from afar', function () {
+        const r = new Manager()
+        r.init()
+        const aEvents = []
+        const aCreatureEvents = []
+        r.events.on('attack', ({ creature, outcome }) => {
+            aEvents.push({ type: 'attack', creature, outcome })
+        })
+        const g1 = r.createEntity('c-goblin-shield')
+        const g2 = r.createEntity('c-goblin-shield')
+        g1.events.on('attack', ({ creature, outcome }) => {
+            aCreatureEvents.push({ type: 'attack', creature, outcome })
+        })
+
+        g1.attack(g2)
+
+        expect(aCreatureEvents).toHaveSize(1)
+    })
+})
