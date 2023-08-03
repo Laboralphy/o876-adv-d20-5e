@@ -22,7 +22,7 @@ module.exports = (state, getters) => {
         'props',
         'armor'
     ]
-    let n = 0
+    let n = 11
     aOrder.forEach(o => {
         const value = oDetails[o]
         if (value > 0) {

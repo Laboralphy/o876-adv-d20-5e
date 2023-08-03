@@ -1210,23 +1210,15 @@ class Creature {
     }
 
     getDeflectingArmorPart (nAttackRoll) {
-        const d = this
+        const acr = this
             .store
             .getters
             .getArmorClassRanges
-            .find(({ min, max }) => min <= nAttackRoll && nAttackRoll <= max)
+        const d = acr.find(({ min, max }) => min <= nAttackRoll && nAttackRoll <= max)
         if (d) {
             return d
         } else {
-            console.error(this
-                .store
-                .getters
-                .getArmorClassRanges, this
-                .store
-                .getters
-                .getArmorClassDetails,
-                nAttackRoll)
-            throw new Error('WTF ' + nAttackRoll + ' not in range')
+            return { type: 'hit', min: acr[acr.length - 1].max + 1, max: Infinity, value: Infinity }
         }
     }
 }
