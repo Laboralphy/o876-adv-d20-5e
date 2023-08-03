@@ -29,6 +29,7 @@ describe ('validate', function () {
             "entityType": "ENTITY_TYPE_ITEM",
             "itemType": "ITEM_TYPE_WEAPON",
             "weaponType": "weapon-type-dagger",
+            "material": "MATERIAL_IRON",
             "properties": [],
             "attributes": []
         }

@@ -43,7 +43,7 @@
     "parent": "MATERIAL_METAL"
   },
   "MATERIAL_POLYMER": {
-    "description": "Non conductive material made out of oil or resin, requires modern and heavy industry, resistant to fire, cold, acid, electricity",
+    "description": "this material can be either naturally or artificially produced (keratin and chitin are polymers). When artificially created, it is a non-conductive material made out of oil or resin, requires modern and heavy industry, resistant to fire, cold, acid, electricity",
     "parent": ""
   }
 }
