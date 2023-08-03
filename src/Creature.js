@@ -1184,7 +1184,7 @@ class Creature {
                         oAtk.critical
                     )
                     eDam.subtype = CONSTS.EFFECT_SUBTYPE_WEAPON
-                    const eMitigDam = oTarget.applyEffect(eDam)
+                    const eMitigDam = oTarget.applyEffect(eDam, 0, this)
                     const n = eMitigDam.data.resistedAmount
                     if (!(sType in oResisted)) {
                         oResisted[sType] = n
