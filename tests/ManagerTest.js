@@ -944,3 +944,7 @@ describe('bug anneau perspicacité not affecting intelligence', function () {
         expect(tourist.store.getters.getAbilityValues[CONSTS.ABILITY_INTELLIGENCE]).toBe(11)
     })
 })
+
+describe('getArmorClassDetail', function () {
+
+})
