@@ -978,7 +978,7 @@ class Creature {
             success: dc !== undefined ? value >= dc : undefined,
             circumstance: this.getCircumstanceNumValue(r.circumstances)
         }
-        this._events.emit('saving-throw', output)
+        this._events.emit('saving-throw', { output })
         return output
     }
 
