@@ -77,7 +77,9 @@ class Manager {
      * @returns {Creature|*}
      */
     importCreature (data) {
-        return this._ef.importCreature(data)
+        const oCreature = this._ef.importCreature(data)
+        this._defineCreatureEventHandlers(oCreature)
+        return oCreature
     }
 
     /**
