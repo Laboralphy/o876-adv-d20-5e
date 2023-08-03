@@ -1013,24 +1013,25 @@ describe('getArmorClassDetail', function () {
         r.init()
         const g = r.createEntity('c-goblin-shield')
         expect(g.store.getters.getArmorClassDetails).toEqual({
-            armor: 1,
-            shield: 2,
-            dexterity: 2,
-            props: 0, effects: 0
+            [CONSTS.ARMOR_DEFLECTOR_ARMOR]: 11,
+            [CONSTS.ARMOR_DEFLECTOR_SHIELD]: 2,
+            [CONSTS.ARMOR_DEFLECTOR_DEXTERITY]: 2,
+            [CONSTS.ARMOR_DEFLECTOR_PROPERTIES]: 0,
+            [CONSTS.ARMOR_DEFLECTOR_EFFECTS]: 0
         })
         expect(g.store.getters.getArmorClassRanges).toEqual([
-            { type: 'miss', min: -Infinity, max: 10, value: 0 },
-            { type: 'dexterity', min: 11, max: 12, value: 2 },
-            { type: 'shield', min: 13, max: 14, value: 2 },
-            { type: 'armor', min: 15, max: 15, value: 1 }
+            { type: CONSTS.ARMOR_DEFLECTOR_MISS, min: -Infinity, max: 10, value: 0 },
+            { type: CONSTS.ARMOR_DEFLECTOR_DEXTERITY, min: 11, max: 12, value: 2 },
+            { type: CONSTS.ARMOR_DEFLECTOR_SHIELD, min: 13, max: 14, value: 2 },
+            { type: CONSTS.ARMOR_DEFLECTOR_ARMOR, min: 15, max: 15, value: 1 }
         ])
-        expect(g.getDeflectingArmorPart(-10).type).toBe('miss')
-        expect(g.getDeflectingArmorPart(10).type).toBe('miss')
-        expect(g.getDeflectingArmorPart(11).type).toBe('dexterity')
-        expect(g.getDeflectingArmorPart(12).type).toBe('dexterity')
-        expect(g.getDeflectingArmorPart(13).type).toBe('shield')
-        expect(g.getDeflectingArmorPart(14).type).toBe('shield')
-        expect(g.getDeflectingArmorPart(15).type).toBe('armor')
-        expect(g.getDeflectingArmorPart(16).type).toBe('hit')
+        expect(g.getDeflectingArmorPart(-10).type).toBe(CONSTS.ARMOR_DEFLECTOR_MISS)
+        expect(g.getDeflectingArmorPart(10).type).toBe(CONSTS.ARMOR_DEFLECTOR_MISS)
+        expect(g.getDeflectingArmorPart(11).type).toBe(CONSTS.ARMOR_DEFLECTOR_DEXTERITY)
+        expect(g.getDeflectingArmorPart(12).type).toBe(CONSTS.ARMOR_DEFLECTOR_DEXTERITY)
+        expect(g.getDeflectingArmorPart(13).type).toBe(CONSTS.ARMOR_DEFLECTOR_SHIELD)
+        expect(g.getDeflectingArmorPart(14).type).toBe(CONSTS.ARMOR_DEFLECTOR_SHIELD)
+        expect(g.getDeflectingArmorPart(15).type).toBe(CONSTS.ARMOR_DEFLECTOR_ARMOR)
+        expect(g.getDeflectingArmorPart(16).type).toBe(CONSTS.ARMOR_DEFLECTOR_HIT)
     })
 })

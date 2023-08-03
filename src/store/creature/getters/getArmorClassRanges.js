@@ -10,21 +10,23 @@ const { aggregateModifiers } = require('../common/aggregate-modifiers')
 module.exports = (state, getters) => {
     const oDetails = getters.getArmorClassDetails
     const aRanges = [{
-        type: 'miss',
+        type: CONSTS.ARMOR_DEFLECTOR_MISS,
         min: -Infinity,
         max: 10,
         value: 0
     }]
     const aOrder = [
-        'dexterity',
-        'shield',
-        'effects',
-        'props',
-        'armor'
+        CONSTS.ARMOR_DEFLECTOR_DEXTERITY,
+        CONSTS.ARMOR_DEFLECTOR_SHIELD,
+        CONSTS.ARMOR_DEFLECTOR_EFFECTS,
+        CONSTS.ARMOR_DEFLECTOR_PROPERTIES,
+        CONSTS.ARMOR_DEFLECTOR_ARMOR
     ]
     let n = 11
     aOrder.forEach(o => {
-        const value = oDetails[o]
+        const value = o === CONSTS.ARMOR_DEFLECTOR_ARMOR
+            ? oDetails[o] - 10
+            : oDetails[o]
         if (value > 0) {
             aRanges.push({
                 type: o,

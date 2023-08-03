@@ -78,6 +78,7 @@ module.exports = {
     ...require('./against-type.json'),
     ...require('./alignments.json'),
     ...require('./area-flags.json'),
+    ...require('./armor-deflectors.json'),
     ...require('./conditions.json'),
     ...require('./damage-types.json'),
     ...require('./effects.json'),

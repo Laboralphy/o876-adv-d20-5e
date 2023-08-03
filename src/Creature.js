@@ -1218,7 +1218,7 @@ class Creature {
         if (d) {
             return d
         } else {
-            return { type: 'hit', min: acr[acr.length - 1].max + 1, max: Infinity, value: Infinity }
+            return { type: CONSTS.ARMOR_DEFLECTOR_HIT, min: acr[acr.length - 1].max + 1, max: Infinity, value: Infinity }
         }
     }
 }
