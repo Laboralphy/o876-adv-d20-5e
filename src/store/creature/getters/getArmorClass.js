@@ -8,6 +8,12 @@ const { aggregateModifiers } = require('../common/aggregate-modifiers')
  * @returns {number}
  */
 module.exports = (state, getters) => {
-    const { armor, dexterity, shield, effects, props } = getters.getArmorClassDetails
+    const {
+        [CONSTS.ARMOR_DEFLECTOR_ARMOR]: armor,
+        [CONSTS.ARMOR_DEFLECTOR_DEXTERITY]: dexterity,
+        [CONSTS.ARMOR_DEFLECTOR_SHIELD]: shield,
+        [CONSTS.ARMOR_DEFLECTOR_EFFECTS]: effects,
+        [CONSTS.ARMOR_DEFLECTOR_PROPERTIES]: props
+    } = getters.getArmorClassDetails
     return armor + dexterity + shield + effects + props
 }
