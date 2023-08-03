@@ -6,5 +6,5 @@
   "damageType": "DAMAGE_TYPE_CRUSHING",
   "weaponType": "weapon-type-unarmed",
   "attributes": [],
-  "material": ""
+  "material": "MATERIAL_UNKNOWN"
 }
