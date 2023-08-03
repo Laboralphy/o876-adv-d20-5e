@@ -29,7 +29,7 @@ module.exports = (state, getters) => {
         CONSTS.ITEM_PROPERTY_AC_BONUS
     ], getters)
     return {
-        armor: nArmorAC,
+        armor: nArmorAC - 10,
         shield: nShieldAC,
         dexterity: nMaxedDexterityBonus,
         props: oItemACEffProps.ip,

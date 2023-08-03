@@ -12,7 +12,7 @@ module.exports = (state, getters) => {
     const aRanges = [{
         type: 'miss',
         min: -Infinity,
-        max: -1,
+        max: 10,
         value: 0
     }]
     const aOrder = [
@@ -22,7 +22,7 @@ module.exports = (state, getters) => {
         'props',
         'armor'
     ]
-    let n = 0
+    let n = 11
     aOrder.forEach(o => {
         const value = oDetails[o]
         if (value > 0) {

@@ -1005,3 +1005,32 @@ describe('Bug: les évènements fonctionnent ils ?', function () {
 
     })
 })
+
+
+describe('getArmorClassDetail', function () {
+    it('should show armor class detail', function () {
+        const r = new Manager()
+        r.init()
+        const g = r.createEntity('c-goblin-shield')
+        expect(g.store.getters.getArmorClassDetails).toEqual({
+            armor: 1,
+            shield: 2,
+            dexterity: 2,
+            props: 0, effects: 0
+        })
+        expect(g.store.getters.getArmorClassRanges).toEqual([
+            { type: 'miss', min: -Infinity, max: 10, value: 0 },
+            { type: 'dexterity', min: 11, max: 12, value: 2 },
+            { type: 'shield', min: 13, max: 14, value: 2 },
+            { type: 'armor', min: 15, max: 15, value: 1 }
+        ])
+        expect(g.getDeflectingArmorPart(-10).type).toBe('miss')
+        expect(g.getDeflectingArmorPart(10).type).toBe('miss')
+        expect(g.getDeflectingArmorPart(11).type).toBe('dexterity')
+        expect(g.getDeflectingArmorPart(12).type).toBe('dexterity')
+        expect(g.getDeflectingArmorPart(13).type).toBe('shield')
+        expect(g.getDeflectingArmorPart(14).type).toBe('shield')
+        expect(g.getDeflectingArmorPart(15).type).toBe('armor')
+        expect(g.getDeflectingArmorPart(16).type).toBe('hit')
+    })
+})
