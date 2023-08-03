@@ -948,3 +948,64 @@ describe('bug anneau perspicacité not affecting intelligence', function () {
 describe('getArmorClassDetail', function () {
 
 })
+
+describe('Bug: les évènements fonctionnent ils ?', function () {
+    it('should fire attack event when 2 melee creatures fight from afar', function () {
+        const r = new Manager()
+        r.init()
+        const aEvents = []
+        const aCreatureEvents = []
+        r.events.on('attack', ({ creature, outcome }) => {
+            aEvents.push({ type: 'attack', creature, outcome })
+        })
+        const g1 = r.createEntity('c-goblin-shield')
+        const g2 = r.createEntity('c-goblin-shield')
+        g1.events.on('attack', ({ creature, outcome }) => {
+            aCreatureEvents.push({ type: 'attack', creature, outcome })
+        })
+
+        g1.attack(g2)
+
+        expect(aCreatureEvents).toHaveSize(1)
+        expect(aEvents).toHaveSize(1)
+    })
+    it('should fire event when custom blueprint creature attacks', function () {
+        const PLAYER_BASE_BLUEPRINT = {
+            "entityType": "ENTITY_TYPE_ACTOR",
+            "class": "tourist",
+            "level": 1,
+            "abilities": {
+                "strength": 10,
+                "dexterity": 10,
+                "constitution": 10,
+                "intelligence": 10,
+                "wisdom": 10,
+                "charisma": 10
+            },
+            "size": "medium",
+            "specie": "humanoid",
+            "speed": 30,
+            "equipment": []
+        }
+        const r = new Manager()
+        r.init()
+        const aEvents = []
+        const aCreatureEvents = []
+        r.events.on('attack', ({ creature, outcome }) => {
+            aEvents.push({ type: 'attack', creature, outcome })
+        })
+        const g1 = r.createEntity('c-goblin-shield')
+        const p1 = r.createEntity(PLAYER_BASE_BLUEPRINT)
+        p1.name = 'p1'
+
+        p1.events.on('attack', ({ creature, outcome }) => {
+            aCreatureEvents.push({ type: 'attack', creature, outcome })
+        })
+
+        p1.attack(g1)
+
+        expect(aCreatureEvents).toHaveSize(1)
+        expect(aEvents).toHaveSize(1)
+
+    })
+})

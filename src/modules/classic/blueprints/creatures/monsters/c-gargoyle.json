@@ -21,14 +21,14 @@
       "ref": "nwpn-c-gargoyle",
       "damage": "1d6",
       "damageType": "DAMAGE_TYPE_SLASHING",
-      "material": "MATERIAL_UNKNOWN",
+      "material": "MATERIAL_STONE",
       "properties": []
     },
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_NATURAL_ARMOR",
       "armorType": "armor-type-natural",
-      "material": "MATERIAL_UNKNOWN",
+      "material": "MATERIAL_STONE",
       "ref": "narm-c-gargoyle",
       "properties": [
         {
