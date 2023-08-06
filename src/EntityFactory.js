@@ -21,15 +21,23 @@ class EntityFactory {
 
     mixData(oBlueprint, oData, slots) {
         const properties = oBlueprint.properties.map(ip => itemProperties[ip.property](ip))
+        let nExtraWeight = 0
         properties.forEach(p => {
             if (!('data' in p)) {
                 p.data = {}
+            }
+            if (p.property === CONSTS.ITEM_PROPERTY_EXTRA_WEIGHT) {
+                nExtraWeight += p.amp
             }
         })
         const oBlueprintCopy = {
             ...oBlueprint
         }
         delete oBlueprintCopy.properties
+        if (oBlueprintCopy.entityType === CONSTS.ENTITY_TYPE_ITEM) {
+            const sItemType = oBlueprintCopy.itemType
+            oBlueprintCopy.weight = nExtraWeight + (oData.weight || oBlueprint.weight || this._am.data['item-types'][sItemType].defaultWeight || 0)
+        }
         return {
             properties,
             ...oData,

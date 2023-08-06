@@ -872,6 +872,9 @@
       "ITEM_PROPERTY_EXTRA_ATTACKS": {
         "amp": "number"
       },
+      "ITEM_PROPERTY_EXTRA_WEIGHT": {
+        "amp": "number"
+      },
       "ITEM_PROPERTY_HP_BONUS": {
         "amp": "number"
       },
