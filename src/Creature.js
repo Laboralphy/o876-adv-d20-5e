@@ -1209,6 +1209,11 @@ class Creature {
         return oAtk
     }
 
+    /**
+     * Renvoie la partie de la protection qui a dévié le précédent coup
+     * @param nAttackRoll {number}
+     * @returns {{min: *, max: number, type: (*|string), value: number}|*}
+     */
     getDeflectingArmorPart (nAttackRoll) {
         const acr = this
             .store
