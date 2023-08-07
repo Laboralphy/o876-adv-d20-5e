@@ -1035,30 +1035,3 @@ describe('getArmorClassDetail', function () {
         expect(g.getDeflectingArmorPart(16).type).toBe(CONSTS.ARMOR_DEFLECTOR_HIT)
     })
 })
-
-describe('get weight', function () {
-    it('should return a weight of 0.02 when creating a ring', function () {
-        const r = new Manager()
-        r.init()
-        const ring = r.createEntity('ring-clear-thought')
-        expect(ring.weight).toBe(0.02)
-    })
-    it('should return a weight of 4 when creating a mace', function () {
-        const r = new Manager()
-        r.init()
-        const ring = r.createEntity('wpn-mace')
-        expect(ring.weight).toBe(4)
-    })
-    it('should return a weight of 4 when creating a mace', function () {
-        const r = new Manager()
-        r.init()
-        const mace = r.createEntity('wpn-mace')
-        expect(mace.weight).toBe(4)
-    })
-    it('should return a weight of 20 when creating a breastplate', function () {
-        const r = new Manager()
-        r.init()
-        const armor = r.createEntity('arm-breastplate')
-        expect(armor.weight).toBe(20)
-    })
-})

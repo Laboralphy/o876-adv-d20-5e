@@ -8,6 +8,79 @@ const PHYSICAL_DAMAGE_TYPES = require('./data/physical-damage-types.json')
 // Store
 const { aggregateModifiers } = require("./store/creature/common/aggregate-modifiers");
 
+
+
+/**
+ * @typedef D20AbilityNumberRegistry {object}
+ * @property ABILITY_STRENGTH {number}
+ * @property ABILITY_DEXTERITY {number}
+ * @property ABILITY_CONSTITUTION {number}
+ * @property ABILITY_INTELLIGENCE {number}
+ * @property ABILITY_WISDOM {number}
+ * @property ABILITY_CHARISMA {number}
+ */
+
+/**
+ * @typedef D20RuleValue {object}
+ * @property rules {object.<string, boolean>}
+ * @property value {boolean}
+ *
+ * @typedef D20RuleValueRegistry {object}
+ * @property ABILITY_STRENGTH {D20RuleValue}
+ * @property ABILITY_DEXTERITY {D20RuleValue}
+ * @property ABILITY_CONSTITUTION {D20RuleValue}
+ * @property ABILITY_INTELLIGENCE {D20RuleValue}
+ * @property ABILITY_WISDOM {D20RuleValue}
+ * @property ABILITY_CHARISMA {D20RuleValue}
+ *
+ * @typedef D20AdvantagesOrDisadvantages {object}
+ * @property ROLL_TYPE_ATTACK {D20RuleValueRegistry}
+ * @property ROLL_TYPE_SAVE {D20RuleValueRegistry}
+ * @property ROLL_TYPE_CHECK {D20RuleValueRegistry}
+ *
+ * @typedef D20ConditionBooleanRegistry {{[p: string]: boolean}}
+ *
+ * @typedef D20ArmorData {object}
+ * @property proficiency {string}
+ * @property ac {number}
+ * @property maxDexterityModifier {false|number}
+ * @property minStrengthRequired {number}
+ * @property disadvantageStealth {boolean}
+ * @property weight {number}
+ * @property equipmentSlots {string}
+ *
+ * @typedef D20WeaponData {object}
+ * @property damage {string}
+ * @property damageType {string}
+ * @property versatileDamage {string}
+ * @property attributes {string[]}
+ * @property proficiency {string}
+ * @property weight {number}
+ * @property equipmentSlots {string}
+ *
+ * @typedef D20Item {object}
+ * @property ref {string} blueprint reference
+ * @property entityType {string}
+ * @property itemType {string}
+ * @property [armorType] {string}
+ * @property [weaponType] {string}
+ * @property [shieldType] {string}
+ * @property [ammoType] {string}
+ * @property properties {[]}
+ * @property data {D20ArmorData|D20WeaponData|D20AmmoData|D20ShieldData}
+ * @property equipmentSlots {string[]}
+ * @property material {string}
+ *
+ * @property D20AmmoData {object}
+ * @property weight {number}
+ * @property weaponTypes {string[]}
+ * @property equipmentSlots {string}
+ *
+ * @property D20ShieldData {object}
+ * @property weight {number}
+ * @property equipmentSlots {string}
+ */
+
 class Creature {
     constructor () {
         this._id = uuidv4({}, null, 0)
@@ -1132,14 +1205,30 @@ class Creature {
 
         const sBetterSlot = this.store.getters.getSuitableOffensiveSlot
         if (sBetterSlot === '') {
-            const outcome = this.createDefaultAttackOutcome({
-                failed: true,
-                failure: CONSTS.ATTACK_OUTCOME_UNREACHABLE
-            })
-            this._events.emit('attack', { outcome })
-            return outcome
+            /*
+                avant on renvoyait un outcome ATTACK_OUTCOME_UNREACHABLE
+                Et cela ne réglais pas les problèmes
+                car le système gardait une arme à distance non-approvisionné, equipée,
+                et la créature ne pouvait pas attaquer et restait inactive
+            */
+            // déterminer si on a une arme de mélée ou bien une arme naturelle
+
+            if (this.store.getters.getEquippedWeapons.melee) {
+                this.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+            } else if (this.store.getters.getEquippedWeapons.natural) {
+                this.useOffensiveSlot(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON)
+            } else {
+                // Vraiment aucune arme
+                const outcome = this.createDefaultAttackOutcome({
+                    failed: true,
+                    failure: CONSTS.ATTACK_OUTCOME_UNREACHABLE
+                })
+                this._events.emit('attack', { outcome })
+                return outcome
+            }
+        } else {
+            this.useOffensiveSlot(sBetterSlot)
         }
-        this.useOffensiveSlot(sBetterSlot)
 
         if (!this.store.getters.canAttackTarget) {
             const outcome = this.createDefaultAttackOutcome({

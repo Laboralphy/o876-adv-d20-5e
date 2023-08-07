@@ -41,6 +41,7 @@
  * @property getEquipmentItemProperties {[]}
  * @property getEquipmentList {D20Item[]}
  * @property getEquippedItems {{[slot: string]: D20Item}}
+ * @property getEquippedWeapons {{ ranged: D20Item, melee: D20Item, natural: D20Item, ammo: D20Item }}
  * @property getExhaustionLevel {number}
  * @property getExportedState {{id: number, specie: (string|*), counters: (*|{}), classes: ([]|*), equipment: ([{damage: string, itemType: string, entityType: string, weaponType: string, attributes: [], damageType: string, properties: [{amp: number, property: string},{amp: string, property: string, type: string}]},{itemType: string, material: string, entityType: string, armorType: string, properties: [{property: string, type: string},{property: string, type: string},{property: string, type: string},{condition: string, property: string},{amp: number, skill: string, property: string}]}]|*), gauges: ({damage: number}|*), feats: ([]|*), speed: *, encumbrance: (number|*), abilities, skills: ([]|*), effects: (number|[]|*), size, proficiencies: ([]|*), offensiveSlot: *, recentDamageTypes: *, alignment: ({entropy: number, morality: number}|*)}}
  * @property getFeatReport {FeatReport[]}
@@ -78,7 +79,6 @@
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property getTargetDistance {number}
- * @property isEquippedWithRangedWeapon {boolean}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
  * @property isRangedWeaponProperlyLoaded {boolean}
