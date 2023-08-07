@@ -21,7 +21,7 @@ class Manager {
      * @private
      */
     _defineCreatureEventHandlers (oCreature) {
-        const aEvents = ['death', 'attack', 'action', 'target-distance', 'saving-throw', 'check-skill', 'damaged']
+        const aEvents = ['death', 'attack', 'action', 'target-distance', 'saving-throw', 'check-skill', 'damaged', 'offensive-slot']
         aEvents.forEach(evName => {
             oCreature.events.on(evName, oPayload => {
                 this._events.emit(evName, {
