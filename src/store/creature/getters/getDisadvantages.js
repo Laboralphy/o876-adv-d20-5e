@@ -35,7 +35,7 @@ module.exports = (state, getters, externals) => {
     const CREATURE_IS_SMALL = getters.getSizeProperties.value < externals.data['creature-sizes'][CONSTS.CREATURE_SIZE_MEDIUM].value
 
     // L'arme équipée est trop lourde pour le personnage
-    const HEAVY_WEAPON = getters.isWieldingNonLightWeapon && CREATURE_IS_SMALL
+    const HEAVY_WEAPON = getters.isWieldingHeavyWeapon && CREATURE_IS_SMALL
 
     // La créature subit la condition "poison-wyvern.json"
     const POISONED = myConditions.has(CONSTS.CONDITION_POISONED)
