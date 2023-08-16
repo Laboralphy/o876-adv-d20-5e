@@ -18,7 +18,7 @@ const CONSTS = require("../../../consts");
  */
 module.exports = function ({ target, source, property: { data: { condition, dc, saveAbility, duration } } }) {
     if (!target.store.getters.getConditions.has(condition)) {
-        const st = target.rollSavingThrow(saveAbility, [], dc)
+        const st = target.rollSavingThrow(saveAbility, [], dc, source)
         if (!st.success) {
             target.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition), duration, source)
         }

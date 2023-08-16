@@ -12,7 +12,7 @@ const CONSTS = require("../../../consts");
  * @param attackOutcome {AttackOutcome}
  */
 module.exports = function ({ target, source, attackOutcome, property: { data: { dc } } }) {
-    const st = target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [CONSTS.THREAT_TYPE_DEATH], dc)
+    const st = target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [CONSTS.THREAT_TYPE_DEATH], dc, source)
     if (st.success) {
         return
     }

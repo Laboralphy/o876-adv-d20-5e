@@ -23,7 +23,7 @@ function conditionAttack ({
                               dc,
                               subtype = CONSTS.EFFECT_SUBTYPE_MAGICAL
                           }) {
-    const { success } = target.rollSavingThrow(savingAbility, [CONSTS.THREAT_TYPE_SPELL, ...threats], dc)
+    const { success } = target.rollSavingThrow(savingAbility, [CONSTS.THREAT_TYPE_SPELL, ...threats], dc, caster)
     if (!success) {
         const eCond = EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition)
         eCond.subtype = subtype
@@ -52,7 +52,7 @@ function evocationAttack ({
                               type: sType,
                               dc
                           }) {
-    const { success } = target.rollSavingThrow(CONSTS.ABILITY_DEXTERITY, [CONSTS.THREAT_TYPE_SPELL], dc)
+    const { success } = target.rollSavingThrow(CONSTS.ABILITY_DEXTERITY, [CONSTS.THREAT_TYPE_SPELL], dc, caster)
     if (success) {
         damage = damage >> 1
     }

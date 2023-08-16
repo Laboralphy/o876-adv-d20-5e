@@ -19,7 +19,7 @@ function mutate ({ effect, target, source }, oEffectProcessor) {
     }
     if (effect.data.turns > 0) {
         if (effect.data.dot) {
-            if (target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [CONSTS.THREAT_TYPE_POISON], effect.data.dc).success) {
+            if (target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [CONSTS.THREAT_TYPE_POISON], effect.data.dc).success, source) {
                 --effect.data.saveCount
             } else {
                 target.applyEffect(
@@ -39,7 +39,7 @@ function mutate ({ effect, target, source }, oEffectProcessor) {
     } else {
         // dégâts initiaux
         if (effect.amp > 0) {
-            if (!target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [CONSTS.THREAT_TYPE_POISON], effect.data.dc).success) {
+            if (!target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [CONSTS.THREAT_TYPE_POISON], effect.data.dc).success, source) {
                 target.applyEffect(
                     oEffectProcessor.createEffect(
                         CONSTS.EFFECT_DAMAGE,
