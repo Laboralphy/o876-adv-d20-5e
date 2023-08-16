@@ -19,7 +19,7 @@ module.exports = function ({ target, source, damage, property }) {
     const amp = damage.amp
     const hp = target.store.getters.getHitPoints
     if (amp >= hp) {
-        const st = target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [], 5 + damage.amp)
+        const st = target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [], 5 + damage.amp, source)
         if (st.success) {
             damage.amp = hp - 1
             damage.data.resistedAmount += amp - damage.amp

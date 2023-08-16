@@ -1030,9 +1030,13 @@ class Creature {
      * @param sAbility {string}
      * @param aThreats {string[]}
      * @param dc {number}
-     * @returns {{ roll, bonus, value, circumstance, success }}
+     * @param source {Creature|null}
+     * @returns {{ roll, bonus, value, source, circumstance, success }}
      */
-    rollSavingThrow (sAbility, aThreats = [], dc) {
+    rollSavingThrow (sAbility, aThreats = [], dc, source = null) {
+        if (source) {
+            this.setAggressor(source)
+        }
         const st = this.store.getters.getSavingThrowBonus
         const sta = sAbility in st ? st[sAbility] : 0
         const stt = aThreats.reduce((prev, sThreat) => {
@@ -1043,6 +1047,7 @@ class Creature {
         const value = r.value + bonus
         const output = {
             roll: r.value,
+            source,
             bonus,
             value,
             ability: sAbility,
