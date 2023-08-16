@@ -41,6 +41,10 @@ function mutate ({ effect, target }) {
         const appliedAmount = Math.ceil(Math.max(0, (amp - reduction)) * nFinalFactor)
         effect.data.resistedAmount += amp - appliedAmount
         effect.amp = amp - effect.data.resistedAmount
+        effect.data.appliedAmount = appliedAmount
+    } else {
+        // no resistance no absorb no immunity
+        effect.data.appliedAmount = amp
     }
     target.store.mutations.addRecentDamageType({ amount: effect.amp, type: sType })
     target.store.mutations.damage({ amount: effect.amp })
