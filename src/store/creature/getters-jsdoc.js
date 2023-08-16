@@ -87,6 +87,7 @@
  * @property isTargetInWeaponRange {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
  * @property isWieldingHeavyMeleeWeapon {boolean}
+ * @property isWieldingHeavyWeapon {boolean}
  * @property isWieldingNonLightWeapon {boolean}
  * @property isWieldingRangedWeapon {boolean}
  * @property getClassicSkillAdvantages {D20AdvantagesOrDisadvantages}
