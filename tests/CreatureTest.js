@@ -1,3 +1,6 @@
+const config = require('../src/config')
+config.setModuleActive('classic', true)
+
 const Creature = require('../src/Creature')
 const Manager = require('../src/Manager')
 const EffectProcessor = require('../src/EffectProcessor')
@@ -9,6 +12,7 @@ const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../sr
 const DISTANCE_MELEE = 4
 const DISTANCE_REACH = 9
 const DISTANCE_RANGED = 30
+
 
 beforeAll(function () {
     Error.stackTraceLimit = Infinity

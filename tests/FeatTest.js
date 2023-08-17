@@ -1,3 +1,6 @@
+const config = require('../src/config')
+config.setModuleActive('classic', true)
+
 const Creature = require('../src/Creature')
 const Manager = require('../src/Manager')
 const CONSTS = require('../src/consts')
