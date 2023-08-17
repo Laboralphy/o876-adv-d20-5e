@@ -9,8 +9,18 @@ const aModules = [
     },
     {
         id: 'classic',
-        active: true,
+        active: false,
         path: path.resolve(__dirname, 'modules', 'classic')
+    },
+    {
+        id: 'future',
+        active: false,
+        path: path.resolve(__dirname, 'modules', 'future')
+    },
+    {
+        id: 'modern',
+        active: false,
+        path: path.resolve(__dirname, 'modules', 'modern')
     }
 ]
 
@@ -45,7 +55,7 @@ function getModule(id) {
 function setModuleActive(id, value) {
     const m = getModule(id)
     if (m) {
-        m.Active = value
+        m.active = value
     }
 }
 
