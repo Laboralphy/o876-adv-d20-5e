@@ -62,7 +62,18 @@ class Comparator {
         }
     }
 
+    static getCreatureNumbers (c) {
+        c.dice.cheat(0.5)
+        const g = c.store.getters
+        const atkBonus = g.getAttackBonus
+        const atkCount = g.getAttackCount
+        c.dice.cheat(false)
+    }
 
+    static consider (c1, c2) {
+        c1.dice.cheat(0.5)
+        c2.dice.cheat(0.5)
+    }
 }
 
 module.exports = Comparator
