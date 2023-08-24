@@ -133,20 +133,18 @@ describe('real combat', function () {
         // 27 - 4 * 3.90 = 11.4
         expect(Comparator.considerHPLeft(cc2.melee, cc1.melee)).toBeCloseTo(11.4, 2)
         const cx = Comparator.consider(c1, c2)
-        expect(cx.you.melee.hp).toBeCloseTo(-12.95, 2)
+        expect(cx.you.melee.hp.after).toBeCloseTo(-12.95, 2)
         expect(cx.you.melee.turns).toBe(7)
-        console.log(1 - cx.you.melee.hp100)
-        console.log(1 - cx.adv.melee.hp100)
 
-        expect(cx.adv.melee.hp).toBeCloseTo(11.4, 2)
+        expect(cx.adv.melee.hp.after).toBeCloseTo(11.4, 2)
         expect(cx.adv.melee.turns).toBe(4)
 
         expect(cx.you.ranged.hasWeapon).toBeTrue()
-        expect(cx.you.ranged.hp).toBeCloseTo(14, 2)
+        expect(cx.you.ranged.hp.after).toBeCloseTo(14, 2)
         expect(cx.you.ranged.turns).toBe(7)
 
         expect(cx.adv.ranged.hasWeapon).toBeFalse()
-        expect(cx.adv.ranged.hp).toBe(-Infinity)
+        expect(cx.adv.ranged.hp.after).toBe(-Infinity)
         expect(cx.adv.ranged.turns).toBe(Infinity)
     })
 })

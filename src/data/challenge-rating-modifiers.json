@@ -1,7 +1,0 @@
-{
-  "damageResistanceHPMod": [2, 1.5, 1.25, 1],
-  "damageImmunityHPMod": [2, 2, 1.5, 1.25],
-  "regenFactorHPMod": 3,
-  "ipOnHit": 1,
-  "ipAura": 1
-}
