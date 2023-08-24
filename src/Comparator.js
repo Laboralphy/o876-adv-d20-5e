@@ -172,13 +172,14 @@ class Comparator {
      *
      * @typedef ComparatorConsiderAttackType {object}
      * @property toHit {number} probabilité de toucher
+     * @property advDamage {number} dégâts moyen par tour
      * @property turns {number} nombre de tours nécessaires pour tuer l'adversaire
      * @property hp {ComparatorConsiderHP}
      * @property hasWeapon {boolean} true si une arme est utilisée pour ce type d'attaque
      *
-     * @typedef ComparatorConsiderAttacks {{ranged : ComparatorConsiderAttackType, melee : ComparatorConsiderAttackType}}
+     * @typedef ComparatorConsiderCombatType {{you : ComparatorConsiderAttackType, adv : ComparatorConsiderAttackType}}
      *
-     * @typedef ComparatorConsiderResult {{you: ComparatorConsiderAttacks, adv: ComparatorConsiderAttacks}}
+     * @typedef ComparatorConsiderResult {{ranged: ComparatorConsiderCombatType, melee: ComparatorConsiderCombatType}}
      *
      * @param c1 {Creature}
      * @param c2 {Creature}
@@ -192,24 +193,24 @@ class Comparator {
         const c1RangedHPLeft = Comparator.considerHPLeft(cc1.ranged, cc2.ranged)
         const c2RangedHPLeft = Comparator.considerHPLeft(cc2.ranged, cc1.ranged)
         /*
-                    tohit,
+            tohit,
             dpa,
             dpt,
             hp,
             apt,
             turns,
             attacks
-
          */
         const c1hpmax = c1.store.getters.getMaxHitPoints
         const c1hp = c1.store.getters.getHitPoints
         const c2hpmax = c2.store.getters.getMaxHitPoints
         const c2hp = c2.store.getters.getHitPoints
         return {
-            you: {
-                melee: {
+            melee: {
+                you: {
                     toHit: cc1.melee.tohit,
                     turns: cc1.melee.turns,
+                    dpt: cc1.melee.dpt,
                     hp: {
                         before: c1hp,
                         after: c1MeleeHPLeft,
@@ -218,22 +219,10 @@ class Comparator {
                     },
                     hasWeapon: cc1.melee.hasWeapon
                 },
-                ranged: {
-                    toHit: cc1.ranged.tohit,
-                    turns: cc1.ranged.turns,
-                    hp: {
-                        before: c1hp,
-                        after: c1RangedHPLeft,
-                        lost: c1hp - c1RangedHPLeft,
-                        lost100: (c1hp - c1RangedHPLeft) / c1hpmax
-                    },
-                    hasWeapon: cc1.ranged.hasWeapon
-                }
-            },
-            adv: {
-                melee: {
+                adv: {
                     toHit: cc2.melee.tohit,
                     turns: cc2.melee.turns,
+                    dpt: cc2.melee.dpt,
                     hp: {
                         before: c2hp,
                         after: c2MeleeHPLeft,
@@ -241,10 +230,25 @@ class Comparator {
                         lost100: (c2hp - c2MeleeHPLeft) / c2hpmax,
                     },
                     hasWeapon: cc2.melee.hasWeapon
+                }
+            },
+            ranged: {
+                you: {
+                    toHit: cc1.ranged.tohit,
+                    turns: cc1.ranged.turns,
+                    dpt: cc1.ranged.dpt,
+                    hp: {
+                        before: c1hp,
+                        after: c1RangedHPLeft,
+                        lost: c1hp - c1RangedHPLeft,
+                        lost100: (c1hp - c1RangedHPLeft) / c1hpmax
+                    },
+                    hasWeapon: cc1.ranged.hasWeapon
                 },
-                ranged: {
+                adv: {
                     toHit: cc2.ranged.tohit,
                     turns: cc2.ranged.turns,
+                    dpt: cc2.ranged.dpt,
                     hp: {
                         before: c2hp,
                         after: c2RangedHPLeft,

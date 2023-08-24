@@ -133,18 +133,18 @@ describe('real combat', function () {
         // 27 - 4 * 3.90 = 11.4
         expect(Comparator.considerHPLeft(cc2.melee, cc1.melee)).toBeCloseTo(11.4, 2)
         const cx = Comparator.consider(c1, c2)
-        expect(cx.you.melee.hp.after).toBeCloseTo(-12.95, 2)
-        expect(cx.you.melee.turns).toBe(7)
+        expect(cx.melee.you.hp.after).toBeCloseTo(-12.95, 2)
+        expect(cx.melee.you.turns).toBe(7)
 
-        expect(cx.adv.melee.hp.after).toBeCloseTo(11.4, 2)
-        expect(cx.adv.melee.turns).toBe(4)
+        expect(cx.melee.adv.hp.after).toBeCloseTo(11.4, 2)
+        expect(cx.melee.adv.turns).toBe(4)
 
-        expect(cx.you.ranged.hasWeapon).toBeTrue()
-        expect(cx.you.ranged.hp.after).toBeCloseTo(14, 2)
-        expect(cx.you.ranged.turns).toBe(7)
+        expect(cx.ranged.you.hasWeapon).toBeTrue()
+        expect(cx.ranged.you.hp.after).toBeCloseTo(14, 2)
+        expect(cx.ranged.you.turns).toBe(7)
 
-        expect(cx.adv.ranged.hasWeapon).toBeFalse()
-        expect(cx.adv.ranged.hp.after).toBe(-Infinity)
-        expect(cx.adv.ranged.turns).toBe(Infinity)
+        expect(cx.ranged.adv.hasWeapon).toBeFalse()
+        expect(cx.ranged.adv.hp.after).toBe(-Infinity)
+        expect(cx.ranged.adv.turns).toBe(Infinity)
     })
 })
