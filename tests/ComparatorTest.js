@@ -1,4 +1,9 @@
 const Comparator = require('../src/Comparator')
+const Manager = require('../src/Manager')
+const CONFIG = require('../src/config')
+const CONSTS = require('../src/consts')
+
+CONFIG.setModuleActive('classic', true)
 describe('Chances to hit', function () {
     it ('shoud compute chances to hit', function () {
         expect(Comparator.computeHitProbability(10, 9)).toBe(0.95)
@@ -46,6 +51,7 @@ describe('Chances to hit', function () {
                 damageMitigation: {}
             },
             you: {
+                weapon: 'dirk',
                 atk: 5,
                 atkCount: 1,
                 damages: {
@@ -53,9 +59,13 @@ describe('Chances to hit', function () {
                 }
             }
         })).toEqual({
+            hasWeapon: true,
             tohit: 0.55,
             dpa: 4,
+            apt: 1,
+            hp: 30,
             dpt: 2.2,
+            attacks: 14,
             turns: 14
         })
         expect(Comparator.computeTurnsToKill({
@@ -70,6 +80,7 @@ describe('Chances to hit', function () {
                 }
             },
             you: {
+                weapon: 'dirk',
                 atk: 5,
                 atkCount: 1,
                 damages: {
@@ -77,10 +88,65 @@ describe('Chances to hit', function () {
                 }
             }
         })).toEqual({
+            hasWeapon: true,
             tohit: 0.55,
+            apt: 1,
+            hp: 30,
             dpa: 2,
             dpt: 1.1,
+            attacks: 28,
             turns: 28
         })
+    })
+})
+
+describe('real combat', function () {
+    it ('mephit should win', function () {
+        const r = new Manager()
+        r.init()
+        const c1 = r.createEntity('c-goblin-bow')
+        const c2 = r.createEntity('c-mephit-magma')
+        expect(c1.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).not.toBeNull()
+        expect(Comparator.getMeleeSlot(c1)).toBe(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        const cc1 = Comparator.considerP1(c1, c2)
+        const cc2 = Comparator.considerP1(c2, c1)
+
+        expect(cc1.melee.tohit).toBe(0.65)
+        expect(cc1.melee.dpa).toBe(6)
+        expect(cc1.melee.dpt).toBeCloseTo(3.90, 2)
+        expect(cc1.melee.hp).toBe(27)
+        expect(cc1.melee.attacks).toBe(7)
+        expect(cc1.melee.turns).toBe(7)
+
+        expect(cc2.melee.tohit).toBe(0.55)
+        expect(cc2.melee.dpa).toBe(7)
+        expect(cc2.melee.dpt).toBeCloseTo(3.85, 2)
+        expect(cc2.melee.hp).toBe(14)
+        expect(cc2.melee.attacks).toBe(4)
+        expect(cc2.melee.turns).toBe(4)
+
+        // les hp restant de gob après son combat avec meph
+        // 14 - 7 * 3.85 = -12.95
+        expect(Comparator.considerHPLeft(cc1.melee, cc2.melee)).toBeCloseTo(-12.95, 2)
+
+        // les hp de meph après son combat avec gob
+        // 27 - 4 * 3.90 = 11.4
+        expect(Comparator.considerHPLeft(cc2.melee, cc1.melee)).toBeCloseTo(11.4, 2)
+        const cx = Comparator.consider(c1, c2)
+        expect(cx.you.melee.hp).toBeCloseTo(-12.95, 2)
+        expect(cx.you.melee.turns).toBe(7)
+        console.log(1 - cx.you.melee.hp100)
+        console.log(1 - cx.adv.melee.hp100)
+
+        expect(cx.adv.melee.hp).toBeCloseTo(11.4, 2)
+        expect(cx.adv.melee.turns).toBe(4)
+
+        expect(cx.you.ranged.hasWeapon).toBeTrue()
+        expect(cx.you.ranged.hp).toBeCloseTo(14, 2)
+        expect(cx.you.ranged.turns).toBe(7)
+
+        expect(cx.adv.ranged.hasWeapon).toBeFalse()
+        expect(cx.adv.ranged.hp).toBe(-Infinity)
+        expect(cx.adv.ranged.turns).toBe(Infinity)
     })
 })
