@@ -1,6 +1,6 @@
 const Comparator = require('../src/Comparator')
 const Manager = require('../src/Manager')
-const CONFIG = require('../src/config')
+const { CONFIG } = require('../src/config')
 const CONSTS = require('../src/consts')
 
 CONFIG.setModuleActive('classic', true)

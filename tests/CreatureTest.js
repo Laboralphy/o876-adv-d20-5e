@@ -1,5 +1,5 @@
-const config = require('../src/config')
-config.setModuleActive('classic', true)
+const { CONFIG } = require('../src/config')
+CONFIG.setModuleActive('classic', true)
 
 const Creature = require('../src/Creature')
 const Manager = require('../src/Manager')
