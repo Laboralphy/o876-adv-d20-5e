@@ -21,7 +21,7 @@
  * @property addFeat {function({ feat: string })}
  * @property updateFeatEffects {function()}
  * @property dispellEffect {function({ effect })}
- * @property setHitPoints {function({ value })}
+ * @property setGaugeDamage {function({ value })}
  * @property heal {function({ amount })}
  * @property setTargetDistance {function({ value })}
  * @property setSize {function({ value })}

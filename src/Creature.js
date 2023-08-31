@@ -561,6 +561,7 @@ class Creature {
      * Hors combat le processEffects s'effectue lorsque l'entité change de pièce
      */
     processEffects () {
+        this.store.mutations.updateFeatEffects()
         this._effectProcessor.processCreatureEffects(this)
         this.processRegenEffects()
         this.processTargetAuraEffects()
@@ -825,20 +826,30 @@ class Creature {
     rollSkill (sSkill, dc = undefined) {
         const sg = this.store.getters
         // données du skill
-        const aSkills = sg.getSkillProficiencies
-        const bProficient = aSkills.has(sSkill)
+        const aSkills = sg.getProficiencies
+        const bProficient = aSkills.includes(sSkill)
         // déterminer les bonus du skill
         const nSkillBonus = this
-            .aggregateModifiers([CONSTS.ITEM_PROPERTY_SKILL_BONUS], {
-                propFilter: prop => prop.data.skill === sSkill
-            })
-            .sum +
-            (bProficient ? sg.getProficiencyBonus : 0)
+            .aggregateModifiers([
+                CONSTS.ITEM_PROPERTY_SKILL_BONUS
+            ], {
+                propFilter: prop => prop.data.skill === sSkill,
+            }).sum
         // déterminer la carac du skill
         const oSkillData = this.getSkillData(sSkill)
         const sSkillAbility = oSkillData.ability
+        // Ajouter un evéntuel bonus de proficiency (mais qui ne se stack pas)
+        const nNormalProfBonus = (bProficient ? sg.getProficiencyBonus : 0)
+        const nExtraProfBonus = this
+            .aggregateModifiers([
+                CONSTS.EFFECT_SKILL_EXPERTISE
+            ], {
+                effectFilter: eff => eff.data.type === sSkill || eff.data.type === sSkillAbility,
+                effectAmpMapper: eff => Math.ceil(eff.amp * sg.getProficiencyBonus)
+            }).max
+        const nTotalProfBonus = Math.max(nNormalProfBonus, nExtraProfBonus)
         const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
-        const nTotalBonus = nAbilityBonus + nSkillBonus
+        const nTotalBonus = nAbilityBonus + nSkillBonus + nTotalProfBonus
         const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
         const nTotal = value + nTotalBonus
         const output = {

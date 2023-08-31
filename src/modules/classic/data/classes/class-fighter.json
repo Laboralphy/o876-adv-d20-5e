@@ -19,5 +19,132 @@
     "SKILL_INTIMIDATION",
     "SKILL_PERCEPTION",
     "SKILL_SURVIVAL"
+  ],
+  "evolution": [
+    {
+      "level": 1,
+      "feats": [
+        {
+          "group": "feat-fighting-style",
+          "feat": "feat-fighting-style-archery"
+        },
+        {
+          "group": "feat-fighting-style",
+          "feat": "feat-fighting-style-defense"
+        },
+        {
+          "group": "feat-fighting-style",
+          "feat": "feat-fighting-style-dueling"
+        },
+        {
+          "group": "feat-fighting-style",
+          "feat": "feat-fighting-style-great-weapon"
+        }
+      ]
+    }, {
+      "level": 2,
+      "feats": [
+        {
+          "feat": "feat-second-wind",
+          "uses": 1
+        }
+      ]
+    }, {
+      "level": 3,
+      "feats": [
+        {
+          "feat": "feat-improve-critical"
+        }
+      ]
+    }, {
+      "level": 4,
+      "abilityScoreImprovement": true
+    }, {
+      "level": 5,
+      "extraAttack": true
+    }, {
+      "level": 6,
+      "feats": [],
+      "abilityScoreImprovement": true
+    }, {
+      "level": 7,
+      "feats": [
+        {
+          "feat": "feat-remarkable-athlete"
+        }
+      ]
+    }, {
+      "level": 8,
+      "abilityScoreImprovement": true
+    }, {
+      "level": 9
+    }, {
+      "level": 10,
+      "feats": [
+        {
+          "group": "feat-fighting-style",
+          "feat": "feat-fighting-style-archery"
+        },
+        {
+          "group": "feat-fighting-style",
+          "feat": "feat-fighting-style-defense"
+        },
+        {
+          "group": "feat-fighting-style",
+          "feat": "feat-fighting-style-dueling"
+        },
+        {
+          "group": "feat-fighting-style",
+          "feat": "feat-fighting-style-great-weapon"
+        }
+      ]
+    }, {
+      "level": 11,
+      "extraAttack": true
+    }, {
+      "level": 12,
+      "abilityScoreImprovement": true
+    }, {
+      "level": 13
+    }, {
+      "level": 14,
+      "abilityScoreImprovement": true
+    }, {
+      "level": 15,
+      "feats": [
+        {
+          "feat": "feat-superior-critical"
+        }
+      ]
+    }, {
+      "level": 16,
+      "abilityScoreImprovement": true
+    }, {
+      "level": 17,
+      "feats": [
+        {
+          "feat": "feat-second-wind",
+          "uses": 2
+        }
+      ]
+    }, {
+      "level": 18,
+      "feats": [
+        {
+          "feat": "feat-survivor"
+        }
+      ]
+    }, {
+      "level": 19,
+      "feats": [
+        {
+          "feat": "feat-survivor"
+        }
+      ],
+      "abilityScoreImprovement": true
+    }, {
+      "level": 20,
+      "extraAttack": true
+    }
   ]
 }

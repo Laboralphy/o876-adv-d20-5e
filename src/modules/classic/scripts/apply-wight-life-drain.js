@@ -25,7 +25,5 @@ module.exports = function ({ target, source, attackOutcome, property: { data: { 
         oCurse.subtype = CONSTS.EFFECT_SUBTYPE_CURSE
         target.applyEffect(oCurse, Infinity, source)
         target.store.mutations.heal({ amount })
-    } else {
-        console.log('no damage amount')
     }
 }

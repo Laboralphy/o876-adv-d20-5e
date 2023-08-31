@@ -1,0 +1,9 @@
+{
+  "description": "HP +5 +CON modifier, during battle, each turn when hp below 50%",
+  "when": "isHPBelow50Percent",
+  "effects": [
+    ["EFFECT_HEAL", 5, {
+      "useConstitutionModifier": true
+    }]
+  ]
+}

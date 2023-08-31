@@ -1,0 +1,8 @@
+{
+  "description": "All non-proficiency skill checks relying on strength, dexterity, or constitution, have a bonus of half proficiency",
+  "effects": [
+    ["EFFECT_SKILL_EXPERTISE", 0.5, "ABILITY_STRENGTH"],
+    ["EFFECT_SKILL_EXPERTISE", 0.5, "ABILITY_DEXTERITY"],
+    ["EFFECT_SKILL_EXPERTISE", 0.5, "ABILITY_CONSTITUTION"]
+  ]
+}

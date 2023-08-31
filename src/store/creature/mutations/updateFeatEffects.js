@@ -1,5 +1,11 @@
 const { createFeatEffect } = require('../common/create-effect')
 
+/**
+ * Détermine les effet de feat qu'il faut activer ou désactiver.
+ * @param state
+ * @param getters
+ * @param externals
+ */
 module.exports = ({ state, getters, externals }) => {
     const aFeatReport = getters.getFeatReport
     aFeatReport.forEach(({ feat, active, shouldBeActive }) => {

@@ -9,7 +9,7 @@ const aModules = [
     },
     {
         id: 'classic',
-        active: false,
+        active: true,
         path: path.resolve(__dirname, 'modules', 'classic')
     },
     {

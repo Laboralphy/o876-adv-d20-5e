@@ -71,7 +71,6 @@
  * @property getShieldMaterial {string}
  * @property getSize {string}
  * @property getSizeProperties {{value: number, hitDice: number, space: number, carryingCapacity: number, extraMeleeDamageDice: number }}
- * @property getSkillProficiencies {Set<string>}
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getSuitableOffensiveSlot {string}
@@ -96,5 +95,6 @@
  * @property getWizardSpellSlots {number[]}
  * @property has1HWeaponNoShield {boolean}
  * @property has2HWeaponNoShield {boolean}
+ * @property isHPBelow50Percent {boolean}
  * @property isWearingArmor {boolean}
  */
