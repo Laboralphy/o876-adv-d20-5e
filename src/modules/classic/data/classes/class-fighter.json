@@ -25,19 +25,19 @@
       "level": 1,
       "feats": [
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-archery"
         },
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-defense"
         },
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-dueling"
         },
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-great-weapon"
         }
       ]

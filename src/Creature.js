@@ -1047,6 +1047,7 @@ class Creature {
     }
 
     featAction (sFeat) {
+        const oCounters = this.store.getters.getCounters
         if (sFeat in Creature.AssetManager.data) {
             const oFeatData = Creature.AssetManager.data[sFeat]
             if ('when' in oFeatData) {
@@ -1055,6 +1056,17 @@ class Creature {
                 }
             }
             if ('action' in oFeatData) {
+                if (sFeat in oCounters) {
+                    if (oCounters[sFeat].value > 0) {
+                        this.store.mutations.setCounterValue({
+                            counter: sFeat,
+                            value: oCounters[sFeat].value - 1
+                        })
+                    } else {
+                        // le compteur est épuisé
+                        throw new Error('ERR_FEAT_ACTION_DEPLETED_USE')
+                    }
+                }
                 this.action(oFeatData.action)
             } else {
                 throw new Error('ERR_FEAT_HAS_NO_ACTION')
