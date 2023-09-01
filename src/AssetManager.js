@@ -5,15 +5,16 @@ const SchemaValidator = require("./SchemaValidator")
 const StoreManager = require('./StoreManager')
 const deepMerge = require('../libs/deep-merge')
 const deepClone = require('../libs/deep-clone')
-const CONFIG = require('./config')
+const { CONFIG } = require('./config')
 const STRINGS = {
     fr: require('./strings/fr.json'),
     en: require('./strings/en.json')
 }
 
 class AssetManager {
-    constructor () {
+    constructor ({ config = CONFIG } = {}) {
         this._initialized = false
+        this._config = config
         this._lang = 'fr'
         this._assets = {
             blueprints: {},
@@ -129,7 +130,8 @@ class AssetManager {
             for (const [sId, data] of Object.entries(oBaseData)) {
                 this.addData(sId, data)
             }
-            CONFIG
+            this
+                ._config
                 .activeModules
                 .forEach(m => {
                     this.loadModule(m)

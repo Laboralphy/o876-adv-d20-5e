@@ -24,6 +24,49 @@
         "type": "string",
         "pattern": "^SKILL_"
       }
+    },
+    "evolution": {
+      "description": "Manière dont la classe évolue au cours des niveau",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["level"],
+        "properties": {
+          "level": {
+            "type": "number"
+          },
+          "feats": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["feat"],
+              "properties": {
+                "feat": {
+                  "description": "nom du feat",
+                  "type": "string",
+                  "pattern": "^feat-"
+                },
+                "group": {
+                  "description": "groupe du feat, lorsqu'il faut n'en choisir qu'un seul parmis les feat du groupe",
+                  "type": "string"
+                },
+                "uses": {
+                  "description": "limitation du nombre d'utilisation par jour",
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "abilityScoreImprovement": {
+            "description": "si true alors ce niveau permet d'augmenter une carac d'un point",
+            "type": "boolean"
+          },
+          "extraAttack": {
+            "description": "si true alors ce niveau donne une attaque ne plus par tour",
+            "type": "boolean"
+          }
+        }
+      }
     }
   }
 }

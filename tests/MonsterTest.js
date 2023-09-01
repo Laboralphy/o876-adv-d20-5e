@@ -1,5 +1,5 @@
-const config = require('../src/config')
-config.setModuleActive('classic', true)
+const { CONFIG } = require('../src/config')
+CONFIG.setModuleActive('classic', true)
 
 const Manager = require("../src/Manager");
 const EffectProcessor = require("../src/EffectProcessor");

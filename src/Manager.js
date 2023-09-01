@@ -3,7 +3,7 @@ const CONSTS = require('./consts')
 const Events = require('events')
 const Creature = require('./Creature')
 const itemProperties = require('./item-properties')
-const CONFIG = require('./config')
+const { CONFIG } = require('./config')
 
 class Manager {
     constructor () {
