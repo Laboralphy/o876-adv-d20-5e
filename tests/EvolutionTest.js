@@ -1,6 +1,6 @@
 const Evolution = require('../src/Evolution')
 const AssetManager = require('../src/AssetManager')
-const { Config } = require('../src/config')
+const { Config, CONFIG } = require('../src/config')
 
 describe('basic test', function () {
     it ('should load properly when doing nothing', function () {
