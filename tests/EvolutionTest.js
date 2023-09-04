@@ -1,5 +1,6 @@
 const Evolution = require('../src/Evolution')
 const Manager = require('../src/Manager')
+const Creature = require('../src/Creature')
 const AssetManager = require('../src/AssetManager')
 const { Config, CONFIG } = require('../src/config')
 
@@ -100,6 +101,7 @@ describe('creatureLevelUp', function () {
         ev.data = am.data
         const c = r.createEntity('c-pilgrim')
         c.store.mutations.setAbility({ ability: 'ABILITY_STRENGTH', value: 13 })
+
         expect(() => ev.creatureLevelUp(c, { selectedClass: 'fighter' }))
             .toThrow(new Error('ERR_EVOL_GROUP_FEAT_NOT_SELECTED'))
     })
@@ -152,5 +154,44 @@ describe('creatureLevelUp', function () {
         const ev = new Evolution()
         ev.data = am.data
         const c = r.createEntity('c-pilgrim')
+    })
+})
+
+describe('first level up - define character class', function () {
+    it('should not crash when submitting a fresh new player', function () {
+        const config = new Config()
+        config.setModuleActive('classic', true)
+        const am = new AssetManager()
+        am.init()
+        Creature.AssetManager = am
+        const c = new Creature()
+        const ev = new Evolution()
+        ev.data = am.data
+        expect(() =>
+            ev.creatureLevelUp(c, {
+                selectedClass: 'fighter'
+            })
+        ).toThrow(new Error('ERR_EVOL_INVALID_SKILL_COUNT'))
+        expect(() =>
+            ev.creatureLevelUp(c, {
+                selectedClass: 'fighter',
+                selectedSkills: [
+                    'SKILL_INTIMIDATION',
+                    'SKILL_PERCEPTION'
+                ]
+            })
+        ).toThrow(new Error('ERR_EVOL_GROUP_FEAT_NOT_SELECTED'))
+        expect(() =>
+            ev.creatureLevelUp(c, {
+                selectedClass: 'fighter',
+                selectedSkills: [
+                    'SKILL_INTIMIDATION',
+                    'SKILL_PERCEPTION'
+                ],
+                selectedFeats: [
+                    'feat-fighting-style-archery'
+                ]
+            })
+        ).not.toThrow()
     })
 })

@@ -6,16 +6,6 @@
     "ammo-type-slug": "Cartouche à plombs"
   },
   "weaponType": {
-    "armor-type-concealable-vest": "Treillis de camouflage",
-    "armor-type-forced-entry-unit": "Armure d'assaut",
-    "armor-type-leather-jacket": "Gilet de cuir",
-    "armor-type-light-duty-vest": "Armure de protection légère",
-    "armor-type-light-undercover-shirt": "Treillis léger d'infiltration",
-    "armor-type-special-response-vest": "Armure d'intervention spéciale",
-    "armor-type-tactical-vest": "Armure de combat tactique",
-    "armor-type-undercover-vest": "Armure d'infiltration"
-  },
-  "armorType": {
     "weapon-type-anti-material-sniper-rifle": "Fusil de précision anti-matériel",
     "weapon-type-anti-personnel-sniper-rifle": "Fusil de précision anti-personnel",
     "weapon-type-assault-rifle":  "Fusil d'assaut",
@@ -35,5 +25,15 @@
     "weapon-type-large-caliber-autoloader": "Pistolet automatique gros calibre",
     "weapon-type-machine-pistol": "Pistolet mitrailleur",
     "weapon-type-revolver": "Revolver"
+  },
+  "armorType": {
+    "armor-type-concealable-vest": "Treillis de camouflage",
+    "armor-type-forced-entry-unit": "Armure d'assaut",
+    "armor-type-leather-jacket": "Gilet de cuir",
+    "armor-type-light-duty-vest": "Armure de protection légère",
+    "armor-type-light-undercover-shirt": "Treillis léger d'infiltration",
+    "armor-type-special-response-vest": "Armure d'intervention spéciale",
+    "armor-type-tactical-vest": "Armure de combat tactique",
+    "armor-type-undercover-vest": "Armure d'infiltration"
   }
 }

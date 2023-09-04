@@ -110,6 +110,19 @@ class Evolution {
         return true
     }
 
+    /**
+     * Renvoie true si on est multiclasser ou si on va multiclasser
+     * @param oCreature {Creature}
+     * @param sClass {string}
+     */
+    isMultiClassing (oCreature, sClass) {
+        const cl = oCreature.store.getters.getClassList
+        const nClassCount = cl.length
+        const bOneClass = nClassCount === 1
+        const bMoreClasses = nClassCount > 1
+        return bMoreClasses || (bOneClass && cl[0] !== sClass)
+    }
+
     canCreatureLevelUpTo (oCreature, sClass) {
         const aClasses = Object.keys(oCreature.store.getters.getLevelByClass)
         if (sClass !== aClasses[aClasses.length - 1]) {
@@ -125,7 +138,7 @@ class Evolution {
         selectedClass,
         selectedFeats = [],
         selectedAbility = '',
-        selectedSkills: []
+        selectedSkills = []
     }) {
         const oJournal = {}
         if (!selectedClass) {
@@ -134,12 +147,38 @@ class Evolution {
         if (!this.canCreatureLevelUpTo(oCreature, selectedClass)) {
             throw new Error('ERR_EVOL_CANT_MULTICLASS')
         }
-        const nLevel = this.getClassNextLevelValue(oCreature, selectedClass)
-        // les skills
-        // lorsqu'on acceder à cette classe la première fois il faut choisir des skills
-        const bClassPrimoLevel = nLevel === 1
 
+        // Est ce qu'on multiclass ?
+        const bMulticlass = this.isMultiClassing(oCreature, selectedClass)
+
+        // Niveau auquel on acceder
+        const nLevel = this.getClassNextLevelValue(oCreature, selectedClass)
+        const bNeedSkills = nLevel === 1
         const ex = this.getClassLevelData(oCreature, selectedClass, nLevel)
+        const cd = this.getClassData(selectedClass)
+
+        // les skills
+        // lorsqu'on accède à cette classe la première fois, il faut choisir des skills
+        // Pour un fresh new character il faut choisir parmis ".skill"
+        // Sinon (multiclass) il faut choisir parmis ".skills" aussi mais seulement si .multiclass.skillCount est supérieur à 0
+        const nExpectedSkillCount = bNeedSkills
+            ? bMulticlass
+                ? (cd.multiclass?.skillCount || 0)
+                : (cd.skillCount || 0)
+            : 0
+
+        console.log(oCreature.store.getters.getClassList, selectedClass, 'skill expected', nExpectedSkillCount)
+
+        if (nExpectedSkillCount !== selectedSkills.length) {
+            throw new Error('ERR_EVOL_INVALID_SKILL_COUNT')
+        }
+
+        // Tous les skills doivent être dans les skills autorisés
+        const aAllowedSkills = cd.classSkills || []
+        if (selectedSkills.some(skill => !aAllowedSkills.includes(skill))) {
+            throw new Error('ERR_EVOL_FORBIDDEN_SKILL')
+        }
+
         const oLevelFeatRegistry = {}
         ex.feats.forEach(f => {
             oLevelFeatRegistry[f.feat] = f
