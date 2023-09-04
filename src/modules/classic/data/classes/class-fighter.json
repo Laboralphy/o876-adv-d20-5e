@@ -20,6 +20,17 @@
     "SKILL_PERCEPTION",
     "SKILL_SURVIVAL"
   ],
+  "multiclass": {
+    "abilities": "ABILITY_STRENGTH | ABILITY_DEXTERITY",
+    "proficiencies": [
+      "PROFICIENCY_ARMOR_LIGHT",
+      "PROFICIENCY_ARMOR_MEDIUM",
+      "PROFICIENCY_ARMOR_SHIELD",
+      "PROFICIENCY_WEAPON_SIMPLE",
+      "PROFICIENCY_WEAPON_MARTIAL"
+    ],
+    "skillCount": 0
+  },
   "evolution": [
     {
       "level": 1,
@@ -61,7 +72,7 @@
       "abilityScoreImprovement": true
     }, {
       "level": 5,
-      "extraAttack": true
+      "extraAttacks": 1
     }, {
       "level": 6,
       "feats": [],
@@ -100,7 +111,7 @@
       ]
     }, {
       "level": 11,
-      "extraAttack": true
+      "extraAttacks": 2
     }, {
       "level": 12,
       "abilityScoreImprovement": true
@@ -144,7 +155,7 @@
       "abilityScoreImprovement": true
     }, {
       "level": 20,
-      "extraAttack": true
+      "extraAttacks": 3
     }
   ]
 }

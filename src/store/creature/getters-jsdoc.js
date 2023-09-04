@@ -23,6 +23,7 @@
  * @property getAttackCount {number}
  * @property getBreakableEffects {D20Effect[]}
  * @property getCarryingCapacity {number}
+ * @property getClassList {string[]}
  * @property getConditionImmunities {Set<string>}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}

@@ -23,5 +23,12 @@
     "SKILL_PERFORMANCE",
     "SKILL_SLEIGHT_OF_HAND",
     "SKILL_STEALTH"
-  ]
+  ],
+  "multiclass": {
+    "proficiencies": [
+      "PROFICIENCY_ARMOR_LIGHT",
+      "PROFICIENCY_TOOL_THIEVES_TOOLS"
+    ],
+    "skillCount": 1
+  }
 }

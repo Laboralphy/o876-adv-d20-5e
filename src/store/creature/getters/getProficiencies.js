@@ -3,12 +3,16 @@
  * @return {string[]}
  */
 module.exports = (state, getters, { data }) => {
-    const oClassProficiencies = new Set(Object
-        .keys(getters.getLevelByClass)
-        .map(ref => {
+    const aClasses = getters.getClassList
+    const oClassProficiencies = new Set(
+        aClasses
+        .map((ref, i) => {
             const sClassName = 'class-' + ref
             if (sClassName in data) {
-                return data['class-' + ref].proficiencies
+                const cr = data['class-' + ref]
+                return (i !== 0 && 'multiclass' in cr)
+                    ? (cr.multiclass.proficiencies || [])
+                    : cr.proficiencies
             } else {
                 throw new Error('this class has no defined data : ' + sClassName)
             }
