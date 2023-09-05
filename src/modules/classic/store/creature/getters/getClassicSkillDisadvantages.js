@@ -44,60 +44,60 @@ module.exports = (state, getters) => {
     Définir l'ossature D20AdvantagesOrDisadvantages
      */
     return {
-        SKILL_ACROBATICS: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_ACROBATICS')
+        'skill-acrobatics': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-acrobatics')
         }),
-        SKILL_ANIMAL_HANDLING: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_ANIMAL_HANDLING')
+        'skill-animal-handling': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-animal-handling')
         }),
-        SKILL_ARCANA: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_ARCANA')
+        'skill-arcana': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-arcana')
         }),
-        SKILL_ATHLETICS: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_ATHLETICS')
+        'skill-athletics': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-athletics')
         }),
-        SKILL_DECEPTION: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_DECEPTION')
+        'skill-deception': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-deception')
         }),
-        SKILL_DISARM_TRAP: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_DISARM_TRAP')
+        'skill-disarm-trap': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-disarm-trap')
         }),
-        SKILL_HISTORY: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_HISTORY')
+        'skill-history': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-history')
         }),
-        SKILL_INSIGHT: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_INSIGHT')
+        'skill-insight': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-insight')
         }),
-        SKILL_INTIMIDATION: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_INTIMIDATION')
+        'skill-intimidation': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-intimidation')
         }),
-        SKILL_INVESTIGATION: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_INVESTIGATION')
+        'skill-investigation': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-investigation')
         }),
-        SKILL_MEDICINE: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_MEDICINE')
+        'skill-medicine': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-medicine')
         }),
-        SKILL_NATURE: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_NATURE')
+        'skill-nature': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-nature')
         }),
-        SKILL_PERFORMANCE: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_PERFORMANCE')
+        'skill-performance': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-performance')
         }),
-        SKILL_PERSUASION: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_PERSUASION')
+        'skill-persuasion': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-persuasion')
         }),
-        SKILL_RELIGION: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_RELIGION')
+        'skill-religion': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-religion')
         }),
-        SKILL_SLEIGHT_OF_HAND: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_SLEIGHT_OF_HAND')
+        'skill-sleight-of-hand': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-sleight-of-hand')
         }),
-        SKILL_STEALTH: computeRuleValue({
+        'skill-stealth': computeRuleValue({
             WEARING_NON_STEALTH_ARMOR,
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_STEALTH')
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-stealth')
         }),
-        SKILL_SURVIVAL: computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_SURVIVAL')
+        'skill-survival': computeRuleValue({
+            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-survival')
         })
     }
 }

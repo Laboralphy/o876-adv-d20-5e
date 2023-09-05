@@ -120,12 +120,12 @@ describe('creatureLevelUp', function () {
             selectedClass: 'fighter',
             selectedFeats: ['feat-fighting-style-defense', 'xxxxxx']
         }))
-            .toThrow(new Error('ERR_EVOL_FORBIDDEN_FEAT'))
+            .toThrow(new Error('ERR_EVOL_FORBIDDEN_FEAT: xxxxxx - ALLOWED VALUES: feat-fighting-style-archery, feat-fighting-style-defense, feat-fighting-style-dueling, feat-fighting-style-great-weapon'))
         expect(() => ev.creatureLevelUp(c, {
             selectedClass: 'fighter',
             selectedFeats: ['feat-improved-critical']
         }))
-            .toThrow(new Error('ERR_EVOL_FORBIDDEN_FEAT'))
+            .toThrow(new Error('ERR_EVOL_FORBIDDEN_FEAT: feat-improved-critical - ALLOWED VALUES: feat-fighting-style-archery, feat-fighting-style-defense, feat-fighting-style-dueling, feat-fighting-style-great-weapon'))
     })
     it('should throw ERR_EVOL_GROUP_FEAT_OVER_SELECTED when level up with 2 feat of same group', function () {
         const r = new Manager()
@@ -176,8 +176,8 @@ describe('first level up - define character class', function () {
             ev.creatureLevelUp(c, {
                 selectedClass: 'fighter',
                 selectedSkills: [
-                    'SKILL_INTIMIDATION',
-                    'SKILL_PERCEPTION'
+                    'skill-intimidation',
+                    'skill-perception'
                 ]
             })
         ).toThrow(new Error('ERR_EVOL_GROUP_FEAT_NOT_SELECTED'))
@@ -185,8 +185,8 @@ describe('first level up - define character class', function () {
             ev.creatureLevelUp(c, {
                 selectedClass: 'fighter',
                 selectedSkills: [
-                    'SKILL_INTIMIDATION',
-                    'SKILL_PERCEPTION'
+                    'skill-intimidation',
+                    'skill-perception'
                 ],
                 selectedFeats: [
                     'feat-fighting-style-archery'
@@ -206,13 +206,137 @@ describe('checkLevelUp', function () {
     ev.data = am.data
     it('should show leveling requirement when submitting any creature', function () {
         const c = new Creature()
+        c.store.mutations.setAbility({ ability: 'ABILITY_STRENGTH', value: 10})
         const clur1 = ev.checkLevelUpRequirements(c, 'fighter')
-        console.log(clur1)
-        ev.creatureLevelUp(c, {
+        expect(clur1).toEqual({
+            class: 'fighter',
+            canDo: true,
+            feats: {
+                'feat-group-fighting-style': [
+                'feat-fighting-style-archery',
+                'feat-fighting-style-defense',
+                'feat-fighting-style-dueling',
+                'feat-fighting-style-great-weapon'
+                ]
+            },
+            skills: [
+                'skill-acrobatics',
+                'skill-athletics',
+                'skill-history',
+                'skill-insight',
+                'skill-intimidation',
+                'skill-perception',
+                'skill-survival'
+            ],
+            skillCount: 2,
+            ability: false
+        })
+        const lup1 = ev.creatureLevelUp(c, {
             selectedClass: 'fighter',
             selectedFeats: [clur1.feats['feat-group-fighting-style'][0]],
             selectedSkills: [clur1.skills[0], clur1.skills[1]]
         })
         expect(c.store.getters.getLevel).toBe(1)
+        expect(lup1).toEqual({
+            class: 'fighter',
+            feats: { newFeats: [ 'feat-fighting-style-archery' ] }
+        })
+
+        const clur2 = ev.checkLevelUpRequirements(c, 'fighter')
+        expect(clur2).toEqual({
+            class: 'fighter',
+            canDo: true,
+            feats: {},
+            skills: [],
+            skillCount: 0,
+            ability: false
+        })
+        const lup2 = ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedFeats: [],
+            selectedSkills: []
+        })
+        expect(c.store.getters.getLevel).toBe(2)
+        expect(lup2).toEqual({
+            class: 'fighter',
+            feats: {
+                newFeats: ['feat-second-wind'],
+                newFeatUses: ['feat-second-wind']
+            }
+        })
+
+        const clur3 = ev.checkLevelUpRequirements(c, 'fighter')
+        expect(clur3).toEqual({
+            class: 'fighter',
+            canDo: true,
+            feats: {},
+            skills: [],
+            skillCount: 0,
+            ability: false
+        })
+        const lup3 = ev.creatureLevelUp(c, { selectedClass: 'fighter' })
+        expect(lup3).toEqual({ class: 'fighter', feats: { newFeats: [ 'feat-improve-critical' ] } })
+
+        const clur4 = ev.checkLevelUpRequirements(c, 'fighter')
+        expect(clur4).toEqual({
+            class: 'fighter',
+            canDo: true,
+            feats: {},
+            skills: [],
+            skillCount: 0,
+            ability: true
+        })
+        expect(c.store.getters.getAbilityBaseValues.ABILITY_STRENGTH).toBe(10)
+        const lup4 = ev.creatureLevelUp(c, { selectedClass: 'fighter', selectedAbility: 'ABILITY_STRENGTH' })
+        expect(c.store.getters.getAbilityBaseValues.ABILITY_STRENGTH).toBe(11)
+        expect(lup4).toEqual({
+            class: 'fighter',
+            augmentedAbility: 'ABILITY_STRENGTH'
+        })
+
+        const clur5 = ev.checkLevelUpRequirements(c, 'fighter')
+        expect(clur5).toEqual({
+            class: 'fighter',
+            canDo: true,
+            feats: {},
+            skills: [],
+            skillCount: 0,
+            ability: false
+        })
+        const lup5 = ev.creatureLevelUp(c, { selectedClass: 'fighter' })
+        expect(lup5).toEqual({ class: 'fighter', extraAttacks: true })
+
+        // 6
+        ev.creatureLevelUp(c, { selectedClass: 'fighter', selectedAbility: 'ABILITY_STRENGTH' })
+        expect(c.store.getters.getAbilityBaseValues.ABILITY_STRENGTH).toBe(12)
+
+        // 7
+        ev.creatureLevelUp(c, { selectedClass: 'fighter' })
+
+        // 8
+        ev.creatureLevelUp(c, { selectedClass: 'fighter', selectedAbility: 'ABILITY_STRENGTH' })
+        expect(c.store.getters.getAbilityBaseValues.ABILITY_STRENGTH).toBe(13)
+
+        // 9
+        ev.creatureLevelUp(c, { selectedClass: 'fighter' })
+        expect(c.store.getters.getLevel).toBe(9)
+
+        // 10
+        const clur10 = ev.checkLevelUpRequirements(c, 'fighter')
+        expect(clur10).toEqual({
+                class: 'fighter',
+                canDo: true,
+                feats: {
+                    'feat-group-fighting-style': [
+                        'feat-fighting-style-defense',
+                        'feat-fighting-style-dueling',
+                        'feat-fighting-style-great-weapon'
+                    ]
+                },
+                skills: [],
+                skillCount: 0,
+                ability: false
+            }
+        )
     })
 })

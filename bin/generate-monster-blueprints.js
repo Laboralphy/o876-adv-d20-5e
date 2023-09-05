@@ -118,7 +118,7 @@ function searchConstObj (obj) {
     const oOutput = {}
     for (const [k, v] of Object.entries(obj)) {
         if (k === 'skill') {
-            oOutput[k] = 'SKILL_' + v.toUpperCase()
+            oOutput[k] = 'skill-' + v.toLowerCase()
         } else {
             oOutput[k] = searchConst(v)
         }

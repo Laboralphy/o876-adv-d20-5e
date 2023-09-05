@@ -4,22 +4,22 @@
   "properties": [
     {
       "property": "ITEM_PROPERTY_SKILL_BONUS",
-      "skill": "SKILL_DISARM_TRAP",
+      "skill": "skill-disarm-trap",
       "amp": 6
     },
     {
       "property": "ITEM_PROPERTY_SKILL_BONUS",
-      "skill": "SKILL_PERSUASION",
+      "skill": "skill-persuasion",
       "amp": 6
     },
     {
       "property": "ITEM_PROPERTY_SKILL_BONUS",
-      "skill": "SKILL_PERCEPTION",
+      "skill": "skill-perception",
       "amp": 6
     },
     {
       "property": "ITEM_PROPERTY_SKILL_BONUS",
-      "skill": "SKILL_UNLOCK",
+      "skill": "skill-unlock",
       "amp": 6
     },
     {

@@ -381,14 +381,14 @@ describe('check skills on additionnal modules like "classic"', function () {
         const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
-        const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_RELIGION'])
+        const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['skill-religion'])
         expect(circ1).toEqual({
             advantage: false,
             disadvantage: false,
             details: { advantages: [], disadvantages: [] }
         })
-        c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ADVANTAGE, [CONSTS.ROLL_TYPE_CHECK], ['SKILL_RELIGION'], 'ILLUMINE'), 10)
-        const circ2 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_RELIGION'])
+        c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ADVANTAGE, [CONSTS.ROLL_TYPE_CHECK], ['skill-religion'], 'ILLUMINE'), 10)
+        const circ2 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['skill-religion'])
         expect(circ2).toEqual({
             advantage: true,
             disadvantage: false,
@@ -399,14 +399,14 @@ describe('check skills on additionnal modules like "classic"', function () {
         const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
-        const circ10 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_UNLOCK'])
+        const circ10 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['skill-unlock'])
         expect(circ10).toEqual({
             advantage: false,
             disadvantage: false,
             details: { advantages: [], disadvantages: [] }
         })
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ADVANTAGE, [CONSTS.ROLL_TYPE_CHECK], [CONSTS.ABILITY_DEXTERITY], 'REFLEX'), 10)
-        const circ20 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['SKILL_UNLOCK'])
+        const circ20 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['skill-unlock'])
         expect(circ20).toEqual({
             advantage: true,
             disadvantage: false,
@@ -477,7 +477,7 @@ describe('damage immunity', function () {
                         }, {
                             "property": "ITEM_PROPERTY_SKILL_BONUS",
                             "amp": 3,
-                            "skill": "SKILL_STEALTH"
+                            "skill": "skill-stealth"
                         }
                     ],
                     "material": "MATERIAL_UNKNOWN"
@@ -501,7 +501,7 @@ describe('damage immunity', function () {
         m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_ACID))
         expect(m1.store.getters.getHitPoints).toBe(22)
         m1.dice.cheat(0.000001)
-        expect(m1.rollSkill('SKILL_STEALTH')).toEqual({
+        expect(m1.rollSkill('skill-stealth')).toEqual({
             bonus: 4,
             roll: 1,
             value: 5,
@@ -871,7 +871,7 @@ describe('import/export creature', function () {
                             property: "ITEM_PROPERTY_SKILL_BONUS",
                             amp: 2,
                             data: {
-                                skill: "SKILL_STEALTH"
+                                skill: "skill-stealth"
                             }
                         }
                     ],

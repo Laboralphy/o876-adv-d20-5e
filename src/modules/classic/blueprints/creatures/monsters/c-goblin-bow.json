@@ -28,7 +28,7 @@
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",
           "amp": 2,
-          "skill": "SKILL_STEALTH"
+          "skill": "skill-stealth"
         }
       ]
     }

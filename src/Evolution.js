@@ -24,7 +24,7 @@ class Evolution {
     getClassNextLevelValue (oCreature, sClass) {
         const oLevelByClass = oCreature.store.getters.getLevelByClass
         return sClass in oLevelByClass
-            ? (oLevelByClass[sClass].level + 1)
+            ? (oLevelByClass[sClass] + 1)
             : 1
     }
 
@@ -44,6 +44,9 @@ class Evolution {
      * @return {{ level: number, abilityScoreImprovement: boolean, extraAttacks: boolean, feats: {uses: number, feat: string, group: string}[]}}
      */
     getClassLevelData (oCreature, sClass, nLevel) {
+        if (isNaN(nLevel)) {
+            throw new TypeError('ERR_EVOL_BAD_LEVEL')
+        }
         const cd = this.getClassData(sClass)
         if ('evolution' in cd) {
             const cdl = cd.evolution.find(n => n.level === nLevel)
@@ -174,9 +177,9 @@ class Evolution {
         ex.feats.forEach(f => {
             if ('group' in f) {
                 if (f.group in oAvailableFeatGroups) {
-                    oAvailableFeatGroups[f.group].push(f)
+                    oAvailableFeatGroups[f.group].push(f.feat)
                 } else {
-                    oAvailableFeatGroups[f.group] = [f]
+                    oAvailableFeatGroups[f.group] = [f.feat]
                 }
             }
         })
@@ -196,10 +199,22 @@ class Evolution {
         selectedAbility = '',
         selectedSkills = []
     }) {
-        const oJournal = {}
         if (!selectedClass) {
             throw new Error('ERR_EVOL_NO_CLASS_SELECTED')
         }
+        if (selectedFeats.some(s => typeof s !== 'string')) {
+            throw new TypeError('ERR_EVOL_FEATS_EXPECTED_STRING')
+        }
+        if (selectedSkills.some(s => typeof s !== 'string')) {
+            throw new TypeError('ERR_EVOL_SKILLS_EXPECTED_STRING')
+        }
+        if (typeof selectedAbility !== 'string') {
+            throw new TypeError('ERR_EVOL_ABILITY_EXPECTED_STRING')
+        }
+        if (typeof selectedClass !== 'string') {
+            throw new TypeError('ERR_EVOL_CLASS_EXPECTED_STRING')
+        }
+        const oJournal = {}
         if (!this.canCreatureLevelUpTo(oCreature, selectedClass)) {
             throw new Error('ERR_EVOL_CANT_MULTICLASS')
         }
@@ -228,26 +243,33 @@ class Evolution {
         // Tous les skills doivent être dans les skills autorisés
         const aAllowedSkills = clur.skills
         if (selectedSkills.some(skill => !aAllowedSkills.includes(skill))) {
-            throw new Error('ERR_EVOL_FORBIDDEN_SKILL')
+            const sError = selectedSkills.filter(skill => !aAllowedSkills.includes(skill)).join(', ')
+            const sAllowed = aAllowedSkills.join(', ')
+            throw new Error('ERR_EVOL_FORBIDDEN_SKILL: ' + sError + ' - ALLOWED VALUES: ' + sAllowed)
         }
 
+        // FEATS
         const oLevelFeatRegistry = {}
         ex.feats.forEach(f => {
             oLevelFeatRegistry[f.feat] = f
         })
         // il faut que les feats de selectedFeats soient dans les feats selectable
-        if (selectedFeats.some(f => !oLevelFeatRegistry[f.feat])) {
-            console.log(selectedFeats, oLevelFeatRegistry, selectedFeats.filter(f => !oLevelFeatRegistry[f.feat]))
-            throw new Error('ERR_EVOL_FORBIDDEN_FEAT')
+        if (selectedFeats.some(f => !(f in oLevelFeatRegistry))) {
+            const sError = selectedFeats.filter(f => !oLevelFeatRegistry[f]).join(', ')
+            const sAllowed = Object.keys(oLevelFeatRegistry).join(', ')
+            throw new Error('ERR_EVOL_FORBIDDEN_FEAT: ' + sError + ' - ALLOWED VALUES: ' + sAllowed)
         }
         // Déterminer les groupes de feat disponibles à ce niveau
         const oAvailableFeatGroups = {}
+        const aAutoFeats = []
         ex.feats.forEach(f => {
             if ('group' in f) {
                 oAvailableFeatGroups[f.group] = 0
+            } else {
+                aAutoFeats.push(f)
             }
         })
-        // pour tous les feats sélecteionnés, créé un compteur de group
+        // pour tous les feats sélecteionnés, créé un compteur de groupe
         selectedFeats.forEach(selectedFeatName => {
             const oFeat = ex.feats.find(f => f.feat === selectedFeatName)
             if (!oFeat) {
@@ -273,22 +295,23 @@ class Evolution {
         }
         // Feat deja acquis
         const aAlreadyHaveFeats = new Set()
-        oCreature.store.getters.getFeatReport.forEach(f => aAlreadyHaveFeats.add(f))
+        oCreature.store.getters.getFeatReport.forEach(f => aAlreadyHaveFeats.add(f.feat))
 
         // A ce stade tous les feats sélectionnés sont valides on peut les ajouter à la créature
         // Mais certains sont peut être des augmentations d'usage
-        const aFeatAugmentUses = selectedFeats.filter(f => !!oLevelFeatRegistry[f].uses)
-        const aFeatAdd = selectedFeats.filter(f => !aAlreadyHaveFeats.has(f))
+        const aFinalFeats = [...(aAutoFeats.map(({ feat }) => feat)), ...selectedFeats]
+        const aFeatAugmentUses = aFinalFeats.filter(f => !!oLevelFeatRegistry[f].uses)
+        const aFeatAdd = aFinalFeats.filter(f => !aAlreadyHaveFeats.has(f))
 
         // Ajouter la classe
         oCreature.store.mutations.addClass({ ref: selectedClass })
         oJournal.class = selectedClass
 
         // Ajouter les feats
-        aFeatAdd.forEach(({ feat }) => {
+        aFeatAdd.forEach(feat => {
             oCreature.store.mutations.addFeat({ feat })
         })
-        aFeatAugmentUses.forEach(({ feat, uses }) => oCreature.mutations.setCounterValue({ counter: feat, max: uses }))
+        aFeatAugmentUses.forEach(({ feat, uses }) => oCreature.store.mutations.setCounterValue({ counter: feat, max: uses }))
 
         const bHasNewFeats = aFeatAdd.length > 0
         const bHasNewFeatUses = aFeatAugmentUses.length > 0
@@ -315,12 +338,12 @@ class Evolution {
             if (!selectedAbility) {
                 throw new Error('ERR_EVOL_ABILITY_REQUIRED')
             }
-            const nValue = oCreature.store.getters.getAbilityBaseValues[ex.abilityScoreImprovement]
+            const nValue = oCreature.store.getters.getAbilityBaseValues[selectedAbility]
             if (isNaN(nValue)) {
                 throw new Error('ERR_EVOL_ABILITY_INVALID_VALUE')
             }
-            oCreature.store.mutations.setAbility({ ability: ex.abilityScoreImprovement, value: nValue + 1 })
-            oJournal.abilityScoreImprovement = 1
+            oCreature.store.mutations.setAbility({ ability: selectedAbility, value: nValue + 1 })
+            oJournal.augmentedAbility = selectedAbility
         }
 
         return oJournal

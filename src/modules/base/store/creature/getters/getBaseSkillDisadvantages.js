@@ -5,7 +5,7 @@ const CONSTS = require("../../../../../consts");
 /**
  * @param state
  * @param getters
- * @returns {{SKILL_PERCEPTION: D20RuleValue}}
+ * @returns {{'skill-perception': D20RuleValue, 'skill-unlock': D20RuleValue}}
  */
 module.exports = (state, getters) => {
     const oDisadvantageRegistry = getters.getDisadvantagePropEffects
@@ -15,12 +15,12 @@ module.exports = (state, getters) => {
     const AREA_DARK = af.has(CONSTS.AREA_FLAG_DARK)
 
     return {
-        SKILL_PERCEPTION: computeRuleValue({
+        'skill-perception': computeRuleValue({
             AREA_DARK,
-            ...getThoseProvidedByEffects(oDisadvantageRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_PERCEPTION')
+            ...getThoseProvidedByEffects(oDisadvantageRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-perception')
         }),
-        SKILL_UNLOCK: computeRuleValue({
-            ...getThoseProvidedByEffects(oDisadvantageRegistry, CONSTS.ROLL_TYPE_CHECK, 'SKILL_UNLOCK')
+        'skill-unlock': computeRuleValue({
+            ...getThoseProvidedByEffects(oDisadvantageRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-unlock')
         })
     }
 }

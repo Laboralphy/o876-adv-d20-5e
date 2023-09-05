@@ -14,7 +14,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^(PROFICIENCY_|weapon-type-|armor-type-|SKILL_)"
+        "pattern": "^(PROFICIENCY_|weapon-type-|armor-type-|skill-)"
       }
     },
     "skills": {
@@ -22,7 +22,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^SKILL_"
+        "pattern": "^skill-[-a-z0-9]+$"
       }
     },
     "evolution": {
