@@ -7,8 +7,8 @@
     "armor-type-natural": "Armure naturelle"
   },
   "skill": {
-    "SKILL_PERCEPTION": "Perception",
-    "SKILL_UNLOCK": "Crochetage"
+    "skill-perception": "Perception",
+    "skill-unlock": "Crochetage"
   },
   "weaponType": {
     "weapon-type-improvised": "Arme improvisée",

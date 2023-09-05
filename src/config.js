@@ -83,9 +83,13 @@ class Config {
      * @param value {boolean}
      */
     setModuleActive(id, value) {
-        const m = this.getModule(id)
-        if (m) {
-            m.active = value
+        if (id === '*') {
+            this._modules.forEach(m => m.active = value)
+        } else {
+            const m = this.getModule(id)
+            if (m) {
+                m.active = value
+            }
         }
     }
 

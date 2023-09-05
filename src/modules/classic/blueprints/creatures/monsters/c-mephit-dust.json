@@ -49,12 +49,12 @@
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",
           "amp": 2,
-          "skill": "SKILL_STEALTH"
+          "skill": "skill-stealth"
         },
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",
           "amp": 2,
-          "skill": "SKILL_PERCEPTION"
+          "skill": "skill-perception"
         }
       ]
     }

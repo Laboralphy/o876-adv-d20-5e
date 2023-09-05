@@ -26,7 +26,7 @@
         {
           "property": "ITEM_PROPERTY_SKILL_BONUS",
           "amp": 2,
-          "skill": "SKILL_INTIMIDATION"
+          "skill": "skill-intimidation"
         }
       ]
     }

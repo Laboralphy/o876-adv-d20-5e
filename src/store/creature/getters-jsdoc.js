@@ -23,9 +23,11 @@
  * @property getAttackCount {number}
  * @property getBreakableEffects {D20Effect[]}
  * @property getCarryingCapacity {number}
+ * @property getClassList {string[]}
  * @property getConditionImmunities {Set<string>}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
+ * @property getCounters {Object<string, { value: number, max: value }>}
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
  * @property getDamageRerollThreshold {[]}
  * @property getDeadEffects {D20Effect[]}

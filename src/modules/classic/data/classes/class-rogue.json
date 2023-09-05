@@ -12,16 +12,23 @@
   ],
   "skillCount": 4,
   "skills": [
-    "SKILL_ACROBATICS",
-    "SKILL_ATHLETICS",
-    "SKILL_DECEPTION",
-    "SKILL_INSIGHT",
-    "SKILL_INTIMIDATION",
-    "SKILL_INVESTIGATION",
-    "SKILL_PERCEPTION",
-    "SKILL_PERSUASION",
-    "SKILL_PERFORMANCE",
-    "SKILL_SLEIGHT_OF_HAND",
-    "SKILL_STEALTH"
-  ]
+    "skill-acrobatics",
+    "skill-athletics",
+    "skill-deception",
+    "skill-insight",
+    "skill-intimidation",
+    "skill-investigation",
+    "skill-perception",
+    "skill-persuasion",
+    "skill-performance",
+    "skill-sleight-of-hand",
+    "skill-stealth"
+  ],
+  "multiclass": {
+    "proficiencies": [
+      "PROFICIENCY_ARMOR_LIGHT",
+      "PROFICIENCY_TOOL_THIEVES_TOOLS"
+    ],
+    "skillCount": 1
+  }
 }

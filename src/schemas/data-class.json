@@ -14,7 +14,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^(PROFICIENCY_|weapon-type-|armor-type-|SKILL_)"
+        "pattern": "^(PROFICIENCY_|weapon-type-|armor-type-|skill-)"
       }
     },
     "skills": {
@@ -22,7 +22,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^SKILL_"
+        "pattern": "^skill-[-a-z0-9]+$"
       }
     },
     "evolution": {
@@ -31,6 +31,7 @@
       "items": {
         "type": "object",
         "required": ["level"],
+        "additionalProperties": false,
         "properties": {
           "level": {
             "type": "number"
@@ -40,6 +41,7 @@
             "items": {
               "type": "object",
               "required": ["feat"],
+              "additionalProperties": false,
               "properties": {
                 "feat": {
                   "description": "nom du feat",
@@ -61,10 +63,37 @@
             "description": "si true alors ce niveau permet d'augmenter une carac d'un point",
             "type": "boolean"
           },
-          "extraAttack": {
-            "description": "si true alors ce niveau donne une attaque ne plus par tour",
-            "type": "boolean"
+          "extraAttacks": {
+            "description": "nombre d'attaques par tour à ce niveau (ne se stacke pas)",
+            "type": "number"
           }
+        }
+      }
+    },
+    "multiclass": {
+      "description": "crittère de multiclassage",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abilities": {
+          "description": "list of abilities, separated by & or |",
+          "type": "string",
+          "pattern": " *ABILITY_[_A-Z]+( *[&|] *ABILITY_[_A-Z]+)? *",
+          "examples": [
+            "ABILITY_INTELLIGENCE",
+            "ABILITY_STRENGTH | ABILITY_DEXTERITY"
+          ]
+        },
+        "proficiencies": {
+          "description": "liste des proficiencies qui sont disponibles au multiclassage",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skillCount": {
+          "description": "nombre de skill qu'il est possible de choisir lorsqion multiclasse",
+          "type": "number"
         }
       }
     }

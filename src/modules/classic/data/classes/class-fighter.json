@@ -12,32 +12,43 @@
   ],
   "skillCount": 2,
   "classSkills": [
-    "SKILL_ACROBATICS",
-    "SKILL_ATHLETICS",
-    "SKILL_HISTORY",
-    "SKILL_INSIGHT",
-    "SKILL_INTIMIDATION",
-    "SKILL_PERCEPTION",
-    "SKILL_SURVIVAL"
+    "skill-acrobatics",
+    "skill-athletics",
+    "skill-history",
+    "skill-insight",
+    "skill-intimidation",
+    "skill-perception",
+    "skill-survival"
   ],
+  "multiclass": {
+    "abilities": "ABILITY_STRENGTH | ABILITY_DEXTERITY",
+    "proficiencies": [
+      "PROFICIENCY_ARMOR_LIGHT",
+      "PROFICIENCY_ARMOR_MEDIUM",
+      "PROFICIENCY_ARMOR_SHIELD",
+      "PROFICIENCY_WEAPON_SIMPLE",
+      "PROFICIENCY_WEAPON_MARTIAL"
+    ],
+    "skillCount": 0
+  },
   "evolution": [
     {
       "level": 1,
       "feats": [
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-archery"
         },
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-defense"
         },
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-dueling"
         },
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-great-weapon"
         }
       ]
@@ -61,7 +72,7 @@
       "abilityScoreImprovement": true
     }, {
       "level": 5,
-      "extraAttack": true
+      "extraAttacks": 1
     }, {
       "level": 6,
       "feats": [],
@@ -82,25 +93,25 @@
       "level": 10,
       "feats": [
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-archery"
         },
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-defense"
         },
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-dueling"
         },
         {
-          "group": "feat-fighting-style",
+          "group": "feat-group-fighting-style",
           "feat": "feat-fighting-style-great-weapon"
         }
       ]
     }, {
       "level": 11,
-      "extraAttack": true
+      "extraAttacks": 2
     }, {
       "level": 12,
       "abilityScoreImprovement": true
@@ -144,7 +155,7 @@
       "abilityScoreImprovement": true
     }, {
       "level": 20,
-      "extraAttack": true
+      "extraAttacks": 3
     }
   ]
 }

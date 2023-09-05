@@ -61,6 +61,9 @@ module.exports = function () {
         feats: [],
         skills: [],
         counters: {
+            extraAttacks: {
+                value: 0
+            }
         }
     }
 }

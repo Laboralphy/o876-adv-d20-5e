@@ -6,16 +6,6 @@
     "ammo-type-slug": "Slug"
   },
   "weaponType": {
-    "armor-type-concealable-vest": "Concealable vest",
-    "armor-type-forced-entry-unit": "Forced entry unit",
-    "armor-type-leather-jacket": "Leather jacket",
-    "armor-type-light-duty-vest": "Light duty vest",
-    "armor-type-light-undercover-shirt": "Light undercover shirt",
-    "armor-type-special-response-vest": "Special response vest",
-    "armor-type-tactical-vest": "Tactical vest",
-    "armor-type-undercover-vest": "Undercover vest"
-  },
-  "armorType": {
     "weapon-type-anti-material-sniper-rifle": "Anti material sniper rifle",
     "weapon-type-anti-personnel-sniper-rifle": "Anti personnel sniper rifle",
     "weapon-type-assault-rifle": "Assault rifle",
@@ -35,5 +25,15 @@
     "weapon-type-large-caliber-autoloader": "Large caliber autoloader",
     "weapon-type-machine-pistol": "Machine pistol",
     "weapon-type-revolver": "Revolver"
+  },
+  "armorType": {
+    "armor-type-concealable-vest": "Concealable vest",
+    "armor-type-forced-entry-unit": "Forced entry unit",
+    "armor-type-leather-jacket": "Leather jacket",
+    "armor-type-light-duty-vest": "Light duty vest",
+    "armor-type-light-undercover-shirt": "Light undercover shirt",
+    "armor-type-special-response-vest": "Special response vest",
+    "armor-type-tactical-vest": "Tactical vest",
+    "armor-type-undercover-vest": "Undercover vest"
   }
 }

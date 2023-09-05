@@ -4,17 +4,17 @@
   "properties": [
     {
       "property": "ITEM_PROPERTY_SKILL_BONUS",
-      "skill": "SKILL_INSIGHT",
+      "skill": "skill-insight",
       "amp": 5
     },
     {
       "property": "ITEM_PROPERTY_SKILL_BONUS",
-      "skill": "SKILL_HISTORY",
+      "skill": "skill-history",
       "amp": 5
     },
     {
       "property": "ITEM_PROPERTY_SKILL_BONUS",
-      "skill": "SKILL_RELIGION",
+      "skill": "skill-religion",
       "amp": 5
     }
   ]
