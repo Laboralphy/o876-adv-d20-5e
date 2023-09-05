@@ -195,3 +195,24 @@ describe('first level up - define character class', function () {
         ).not.toThrow()
     })
 })
+
+describe('checkLevelUp', function () {
+    const config = new Config()
+    config.setModuleActive('classic', true)
+    const am = new AssetManager()
+    am.init()
+    Creature.AssetManager = am
+    const ev = new Evolution()
+    ev.data = am.data
+    it('should show leveling requirement when submitting any creature', function () {
+        const c = new Creature()
+        const clur1 = ev.checkLevelUpRequirements(c, 'fighter')
+        console.log(clur1)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedFeats: [clur1.feats['feat-group-fighting-style'][0]],
+            selectedSkills: [clur1.skills[0], clur1.skills[1]]
+        })
+        expect(c.store.getters.getLevel).toBe(1)
+    })
+})

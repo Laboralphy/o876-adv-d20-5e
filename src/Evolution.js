@@ -123,6 +123,12 @@ class Evolution {
         return bMoreClasses || (bOneClass && cl[0] !== sClass)
     }
 
+    /**
+     * Repond true si la creature a le droit de choisir la classe spécifiée
+     * @param oCreature
+     * @param sClass
+     * @returns {this is string[]|boolean}
+     */
     canCreatureLevelUpTo (oCreature, sClass) {
         const aClasses = Object.keys(oCreature.store.getters.getLevelByClass)
         if (sClass !== aClasses[aClasses.length - 1]) {
@@ -132,6 +138,56 @@ class Evolution {
             return true
         }
         return aClasses.every(c => this.isMeetingClassPrerequisites(oCreature, c))
+    }
+
+    /**
+     * La focntion doit pouvoir proposer une liste de selection parmi les feats, skills, abilities...
+     * @param oCreature
+     * @param sClass
+     * @returns {{skills: *[], skillCount: (number|*), canDo: boolean, ability: boolean, class, feats: {}}}
+     */
+    checkLevelUpRequirements (oCreature, sClass) {
+        const nLevel = this.getClassNextLevelValue(oCreature, sClass)
+        const bNeedSkills = nLevel === 1
+        const ex = this.getClassLevelData(oCreature, sClass, nLevel)
+        const cd = this.getClassData(sClass)
+        const bMultiClassing = this.isMultiClassing(oCreature, sClass)
+        const nExpectedSkillCount = bNeedSkills
+            ? bMultiClassing
+                ? (cd.multiclass?.skillCount || 0)
+                : (cd.skillCount || 0)
+            : 0
+        const oOutcome = {
+            class: sClass,
+            canDo: true,
+            feats: {},
+            skills: [],
+            skillCount: nExpectedSkillCount,
+            ability: ex.abilityScoreImprovement
+        }
+        if (!this.canCreatureLevelUpTo(oCreature, sClass)) {
+            oOutcome.canDo = false
+            return oOutcome
+        }
+        // Déterminer les feat groupés
+        const oAvailableFeatGroups = oOutcome.feats
+        ex.feats.forEach(f => {
+            if ('group' in f) {
+                if (f.group in oAvailableFeatGroups) {
+                    oAvailableFeatGroups[f.group].push(f)
+                } else {
+                    oAvailableFeatGroups[f.group] = [f]
+                }
+            }
+        })
+        // Y a t il des skills à selectionner ?
+        if (bNeedSkills) {
+            const skills = bNeedSkills
+                ? cd.classSkills
+                : []
+            oOutcome.skills = skills.slice(0)
+        }
+        return oOutcome
     }
 
     creatureLevelUp (oCreature, {
@@ -157,24 +213,20 @@ class Evolution {
         const ex = this.getClassLevelData(oCreature, selectedClass, nLevel)
         const cd = this.getClassData(selectedClass)
 
+        const clur = this.checkLevelUpRequirements(oCreature, selectedClass)
+
         // les skills
         // lorsqu'on accède à cette classe la première fois, il faut choisir des skills
         // Pour un fresh new character il faut choisir parmis ".skill"
         // Sinon (multiclass) il faut choisir parmis ".skills" aussi mais seulement si .multiclass.skillCount est supérieur à 0
-        const nExpectedSkillCount = bNeedSkills
-            ? bMulticlass
-                ? (cd.multiclass?.skillCount || 0)
-                : (cd.skillCount || 0)
-            : 0
-
-        console.log(oCreature.store.getters.getClassList, selectedClass, 'skill expected', nExpectedSkillCount)
+        const nExpectedSkillCount = clur.skillCount
 
         if (nExpectedSkillCount !== selectedSkills.length) {
             throw new Error('ERR_EVOL_INVALID_SKILL_COUNT')
         }
 
         // Tous les skills doivent être dans les skills autorisés
-        const aAllowedSkills = cd.classSkills || []
+        const aAllowedSkills = clur.skills
         if (selectedSkills.some(skill => !aAllowedSkills.includes(skill))) {
             throw new Error('ERR_EVOL_FORBIDDEN_SKILL')
         }
@@ -184,7 +236,8 @@ class Evolution {
             oLevelFeatRegistry[f.feat] = f
         })
         // il faut que les feats de selectedFeats soient dans les feats selectable
-        if (selectedFeats.some(f => !oLevelFeatRegistry[f])) {
+        if (selectedFeats.some(f => !oLevelFeatRegistry[f.feat])) {
+            console.log(selectedFeats, oLevelFeatRegistry, selectedFeats.filter(f => !oLevelFeatRegistry[f.feat]))
             throw new Error('ERR_EVOL_FORBIDDEN_FEAT')
         }
         // Déterminer les groupes de feat disponibles à ce niveau
