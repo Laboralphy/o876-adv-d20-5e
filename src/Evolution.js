@@ -93,7 +93,7 @@ class Evolution {
         if (!('multiclass' in cd)) {
             return true
         }
-        const sMulticlass = cd.multiclass.abilities
+        const sMulticlass = cd.multiclass?.abilities || ''
         let r
         r = sMulticlass.match(/(ABILITY_[_A-Z]+) *& *(ABILITY_[_A-Z]+)/)
         if (r) {
