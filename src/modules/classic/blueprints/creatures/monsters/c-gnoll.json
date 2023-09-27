@@ -10,8 +10,8 @@
     "wisdom": 10,
     "charisma": 6
   },
-  "size": "medium",
-  "specie": "humanoid",
+  "size": "CREATURE_SIZE_MEDIUM",
+  "specie": "SPECIE_HUMANOID",
   "speed": 30,
   "equipment": [
     "wpn-spear",

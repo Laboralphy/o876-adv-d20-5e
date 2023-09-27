@@ -10,8 +10,8 @@
     "wisdom": 10,
     "charisma": 9
   },
-  "size": "small",
-  "specie": "humanoid",
+  "size": "CREATURE_SIZE_SMALL",
+  "specie": "SPECIE_HUMANOID",
   "speed": 30,
   "equipment": [
     "wpn-scimitar",

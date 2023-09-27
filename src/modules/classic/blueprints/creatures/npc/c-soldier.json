@@ -10,8 +10,8 @@
     "wisdom": 12,
     "charisma": 8
   },
-  "size": "medium",
-  "specie": "humanoid",
+  "size": "CREATURE_SIZE_MEDIUM",
+  "specie": "SPECIE_HUMANOID",
   "speed": 30,
   "equipment": [
     "arm-chain-shirt",

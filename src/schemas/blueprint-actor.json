@@ -82,11 +82,12 @@
     },
     "size": {
       "description": "Size of creature",
-      "enum": ["tiny", "small", "medium", "large", "huge", "gargantuan"]
+      "enum": ["CREATURE_SIZE_TINY", "CREATURE_SIZE_SMALL", "CREATURE_SIZE_MEDIUM", "CREATURE_SIZE_LARGE", "CREATURE_SIZE_HUGE", "CREATURE_SIZE_GARGANTUAN"]
     },
     "specie": {
       "description": "Specie of creature",
-      "type": "string"
+      "type": "string",
+      "pattern": "^SPECIE_"
     },
     "speed": {
       "description": "Speed of the creature",

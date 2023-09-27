@@ -2,9 +2,14 @@
   "description": "définition d'une classe",
   "type": "object",
   "required": [
-    "proficiencies"
+    "proficiencies",
+    "playable"
   ],
   "properties": {
+    "playable": {
+      "description": "if true then this class is playable, else it is a technical class (monster, tourist).",
+      "type": "boolean"
+    },
     "hitDice": {
       "description": "Nombre max de pv gagné à chaque niveau. Si cette propriété est absente, on se sert de la taille de la créature pour calculer le hitDice.",
       "type": "number"

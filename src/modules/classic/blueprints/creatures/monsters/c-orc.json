@@ -10,8 +10,8 @@
     "wisdom": 11,
     "charisma": 10
   },
-  "size": "medium",
-  "specie": "humanoid",
+  "size": "CREATURE_SIZE_MEDIUM",
+  "specie": "SPECIE_HUMANOID",
   "speed": 60,
   "equipment": [
     "wpn-greataxe",

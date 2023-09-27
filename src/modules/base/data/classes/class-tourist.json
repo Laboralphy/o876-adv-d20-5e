@@ -1,4 +1,5 @@
 {
+  "playable": false,
   "hitDice": 8,
   "proficiencies": [
     "PROFICIENCY_ARMOR_LIGHT",

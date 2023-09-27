@@ -10,8 +10,8 @@
     "wisdom": 10,
     "charisma": 12
   },
-  "size": "medium",
-  "specie": "undead",
+  "size": "CREATURE_SIZE_MEDIUM",
+  "specie": "SPECIE_UNDEAD",
   "speed": 20,
   "equipment": [
     {
