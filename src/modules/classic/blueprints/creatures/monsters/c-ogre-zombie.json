@@ -10,8 +10,8 @@
     "wisdom": 6,
     "charisma": 5
   },
-  "size": "large",
-  "specie": "undead",
+  "size": "CREATURE_SIZE_LARGE",
+  "specie": "SPECIE_UNDEAD",
   "speed": 30,
   "equipment": [
     "wpn-greatclub",

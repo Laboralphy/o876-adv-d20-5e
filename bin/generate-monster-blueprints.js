@@ -26,7 +26,7 @@ function loadCsv () {
  */
 function compile (oCodes) {
     const aCompiled = []
-    for (const [sName, sCode] of Object.entries(oCodes)) {
+    for (const [, sCode] of Object.entries(oCodes)) {
         aCompiled.push(new vm.Script(sCode))
     }
     return aCompiled
@@ -109,7 +109,7 @@ function searchConst (sSearch) {
     if (typeof sSearch === "number") {
         return sSearch
     }
-    const sSearchUpper = '_' + sSearch.replace(/-/g, '_').toUpperCase()
+    const sSearchUpper = '_' + toSNAKECASE(sSearch)
     const sFound = Object.values(CONSTS).find(s => s.endsWith(sSearchUpper))
     return sFound === undefined ? sSearch : sFound
 }
@@ -126,14 +126,18 @@ function searchConstObj (obj) {
     return oOutput
 }
 
+function toSNAKECASE (s) {
+    return s.replace(/-/g, '_').toUpperCase()
+}
+
 function makeBlueprint (data) {
     const blueprint = {
         entityType: "ENTITY_TYPE_ACTOR",
         class: data.class,
         level: data.level,
         abilities: data.abilities,
-        size: data.size,
-        specie: data.specie,
+        size: 'CREATURE_SIZE_' + toSNAKECASE(data.size),
+        specie: 'SPECIE_' + toSNAKECASE(data.specie),
         speed: data.speed,
         equipment: data.equipment ? data.equipment : [],
         actions: data.actions || []
@@ -149,7 +153,7 @@ function makeBlueprint (data) {
             material: 'MATERIAL_UNKNOWN',
             properties: data.weaponProps
                 ? data.weaponProps.map(wp => ({
-                    property: 'ITEM_PROPERTY_' + wp.type.replace(/-/g, '_').toUpperCase(),
+                    property: 'ITEM_PROPERTY_' + toSNAKECASE(wp.type),
                     amp: wp.amp || 0,
                     ...searchConstObj(wp.data)
                 }))
@@ -165,7 +169,7 @@ function makeBlueprint (data) {
             ref: 'narm-' + data.name,
             properties: data.armorProps
                 ? data.armorProps.map(ap => ({
-                    property: 'ITEM_PROPERTY_' + ap.property.replace(/-/g, '_').toUpperCase(),
+                    property: 'ITEM_PROPERTY_' + toSNAKECASE(ap.property),
                     amp: ap.amp || 0,
                     ...searchConstObj(ap.data)
                 }))

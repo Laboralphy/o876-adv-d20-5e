@@ -10,8 +10,8 @@
     "wisdom": 9,
     "charisma": 7
   },
-  "size": "large",
-  "specie": "giant",
+  "size": "CREATURE_SIZE_LARGE",
+  "specie": "SPECIE_GIANT",
   "speed": 30,
   "equipment": [
     {

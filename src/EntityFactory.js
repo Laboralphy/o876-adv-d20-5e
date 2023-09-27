@@ -199,13 +199,13 @@ class EntityFactory {
             oCreature.equipItem(nw, CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR)
         }
 
-        const sSizeConst = 'CREATURE_SIZE_' + (oBlueprint.size || 'medium').toUpperCase()
+        const sSizeConst = oBlueprint.size || 'CREATURE_SIZE_MEDIUM'
         if (sSizeConst in CONSTS) {
             csm.setSize({ value: sSizeConst })
         } else {
             throw new Error('ERR_INVALID_SIZE: ' + oBlueprint.size)
         }
-        const sSpecieConst = 'SPECIE_' + oBlueprint.specie.toUpperCase()
+        const sSpecieConst = oBlueprint.specie
         if (sSpecieConst in CONSTS) {
             csm.setSpecie({ value: sSpecieConst })
         } else {

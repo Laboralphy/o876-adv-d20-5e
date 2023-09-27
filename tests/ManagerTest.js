@@ -434,8 +434,8 @@ describe('damage immunity', function () {
                 "wisdom": 10,
                 "charisma": 10
             },
-            "size": "small",
-            "specie": "elemental",
+            "size": "CREATURE_SIZE_SMALL",
+            "specie": "SPECIE_ELEMENTAL",
             "speed": 30,
             "equipment": [
                 {
@@ -932,8 +932,8 @@ describe('bug anneau perspicacité not affecting intelligence', function () {
                 "wisdom": 10,
                 "charisma": 10
             },
-            "size": "medium",
-            "specie": "humanoid",
+            "size": "CREATURE_SIZE_MEDIUM",
+            "specie": "SPECIE_HUMANOID",
             "speed": 30,
             "equipment": []
         }
@@ -981,8 +981,8 @@ describe('Bug: les évènements fonctionnent ils ?', function () {
                 "wisdom": 10,
                 "charisma": 10
             },
-            "size": "medium",
-            "specie": "humanoid",
+            "size": "CREATURE_SIZE_MEDIUM",
+            "specie": "SPECIE_HUMANOID",
             "speed": 30,
             "equipment": []
         }

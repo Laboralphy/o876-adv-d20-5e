@@ -10,8 +10,8 @@
     "wisdom": 11,
     "charisma": 7
   },
-  "size": "medium",
-  "specie": "elemental",
+  "size": "CREATURE_SIZE_MEDIUM",
+  "specie": "SPECIE_ELEMENTAL",
   "speed": 30,
   "equipment": [
     {

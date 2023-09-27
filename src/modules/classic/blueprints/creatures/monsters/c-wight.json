@@ -10,8 +10,8 @@
     "wisdom": 13,
     "charisma": 15
   },
-  "size": "medium",
-  "specie": "undead",
+  "size": "CREATURE_SIZE_MEDIUM",
+  "specie": "SPECIE_UNDEAD",
   "speed": 30,
   "equipment": [
     "wpn-longsword-unholy",
