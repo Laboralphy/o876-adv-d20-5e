@@ -7,7 +7,7 @@
     "PROFICIENCY_SAVING_THROW_INTELLIGENCE",
     "PROFICIENCY_SAVING_THROW_CHARISME"
   ],
-  "skillCount": 2,
+  "skillCount": 1,
   "classSkills": [
     "skill-history",
     "skill-deception",
