@@ -148,11 +148,6 @@
       ]
     }, {
       "level": 19,
-      "feats": [
-        {
-          "feat": "feat-survivor"
-        }
-      ],
       "abilityScoreImprovement": true
     }, {
       "level": 20,

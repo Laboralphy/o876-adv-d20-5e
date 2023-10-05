@@ -4,7 +4,19 @@
   "proficiencies": [
     "PROFICIENCY_ARMOR_LIGHT",
     "PROFICIENCY_WEAPON_SIMPLE",
-    "PROFICIENCY_SAVING_THROW_WISDOM",
-    "PROFICIENCY_SAVING_THROW_CONSTITUTION"
-  ]
+    "PROFICIENCY_SAVING_THROW_INTELLIGENCE",
+    "PROFICIENCY_SAVING_THROW_CHARISME"
+  ],
+  "skillCount": 2,
+  "classSkills": [
+    "skill-history",
+    "skill-deception",
+    "skill-nature",
+    "skill-insight"
+  ],
+  "multiclass": {
+    "proficiencies": [],
+    "skillCount": 0
+  },
+  "evolution": []
 }
