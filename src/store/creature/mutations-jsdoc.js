@@ -2,33 +2,35 @@
  * @typedef D20CreatureStoreMutations {object}
  * @property addClass {function({ ref: string, levels: number })}
  * @property addEffect {function({ effect: D20Effect })}
+ * @property addFeat {function({ feat: string })}
+ * @property addProficiency {function({ proficiency: string })}
  * @property addRecentDamageType {function({ effect: D20Effect, type: string, amount: number })}
+ * @property clearAggressor {function}
  * @property clearRecentDamageTypes{function({ effect: D20Effect })}
+ * @property clearTarget {function}
+ * @property damage {function({ amount: number })}
+ * @property decrementEffectDuration {function({ effect: D20Effect, value: number })}
+ * @property dispellEffect {function({ effect })}
+ * @property dispellEffectFromCreature {function({ creature })}
+ * @property equipItem {function({ item: object, slot: string })}
+ * @property heal {function({ amount })}
+ * @property importCreatureState {function({ state })}
+ * @property patchEffect {function({ effect: D20Effect })}
  * @property removeEffect {function({ effect: D20Effect })}
  * @property removeEffectIndex {function({ index: number })}
- * @property patchEffect {function({ effect: D20Effect })}
- * @property decrementEffectDuration {function({ effect: D20Effect, value: number })}
- * @property addProficiency {function({ proficiency: string })}
- * @property equipItem {function({ item: object, slot: string })}
+ * @property resetCharacter {function}
  * @property setAbility {function({ ability: string, value: number })}
- * @property setSelectedWeapon {function({ slot: string })}
- * @property clearTarget {function}
- * @property clearAggressor {function}
- * @property updateTargetConditions {function({ [id]: number, conditions: Set|[] })}
- * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[] })}
- * @property setEncumbrance {function({ value: number })}
  * @property setAreaFlags {function({ flags: string[] })}
- * @property addFeat {function({ feat: string })}
- * @property updateFeatEffects {function()}
- * @property dispellEffect {function({ effect })}
+ * @property setCounterValue {function({ counter, value, max })}
+ * @property setEncumbrance {function({ value: number })}
  * @property setGaugeDamage {function({ value })}
- * @property heal {function({ amount })}
- * @property setTargetDistance {function({ value })}
+ * @property setId {function({ value })}
+ * @property setSelectedWeapon {function({ slot: string })}
  * @property setSize {function({ value })}
  * @property setSpecie {function({ value })}
  * @property setSpeed {function({ value })}
- * @property setId {function({ value })}
- * @property importCreatureState {function({ state })}
- * @property dispellEffectFromCreature {function({ creature })}
- * @property setCounterValue {function({ counter, value, max })}
+ * @property setTargetDistance {function({ value })}
+ * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[] })}
+ * @property updateFeatEffects {function()}
+ * @property updateTargetConditions {function({ [id]: number, conditions: Set|[] })}
  */
