@@ -48,8 +48,10 @@ class Evolution {
             throw new TypeError('ERR_EVOL_BAD_LEVEL')
         }
         const cd = this.getClassData(sClass)
+        const cdl = ('evolution' in cd)
+            ? (cd.evolution.find(n => n.level === nLevel) || {})
+            : {}
         if ('evolution' in cd) {
-            const cdl = cd.evolution.find(n => n.level === nLevel)
             // déterminer les feat actuellement disponible pour la creature
             const aAlreadyHaveFeats = oCreature.store.getters.getFeatReport.map(f => f.feat)
             // déterminer la liste des prochains feat susceptible d'etre ajouté par le niveau
