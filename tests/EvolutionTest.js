@@ -340,3 +340,19 @@ describe('checkLevelUp', function () {
         )
     })
 })
+
+describe('getClassLevelData with tourist evolution', function () {
+    it('should not crash when asking for tourist', function () {
+        const r = new Manager()
+        r.init()
+        const config = new Config()
+        config.setModuleActive('classic', true)
+        const am = new AssetManager()
+        am.init()
+        const ev = new Evolution()
+        ev.data = am.data
+        const c = new Creature()
+        ev.getClassLevelData(c, 'tourist', 1)
+
+    })
+})

@@ -49,7 +49,7 @@ class Evolution {
         }
         const cd = this.getClassData(sClass)
         const cdl = ('evolution' in cd)
-            ? cd.evolution.find(n => n.level === nLevel)
+            ? (cd.evolution.find(n => n.level === nLevel) || {})
             : {}
         if ('evolution' in cd) {
             // déterminer les feat actuellement disponible pour la creature
