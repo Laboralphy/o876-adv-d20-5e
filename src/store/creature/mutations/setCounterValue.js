@@ -1,5 +1,11 @@
 module.exports = ({ state }, { counter, value = undefined, max = undefined, create = false }) => {
-    if ((counter in state.counters) || create) {
+    const bPresent = counter in state.counters
+    if (bPresent || create) {
+        if (!bPresent) {
+            state.counters[counter] = {
+                value: 0
+            }
+        }
         if (value !== undefined) {
             state.counters[counter].value = value
         }
