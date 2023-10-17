@@ -5,6 +5,7 @@
  * @property addFeat {function({ feat: string })}
  * @property addProficiency {function({ proficiency: string })}
  * @property addRecentDamageType {function({ effect: D20Effect, type: string, amount: number })}
+ * @property addSkill {function({ skill: string })}
  * @property clearAggressor {function}
  * @property clearRecentDamageTypes{function({ effect: D20Effect })}
  * @property clearTarget {function}

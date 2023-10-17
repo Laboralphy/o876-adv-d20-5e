@@ -327,6 +327,15 @@ class Evolution {
             oJournal.feats.newFeatUses = aFeatAugmentUses
         }
 
+        // Ajouter les skills
+        selectedSkills.forEach(skill => {
+            oCreature.store.mutations.addSkill({ skill })
+            if (!('skills' in oJournal)) {
+                oJournal.skills = []
+            }
+            oJournal.skills.push(skill)
+        })
+
         if (ex.extraAttacks) {
             const nPrevExtraAttacks = oCreature.store.getters.getCounters.extraAttacks.value
             if (nPrevExtraAttacks < ex.extraAttacks) {
