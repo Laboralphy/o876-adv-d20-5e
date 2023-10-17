@@ -239,7 +239,8 @@ describe('checkLevelUp', function () {
         expect(c.store.getters.getLevel).toBe(1)
         expect(lup1).toEqual({
             class: 'fighter',
-            feats: { newFeats: [ 'feat-fighting-style-archery' ] }
+            feats: { newFeats: [ 'feat-fighting-style-archery' ] },
+            skills: ['skill-acrobatics', 'skill-athletics']
         })
 
         const clur2 = ev.checkLevelUpRequirements(c, 'fighter')
