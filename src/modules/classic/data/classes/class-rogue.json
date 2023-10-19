@@ -32,5 +32,31 @@
       "PROFICIENCY_TOOL_THIEVES_TOOLS"
     ],
     "skillCount": 1
-  }
+  },
+  "evolution": [
+    {
+      "level": 4,
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 8,
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 10,
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 12,
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 16,
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 19,
+      "abilityScoreImprovement": true
+    }
+  ]
 }
