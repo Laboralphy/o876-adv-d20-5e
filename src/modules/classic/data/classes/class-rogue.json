@@ -12,7 +12,7 @@
     "weapon-type-longsword"
   ],
   "skillCount": 4,
-  "skills": [
+  "classSkills": [
     "skill-acrobatics",
     "skill-athletics",
     "skill-deception",
