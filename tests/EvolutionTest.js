@@ -262,7 +262,7 @@ describe('checkLevelUp', function () {
             class: 'fighter',
             feats: {
                 newFeats: ['feat-second-wind'],
-                newFeatUses: ['feat-second-wind']
+                newFeatUses: [{ feat: 'feat-second-wind', uses: 1 }]
             }
         })
 
@@ -354,6 +354,101 @@ describe('getClassLevelData with tourist evolution', function () {
         ev.data = am.data
         const c = new Creature()
         ev.getClassLevelData(c, 'tourist', 1)
+    })
+})
 
+describe('retrieve available actions for player and creatures', function () {
+    it ('should return [second wind] when leveling fighter to level 2', function () {
+        const r = new Manager()
+        r.init()
+        const config = new Config()
+        config.setModuleActive('classic', true)
+        const am = new AssetManager()
+        am.init()
+        const ev = new Evolution()
+        ev.data = am.data
+        const c = new Creature()
+        c.store.mutations.resetCharacter()
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedSkills: [
+                'skill-acrobatics',
+                'skill-athletics',
+            ],
+            selectedFeats: ['feat-fighting-style-defense']
+        })
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter'
+        })
+        expect(c.store.getters.getLevel).toBe(2)
+        expect(c.store.getters.getCounters['feat-second-wind'].max).toBe(1)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter'
+        })
+        expect(c.store.getters.getLevel).toBe(3)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedAbility: 'ABILITY_STRENGTH'
+        })
+        expect(c.store.getters.getLevel).toBe(4)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter'
+        })
+        expect(c.store.getters.getLevel).toBe(5)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedAbility: 'ABILITY_STRENGTH'
+        })
+        expect(c.store.getters.getLevel).toBe(6)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter'
+        })
+        expect(c.store.getters.getLevel).toBe(7)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedAbility: 'ABILITY_STRENGTH'
+        })
+        expect(c.store.getters.getLevel).toBe(8)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter'
+        })
+        expect(c.store.getters.getLevel).toBe(9)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedFeats: ['feat-fighting-style-archery']
+        })
+        expect(c.store.getters.getLevel).toBe(10)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter'
+        })
+        expect(c.store.getters.getLevel).toBe(11)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedAbility: 'ABILITY_STRENGTH'
+        })
+        expect(c.store.getters.getLevel).toBe(12)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter'
+        })
+        expect(c.store.getters.getLevel).toBe(13)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedAbility: 'ABILITY_STRENGTH'
+        })
+        expect(c.store.getters.getLevel).toBe(14)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter'
+        })
+        expect(c.store.getters.getLevel).toBe(15)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter',
+            selectedAbility: 'ABILITY_STRENGTH'
+        })
+        expect(c.store.getters.getLevel).toBe(16)
+        ev.creatureLevelUp(c, {
+            selectedClass: 'fighter'
+        })
+        expect(c.store.getters.getLevel).toBe(17)
+        expect(c.store.getters.getCounters['feat-second-wind'].max).toBe(2)
     })
 })

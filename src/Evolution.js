@@ -302,7 +302,12 @@ class Evolution {
         // A ce stade tous les feats sélectionnés sont valides on peut les ajouter à la créature
         // Mais certains sont peut être des augmentations d'usage
         const aFinalFeats = [...(aAutoFeats.map(({ feat }) => feat)), ...selectedFeats]
-        const aFeatAugmentUses = aFinalFeats.filter(f => !!oLevelFeatRegistry[f].uses)
+        const aFeatAugmentUses = aFinalFeats
+            .filter(f => !!oLevelFeatRegistry[f].uses)
+            .map(f => ({
+                feat: f,
+                uses: oLevelFeatRegistry[f].uses
+            }))
         const aFeatAdd = aFinalFeats.filter(f => !aAlreadyHaveFeats.has(f))
 
         // Ajouter la classe

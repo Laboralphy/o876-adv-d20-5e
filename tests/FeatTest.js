@@ -25,6 +25,8 @@ describe('feat-fighting-style-archery', function () {
         expect(aFeatReport).toEqual([{
             feat: 'feat-fighting-style-archery',
             active: false,
+            activable: false,
+            uses: 0,
             shouldBeActive: true
         }])
     })
@@ -36,6 +38,8 @@ describe('feat-fighting-style-archery', function () {
         expect(aFeatReport).toEqual([{
             feat: 'feat-fighting-style-archery',
             active: true,
+            activable: false,
+            uses: 0,
             shouldBeActive: true
         }])
     })
@@ -49,6 +53,8 @@ describe('feat-fighting-style-defense', function () {
         expect(c.store.getters.getFeatReport).toEqual([{
             feat: 'feat-fighting-style-defense',
             active: false,
+            activable: false,
+            uses: 0,
             shouldBeActive: false
         }])
         expect(c.store.getters.getArmorClass).toBe(-5)
@@ -65,12 +71,16 @@ describe('feat-fighting-style-defense', function () {
         expect(c.store.getters.getFeatReport).toEqual([{
             feat: 'feat-fighting-style-defense',
             active: false,
+            activable: false,
+            uses: 0,
             shouldBeActive: true
         }])
         c.store.mutations.updateFeatEffects()
         expect(c.store.getters.getFeatReport).toEqual([{
             feat: 'feat-fighting-style-defense',
             active: true,
+            activable: false,
+            uses: 0,
             shouldBeActive: true
         }])
         expect(c.store.getters.getArmorClass).toBe(7) // 11 (armor) +1 (feat) -5 (dex 0)
