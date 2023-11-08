@@ -10,7 +10,6 @@ const Comparator = require('./Comparator')
 const { aggregateModifiers } = require("./store/creature/common/aggregate-modifiers");
 
 
-
 /**
  * @typedef D20AbilityNumberRegistry {object}
  * @property ABILITY_STRENGTH {number}
@@ -110,6 +109,7 @@ class Creature {
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
         this._store.mutations.setId({ value: this._id })
+        this._hasUsedSneakAttack = false
     }
 
     static set AssetManager (value) {
@@ -134,6 +134,7 @@ class Creature {
      */
     set ref (value) {
         this._ref = value
+        this.store.mutations.setRef({ value })
     }
 
     /**
@@ -332,6 +333,7 @@ class Creature {
     clearTarget () {
         if (this._target.creature && this._target.handler) {
             this._target.creature.store.events.off('mutation', this._target.handler)
+            this._target.creature.endAggression(this)
             this._target.creature = null
             this._target.handler = null
             this.store.mutations.clearTarget()
@@ -463,6 +465,14 @@ class Creature {
         if (this.getTarget() === oCreature) {
             this.clearTarget()
         }
+        this.endAggression(oCreature)
+    }
+
+    /**
+     * Signifie qu'une creature arrête de nous attaquer
+     * @param oCreature {Creature}
+     */
+    endAggression (oCreature) {
         if (this.getAggressor() === oCreature) {
             this.clearAggressor()
         }
@@ -734,6 +744,7 @@ class Creature {
      * @property ammo {D20Item}
      * @property advantages {D20RuleValue}
      * @property disadvantages {D20RuleValue}
+     * @property sneakable {boolean}
      * @property damages {amount: number, types: object<string, number>, resisted: object<string, number>}
      *
      * @returns {AttackOutcome}
@@ -755,6 +766,18 @@ class Creature {
         const disadvantages = sg.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
         const bCriticalHit = dice >= Creature.AssetManager.data.variables.ROLL_AUTO_SUCCESS
         const bCriticalFail = dice <= Creature.AssetManager.data.variables.ROLL_AUTO_FAIL
+        const bFinesseWeapon = sg.isWieldingFinesseWeapon
+        const bRangedWeapon = sg.isWieldingRangedWeapon && sg.isRangedWeaponProperlyLoaded
+        const bAdvantaged = advantages.value
+        const bDisadvantaged = disadvantages.value
+        const bDistractedTarget = oTarget.getTarget() !== this
+        const bSneakableWeapon = bFinesseWeapon || bRangedWeapon
+        // Regle du sneak :
+        // 1: disposer d'une arme finesse ou ranged
+        // 2: être avantagé en attaque
+        // 3: ne pas être avantagé en attaque mais la cible est occupée avec une autre cible
+        // resultat = 1 && (2 || 3)
+        const sneakable = bSneakableWeapon && (bAdvantaged || (!bDisadvantaged && bDistractedTarget))
         const hit = bCriticalHit
             ? true
             : bCriticalFail
@@ -777,6 +800,7 @@ class Creature {
             ammo,
             advantages,
             disadvantages,
+            sneakable,
             damages: {
                 amount: 0,
                 resisted: {},
@@ -810,6 +834,7 @@ class Creature {
             failure: '',
             advantages: { rules: [], value: false },
             disadvantages: { rules: [], value: false },
+            sneakable: false,
             damages: {
                 amount: 0,
                 resisted: {},
@@ -869,10 +894,11 @@ class Creature {
      * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
      * La valeur renvoyée ne fait pas intervenir des bonus liés aux effets de la créature ou à ses caractéristiques
      * @param critical {boolean} si true alors le coup est critique et tous les jets de dé doivent être doublés
+     * @param sneak {boolean} appliquer le sneak attack damage bonus si true
      * @param dice {Dice} dé à utiliser
      * return {Object<string, number>}
      */
-    rollWeaponDamage ({ critical = false } = {}) {
+    rollWeaponDamage ({ critical = false, sneak = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
         const nExtraDamageDice = this.store.getters.isWieldingHeavyMeleeWeapon
             ? this.store.getters.getSizeProperties.extraMeleeDamageDice
@@ -891,9 +917,20 @@ class Creature {
         }
         const oDamageBonus = this.getDamageBonus({ critical })
         if (!(oWeapon.damageType in oDamageBonus)) {
-            oDamageBonus[oWeapon.damageType] = Math.max(1, nDamage)
-        } else {
-            oDamageBonus[oWeapon.damageType] = Math.max(1, oDamageBonus[oWeapon.damageType] + nDamage)
+            oDamageBonus[oWeapon.damageType] = 0
+        }
+        oDamageBonus[oWeapon.damageType] = Math.max(1, oDamageBonus[oWeapon.damageType] + nDamage)
+        if (sneak) {
+            const amSneak = this.aggregateModifiers([
+                CONSTS.EFFECT_SNEAK_ATTACK
+            ])
+            const sSneakDice = amSneak.max.toString() + 'd6'
+            const nSneakDamage = this.roll(sSneakDice)
+            oDamageBonus[oWeapon.damageType] += nSneakDamage
+            this.events.emit('sneak-attack', {
+                dice: sSneakDice,
+                damage: nSneakDamage
+            })
         }
         return oDamageBonus
     }
@@ -1172,8 +1209,10 @@ class Creature {
         // si ça touche, calculer les dégâts
         if (oAtk.hit) {
             const oDamages = this.rollWeaponDamage({
-                critical: oAtk.critical
+                critical: oAtk.critical,
+                sneak: !this._hasUsedSneakAttack
             })
+            this._hasUsedSneakAttack = true
             // générer les effets de dégâts
             let amount = 0
             const oResisted = {}

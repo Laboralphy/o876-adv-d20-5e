@@ -812,6 +812,7 @@ describe('attack logs', function () {
             },
             weapon: c1.store.getters.getSelectedWeapon,
             ammo: null,
+            sneakable: false,
             damages: {
                 amount: 1,
                 types: { DAMAGE_TYPE_SLASHING: 1 },
@@ -867,6 +868,7 @@ describe('attack logs', function () {
             },
             weapon: c1.store.getters.getSelectedWeapon,
             ammo: null,
+            sneakable: false,
             damages: {
                 amount: 12,
                 types: { DAMAGE_TYPE_SLASHING: 8, DAMAGE_TYPE_FIRE: 4 },

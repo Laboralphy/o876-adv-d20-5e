@@ -358,7 +358,7 @@ describe('getClassLevelData with tourist evolution', function () {
 })
 
 describe('retrieve available actions for player and creatures', function () {
-    it ('should return [second wind] when leveling fighter to level 2', function () {
+    it('should return [second wind] when leveling fighter to level 2', function () {
         const r = new Manager()
         r.init()
         const config = new Config()
@@ -418,6 +418,14 @@ describe('retrieve available actions for player and creatures', function () {
             selectedFeats: ['feat-fighting-style-archery']
         })
         expect(c.store.getters.getLevel).toBe(10)
+        expect(c.store.getters.getActions).toEqual([{
+            action: 'feat-second-wind',
+            uses: {
+                value: 1,
+                max: 1
+            },
+            innate: false
+        }])
         ev.creatureLevelUp(c, {
             selectedClass: 'fighter'
         })
@@ -450,5 +458,78 @@ describe('retrieve available actions for player and creatures', function () {
         })
         expect(c.store.getters.getLevel).toBe(17)
         expect(c.store.getters.getCounters['feat-second-wind'].max).toBe(2)
+
+        expect(c.store.getters.getActions).toEqual([{
+            action: 'feat-second-wind',
+            uses: {
+                value: 2,
+                max: 2
+            },
+            innate: false
+        }])
+    })
+    it('should return innate actions when asking actions of a creature (magma mephit)', function () {
+        const r = new Manager()
+        r.init()
+        const config = new Config()
+        config.setModuleActive('classic', true)
+        const am = new AssetManager()
+        am.init()
+        const c = r.createEntity('c-mephit-magma')
+        expect(c.store.getters.getActions).toEqual([
+            {
+                action: 'sla-fire-breath',
+                uses: { value: Infinity, max: Infinity },
+                innate: true
+            }
+        ])
+    })
+})
+
+
+describe('rogue class', function () {
+    it('should have sneak attack feat when having rogue class', function () {
+        const r = new Manager()
+        r.init()
+        const config = new Config()
+        config.setModuleActive('classic', true)
+        const am = new AssetManager()
+        am.init()
+        const ev = new Evolution()
+        ev.data = am.data
+        const c = new Creature()
+        c.store.mutations.resetCharacter()
+        ev.creatureLevelUp(c, {
+            selectedClass: 'rogue',
+            selectedSkills: [
+                'skill-acrobatics',
+                'skill-athletics',
+                'skill-deception',
+                'skill-insight'
+            ],
+            selectedFeats: []
+        })
+        c.processEffects()
+        expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
+        expect(c.aggregateModifiers(['EFFECT_SNEAK_ATTACK']).max).toBe(1)
+
+        ev.creatureLevelUp(c, {
+            selectedClass: 'rogue'
+        })
+        c.processEffects()
+        expect(c.store.getters.getLevel).toBe(2)
+        expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
+        expect(c.aggregateModifiers(['EFFECT_SNEAK_ATTACK']).max).toBe(1)
+
+        ev.creatureLevelUp(c, {
+            selectedClass: 'rogue'
+        })
+        c.processEffects()
+        expect(c.store.getters.getLevel).toBe(3)
+        expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
+        expect(c.store.state.feats.includes('feat-sneak-attack-2')).toBeTrue()
+        const am3 = c.aggregateModifiers(['EFFECT_SNEAK_ATTACK'])
+        expect(am3.max).toBe(2)
+        expect(am3.count).toBe(1)
     })
 })

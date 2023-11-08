@@ -35,28 +35,105 @@
   },
   "evolution": [
     {
+      "level": 1,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-1"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-2"
+        }
+      ]
+    },
+    {
       "level": 4,
       "abilityScoreImprovement": true
+    },
+    {
+      "level": 5,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-3"
+        }
+      ]
     },
     {
       "level": 8,
       "abilityScoreImprovement": true
     },
     {
+      "level": 7,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-4"
+        }
+      ]
+    },
+    {
+      "level": 9,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-5"
+        }
+      ]
+    },
+    {
       "level": 10,
       "abilityScoreImprovement": true
+    },
+    {
+      "level": 11,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-6"
+        }
+      ]
     },
     {
       "level": 12,
       "abilityScoreImprovement": true
     },
     {
+      "level": 13,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-7"
+        }
+      ]
+    },
+    {
+      "level": 15,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-8"
+        }
+      ]
+    },
+    {
       "level": 16,
       "abilityScoreImprovement": true
     },
     {
+      "level": 17,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-9"
+        }
+      ]
+    },
+    {
       "level": 19,
-      "abilityScoreImprovement": true
+      "abilityScoreImprovement": true,
+      "feats": [
+        {
+          "feat": "feat-sneak-attack-10"
+        }
+      ]
     }
   ]
 }

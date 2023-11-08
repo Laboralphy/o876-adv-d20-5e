@@ -26,6 +26,7 @@
  * @property setEncumbrance {function({ value: number })}
  * @property setGaugeDamage {function({ value })}
  * @property setId {function({ value })}
+ * @property setRef {function({ value })}
  * @property setSelectedWeapon {function({ slot: string })}
  * @property setSize {function({ value })}
  * @property setSpecie {function({ value })}

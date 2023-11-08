@@ -318,7 +318,12 @@ class Evolution {
         aFeatAdd.forEach(feat => {
             oCreature.store.mutations.addFeat({ feat })
         })
-        aFeatAugmentUses.forEach(({ feat, uses }) => oCreature.store.mutations.setCounterValue({ counter: feat, max: uses, create: true }))
+        aFeatAugmentUses.forEach(({ feat, uses }) => oCreature.store.mutations.setCounterValue({
+            counter: feat,
+            max: uses,
+            value: uses,
+            create: true
+        }))
 
         const bHasNewFeats = aFeatAdd.length > 0
         const bHasNewFeatUses = aFeatAugmentUses.length > 0

@@ -8,6 +8,7 @@
  * @property getAbilityList {string[]}
  * @property getAbilityModifiers {D20AbilityNumberRegistry}
  * @property getAbilityValues {D20AbilityNumberRegistry}
+ * @property getActions {{innate: boolean, uses: {max: number, value: number}, action: string}[]}
  * @property getAdvantagePropEffects {Object<string, Object<string, string>>}
  * @property getAdvantages {D20AdvantagesOrDisadvantages}
  * @property getAggressor {{ condition: Object.<string, boolean>}}
@@ -87,6 +88,7 @@
  * @property isTargetInMeleeWeaponRange {boolean}
  * @property isTargetInWeaponRange {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
+ * @property isWieldingFinesseWeapon {boolean}
  * @property isWieldingHeavyMeleeWeapon {boolean}
  * @property isWieldingHeavyWeapon {boolean}
  * @property isWieldingNonLightWeapon {boolean}

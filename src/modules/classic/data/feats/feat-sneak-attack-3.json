@@ -1,0 +1,7 @@
+{
+  "description": "Provide 3d6 sneak attack per turn",
+  "when": "hasNoSneakAttack4",
+  "effects": [
+    ["EFFECT_SNEAK_ATTACK", 3]
+  ]
+}
