@@ -113,6 +113,32 @@
         "type": "string",
         "description": "action reference"
       }
+    },
+    "skills": {
+      "type": "array",
+      "description": "List of skill proficiencies",
+      "items": {
+        "type": "string",
+        "description": "skill reference"
+      }
+    },
+    "feats": {
+      "type": "array",
+      "description": "List of feats",
+      "items": {
+        "type": "object",
+        "description": "feat reference and uses",
+        "properties": {
+          "feat": {
+            "type": "string",
+            "description": "feat reference"
+          },
+          "uses": {
+            "type": "number",
+            "description": "number of feat action uses"
+          }
+        }
+      }
     }
   }
 }

@@ -6,6 +6,21 @@ const { Config, CONFIG } = require('../src/config')
 
 CONFIG.setModuleActive('classic', true)
 
+function buildStuff () {
+    const r = new Manager()
+    r.init()
+    const config = new Config()
+    config.setModuleActive('classic', true)
+    const am = new AssetManager()
+    am.init()
+    const ev = new Evolution()
+    ev.data = am.data
+    return {
+        manager: r,
+        evolution: ev
+    }
+}
+
 describe('basic test', function () {
     it ('should load properly when doing nothing', function () {
         expect(() => {
@@ -18,14 +33,7 @@ describe('basic test', function () {
 
 describe('getClassNextLevel', function () {
     it('should give me first level data of fighter when submittin fresh new craeature', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = r.createEntity('c-pilgrim')
         const x = ev.getClassLevelData(c, 'fighter', 1)
         expect(x.feats.find(({ feat }) => feat === 'feat-fighting-style-archery')).toBeDefined()
@@ -34,14 +42,7 @@ describe('getClassNextLevel', function () {
         expect(x.feats.find(({ feat }) => feat === 'feat-fighting-style-great-weapon')).toBeDefined()
     })
     it('should not show feat-fighting-style-defense when this feat is already on creature', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = r.createEntity('c-pilgrim')
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-defense' })
         const x = ev.getClassLevelData(c, 'fighter', 1)
@@ -51,54 +52,26 @@ describe('getClassNextLevel', function () {
 
 describe('creatureLevelUp', function () {
     it('should throw no class selected when level up with no class specified', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = r.createEntity('c-pilgrim')
         expect(() => ev.creatureLevelUp(c, {}))
             .toThrow(new Error('ERR_EVOL_NO_CLASS_SELECTED'))
     })
     it('should throw ERR_EVOL_UNKNOWN_CLASS when level up with invalid class', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = r.createEntity('c-pilgrim')
         c.store.mutations.setAbility({ ability: 'ABILITY_STRENGTH', value: 13 })
         expect(() => ev.creatureLevelUp(c, { selectedClass: 'fighter' }))
             .toThrow(new Error('ERR_EVOL_GROUP_FEAT_NOT_SELECTED'))
     })
     it('should throw ERR_EVOL_CANT_MULTICLASS when level up as fighter without str10 & dex10', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = r.createEntity('c-pilgrim')
         expect(() => ev.creatureLevelUp(c, { selectedClass: 'fighter' }))
             .toThrow(new Error('ERR_EVOL_CANT_MULTICLASS'))
     })
     it('should throw ERR_EVOL_GROUP_FEAT_NOT_SELECTED when level up with no feat selected', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = r.createEntity('c-pilgrim')
         c.store.mutations.setAbility({ ability: 'ABILITY_STRENGTH', value: 13 })
 
@@ -106,14 +79,7 @@ describe('creatureLevelUp', function () {
             .toThrow(new Error('ERR_EVOL_GROUP_FEAT_NOT_SELECTED'))
     })
     it('should throw ERR_EVOL_FORBIDDEN_FEAT when level up with invalid feat', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = r.createEntity('c-pilgrim')
         c.store.mutations.setAbility({ ability: 'ABILITY_STRENGTH', value: 13 })
         expect(() => ev.creatureLevelUp(c, {
@@ -128,14 +94,7 @@ describe('creatureLevelUp', function () {
             .toThrow(new Error('ERR_EVOL_FORBIDDEN_FEAT: feat-improved-critical - ALLOWED VALUES: feat-fighting-style-archery, feat-fighting-style-defense, feat-fighting-style-dueling, feat-fighting-style-great-weapon'))
     })
     it('should throw ERR_EVOL_GROUP_FEAT_OVER_SELECTED when level up with 2 feat of same group', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = r.createEntity('c-pilgrim')
         c.store.mutations.setAbility({ ability: 'ABILITY_STRENGTH', value: 13 })
         expect(() => ev.creatureLevelUp(c, {
@@ -145,14 +104,7 @@ describe('creatureLevelUp', function () {
             .toThrow(new Error('ERR_EVOL_GROUP_FEAT_OVER_SELECTED'))
     })
     it('should successfully add a fighter level', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = r.createEntity('c-pilgrim')
     })
 })
@@ -344,14 +296,7 @@ describe('checkLevelUp', function () {
 
 describe('getClassLevelData with tourist evolution', function () {
     it('should not crash when asking for tourist', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = new Creature()
         ev.getClassLevelData(c, 'tourist', 1)
     })
@@ -359,14 +304,7 @@ describe('getClassLevelData with tourist evolution', function () {
 
 describe('retrieve available actions for player and creatures', function () {
     it('should return [second wind] when leveling fighter to level 2', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = new Creature()
         c.store.mutations.resetCharacter()
         ev.creatureLevelUp(c, {
@@ -489,14 +427,7 @@ describe('retrieve available actions for player and creatures', function () {
 
 describe('rogue class', function () {
     it('should have sneak attack feat when having rogue class', function () {
-        const r = new Manager()
-        r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
-        am.init()
-        const ev = new Evolution()
-        ev.data = am.data
+        const { manager: r, evolution: ev } = buildStuff()
         const c = new Creature()
         c.store.mutations.resetCharacter()
         ev.creatureLevelUp(c, {
@@ -531,5 +462,20 @@ describe('rogue class', function () {
         const am3 = c.aggregateModifiers(['EFFECT_SNEAK_ATTACK'])
         expect(am3.max).toBe(2)
         expect(am3.count).toBe(1)
+    })
+})
+
+describe('initial autoleveling of creature blueprint', function () {
+    it('c-soldier should have acrobatics when creating creature', function () {
+        const { manager, evolution } = buildStuff()
+        const c = manager.createEntity('c-soldier')
+        expect(c.store.state.skills.length).toBe(2)
+        expect(c.store.getters.getActions).toEqual([
+          {
+            action: 'feat-second-wind',
+            uses: { value: 1, max: 1 },
+            innate: false
+          }
+        ])
     })
 })
