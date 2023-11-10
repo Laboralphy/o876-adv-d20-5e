@@ -39,9 +39,6 @@ module.exports = (state, getters) => {
             TARGET_CHARMED,
             ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-deception')
         }),
-        'skill-disarm-trap': computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-disarm-trap')
-        }),
         'skill-history': computeRuleValue({
             ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-history')
         }),

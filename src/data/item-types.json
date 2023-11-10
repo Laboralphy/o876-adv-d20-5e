@@ -79,10 +79,6 @@
     "slots": [],
     "defaultWeight": 1
   },
-  "ITEM_TYPE_DISARMKIT": {
-    "slots": [],
-    "defaultWeight": 1
-  },
   "ITEM_TYPE_KEY": {
     "slots": [],
     "defaultWeight": 0.25

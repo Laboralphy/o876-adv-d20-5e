@@ -399,14 +399,14 @@ describe('check skills on additionnal modules like "classic"', function () {
         const r = new Manager()
         r.init()
         const c1 = r.createEntity('c-soldier')
-        const circ10 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['skill-unlock'])
+        const circ10 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['skill-sleight-of-hand'])
         expect(circ10).toEqual({
             advantage: false,
             disadvantage: false,
             details: { advantages: [], disadvantages: [] }
         })
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_ADVANTAGE, [CONSTS.ROLL_TYPE_CHECK], [CONSTS.ABILITY_DEXTERITY], 'REFLEX'), 10)
-        const circ20 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['skill-unlock'])
+        const circ20 = c1.getCircumstances(CONSTS.ROLL_TYPE_CHECK, ['skill-sleight-of-hand'])
         expect(circ20).toEqual({
             advantage: true,
             disadvantage: false,

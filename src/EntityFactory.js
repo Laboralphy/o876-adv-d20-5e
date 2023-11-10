@@ -185,9 +185,7 @@ class EntityFactory {
         csm.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: ba.charisma })
 
         if ('skills' in oBlueprint) {
-            console.log('SKILLS')
             oBlueprint.skills.forEach(s => {
-                console.log('skills', s)
                 csm.addSkill({ skill: s })
             })
         }

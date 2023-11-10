@@ -99,6 +99,16 @@
  * @property getWizardSpellSlots {number[]}
  * @property has1HWeaponNoShield {boolean}
  * @property has2HWeaponNoShield {boolean}
+ * @property hasNoSneakAttack1 {boolean}
+ * @property hasNoSneakAttack10 {boolean}
+ * @property hasNoSneakAttack2 {boolean}
+ * @property hasNoSneakAttack3 {boolean}
+ * @property hasNoSneakAttack4 {boolean}
+ * @property hasNoSneakAttack5 {boolean}
+ * @property hasNoSneakAttack6 {boolean}
+ * @property hasNoSneakAttack7 {boolean}
+ * @property hasNoSneakAttack8 {boolean}
+ * @property hasNoSneakAttack9 {boolean}
  * @property isHPBelow50Percent {boolean}
  * @property isWearingArmor {boolean}
  */

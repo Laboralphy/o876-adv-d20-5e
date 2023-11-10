@@ -39,6 +39,9 @@
       "feats": [
         {
           "feat": "feat-sneak-attack-1"
+        },
+        {
+          "feat": "feat-expertise"
         }
       ]
     },

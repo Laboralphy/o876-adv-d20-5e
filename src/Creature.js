@@ -886,6 +886,7 @@ class Creature {
             ability: sSkillAbility,
             circumstance: this.getCircumstanceNumValue(circumstances)
         }
+        // To unlock door : throw skill sleight of hand + ptoficiency bonus with thieves tools
         this._events.emit('check-skill', output)
         return output
     }
