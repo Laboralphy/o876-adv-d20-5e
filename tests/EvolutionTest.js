@@ -101,7 +101,7 @@ describe('creatureLevelUp', function () {
             selectedClass: 'fighter',
             selectedFeats: ['feat-fighting-style-defense', 'feat-fighting-style-dueling']
         }))
-            .toThrow(new Error('ERR_EVOL_GROUP_FEAT_OVER_SELECTED'))
+            .toThrow(new Error('ERR_EVOL_GROUP_ALREADY_SELECTED: feat-group-fighting-style feat: feat-fighting-style-dueling'))
     })
     it('should successfully add a fighter level', function () {
         const { manager: r, evolution: ev } = buildStuff()
@@ -438,7 +438,10 @@ describe('rogue class', function () {
                 'skill-deception',
                 'skill-insight'
             ],
-            selectedFeats: []
+            selectedFeats: [
+                'feat-expertise-thieves-tools',
+                'feat-expertise-sleight-of-hand'
+            ]
         })
         c.processEffects()
         expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
@@ -477,5 +480,12 @@ describe('initial autoleveling of creature blueprint', function () {
             innate: false
           }
         ])
+    })
+})
+
+describe('testing if a rogue has good skill throw in sleaith of hand', function () {
+    it('should', function () {
+        const { manager, evolution } = buildStuff()
+        const c = manager.createEntity('c-soldier')
     })
 })

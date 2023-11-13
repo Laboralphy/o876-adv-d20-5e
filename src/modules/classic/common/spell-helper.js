@@ -53,8 +53,19 @@ function evocationAttack ({
                               dc
                           }) {
     const { success } = target.rollSavingThrow(CONSTS.ABILITY_DEXTERITY, [CONSTS.THREAT_TYPE_SPELL], dc, caster)
-    if (success) {
-        damage = damage >> 1
+    const bHasEvasion = target.aggregateModifiers([CONSTS.EFFECT_EVASION], {}).count > 0
+    const nCase = (bHasEvasion ? 10 : 0) + (success ? 1 : 0)
+    switch (nCase) {
+        case 11: {
+            damage = 0
+            break
+        }
+
+        case 10:
+        case 1: {
+            damage >>= 1
+            break
+        }
     }
     const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, damage, sType)
     target.applyEffect(eDam, 0, caster)

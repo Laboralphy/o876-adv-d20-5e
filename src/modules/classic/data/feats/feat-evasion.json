@@ -1,0 +1,6 @@
+{
+  "description": "When a Dexterity Saving Throw is a success against a threat that deals damages : damages are nullified. When the saving throw fails damages are halved",
+  "effects": [
+    ["EFFECT_EVASION"]
+  ]
+}

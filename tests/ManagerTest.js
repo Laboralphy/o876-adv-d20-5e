@@ -501,13 +501,13 @@ describe('damage immunity', function () {
         m1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, 5, CONSTS.DAMAGE_TYPE_ACID))
         expect(m1.store.getters.getHitPoints).toBe(22)
         m1.dice.cheat(0.000001)
-        expect(m1.rollSkill('skill-stealth')).toEqual({
+        expect(m1.rollSkill('skill-stealth', 0)).toEqual({
             bonus: 4,
             roll: 1,
             value: 5,
             ability: 'ABILITY_DEXTERITY',
-            dc: undefined,
-            success: undefined,
+            dc: 0,
+            success: true,
             circumstance: 0
         })
     })

@@ -1,0 +1,6 @@
+{
+  "description": "Halves weapon damages dealt by current target",
+  "effects": [
+    ["EFFECT_UNCANNY_DODGE"]
+  ]
+}

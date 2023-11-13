@@ -221,15 +221,9 @@ class Evolution {
             throw new Error('ERR_EVOL_CANT_MULTICLASS')
         }
 
-        // Est ce qu'on multiclass ?
-        const bMulticlass = this.isMultiClassing(oCreature, selectedClass)
-
         // Niveau auquel on acceder
         const nLevel = this.getClassNextLevelValue(oCreature, selectedClass)
-        const bNeedSkills = nLevel === 1
         const ex = this.getClassLevelData(oCreature, selectedClass, nLevel)
-        const cd = this.getClassData(selectedClass)
-
         const clur = this.checkLevelUpRequirements(oCreature, selectedClass)
 
         // les skills
@@ -272,13 +266,21 @@ class Evolution {
             }
         })
         // pour tous les feats sélecteionnés, créé un compteur de groupe
+        const aSelectedGroup = new Set()
+
         selectedFeats.forEach(selectedFeatName => {
-            const oFeat = ex.feats.find(f => f.feat === selectedFeatName)
+            const oFeat = ex.feats.find(f => f.feat === selectedFeatName && !aSelectedGroup.has(f.group))
+            // il faudra faire gaffe : il peut y avoir plusieur fois le même feat dans plusieur groupe différent
             if (!oFeat) {
+                const oFeatInAnotherGroup = ex.feats.find(f => f.feat === selectedFeatName && aSelectedGroup.has(f.group))
+                if (oFeatInAnotherGroup) {
+                    throw new Error('ERR_EVOL_GROUP_ALREADY_SELECTED: ' + oFeatInAnotherGroup.group + ' feat: ' + oFeatInAnotherGroup.feat)
+                }
                 // bizarre, l'un des feats sélectionnés n'est pas dispo à ce niveau dans la classe
                 throw new Error('ERR_EVOL_WEIRD_UNFOUND_FEAT: ' + selectedFeatName)
             }
             if ('group' in oFeat) {
+                aSelectedGroup.add(oFeat.group)
                 // on ne traite que les feats groupés
                 if (oFeat.group in oAvailableFeatGroups) {
                     ++oAvailableFeatGroups[oFeat.group]

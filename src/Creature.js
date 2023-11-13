@@ -847,8 +847,16 @@ class Creature {
     /**
      * Lance un dé pour déterminer le résultat d'une vérification compétence
      * On détermine la caractéristique associée à la compétence puis lance un D20
+     *
+     * Pour sleight of hand il faut faire un rollSkill('skill-sleight-of-hand', ...)
+     * Mais si on utilise un thieves tool on doit ajouter le bonus proficiency (si on a l'expertise)
+     *
+     * @param sSkill {string} le skill à tester
+     * @param dc {number} difficulty class
+     * @param sExtraStackingProficiency {string|''} principalement utilisé lorsqu'un outil permet d'appuyer l'expertise
+     * de la compétence, généralement THIEVES TOOL
      */
-    rollSkill (sSkill, dc = undefined) {
+    rollSkill (sSkill, dc, sExtraStackingProficiency = '') {
         const sg = this.store.getters
         // données du skill
         const aSkills = sg.getProficiencies
@@ -865,16 +873,22 @@ class Creature {
         const sSkillAbility = oSkillData.ability
         // Ajouter un evéntuel bonus de proficiency (mais qui ne se stack pas)
         const nNormalProfBonus = (bProficient ? sg.getProficiencyBonus : 0)
-        const nExtraProfBonus = this
+        const amSkills = this
             .aggregateModifiers([
                 CONSTS.EFFECT_SKILL_EXPERTISE
             ], {
-                effectFilter: eff => eff.data.type === sSkill || eff.data.type === sSkillAbility,
-                effectAmpMapper: eff => Math.ceil(eff.amp * sg.getProficiencyBonus)
-            }).max
+                effectFilter: eff => eff.data.type === sSkill || eff.data.type === sSkillAbility || eff.data.type === sExtraStackingProficiency,
+                effectAmpMapper: eff => Math.ceil(eff.amp * sg.getProficiencyBonus),
+                effectSorter: eff => eff.data.type
+            })
+        const amSkillSorter = amSkills.sorter
+        const nPureSkillExpertiseValue = amSkillSorter[sSkill]?.max || 0
+        const nAbilityExpertiseValue = amSkillSorter[sSkillAbility]?.max || 0
+        const nStackedExpertiseValue = amSkillSorter[sExtraStackingProficiency]?.max || 0
+        const nExtraProfBonus = Math.max(nPureSkillExpertiseValue, nAbilityExpertiseValue)
         const nTotalProfBonus = Math.max(nNormalProfBonus, nExtraProfBonus)
         const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
-        const nTotalBonus = nAbilityBonus + nSkillBonus + nTotalProfBonus
+        const nTotalBonus = nAbilityBonus + nSkillBonus + nTotalProfBonus + nStackedExpertiseValue
         const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
         const nTotal = value + nTotalBonus
         const output = {
@@ -882,7 +896,7 @@ class Creature {
             roll: value,
             value: nTotal,
             dc,
-            success: dc !== undefined ? nTotal >= dc : undefined,
+            success: nTotal >= dc,
             ability: sSkillAbility,
             circumstance: this.getCircumstanceNumValue(circumstances)
         }
@@ -899,7 +913,7 @@ class Creature {
      * @param dice {Dice} dé à utiliser
      * return {Object<string, number>}
      */
-    rollWeaponDamage ({ critical = false, sneak = false } = {}) {
+    rollWeaponDamage ({ critical = false, sneak = false, uncannyDodge = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
         const nExtraDamageDice = this.store.getters.isWieldingHeavyMeleeWeapon
             ? this.store.getters.getSizeProperties.extraMeleeDamageDice
@@ -1211,7 +1225,8 @@ class Creature {
         if (oAtk.hit) {
             const oDamages = this.rollWeaponDamage({
                 critical: oAtk.critical,
-                sneak: !this._hasUsedSneakAttack
+                sneak: !this._hasUsedSneakAttack,
+                uncannyDodge: false
             })
             this._hasUsedSneakAttack = true
             // générer les effets de dégâts

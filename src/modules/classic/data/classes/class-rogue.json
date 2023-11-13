@@ -41,7 +41,100 @@
           "feat": "feat-sneak-attack-1"
         },
         {
-          "feat": "feat-expertise"
+          "feat": "feat-expertise-acrobatics",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-athletics",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-deception",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-insight",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-intimidation",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-investigation",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-perception",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-performance",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-persuasion",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-sleight-of-hand",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-stealth",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-thieves-tools",
+          "group": "feat-group-expertise-1"
+        },
+        {
+          "feat": "feat-expertise-acrobatics",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-athletics",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-deception",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-insight",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-intimidation",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-investigation",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-perception",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-performance",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-persuasion",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-sleight-of-hand",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-stealth",
+          "group": "feat-group-expertise-2"
+        },
+        {
+          "feat": "feat-expertise-thieves-tools",
+          "group": "feat-group-expertise-2"
         }
       ]
     },
@@ -62,6 +155,110 @@
       "feats": [
         {
           "feat": "feat-sneak-attack-3"
+        },
+        {
+          "feat": "feat-uncanny-dodge"
+        }
+      ]
+    },
+    {
+      "level": 6,
+      "feats": [
+        {
+          "feat": "feat-expertise-acrobatics",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-athletics",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-deception",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-insight",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-intimidation",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-investigation",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-perception",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-performance",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-persuasion",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-sleight-of-hand",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-stealth",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-thieves-tools",
+          "group": "feat-group-expertise-3"
+        },
+        {
+          "feat": "feat-expertise-acrobatics",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-athletics",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-deception",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-insight",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-intimidation",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-investigation",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-perception",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-performance",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-persuasion",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-sleight-of-hand",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-stealth",
+          "group": "feat-group-expertise-4"
+        },
+        {
+          "feat": "feat-expertise-thieves-tools",
+          "group": "feat-group-expertise-4"
         }
       ]
     },

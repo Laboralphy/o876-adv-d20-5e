@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 10/11/2023, 15:50:43 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 13/11/2023, 18:04:34 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
@@ -17,6 +17,7 @@ module.exports = {
   [CONSTS.EFFECT_DAMAGE]: require('./damage'),
   [CONSTS.EFFECT_DISADVANTAGE]: require('./disadvantage'),
   [CONSTS.EFFECT_DUMMY]: require('./dummy'),
+  [CONSTS.EFFECT_EVASION]: require('./evasion'),
   [CONSTS.EFFECT_EXHAUSTION]: require('./exhaustion'),
   [CONSTS.EFFECT_EXTRA_ATTACKS]: require('./extra-attacks'),
   [CONSTS.EFFECT_GROUP]: require('./group'),
@@ -35,6 +36,7 @@ module.exports = {
   [CONSTS.EFFECT_SKILL_EXPERTISE]: require('./skill-expertise'),
   [CONSTS.EFFECT_SNEAK_ATTACK]: require('./sneak-attack'),
   [CONSTS.EFFECT_SPEED_BONUS]: require('./speed-bonus'),
-  [CONSTS.EFFECT_TRUE_SIGHT]: require('./true-sight')
+  [CONSTS.EFFECT_TRUE_SIGHT]: require('./true-sight'),
+  [CONSTS.EFFECT_UNCANNY_DODGE]: require('./uncanny-dodge')
 }
 

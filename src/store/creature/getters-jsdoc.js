@@ -81,6 +81,7 @@
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property getTargetDistance {number}
+ * @property hasUncannyDodge {boolean}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
  * @property isRangedWeaponProperlyLoaded {boolean}
