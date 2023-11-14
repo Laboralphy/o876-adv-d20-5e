@@ -1,0 +1,6 @@
+{
+  "description": "When you check a skill you are expert in (skill-expertise) your roll is minimum 10",
+  "effects": [
+    ["EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL", 10]
+  ]
+}

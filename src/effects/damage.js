@@ -1,5 +1,6 @@
 const createEffect = require('./abstract')
 const CONSTS = require('../consts')
+const { EFFECT_UNCANNY_DODGE, EFFECT_SUBTYPE_WEAPON } = CONSTS
 
 /**
  * Inflict damage
@@ -31,7 +32,7 @@ function mutate ({ effect, target, source }) {
     const oMitigation = target.store.getters.getDamageMitigation
     const sType = effect.data.type
     const aMaterials = effect.data.material
-    const bSubTypeWeapon = effect.subtype === CONSTS.EFFECT_SUBTYPE_WEAPON
+    const bSubTypeWeapon = effect.subtype === EFFECT_SUBTYPE_WEAPON
     let bMaterialVulnerable = false
     if (aMaterials) {
         bMaterialVulnerable = aMaterials.some(m => oMitigation[m] && oMitigation[m].vulnerability)
@@ -48,11 +49,18 @@ function mutate ({ effect, target, source }) {
         // no resistance no absorb no immunity
         effect.data.appliedAmount = amp
     }
-    if (bSubTypeWeapon && target.store.getters.hasUncannyDodge && source === target.getTarget()) {
-        const appliedAmount = effect.data.appliedAmount >> 1
-        const resistedAmount = effect.data.appliedAmount - appliedAmount
-        effect.data.resistedAmount += resistedAmount
-        effect.amp = appliedAmount
+    if (target.store.getters.getEffectList.has(EFFECT_UNCANNY_DODGE)) {
+        const aUncannyDodgeEffects = target.store.getters.getEffects.filter(eff => eff.type === EFFECT_UNCANNY_DODGE && eff.amp > 0)
+        const bUncannyDodge = aUncannyDodgeEffects.length > 0
+        if (bSubTypeWeapon && bUncannyDodge && source === target.getTarget()) {
+            const appliedAmount = Math.ceil(effect.data.appliedAmount / 2)
+            const resistedAmount = effect.data.appliedAmount - appliedAmount
+            effect.data.resistedAmount += resistedAmount
+            effect.amp = appliedAmount
+            aUncannyDodgeEffects.forEach(eff => {
+                eff.amp = 0
+            })
+        }
     }
     target.store.mutations.addRecentDamageType({ amount: effect.amp, type: sType })
     target.store.mutations.damage({ amount: effect.amp })

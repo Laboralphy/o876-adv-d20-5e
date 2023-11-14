@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 13/11/2023, 18:04:34 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 14/11/2023, 13:47:41 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
@@ -33,6 +33,8 @@ module.exports = {
   [CONSTS.EFFECT_RANGED_ATTACK_BONUS]: require('./ranged-attack-bonus'),
   [CONSTS.EFFECT_REROLL]: require('./reroll'),
   [CONSTS.EFFECT_SAVING_THROW_BONUS]: require('./saving-throw-bonus'),
+  [CONSTS.EFFECT_SKILL_BONUS]: require('./skill-bonus'),
+  [CONSTS.EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL]: require('./skill-expertise-minimum-roll'),
   [CONSTS.EFFECT_SKILL_EXPERTISE]: require('./skill-expertise'),
   [CONSTS.EFFECT_SNEAK_ATTACK]: require('./sneak-attack'),
   [CONSTS.EFFECT_SPEED_BONUS]: require('./speed-bonus'),

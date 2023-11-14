@@ -271,6 +271,9 @@
       "feats": [
         {
           "feat": "feat-sneak-attack-4"
+        },
+        {
+          "feat": "feat-evasion"
         }
       ]
     },
@@ -279,6 +282,9 @@
       "feats": [
         {
           "feat": "feat-sneak-attack-5"
+        },
+        {
+          "feat": "feat-supreme-sneak"
         }
       ]
     },
@@ -291,6 +297,9 @@
       "feats": [
         {
           "feat": "feat-sneak-attack-6"
+        },
+        {
+          "feat": "feat-reliable-talent"
         }
       ]
     },

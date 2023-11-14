@@ -36,6 +36,7 @@
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantagePropEffects {Object<string, string>}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
+ * @property getEffectList {Set<string>}
  * @property getEffectSources {string[]}
  * @property getEffects {D20Effect[]}
  * @property getEncumbranceLevel {number}
@@ -81,7 +82,6 @@
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property getTargetDistance {number}
- * @property hasUncannyDodge {boolean}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
  * @property isRangedWeaponProperlyLoaded {boolean}

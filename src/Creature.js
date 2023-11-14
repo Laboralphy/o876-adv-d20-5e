@@ -864,9 +864,11 @@ class Creature {
         // déterminer les bonus du skill
         const nSkillBonus = this
             .aggregateModifiers([
-                CONSTS.ITEM_PROPERTY_SKILL_BONUS
+                CONSTS.ITEM_PROPERTY_SKILL_BONUS,
+                CONSTS.EFFECT_SKILL_BONUS
             ], {
                 propFilter: prop => prop.data.skill === sSkill,
+                effectFilter: eff => eff.data.skill === sSkill,
             }).sum
         // déterminer la carac du skill
         const oSkillData = this.getSkillData(sSkill)
@@ -883,6 +885,14 @@ class Creature {
             })
         const amSkillSorter = amSkills.sorter
         const nPureSkillExpertiseValue = amSkillSorter[sSkill]?.max || 0
+        const nMinimumRoll = nPureSkillExpertiseValue > 0
+            ? this
+                .aggregateModifiers([
+                    CONSTS.EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL
+                ], {
+                    effectFilter: eff => eff.data.type === sSkill
+                }).max || 0
+            : 0
         const nAbilityExpertiseValue = amSkillSorter[sSkillAbility]?.max || 0
         const nStackedExpertiseValue = amSkillSorter[sExtraStackingProficiency]?.max || 0
         const nExtraProfBonus = Math.max(nPureSkillExpertiseValue, nAbilityExpertiseValue)
@@ -890,10 +900,11 @@ class Creature {
         const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
         const nTotalBonus = nAbilityBonus + nSkillBonus + nTotalProfBonus + nStackedExpertiseValue
         const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
-        const nTotal = value + nTotalBonus
+        const roll = Math.max(nMinimumRoll, value)
+        const nTotal = roll + nTotalBonus
         const output = {
             bonus: nTotalBonus,
-            roll: value,
+            roll,
             value: nTotal,
             dc,
             success: nTotal >= dc,
@@ -913,7 +924,7 @@ class Creature {
      * @param dice {Dice} dé à utiliser
      * return {Object<string, number>}
      */
-    rollWeaponDamage ({ critical = false, sneak = false, uncannyDodge = false } = {}) {
+    rollWeaponDamage ({ critical = false, sneak = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
         const nExtraDamageDice = this.store.getters.isWieldingHeavyMeleeWeapon
             ? this.store.getters.getSizeProperties.extraMeleeDamageDice
@@ -1225,8 +1236,7 @@ class Creature {
         if (oAtk.hit) {
             const oDamages = this.rollWeaponDamage({
                 critical: oAtk.critical,
-                sneak: !this._hasUsedSneakAttack,
-                uncannyDodge: false
+                sneak: !this._hasUsedSneakAttack
             })
             this._hasUsedSneakAttack = true
             // générer les effets de dégâts
