@@ -263,10 +263,6 @@
       ]
     },
     {
-      "level": 8,
-      "abilityScoreImprovement": true
-    },
-    {
       "level": 7,
       "feats": [
         {
@@ -276,6 +272,10 @@
           "feat": "feat-evasion"
         }
       ]
+    },
+    {
+      "level": 8,
+      "abilityScoreImprovement": true
     },
     {
       "level": 9,

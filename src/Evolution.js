@@ -7,7 +7,7 @@ class Evolution {
         this._data = Object
             .fromEntries(Object
                 .entries(value)
-                .filter(([sKey]) => sKey.startsWith('class-'))
+                .filter(([sKey]) => sKey.startsWith('class-') || sKey.startsWith('template-'))
             )
     }
 
@@ -193,6 +193,34 @@ class Evolution {
             oOutcome.skills = skills.slice(0)
         }
         return oOutcome
+    }
+
+    creatureTemplateBuildUp (oCreature, sTemplate, nTargetLevel) {
+        const oTemplate = this._data[sTemplate]
+        const cm = oCreature.store.mutations
+        cm.resetCharacter()
+        for (const [ability, value] of Object.entries(oTemplate.abilities)) {
+            cm.setAbility({ ability, value })
+        }
+        for (let iLevel = 1; iLevel <= nTargetLevel; ++iLevel) {
+            const level = oTemplate
+                .levels
+                .find(({ level }) => level === iLevel)
+            const oParams = {
+                selectedClass: level.class
+            }
+            if ('skills' in level) {
+                oParams.selectedSkills = level.skills
+            }
+            if ('feats' in level) {
+                oParams.selectedFeats = level.feats
+            }
+            if ('ability' in level) {
+                oParams.selectedAbility = level.ability
+            }
+            this.creatureLevelUp(oCreature, oParams)
+        }
+        return oCreature
     }
 
     creatureLevelUp (oCreature, {
