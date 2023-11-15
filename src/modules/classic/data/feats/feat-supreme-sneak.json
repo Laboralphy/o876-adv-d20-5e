@@ -1,6 +1,6 @@
 {
   "description": "You get advantage on all sneak roll",
   "effects": [
-    ["EFFECT_ADVANTAGE", "skill-sneak", "feat-supreme-sneak"]
+    ["EFFECT_ADVANTAGE", "ROLL_TYPE_CHECK", "skill-stealth", "feat-supreme-sneak"]
   ]
 }

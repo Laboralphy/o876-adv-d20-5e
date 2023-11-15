@@ -590,7 +590,13 @@ class Creature {
 
     getSkillData (sSkill) {
         const sSkillDataProp = sSkill.toLowerCase().replace(/_/g, '-')
-        return Creature.AssetManager.data[sSkillDataProp]
+        if (sSkillDataProp in Creature.AssetManager.data) {
+            return Creature.AssetManager.data[sSkillDataProp]
+        } else {
+            if (sSkillDataProp.startsWith('skill-')) {
+                throw new Error(sSkill + ' is not in data')
+            }
+        }
     }
 
     /**
@@ -860,7 +866,7 @@ class Creature {
         const sg = this.store.getters
         // données du skill
         const aSkills = sg.getProficiencies
-        const bProficient = aSkills.includes(sSkill)
+        const bSkillProficient = aSkills.includes(sSkill)
         // déterminer les bonus du skill
         const nSkillBonus = this
             .aggregateModifiers([
@@ -874,8 +880,8 @@ class Creature {
         const oSkillData = this.getSkillData(sSkill)
         const sSkillAbility = oSkillData.ability
         // Ajouter un evéntuel bonus de proficiency (mais qui ne se stack pas)
-        const nNormalProfBonus = (bProficient ? sg.getProficiencyBonus : 0)
-        const amSkills = this
+        const nSkillProfBonus = (bSkillProficient ? sg.getProficiencyBonus : 0)
+        const amExpertise = this
             .aggregateModifiers([
                 CONSTS.EFFECT_SKILL_EXPERTISE
             ], {
@@ -883,20 +889,19 @@ class Creature {
                 effectAmpMapper: eff => Math.ceil(eff.amp * sg.getProficiencyBonus),
                 effectSorter: eff => eff.data.type
             })
-        const amSkillSorter = amSkills.sorter
-        const nPureSkillExpertiseValue = amSkillSorter[sSkill]?.max || 0
-        const nMinimumRoll = nPureSkillExpertiseValue > 0
+        const amExpertiseSorter = amExpertise.sorter
+        const nSkillExpertiseValue = amExpertiseSorter[sSkill]?.max || 0
+        const nAbilityExpertiseValue = amExpertiseSorter[sSkillAbility]?.max || 0
+        const nStackedExpertiseValue = amExpertiseSorter[sExtraStackingProficiency]?.max || 0
+        const nMinimumRoll = nSkillExpertiseValue > 0
             ? this
                 .aggregateModifiers([
                     CONSTS.EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL
                 ], {
-                    effectFilter: eff => eff.data.type === sSkill
                 }).max || 0
             : 0
-        const nAbilityExpertiseValue = amSkillSorter[sSkillAbility]?.max || 0
-        const nStackedExpertiseValue = amSkillSorter[sExtraStackingProficiency]?.max || 0
-        const nExtraProfBonus = Math.max(nPureSkillExpertiseValue, nAbilityExpertiseValue)
-        const nTotalProfBonus = Math.max(nNormalProfBonus, nExtraProfBonus)
+        const nExtraProfBonus = Math.max(nSkillExpertiseValue, nAbilityExpertiseValue)
+        const nTotalProfBonus = Math.max(nSkillProfBonus, nExtraProfBonus)
         const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
         const nTotalBonus = nAbilityBonus + nSkillBonus + nTotalProfBonus + nStackedExpertiseValue
         const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])

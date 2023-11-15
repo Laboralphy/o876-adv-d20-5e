@@ -472,7 +472,6 @@ describe('initial autoleveling of creature blueprint', function () {
     it('c-soldier should have acrobatics when creating creature', function () {
         const { manager, evolution } = buildStuff()
         const c = manager.createEntity('c-soldier')
-        expect(c.store.state.skills.length).toBe(2)
         expect(c.store.getters.getActions).toEqual([
           {
             action: 'feat-second-wind',

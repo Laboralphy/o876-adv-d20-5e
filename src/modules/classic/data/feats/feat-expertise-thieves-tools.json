@@ -1,6 +1,6 @@
 {
   "description": "Double proficiency bonus for rogue skills",
   "effects": [
-    ["EFFECT_SKILL_EXPERTISE", 1, "PROFICIENCY_TOOLS_THIEVES_TOOLS"]
+    ["EFFECT_SKILL_EXPERTISE", 1, "PROFICIENCY_TOOL_THIEVES_TOOLS"]
   ]
 }

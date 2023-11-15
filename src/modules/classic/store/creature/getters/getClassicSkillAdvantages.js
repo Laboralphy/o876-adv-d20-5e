@@ -18,7 +18,6 @@ module.exports = (state, getters) => {
 
     // TARGET_CHARMED : La cible est charmée par this
     const TARGET_CHARMED = targetAffectedByMe(CONSTS.CONDITION_CHARMED, getters)
-
     /*
     Définir l'ossature D20AdvantagesOrDisadvantages
      */

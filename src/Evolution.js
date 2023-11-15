@@ -195,7 +195,7 @@ class Evolution {
         return oOutcome
     }
 
-    creatureTemplateBuildUp (oCreature, sTemplate, nTargetLevel) {
+    setupCreatureFromTemplate (oCreature, sTemplate, nTargetLevel) {
         const oTemplate = this._data[sTemplate]
         const cm = oCreature.store.mutations
         cm.resetCharacter()
@@ -369,7 +369,7 @@ class Evolution {
 
         // Ajouter les skills
         selectedSkills.forEach(skill => {
-            oCreature.store.mutations.addSkill({ skill })
+            oCreature.store.mutations.addProficiency({ proficiency: skill })
             if (!('skills' in oJournal)) {
                 oJournal.skills = []
             }

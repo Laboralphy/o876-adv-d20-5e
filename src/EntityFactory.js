@@ -186,7 +186,7 @@ class EntityFactory {
 
         if ('skills' in oBlueprint) {
             oBlueprint.skills.forEach(s => {
-                csm.addSkill({ skill: s })
+                csm.addProficiency({ proficiency: s })
             })
         }
 
