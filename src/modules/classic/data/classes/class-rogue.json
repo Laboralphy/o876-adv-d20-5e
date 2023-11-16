@@ -312,6 +312,9 @@
       "feats": [
         {
           "feat": "feat-sneak-attack-7"
+        },
+        {
+          "feat": "feat-use-magic-device"
         }
       ]
     },

@@ -1,0 +1,7 @@
+{
+  "description": "You can detect invisible creatures",
+  "when": "isTargetInMeleeWeaponRange",
+  "effects": [
+    ["EFFECT_TRUE_SIGHT"]
+  ]
+}

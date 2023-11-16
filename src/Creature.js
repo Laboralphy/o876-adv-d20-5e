@@ -164,6 +164,11 @@ class Creature {
     get effectProcessor () {
         return this._effectProcessor
     }
+
+    get EffectProcessor () {
+        return EffectProcessor
+    }
+
     get id () {
         return this._id
     }

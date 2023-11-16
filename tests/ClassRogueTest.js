@@ -4,6 +4,7 @@ const Creature = require('../src/Creature')
 const AssetManager = require('../src/AssetManager')
 const { Config, CONFIG } = require('../src/config')
 const CONSTS = require("../src/consts");
+const SpellHelper = require('../src/modules/classic/common/spell-helper')
 
 CONFIG.setModuleActive('classic', true)
 
@@ -362,5 +363,80 @@ describe('supreme sneak', function () {
             ability: 'ABILITY_DEXTERITY',
             circumstance: 1
         })
+    })
+})
+
+describe('evasion', function () {
+    describe('when having evasion', function () {
+        it('should reduce damage when failing saving throw', function () {
+            const { manager, evolution } = buildStuff()
+            const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+            oRogue.processEffects()
+            oRogue.dice.cheat(0.1)
+            const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+            oWizard.processEffects()
+            const nHP1 = oRogue.store.getters.getHitPoints
+            SpellHelper.evocationAttack({
+                caster: oWizard,
+                target: oRogue,
+                damage: 10,
+                dc: 50,
+                type: 'DAMAGE_TYPE_FIRE'
+            })
+            const nHP2 = oRogue.store.getters.getHitPoints
+            expect(nHP1 - nHP2).toBe(5)
+        })
+        it('should nullify damage when succeeding saving throw', function () {
+            const { manager, evolution } = buildStuff()
+            const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+            oRogue.processEffects()
+            oRogue.dice.cheat(0.9)
+            const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+            oWizard.processEffects()
+            const nHP1 = oRogue.store.getters.getHitPoints
+            SpellHelper.evocationAttack({
+                caster: oWizard,
+                target: oRogue,
+                damage: 10,
+                dc: 1,
+                type: 'DAMAGE_TYPE_FIRE'
+            })
+            const nHP2 = oRogue.store.getters.getHitPoints
+            expect(nHP1 - nHP2).toBe(0)
+        })
+    })
+})
+
+describe('use magic device', function () {
+    it('should have feat use magic device when reaching level 13', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 13)
+        oRogue.processEffects()
+        expect(oRogue.store.getters.getFeats.has('feat-use-magic-device')).toBeTrue()
+    })
+    it('should not have feat use magic device when not reaching level 13', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+        oRogue.processEffects()
+        expect(oRogue.store.getters.getFeats.has('feat-use-magic-device')).toBeFalse()
+    })
+})
+
+describe('blindsight', function () {
+    it('should not see target', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 14)
+        oRogue.processEffects()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
+        const eInvis = oWizard.EffectProcessor.createEffect('EFFECT_INVISIBILITY')
+        oWizard.applyEffect(eInvis, 10, oWizard)
+        oWizard.processEffects()
+        oRogue.processEffects()
+        oRogue.setTarget(oWizard)
+        oWizard.processEffects()
+        oRogue.processEffects()
+        expect(oWizard.store.getters.getEffectList.has('EFFECT_INVISIBILITY')).toBeTrue()
+        expect(oWizard.store.getters.getConditions.has('CONDITION_INVISIBLE')).toBeTrue()
+        console.log(oRogue.store.getters.getEntityVisibility)
     })
 })
