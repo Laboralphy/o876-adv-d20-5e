@@ -7,7 +7,9 @@ const CONSTS = require('../consts')
  * @returns {D20Effect}
  */
 function create () {
-    return createEffect(CONSTS.EFFECT_UNCANNY_DODGE, 1)
+    const oEffect = createEffect(CONSTS.EFFECT_UNCANNY_DODGE, 1)
+    oEffect.unicity = CONSTS.EFFECT_UNICITY_NO_REPLACE
+    return oEffect
 }
 
 function mutate ({ effect }) {

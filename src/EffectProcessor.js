@@ -1,5 +1,6 @@
 const Effects = require('./effects')
 const Events = require('events')
+const CONSTS = require('./consts')
 
 /**
  * @class EffectProcessor
@@ -158,6 +159,26 @@ class EffectProcessor {
         oEffect.source = source ? source.id : target.id
         oEffect.duration = duration || 0
         this.runEffect(oEffect, target, source || target)
+        const sUnicity = oEffect.unicity
+        if (target.store.getters.getEffectList.has(oEffect.type) && sUnicity !== CONSTS.EFFECT_UNICITY_STACK) {
+            const oAlreadyHaveEffect = target
+                .store
+                .getters
+                .getEffects
+                .find(eff => eff.type === oEffect.type)
+            switch (sUnicity) {
+                case CONSTS.EFFECT_UNICITY_NO_REPLACE: {
+                    // On ne remplace pas l'effet déja installé
+                    return oAlreadyHaveEffect
+                }
+
+                case CONSTS.EFFECT_UNICITY_REPLACE: {
+                    // On remplace l'effet existant
+                    oAlreadyHaveEffect.duration = 0
+                }
+            }
+        }
+
         if (duration > 0) {
             return target.store.mutations.addEffect({ effect: oEffect })
         } else {

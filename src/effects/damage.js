@@ -50,16 +50,13 @@ function mutate ({ effect, target, source }) {
         effect.data.appliedAmount = amp
     }
     if (target.store.getters.getEffectList.has(EFFECT_UNCANNY_DODGE)) {
-        const aUncannyDodgeEffects = target.store.getters.getEffects.filter(eff => eff.type === EFFECT_UNCANNY_DODGE && eff.amp > 0)
-        const bUncannyDodge = aUncannyDodgeEffects.length > 0
-        if (bSubTypeWeapon && bUncannyDodge && source === target.getTarget()) {
+        const eUncannyDodge = target.store.getters.getEffects.find(eff => eff.type === EFFECT_UNCANNY_DODGE && eff.amp > 0)
+        if (bSubTypeWeapon && !!eUncannyDodge && source === target.getTarget()) {
             const appliedAmount = Math.ceil(effect.data.appliedAmount / 2)
             const resistedAmount = effect.data.appliedAmount - appliedAmount
             effect.data.resistedAmount += resistedAmount
             effect.amp = appliedAmount
-            aUncannyDodgeEffects.forEach(eff => {
-                eff.amp = 0
-            })
+            eUncannyDodge.amp = 0
         }
     }
     target.store.mutations.addRecentDamageType({ amount: effect.amp, type: sType })

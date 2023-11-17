@@ -437,6 +437,9 @@ describe('blindsight', function () {
         oRogue.processEffects()
         expect(oWizard.store.getters.getEffectList.has('EFFECT_INVISIBILITY')).toBeTrue()
         expect(oWizard.store.getters.getConditions.has('CONDITION_INVISIBLE')).toBeTrue()
-        console.log(oRogue.store.getters.getEntityVisibility)
+        expect(oRogue.store.getters.getEntityVisibility).toEqual({
+            detectable: { target: false, aggressor: false },
+            detectedBy: { target: true, aggressor: true }
+        })
     })
 })
