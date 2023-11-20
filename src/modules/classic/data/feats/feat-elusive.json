@@ -1,0 +1,7 @@
+{
+  "description": "No attack rolls are advantaged against the rogue, unless incapacitated",
+  "when": "isNotIncapacitated",
+  "effects": [
+    ["EFFECT_ELUSIVE"]
+  ]
+}

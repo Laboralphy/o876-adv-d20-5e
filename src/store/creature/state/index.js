@@ -49,12 +49,14 @@ module.exports = function () {
             id: '',
             active: false,
             conditions: {},
+            effects: [],
             distance: 0
         },
         aggressor: {
             id: '',
             active: false,
-            conditions: {}
+            conditions: {},
+            effects: []
         },
         action: '',
         encumbrance: 0,

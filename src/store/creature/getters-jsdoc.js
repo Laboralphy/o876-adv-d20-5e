@@ -14,6 +14,7 @@
  * @property getAggressor {{ condition: Object.<string, boolean>}}
  * @property getAggressorConditionSources {{}}
  * @property getAggressorConditions {Set}
+ * @property getAggressorEffectList {Set}
  * @property getApproachToTargetTurns {number}
  * @property getAreaFlags {Set<string>}
  * @property getArmorClass {number}
@@ -83,6 +84,8 @@
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property getTargetDistance {number}
+ * @property getTargetEffectList {Set}
+ * @property isNotIncapacitated {boolean}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
  * @property isRangedWeaponProperlyLoaded {boolean}

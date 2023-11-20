@@ -1,0 +1,6 @@
+{
+  "description": "If an attack roll misses, it is turn into a hit instead, this may happen each 20 turns",
+  "effects": [
+    ["EFFECT_LUCKY"]
+  ]
+}

@@ -348,7 +348,6 @@ describe('supreme sneak', function () {
         oRogue.processEffects()
         oRogue.dice.cheat(0.5)
         expect(oRogue.store.getters.getEffectList.has('EFFECT_ADVANTAGE')).toBeTrue()
-        // console.log(oRogue.store.getters.getEffects.find(eff => eff.type === 'EFFECT_ADVANTAGE').data)
         expect(oRogue.getCircumstances('ROLL_TYPE_CHECK', ['skill-stealth'])).toEqual({
           advantage: true,
           disadvantage: false,
@@ -441,5 +440,40 @@ describe('blindsight', function () {
             detectable: { target: false, aggressor: false },
             detectedBy: { target: true, aggressor: true }
         })
+    })
+})
+
+describe('elusive', function () {
+    it('should be advantaged when invisible and attacking non-elusive target', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 14)
+        oRogue.processEffects()
+        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 14)
+        oFighter.processEffects()
+        const eInvis = oFighter.EffectProcessor.createEffect('EFFECT_INVISIBILITY')
+        oFighter.applyEffect(eInvis, 100)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oFighter.setTarget(oRogue)
+        expect(oRogue.store.getters.getEffectList.has('EFFECT_ELUSIVE')).toBeFalse()
+        expect(oFighter.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
+        expect(oFighter.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED'))
+            .toBeTrue()
+    })
+    it('should not be advantaged when invisible and attacking elusive target', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 18)
+        oRogue.processEffects()
+        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 18)
+        oFighter.processEffects()
+        const eInvis = oFighter.EffectProcessor.createEffect('EFFECT_INVISIBILITY')
+        oFighter.applyEffect(eInvis, 100)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oFighter.setTarget(oRogue)
+        expect(oRogue.store.getters.getEffectList.has('EFFECT_ELUSIVE')).toBeTrue()
+        expect(oFighter.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+        expect(oFighter.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED'))
+            .toBeFalse()
     })
 })

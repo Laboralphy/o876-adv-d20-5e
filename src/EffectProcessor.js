@@ -50,6 +50,13 @@ class EffectProcessor {
         }
     }
 
+    invokeAllEffectsMethod (oCreature, sMethod, oTarget, oSource) {
+        const aEffects = oCreature.store.getters.getEffects
+        for (let iEff = 0, l = aEffects.length; iEff < l; ++iEff) {
+            this.invokeEffectMethod(aEffects[iEff], sMethod, oTarget, oSource)
+        }
+    }
+
     runEffect (oEffect, oCreature, oSource) {
         this.refCreature(oCreature)
         this.refCreature(oSource)

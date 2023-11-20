@@ -349,7 +349,10 @@ class Creature {
         switch (name) {
             case 'removeEffect':
             case 'addEffect': {
-                this.store.mutations.updateTargetConditions({ conditions: this._target.creature.store.getters.getConditionSources })
+                this.store.mutations.updateTargetConditions({
+                    conditions: this._target.creature.store.getters.getConditionSources,
+                    effects: this._target.creature.store.getters.getEffectList
+                })
                 break
             }
         }
@@ -399,7 +402,8 @@ class Creature {
             this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
             this.store.mutations.updateTargetConditions({
                 id: oCreature.id,
-                conditions: this._target.creature.store.getters.getConditionSources
+                conditions: this._target.creature.store.getters.getConditionSources,
+                effects: this._target.creature.store.getters.getEffectList
             })
             oCreature.store.events.on('mutation', this._target.handler)
             this.initializeDistanceToTarget(Creature.AssetManager.data.variables.DEFAULT_TARGET_DISTANCE)
@@ -442,7 +446,10 @@ class Creature {
         switch (name) {
             case 'removeEffect':
             case 'addEffect': {
-                this.store.mutations.updateAggressorConditions({ conditions: this._aggressor.creature.store.getters.getConditionSources })
+                this.store.mutations.updateAggressorConditions({
+                    conditions: this._aggressor.creature.store.getters.getConditionSources,
+                    effects: this._aggressor.creature.store.getters.getEffectList
+                })
                 break
             }
         }
@@ -453,7 +460,11 @@ class Creature {
             this.clearAggressor()
             this._aggressor.creature = oCreature
             this._aggressor.handler = ({ name, payload }) => this.updateAggressor(name, payload)
-            this.store.mutations.updateAggressorConditions({ id: oCreature.id, conditions: this._aggressor.creature.store.getters.getConditionSources })
+            this.store.mutations.updateAggressorConditions({
+                id: oCreature.id,
+                conditions: this._aggressor.creature.store.getters.getConditionSources,
+                effects: this._aggressor.creature.store.getters.getEffectList
+            })
             oCreature.store.events.on('mutation', this._aggressor.handler)
         }
     }
@@ -737,6 +748,23 @@ class Creature {
     }
 
     /**
+     * Vérifie l'effet LUCKY pour savoir si on a la possibilité de transformer un echec en réussite
+     * @return {boolean}
+     */
+    checkLuck () {
+        if (!this.store.getters.getEffectList.has(CONSTS.EFFECT_LUCKY)) {
+            return false
+        }
+        const eLucky = this.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_LUCKY)
+        if (eLucky.amp >= 20) {
+            eLucky.amp = 0
+            return true
+        } else {
+            return false
+        }
+    }
+
+    /**
      * Effectue une attaque, ajoute les bonus d'attaque, détermine si le coup est critique
      * Ne fonctionne qu'avec les attaques physiques, pas les sorts
      *
@@ -789,11 +817,16 @@ class Creature {
         // 3: ne pas être avantagé en attaque mais la cible est occupée avec une autre cible
         // resultat = 1 && (2 || 3)
         const sneakable = bSneakableWeapon && (bAdvantaged || (!bDisadvantaged && bDistractedTarget))
-        const hit = bCriticalHit
+        let hit = bCriticalHit
             ? true
             : bCriticalFail
                 ? false
                 : roll >= ac
+        if (!hit) {
+            if (this.checkLuck()) {
+                hit = true
+            }
+        }
         const target = this.getTarget()
         const deflector = hit ? '' : target.getDeflectingArmorPart(bCriticalFail ? -1 : roll).type
         return {
@@ -910,14 +943,24 @@ class Creature {
         const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
         const nTotalBonus = nAbilityBonus + nSkillBonus + nTotalProfBonus + nStackedExpertiseValue
         const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
-        const roll = Math.max(nMinimumRoll, value)
-        const nTotal = roll + nTotalBonus
+        let roll = Math.max(nMinimumRoll, value)
+        let nTotal = roll + nTotalBonus
+        let success = nTotal >= dc
+        if (!success) {
+            if ((20 + nTotalBonus) >= dc) {
+                if (this.checkLuck()) {
+                    roll = 20
+                    nTotal = roll + nTotalBonus
+                    success = nTotal >= dc
+                }
+            }
+        }
         const output = {
             bonus: nTotalBonus,
             roll,
             value: nTotal,
             dc,
-            success: nTotal >= dc,
+            success,
             ability: sSkillAbility,
             circumstance: this.getCircumstanceNumValue(circumstances)
         }

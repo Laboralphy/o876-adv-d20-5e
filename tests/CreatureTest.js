@@ -376,8 +376,6 @@ describe('getTarget', function () {
         const eInvis = c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
         expect(eInvis.type).toBe(CONSTS.EFFECT_INVISIBILITY)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
-        c2.store.mutations.removeEffect({ effect: eInvis })
-        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
     })
 })
 

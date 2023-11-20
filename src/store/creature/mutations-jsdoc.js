@@ -7,7 +7,7 @@
  * @property addRecentDamageType {function({ effect: D20Effect, type: string, amount: number })}
  * @property addSkill {function({ skill: string })}
  * @property clearAggressor {function}
- * @property clearRecentDamageTypes{function({ effect: D20Effect })}
+ * @property clearRecentDamageTypes {function({ effect: D20Effect })}
  * @property clearTarget {function}
  * @property damage {function({ amount: number })}
  * @property decrementEffectDuration {function({ effect: D20Effect, value: number })}
@@ -17,8 +17,6 @@
  * @property heal {function({ amount })}
  * @property importCreatureState {function({ state })}
  * @property patchEffect {function({ effect: D20Effect })}
- * @property removeEffect {function({ effect: D20Effect })}
- * @property removeEffectIndex {function({ index: number })}
  * @property resetCharacter {function}
  * @property setAbility {function({ ability: string, value: number })}
  * @property setAreaFlags {function({ flags: string[] })}
@@ -32,7 +30,7 @@
  * @property setSpecie {function({ value })}
  * @property setSpeed {function({ value })}
  * @property setTargetDistance {function({ value })}
- * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[] })}
+ * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[], effects: string[] })}
  * @property updateFeatEffects {function()}
- * @property updateTargetConditions {function({ [id]: number, conditions: Set|[] })}
+ * @property updateTargetConditions {function({ [id]: number, conditions: Set|[], effects: string[] })}
  */

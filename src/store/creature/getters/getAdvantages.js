@@ -11,6 +11,7 @@ const { targetAffectedByMe, getDisAndAdvEffectRegistry, getThoseProvidedByEffect
 module.exports = (state, getters) => {
     const targetConditions = getters.getTargetConditions
     const oAdvantageEffectRegistry = getters.getAdvantagePropEffects
+    const targetEffects = getters.getTargetEffectList
 
     /*
     Commencer par définir les règles.
@@ -30,6 +31,8 @@ module.exports = (state, getters) => {
     // TARGET_PRONE_AND_CLOSE : La cible est à terre et proche (une cible à terre et loin est plus difficile à toucher)
     const TARGET_PRONE_AND_CLOSE = targetConditions.has(CONSTS.CONDITION_PRONE) && getters.isTargetInMeleeWeaponRange
 
+    const TARGET_ELUSIVE = targetEffects.has(CONSTS.EFFECT_ELUSIVE)
+
     /*
     Définir l'ossature D20AdvantagesOrDisadvantages
      */
@@ -40,37 +43,37 @@ module.exports = (state, getters) => {
                 TARGET_INCAPACITATED,
                 TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_STRENGTH)
-            }),
+            }, TARGET_ELUSIVE),
             ABILITY_DEXTERITY: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
                 TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_DEXTERITY)
-            }),
+            }, TARGET_ELUSIVE),
             ABILITY_CONSTITUTION: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
                 TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CONSTITUTION)
-            }),
+            }, TARGET_ELUSIVE),
             ABILITY_INTELLIGENCE: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
                 TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_INTELLIGENCE)
-            }),
+            }, TARGET_ELUSIVE),
             ABILITY_WISDOM: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
                 TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_WISDOM)
-            }),
+            }, TARGET_ELUSIVE),
             ABILITY_CHARISMA: computeRuleValue({
                 UNDETECTED,
                 TARGET_INCAPACITATED,
                 TARGET_PRONE_AND_CLOSE,
                 ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_ATTACK, CONSTS.ABILITY_CHARISMA)
-            })
+            }, TARGET_ELUSIVE)
         },
         ROLL_TYPE_SAVE: {
             ABILITY_STRENGTH: computeRuleValue({

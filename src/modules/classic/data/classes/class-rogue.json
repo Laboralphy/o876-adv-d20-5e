@@ -339,6 +339,14 @@
       ]
     },
     {
+      "level": 18,
+      "feats": [
+        {
+          "feat": "feat-elusive"
+        }
+      ]
+    },
+    {
       "level": 19,
       "abilityScoreImprovement": true,
       "feats": [
