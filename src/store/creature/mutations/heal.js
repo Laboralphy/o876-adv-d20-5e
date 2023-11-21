@@ -1,4 +1,4 @@
-module.exports = ({ state }, { amount }) => {
+module.exports = ({ state }, { amount = Infinity } = {}) => {
     if (isNaN(amount)) {
         throw new TypeError('heal amount must be a number. "' + amount + '" given')
     }

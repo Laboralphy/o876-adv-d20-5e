@@ -10,6 +10,22 @@
     "wisdom": 12,
     "charisma": 8
   },
+  "skills": [
+    "skill-intimidation",
+    "skill-perception"
+  ],
+  "feats": [
+    {
+      "feat": "feat-fighting-style-defense"
+    },
+    {
+      "feat": "feat-second-wind",
+      "uses": 1
+    },
+    {
+      "feat": "feat-improve-critical"
+    }
+  ],
   "size": "CREATURE_SIZE_MEDIUM",
   "specie": "SPECIE_HUMANOID",
   "speed": 30,

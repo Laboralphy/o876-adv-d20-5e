@@ -13,6 +13,7 @@ module.exports = {
     ...require('./equipment-slots.json'),
     ...require('./genders.json'),
     ...require('./effect-subtypes.json'),
+    ...require('./effect-unicity.json'),
     ...require('./index.js'),
     ...require('./item-types.json'),
     ...require('./item-properties.json'),

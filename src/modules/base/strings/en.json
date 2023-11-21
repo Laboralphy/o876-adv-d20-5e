@@ -7,8 +7,7 @@
     "armor-type-natural": "Natural armor"
   },
   "skill": {
-    "skill-perception": "Perception",
-    "skill-unlock": "Unlock"
+    "skill-perception": "Perception"
   },
   "weaponType": {
     "weapon-type-improvised": "Improvised weapon",

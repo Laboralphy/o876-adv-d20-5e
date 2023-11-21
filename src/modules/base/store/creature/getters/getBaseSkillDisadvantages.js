@@ -5,7 +5,7 @@ const CONSTS = require("../../../../../consts");
 /**
  * @param state
  * @param getters
- * @returns {{'skill-perception': D20RuleValue, 'skill-unlock': D20RuleValue}}
+ * @returns {{'skill-perception': D20RuleValue }}
  */
 module.exports = (state, getters) => {
     const oDisadvantageRegistry = getters.getDisadvantagePropEffects
@@ -18,9 +18,6 @@ module.exports = (state, getters) => {
         'skill-perception': computeRuleValue({
             AREA_DARK,
             ...getThoseProvidedByEffects(oDisadvantageRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-perception')
-        }),
-        'skill-unlock': computeRuleValue({
-            ...getThoseProvidedByEffects(oDisadvantageRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-unlock')
         })
     }
 }

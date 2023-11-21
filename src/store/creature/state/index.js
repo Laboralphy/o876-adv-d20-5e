@@ -3,6 +3,7 @@ const CONSTS = require('../../../consts')
 module.exports = function () {
     return {
         id: '',
+        ref: '',
         abilities: {
             [CONSTS.ABILITY_STRENGTH]: 0,
             [CONSTS.ABILITY_DEXTERITY]: 0,
@@ -48,12 +49,14 @@ module.exports = function () {
             id: '',
             active: false,
             conditions: {},
+            effects: [],
             distance: 0
         },
         aggressor: {
             id: '',
             active: false,
-            conditions: {}
+            conditions: {},
+            effects: []
         },
         action: '',
         encumbrance: 0,

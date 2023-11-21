@@ -1,0 +1,6 @@
+{
+  "description": "Double proficiency bonus for rogue skills",
+  "effects": [
+    ["EFFECT_SKILL_EXPERTISE", 1, "skill-insight"]
+  ]
+}

@@ -184,6 +184,26 @@ class EntityFactory {
         csm.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: ba.wisdom })
         csm.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: ba.charisma })
 
+        if ('skills' in oBlueprint) {
+            oBlueprint.skills.forEach(s => {
+                csm.addProficiency({ proficiency: s })
+            })
+        }
+
+        if ('feats' in oBlueprint) {
+            oBlueprint.feats.forEach(({ feat, uses = 0 }) => {
+                csm.addFeat({ feat })
+                if (uses > 0) {
+                    csm.setCounterValue({
+                        counter: feat,
+                        max: uses,
+                        value: uses,
+                        create: true
+                    })
+                }
+            })
+        }
+
         const bi = oBlueprint.equipment
         bi.forEach(e => {
             oCreature.equipItem(this.createEntity(e))

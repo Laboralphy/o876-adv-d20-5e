@@ -310,7 +310,8 @@ class AssetManager {
             'shield-type',
             'ammo-type',
             'skill',
-            'feat'
+            'feat',
+            'template'
         ]
         const getDataType = (sId) => {
             return DATA_TYPES.find(dt => sId.startsWith(dt + '-'))

@@ -1,0 +1,113 @@
+{
+  "description": "A generic rogue template",
+  "abilities": {
+    "ABILITY_STRENGTH": 12,
+    "ABILITY_DEXTERITY": 16,
+    "ABILITY_CONSTITUTION": 14,
+    "ABILITY_INTELLIGENCE": 14,
+    "ABILITY_WISDOM": 10,
+    "ABILITY_CHARISMA": 12
+  },
+  "levels": [
+    {
+      "level": 1,
+      "class": "rogue",
+      "skills": [
+        "skill-stealth",
+        "skill-sleight-of-hand",
+        "skill-perception",
+        "skill-deception"
+      ],
+      "feats": [
+        "feat-expertise-thieves-tools",
+        "feat-expertise-sleight-of-hand"
+      ]
+    },
+    {
+      "level": 2,
+      "class": "rogue"
+    },
+    {
+      "level": 3,
+      "class": "rogue"
+    },
+    {
+      "level": 4,
+      "class": "rogue",
+      "ability": "ABILITY_DEXTERITY"
+    },
+    {
+      "level": 5,
+      "class": "rogue"
+    },
+    {
+      "level": 6,
+      "class": "rogue",
+      "feats": [
+        "feat-expertise-stealth",
+        "feat-expertise-perception"
+      ]
+    },
+    {
+      "level": 7,
+      "class": "rogue"
+    },
+    {
+      "level": 8,
+      "class": "rogue",
+      "ability": "ABILITY_DEXTERITY"
+    },
+    {
+      "level": 9,
+      "class": "rogue"
+    },
+    {
+      "level": 10,
+      "class": "rogue",
+      "ability": "ABILITY_DEXTERITY"
+    },
+    {
+      "level": 11,
+      "class": "rogue"
+    },
+    {
+      "level": 12,
+      "class": "rogue",
+      "ability": "ABILITY_DEXTERITY"
+    },
+    {
+      "level": 13,
+      "class": "rogue"
+    },
+    {
+      "level": 14,
+      "class": "rogue"
+    },
+    {
+      "level": 15,
+      "class": "rogue"
+    },
+    {
+      "level": 16,
+      "class": "rogue",
+      "ability": "ABILITY_DEXTERITY"
+    },
+    {
+      "level": 17,
+      "class": "rogue"
+    },
+    {
+      "level": 18,
+      "class": "rogue"
+    },
+    {
+      "level": 19,
+      "class": "rogue",
+      "ability": "ABILITY_DEXTERITY"
+    },
+    {
+      "level": 20,
+      "class": "rogue"
+    }
+  ]
+}

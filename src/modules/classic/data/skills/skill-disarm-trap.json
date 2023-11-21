@@ -1,8 +1,0 @@
-{
-  "description": "Disarm a trap, an alarm or anything that causes unwanted effects when people trespasses an area.",
-  "ability": "ABILITY_DEXTERITY",
-  "getters": {
-    "advantage": "getClassicSkillAdvantages",
-    "disadvantage": "getClassicSkillDisadvantages"
-  }
-}

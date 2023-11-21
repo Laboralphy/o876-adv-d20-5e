@@ -8,11 +8,13 @@
  * @property getAbilityList {string[]}
  * @property getAbilityModifiers {D20AbilityNumberRegistry}
  * @property getAbilityValues {D20AbilityNumberRegistry}
+ * @property getActions {{innate: boolean, uses: {max: number, value: number}, action: string}[]}
  * @property getAdvantagePropEffects {Object<string, Object<string, string>>}
  * @property getAdvantages {D20AdvantagesOrDisadvantages}
  * @property getAggressor {{ condition: Object.<string, boolean>}}
  * @property getAggressorConditionSources {{}}
  * @property getAggressorConditions {Set}
+ * @property getAggressorEffectList {Set}
  * @property getApproachToTargetTurns {number}
  * @property getAreaFlags {Set<string>}
  * @property getArmorClass {number}
@@ -35,6 +37,7 @@
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantagePropEffects {Object<string, string>}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
+ * @property getEffectList {Set<string>}
  * @property getEffectSources {string[]}
  * @property getEffects {D20Effect[]}
  * @property getEncumbranceLevel {number}
@@ -47,6 +50,7 @@
  * @property getExhaustionLevel {number}
  * @property getExportedState {{id: number, specie: (string|*), counters: (*|{}), classes: ([]|*), equipment: ([{damage: string, itemType: string, entityType: string, weaponType: string, attributes: [], damageType: string, properties: [{amp: number, property: string},{amp: string, property: string, type: string}]},{itemType: string, material: string, entityType: string, armorType: string, properties: [{property: string, type: string},{property: string, type: string},{property: string, type: string},{condition: string, property: string},{amp: number, skill: string, property: string}]}]|*), gauges: ({damage: number}|*), feats: ([]|*), speed: *, encumbrance: (number|*), abilities, skills: ([]|*), effects: (number|[]|*), size, proficiencies: ([]|*), offensiveSlot: *, recentDamageTypes: *, alignment: ({entropy: number, morality: number}|*)}}
  * @property getFeatReport {FeatReport[]}
+ * @property getFeats {Set<string>}
  * @property getHealMitigation {{pharma: boolean, negateheal: boolean, factor: number}}
  * @property getHitPoints {number}
  * @property getId {number}
@@ -80,6 +84,8 @@
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property getTargetDistance {number}
+ * @property getTargetEffectList {Set}
+ * @property isNotIncapacitated {boolean}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}
  * @property isRangedWeaponProperlyLoaded {boolean}
@@ -87,6 +93,7 @@
  * @property isTargetInMeleeWeaponRange {boolean}
  * @property isTargetInWeaponRange {boolean}
  * @property isWearingStealthDisadvantagedArmor {boolean}
+ * @property isWieldingFinesseWeapon {boolean}
  * @property isWieldingHeavyMeleeWeapon {boolean}
  * @property isWieldingHeavyWeapon {boolean}
  * @property isWieldingNonLightWeapon {boolean}
@@ -97,6 +104,16 @@
  * @property getWizardSpellSlots {number[]}
  * @property has1HWeaponNoShield {boolean}
  * @property has2HWeaponNoShield {boolean}
+ * @property hasNoSneakAttack1 {boolean}
+ * @property hasNoSneakAttack10 {boolean}
+ * @property hasNoSneakAttack2 {boolean}
+ * @property hasNoSneakAttack3 {boolean}
+ * @property hasNoSneakAttack4 {boolean}
+ * @property hasNoSneakAttack5 {boolean}
+ * @property hasNoSneakAttack6 {boolean}
+ * @property hasNoSneakAttack7 {boolean}
+ * @property hasNoSneakAttack8 {boolean}
+ * @property hasNoSneakAttack9 {boolean}
  * @property isHPBelow50Percent {boolean}
  * @property isWearingArmor {boolean}
  */

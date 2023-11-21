@@ -18,7 +18,6 @@ module.exports = (state, getters) => {
 
     // TARGET_CHARMED : La cible est charmée par this
     const TARGET_CHARMED = targetAffectedByMe(CONSTS.CONDITION_CHARMED, getters)
-
     /*
     Définir l'ossature D20AdvantagesOrDisadvantages
      */
@@ -38,9 +37,6 @@ module.exports = (state, getters) => {
         'skill-deception': computeRuleValue({
             TARGET_CHARMED,
             ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-deception')
-        }),
-        'skill-disarm-trap': computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-disarm-trap')
         }),
         'skill-history': computeRuleValue({
             ...getThoseProvidedByEffects(oAdvantageEffectRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-history')

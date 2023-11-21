@@ -16,7 +16,6 @@
     "skill-arcana":  "Arcanes",
     "skill-athletics": "Athlétisme",
     "skill-deception": "Tromperie",
-    "skill-disarm-trap": "Désamorçage",
     "skill-history": "Histoire",
     "skill-insight": "Connaissances",
     "skill-intimidation": "Intimidation",
@@ -26,7 +25,7 @@
     "skill-performance": "Interprétation",
     "skill-persuasion": "Persuasion",
     "skill-religion": "Religion",
-    "skill-sleight-of-hand": "Vol à la tire",
+    "skill-sleight-of-hand": "Tour de passe-passe",
     "skill-stealth": "Furtivité",
     "skill-survival": "Survie"
   },

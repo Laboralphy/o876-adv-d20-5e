@@ -5,16 +5,13 @@ const {computeRuleValue} = require("../../../../../store/creature/common/compute
 /**
  * @param state
  * @param getters
- * @returns {{'skill-perception': D20RuleValue, 'skill-unlock': D20RuleValue}}
+ * @returns {{'skill-perception': D20RuleValue}}
  */
 module.exports = (state, getters) => {
     const oAdvantageRegistry = getters.getAdvantagePropEffects
     return {
         'skill-perception': computeRuleValue({
             ...getThoseProvidedByEffects(oAdvantageRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-perception')
-        }),
-        'skill-unlock': computeRuleValue({
-            ...getThoseProvidedByEffects(oAdvantageRegistry, CONSTS.ROLL_TYPE_CHECK, 'skill-unlock')
         })
     }
 }

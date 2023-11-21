@@ -1,0 +1,110 @@
+{
+  "description": "A generic fighter template",
+  "abilities": {
+    "ABILITY_STRENGTH": 16,
+    "ABILITY_DEXTERITY": 14,
+    "ABILITY_CONSTITUTION": 14,
+    "ABILITY_INTELLIGENCE": 14,
+    "ABILITY_WISDOM": 10,
+    "ABILITY_CHARISMA": 10
+  },
+  "levels": [
+    {
+      "level": 1,
+      "class": "fighter",
+      "skills": [
+        "skill-athletics",
+        "skill-acrobatics"
+      ],
+      "feats": [
+        "feat-fighting-style-defense"
+      ]
+    },
+    {
+      "level": 2,
+      "class": "fighter"
+    },
+    {
+      "level": 3,
+      "class": "fighter"
+    },
+    {
+      "level": 4,
+      "class": "fighter",
+      "ability": "ABILITY_STRENGTH"
+    },
+    {
+      "level": 5,
+      "class": "fighter"
+    },
+    {
+      "level": 6,
+      "class": "fighter",
+      "ability": "ABILITY_STRENGTH"
+    },
+    {
+      "level": 7,
+      "class": "fighter"
+    },
+    {
+      "level": 8,
+      "class": "fighter",
+      "ability": "ABILITY_STRENGTH"
+    },
+    {
+      "level": 9,
+      "class": "fighter"
+    },
+    {
+      "level": 10,
+      "class": "fighter",
+      "feats": [
+        "feat-fighting-style-archery"
+      ]
+    },
+    {
+      "level": 11,
+      "class": "fighter"
+    },
+    {
+      "level": 12,
+      "class": "fighter",
+      "ability": "ABILITY_STRENGTH"
+    },
+    {
+      "level": 13,
+      "class": "fighter"
+    },
+    {
+      "level": 14,
+      "class": "fighter",
+      "ability": "ABILITY_STRENGTH"
+    },
+    {
+      "level": 15,
+      "class": "fighter"
+    },
+    {
+      "level": 16,
+      "class": "fighter",
+      "ability": "ABILITY_STRENGTH"
+    },
+    {
+      "level": 17,
+      "class": "fighter"
+    },
+    {
+      "level": 18,
+      "class": "fighter"
+    },
+    {
+      "level": 19,
+      "class": "fighter",
+      "ability": "ABILITY_STRENGTH"
+    },
+    {
+      "level": 20,
+      "class": "fighter"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 const createEffect = require('./abstract')
 const CONSTS = require('../consts')
+const { EFFECT_UNCANNY_DODGE, EFFECT_SUBTYPE_WEAPON } = CONSTS
 
 /**
  * Inflict damage
@@ -24,12 +25,14 @@ function create (amount, type, material = CONSTS.MATERIAL_UNKNOWN, critical = fa
  * Apply effect modification on effect target
  * @param effect {D20Effect}
  * @param target {Creature}
+ * @param source {Creature}
  */
-function mutate ({ effect, target }) {
+function mutate ({ effect, target, source }) {
     // What is the damage resistance, vulnerability, reduction ?
     const oMitigation = target.store.getters.getDamageMitigation
     const sType = effect.data.type
     const aMaterials = effect.data.material
+    const bSubTypeWeapon = effect.subtype === EFFECT_SUBTYPE_WEAPON
     let bMaterialVulnerable = false
     if (aMaterials) {
         bMaterialVulnerable = aMaterials.some(m => oMitigation[m] && oMitigation[m].vulnerability)
@@ -45,6 +48,16 @@ function mutate ({ effect, target }) {
     } else {
         // no resistance no absorb no immunity
         effect.data.appliedAmount = amp
+    }
+    if (target.store.getters.getEffectList.has(EFFECT_UNCANNY_DODGE)) {
+        const eUncannyDodge = target.store.getters.getEffects.find(eff => eff.type === EFFECT_UNCANNY_DODGE && eff.amp > 0)
+        if (bSubTypeWeapon && !!eUncannyDodge && source === target.getTarget()) {
+            const appliedAmount = Math.ceil(effect.data.appliedAmount / 2)
+            const resistedAmount = effect.data.appliedAmount - appliedAmount
+            effect.data.resistedAmount += resistedAmount
+            effect.amp = appliedAmount
+            eUncannyDodge.amp = 0
+        }
     }
     target.store.mutations.addRecentDamageType({ amount: effect.amp, type: sType })
     target.store.mutations.damage({ amount: effect.amp })

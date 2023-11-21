@@ -10,7 +10,6 @@ const Comparator = require('./Comparator')
 const { aggregateModifiers } = require("./store/creature/common/aggregate-modifiers");
 
 
-
 /**
  * @typedef D20AbilityNumberRegistry {object}
  * @property ABILITY_STRENGTH {number}
@@ -110,6 +109,7 @@ class Creature {
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
         this._store.mutations.setId({ value: this._id })
+        this._hasUsedSneakAttack = false
     }
 
     static set AssetManager (value) {
@@ -134,6 +134,7 @@ class Creature {
      */
     set ref (value) {
         this._ref = value
+        this.store.mutations.setRef({ value })
     }
 
     /**
@@ -163,6 +164,11 @@ class Creature {
     get effectProcessor () {
         return this._effectProcessor
     }
+
+    get EffectProcessor () {
+        return EffectProcessor
+    }
+
     get id () {
         return this._id
     }
@@ -332,6 +338,7 @@ class Creature {
     clearTarget () {
         if (this._target.creature && this._target.handler) {
             this._target.creature.store.events.off('mutation', this._target.handler)
+            this._target.creature.endAggression(this)
             this._target.creature = null
             this._target.handler = null
             this.store.mutations.clearTarget()
@@ -342,7 +349,10 @@ class Creature {
         switch (name) {
             case 'removeEffect':
             case 'addEffect': {
-                this.store.mutations.updateTargetConditions({ conditions: this._target.creature.store.getters.getConditionSources })
+                this.store.mutations.updateTargetConditions({
+                    conditions: this._target.creature.store.getters.getConditionSources,
+                    effects: this._target.creature.store.getters.getEffectList
+                })
                 break
             }
         }
@@ -392,7 +402,8 @@ class Creature {
             this._target.handler = ({ name, payload }) => this.updateTarget(name, payload)
             this.store.mutations.updateTargetConditions({
                 id: oCreature.id,
-                conditions: this._target.creature.store.getters.getConditionSources
+                conditions: this._target.creature.store.getters.getConditionSources,
+                effects: this._target.creature.store.getters.getEffectList
             })
             oCreature.store.events.on('mutation', this._target.handler)
             this.initializeDistanceToTarget(Creature.AssetManager.data.variables.DEFAULT_TARGET_DISTANCE)
@@ -435,7 +446,10 @@ class Creature {
         switch (name) {
             case 'removeEffect':
             case 'addEffect': {
-                this.store.mutations.updateAggressorConditions({ conditions: this._aggressor.creature.store.getters.getConditionSources })
+                this.store.mutations.updateAggressorConditions({
+                    conditions: this._aggressor.creature.store.getters.getConditionSources,
+                    effects: this._aggressor.creature.store.getters.getEffectList
+                })
                 break
             }
         }
@@ -446,7 +460,11 @@ class Creature {
             this.clearAggressor()
             this._aggressor.creature = oCreature
             this._aggressor.handler = ({ name, payload }) => this.updateAggressor(name, payload)
-            this.store.mutations.updateAggressorConditions({ id: oCreature.id, conditions: this._aggressor.creature.store.getters.getConditionSources })
+            this.store.mutations.updateAggressorConditions({
+                id: oCreature.id,
+                conditions: this._aggressor.creature.store.getters.getConditionSources,
+                effects: this._aggressor.creature.store.getters.getEffectList
+            })
             oCreature.store.events.on('mutation', this._aggressor.handler)
         }
     }
@@ -463,6 +481,14 @@ class Creature {
         if (this.getTarget() === oCreature) {
             this.clearTarget()
         }
+        this.endAggression(oCreature)
+    }
+
+    /**
+     * Signifie qu'une creature arrête de nous attaquer
+     * @param oCreature {Creature}
+     */
+    endAggression (oCreature) {
         if (this.getAggressor() === oCreature) {
             this.clearAggressor()
         }
@@ -580,7 +606,13 @@ class Creature {
 
     getSkillData (sSkill) {
         const sSkillDataProp = sSkill.toLowerCase().replace(/_/g, '-')
-        return Creature.AssetManager.data[sSkillDataProp]
+        if (sSkillDataProp in Creature.AssetManager.data) {
+            return Creature.AssetManager.data[sSkillDataProp]
+        } else {
+            if (sSkillDataProp.startsWith('skill-')) {
+                throw new Error(sSkill + ' is not in data')
+            }
+        }
     }
 
     /**
@@ -716,6 +748,23 @@ class Creature {
     }
 
     /**
+     * Vérifie l'effet LUCKY pour savoir si on a la possibilité de transformer un echec en réussite
+     * @return {boolean}
+     */
+    checkLuck () {
+        if (!this.store.getters.getEffectList.has(CONSTS.EFFECT_LUCKY)) {
+            return false
+        }
+        const eLucky = this.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_LUCKY)
+        if (eLucky.amp >= 20) {
+            eLucky.amp = 0
+            return true
+        } else {
+            return false
+        }
+    }
+
+    /**
      * Effectue une attaque, ajoute les bonus d'attaque, détermine si le coup est critique
      * Ne fonctionne qu'avec les attaques physiques, pas les sorts
      *
@@ -734,6 +783,7 @@ class Creature {
      * @property ammo {D20Item}
      * @property advantages {D20RuleValue}
      * @property disadvantages {D20RuleValue}
+     * @property sneakable {boolean}
      * @property damages {amount: number, types: object<string, number>, resisted: object<string, number>}
      *
      * @returns {AttackOutcome}
@@ -755,6 +805,18 @@ class Creature {
         const disadvantages = sg.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
         const bCriticalHit = dice >= Creature.AssetManager.data.variables.ROLL_AUTO_SUCCESS
         const bCriticalFail = dice <= Creature.AssetManager.data.variables.ROLL_AUTO_FAIL
+        const bFinesseWeapon = sg.isWieldingFinesseWeapon
+        const bRangedWeapon = sg.isWieldingRangedWeapon && sg.isRangedWeaponProperlyLoaded
+        const bAdvantaged = advantages.value
+        const bDisadvantaged = disadvantages.value
+        const bDistractedTarget = oTarget.getTarget() !== this
+        const bSneakableWeapon = bFinesseWeapon || bRangedWeapon
+        // Regle du sneak :
+        // 1: disposer d'une arme finesse ou ranged
+        // 2: être avantagé en attaque
+        // 3: ne pas être avantagé en attaque mais la cible est occupée avec une autre cible
+        // resultat = 1 && (2 || 3)
+        const sneakable = bSneakableWeapon && (bAdvantaged || (!bDisadvantaged && bDistractedTarget))
         const hit = bCriticalHit
             ? true
             : bCriticalFail
@@ -777,6 +839,7 @@ class Creature {
             ammo,
             advantages,
             disadvantages,
+            sneakable,
             damages: {
                 amount: 0,
                 resisted: {},
@@ -810,6 +873,7 @@ class Creature {
             failure: '',
             advantages: { rules: [], value: false },
             disadvantages: { rules: [], value: false },
+            sneakable: false,
             damages: {
                 amount: 0,
                 resisted: {},
@@ -822,57 +886,85 @@ class Creature {
     /**
      * Lance un dé pour déterminer le résultat d'une vérification compétence
      * On détermine la caractéristique associée à la compétence puis lance un D20
+     *
+     * Pour sleight of hand il faut faire un rollSkill('skill-sleight-of-hand', ...)
+     * Mais si on utilise un thieves tool on doit ajouter le bonus proficiency (si on a l'expertise)
+     *
+     * @param sSkill {string} le skill à tester
+     * @param dc {number} difficulty class
+     * @param sExtraStackingProficiency {string|''} principalement utilisé lorsqu'un outil permet d'appuyer l'expertise
+     * de la compétence, généralement THIEVES TOOL
      */
-    rollSkill (sSkill, dc = undefined) {
+    rollSkill (sSkill, dc, sExtraStackingProficiency = '') {
         const sg = this.store.getters
         // données du skill
         const aSkills = sg.getProficiencies
-        const bProficient = aSkills.includes(sSkill)
+        const bSkillProficient = aSkills.includes(sSkill)
         // déterminer les bonus du skill
         const nSkillBonus = this
             .aggregateModifiers([
-                CONSTS.ITEM_PROPERTY_SKILL_BONUS
+                CONSTS.ITEM_PROPERTY_SKILL_BONUS,
+                CONSTS.EFFECT_SKILL_BONUS
             ], {
                 propFilter: prop => prop.data.skill === sSkill,
+                effectFilter: eff => eff.data.skill === sSkill,
             }).sum
         // déterminer la carac du skill
         const oSkillData = this.getSkillData(sSkill)
         const sSkillAbility = oSkillData.ability
         // Ajouter un evéntuel bonus de proficiency (mais qui ne se stack pas)
-        const nNormalProfBonus = (bProficient ? sg.getProficiencyBonus : 0)
-        const nExtraProfBonus = this
+        const nSkillProfBonus = (bSkillProficient ? sg.getProficiencyBonus : 0)
+        const amExpertise = this
             .aggregateModifiers([
                 CONSTS.EFFECT_SKILL_EXPERTISE
             ], {
-                effectFilter: eff => eff.data.type === sSkill || eff.data.type === sSkillAbility,
-                effectAmpMapper: eff => Math.ceil(eff.amp * sg.getProficiencyBonus)
-            }).max
-        const nTotalProfBonus = Math.max(nNormalProfBonus, nExtraProfBonus)
+                effectFilter: eff => eff.data.type === sSkill || eff.data.type === sSkillAbility || eff.data.type === sExtraStackingProficiency,
+                effectAmpMapper: eff => Math.ceil(eff.amp * sg.getProficiencyBonus),
+                effectSorter: eff => eff.data.type
+            })
+        const amExpertiseSorter = amExpertise.sorter
+        const nSkillExpertiseValue = amExpertiseSorter[sSkill]?.max || 0
+        const nAbilityExpertiseValue = amExpertiseSorter[sSkillAbility]?.max || 0
+        const nStackedExpertiseValue = amExpertiseSorter[sExtraStackingProficiency]?.max || 0
+        const nMinimumRoll = nSkillExpertiseValue > 0
+            ? this
+                .aggregateModifiers([
+                    CONSTS.EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL
+                ], {
+                }).max || 0
+            : 0
+        const nExtraProfBonus = Math.max(nSkillExpertiseValue, nAbilityExpertiseValue)
+        const nTotalProfBonus = Math.max(nSkillProfBonus, nExtraProfBonus)
         const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
-        const nTotalBonus = nAbilityBonus + nSkillBonus + nTotalProfBonus
+        const nTotalBonus = nAbilityBonus + nSkillBonus + nTotalProfBonus + nStackedExpertiseValue
         const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
-        const nTotal = value + nTotalBonus
-        const output = {
+        const roll = Math.max(nMinimumRoll, value)
+        const nTotal = roll + nTotalBonus
+        const success = nTotal >= dc
+        const outcome = {
             bonus: nTotalBonus,
-            roll: value,
+            roll,
             value: nTotal,
             dc,
-            success: dc !== undefined ? nTotal >= dc : undefined,
+            success,
             ability: sSkillAbility,
             circumstance: this.getCircumstanceNumValue(circumstances)
         }
-        this._events.emit('check-skill', output)
-        return output
+        this.effectProcessor.invokeAllEffectsMethod(this, 'check', this, this, { outcome })
+        // To unlock door : throw skill sleight of hand + ptoficiency bonus with thieves tools
+        this._events.emit('check-skill', outcome)
+        return outcome
     }
 
     /**
      * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
      * La valeur renvoyée ne fait pas intervenir des bonus liés aux effets de la créature ou à ses caractéristiques
      * @param critical {boolean} si true alors le coup est critique et tous les jets de dé doivent être doublés
+     * @param sneak {boolean} appliquer le sneak attack damage bonus si true
      * @param dice {Dice} dé à utiliser
      * return {Object<string, number>}
      */
-    rollWeaponDamage ({ critical = false } = {}) {
+    rollWeaponDamage ({ critical = false, sneak = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
         const nExtraDamageDice = this.store.getters.isWieldingHeavyMeleeWeapon
             ? this.store.getters.getSizeProperties.extraMeleeDamageDice
@@ -891,9 +983,20 @@ class Creature {
         }
         const oDamageBonus = this.getDamageBonus({ critical })
         if (!(oWeapon.damageType in oDamageBonus)) {
-            oDamageBonus[oWeapon.damageType] = Math.max(1, nDamage)
-        } else {
-            oDamageBonus[oWeapon.damageType] = Math.max(1, oDamageBonus[oWeapon.damageType] + nDamage)
+            oDamageBonus[oWeapon.damageType] = 0
+        }
+        oDamageBonus[oWeapon.damageType] = Math.max(1, oDamageBonus[oWeapon.damageType] + nDamage)
+        if (sneak) {
+            const amSneak = this.aggregateModifiers([
+                CONSTS.EFFECT_SNEAK_ATTACK
+            ])
+            const sSneakDice = amSneak.max.toString() + 'd6'
+            const nSneakDamage = this.roll(sSneakDice)
+            oDamageBonus[oWeapon.damageType] += nSneakDamage
+            this.events.emit('sneak-attack', {
+                dice: sSneakDice,
+                damage: nSneakDamage
+            })
         }
         return oDamageBonus
     }
@@ -1102,6 +1205,17 @@ class Creature {
     }
 
     /**
+     * Transmet un évènement d'attaque au gestionnaire.
+     * Notifie à tous les effets de cette attaque
+     * @param outcome {AttackOutcome}
+     */
+    notifyAttack (outcome) {
+        this.effectProcessor.invokeAllEffectsMethod(this, 'attack', outcome.target, this, { outcome })
+        outcome.target.effectProcessor.invokeAllEffectsMethod(outcome.target, 'attacked', outcome.target, this, { outcome })
+        this._events.emit('attack', { outcome })
+    }
+
+    /**
      * Effectue une attaque contre la cible actuelle
      * @param target {Creature} définit une nouvelle cible
      * @returns {AttackOutcome|false}
@@ -1118,7 +1232,7 @@ class Creature {
                 failed: true,
                 failure: CONSTS.ATTACK_OUTCOME_NO_TARGET,
             })
-            this._events.emit('attack', { outcome })
+            this.notifyAttack(outcome)
             return outcome
         }
 
@@ -1142,7 +1256,7 @@ class Creature {
                     failed: true,
                     failure: CONSTS.ATTACK_OUTCOME_UNREACHABLE
                 })
-                this._events.emit('attack', { outcome })
+                this.notifyAttack(outcome)
                 return outcome
             }
         } else {
@@ -1154,7 +1268,7 @@ class Creature {
                 failed: true,
                 failure: CONSTS.ATTACK_OUTCOME_CONDITION,
             })
-            this._events.emit('attack', { outcome })
+            this.notifyAttack(outcome)
             return outcome
         }
         // Déterminer si on est à portée
@@ -1163,7 +1277,7 @@ class Creature {
                 failed: true,
                 failure: CONSTS.ATTACK_OUTCOME_UNREACHABLE,
             })
-            this._events.emit('attack', { outcome })
+            this.notifyAttack(outcome)
             return outcome
         }
         oTarget.setAggressor(this)
@@ -1172,8 +1286,10 @@ class Creature {
         // si ça touche, calculer les dégâts
         if (oAtk.hit) {
             const oDamages = this.rollWeaponDamage({
-                critical: oAtk.critical
+                critical: oAtk.critical,
+                sneak: !this._hasUsedSneakAttack
             })
+            this._hasUsedSneakAttack = true
             // générer les effets de dégâts
             let amount = 0
             const oResisted = {}
@@ -1213,7 +1329,7 @@ class Creature {
                 this.processOnHit(oTarget, oAtk)
             }
         }
-        this._events.emit('attack', { outcome: oAtk })
+        this.notifyAttack(oAtk)
         return oAtk
     }
 

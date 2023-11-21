@@ -10,6 +10,26 @@
     "wisdom": 8,
     "charisma": 14
   },
+  "skills": [
+    "skill-sleight-of-hand",
+    "skill-stealth",
+    "skill-perception",
+    "skill-insight"
+  ],
+  "feats": [
+    {
+      "feat": "feat-sneak-attack-1"
+    },
+    {
+      "feat": "feat-expertise-thieves-tools"
+    },
+    {
+      "feat": "feat-expertise-thieves-tools"
+    },
+    {
+      "feat": "feat-expertise-sleight-of-hand"
+    }
+  ],
   "size": "CREATURE_SIZE_MEDIUM",
   "specie": "SPECIE_HUMANOID",
   "speed": 30,

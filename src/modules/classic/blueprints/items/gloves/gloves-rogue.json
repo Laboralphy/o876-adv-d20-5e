@@ -4,17 +4,7 @@
   "properties": [
     {
       "property": "ITEM_PROPERTY_SKILL_BONUS",
-      "skill": "skill-unlock",
-      "amp": 2
-    },
-    {
-      "property": "ITEM_PROPERTY_SKILL_BONUS",
       "skill": "skill-sleight-of-hand",
-      "amp": 2
-    },
-    {
-      "property": "ITEM_PROPERTY_SKILL_BONUS",
-      "skill": "skill-disarm-trap",
       "amp": 2
     }
   ]

@@ -7,7 +7,7 @@ class Evolution {
         this._data = Object
             .fromEntries(Object
                 .entries(value)
-                .filter(([sKey]) => sKey.startsWith('class-'))
+                .filter(([sKey]) => sKey.startsWith('class-') || sKey.startsWith('template-'))
             )
     }
 
@@ -195,6 +195,34 @@ class Evolution {
         return oOutcome
     }
 
+    setupCreatureFromTemplate (oCreature, sTemplate, nTargetLevel) {
+        const oTemplate = this._data[sTemplate]
+        const cm = oCreature.store.mutations
+        cm.resetCharacter()
+        for (const [ability, value] of Object.entries(oTemplate.abilities)) {
+            cm.setAbility({ ability, value })
+        }
+        for (let iLevel = 1; iLevel <= nTargetLevel; ++iLevel) {
+            const level = oTemplate
+                .levels
+                .find(({ level }) => level === iLevel)
+            const oParams = {
+                selectedClass: level.class
+            }
+            if ('skills' in level) {
+                oParams.selectedSkills = level.skills
+            }
+            if ('feats' in level) {
+                oParams.selectedFeats = level.feats
+            }
+            if ('ability' in level) {
+                oParams.selectedAbility = level.ability
+            }
+            this.creatureLevelUp(oCreature, oParams)
+        }
+        return oCreature
+    }
+
     creatureLevelUp (oCreature, {
         selectedClass,
         selectedFeats = [],
@@ -221,15 +249,9 @@ class Evolution {
             throw new Error('ERR_EVOL_CANT_MULTICLASS')
         }
 
-        // Est ce qu'on multiclass ?
-        const bMulticlass = this.isMultiClassing(oCreature, selectedClass)
-
         // Niveau auquel on acceder
         const nLevel = this.getClassNextLevelValue(oCreature, selectedClass)
-        const bNeedSkills = nLevel === 1
         const ex = this.getClassLevelData(oCreature, selectedClass, nLevel)
-        const cd = this.getClassData(selectedClass)
-
         const clur = this.checkLevelUpRequirements(oCreature, selectedClass)
 
         // les skills
@@ -272,13 +294,21 @@ class Evolution {
             }
         })
         // pour tous les feats sélecteionnés, créé un compteur de groupe
+        const aSelectedGroup = new Set()
+
         selectedFeats.forEach(selectedFeatName => {
-            const oFeat = ex.feats.find(f => f.feat === selectedFeatName)
+            const oFeat = ex.feats.find(f => f.feat === selectedFeatName && !aSelectedGroup.has(f.group))
+            // il faudra faire gaffe : il peut y avoir plusieur fois le même feat dans plusieur groupe différent
             if (!oFeat) {
+                const oFeatInAnotherGroup = ex.feats.find(f => f.feat === selectedFeatName && aSelectedGroup.has(f.group))
+                if (oFeatInAnotherGroup) {
+                    throw new Error('ERR_EVOL_GROUP_ALREADY_SELECTED: ' + oFeatInAnotherGroup.group + ' feat: ' + oFeatInAnotherGroup.feat)
+                }
                 // bizarre, l'un des feats sélectionnés n'est pas dispo à ce niveau dans la classe
                 throw new Error('ERR_EVOL_WEIRD_UNFOUND_FEAT: ' + selectedFeatName)
             }
             if ('group' in oFeat) {
+                aSelectedGroup.add(oFeat.group)
                 // on ne traite que les feats groupés
                 if (oFeat.group in oAvailableFeatGroups) {
                     ++oAvailableFeatGroups[oFeat.group]
@@ -302,7 +332,12 @@ class Evolution {
         // A ce stade tous les feats sélectionnés sont valides on peut les ajouter à la créature
         // Mais certains sont peut être des augmentations d'usage
         const aFinalFeats = [...(aAutoFeats.map(({ feat }) => feat)), ...selectedFeats]
-        const aFeatAugmentUses = aFinalFeats.filter(f => !!oLevelFeatRegistry[f].uses)
+        const aFeatAugmentUses = aFinalFeats
+            .filter(f => !!oLevelFeatRegistry[f].uses)
+            .map(f => ({
+                feat: f,
+                uses: oLevelFeatRegistry[f].uses
+            }))
         const aFeatAdd = aFinalFeats.filter(f => !aAlreadyHaveFeats.has(f))
 
         // Ajouter la classe
@@ -313,7 +348,12 @@ class Evolution {
         aFeatAdd.forEach(feat => {
             oCreature.store.mutations.addFeat({ feat })
         })
-        aFeatAugmentUses.forEach(({ feat, uses }) => oCreature.store.mutations.setCounterValue({ counter: feat, max: uses, create: true }))
+        aFeatAugmentUses.forEach(({ feat, uses }) => oCreature.store.mutations.setCounterValue({
+            counter: feat,
+            max: uses,
+            value: uses,
+            create: true
+        }))
 
         const bHasNewFeats = aFeatAdd.length > 0
         const bHasNewFeatUses = aFeatAugmentUses.length > 0
@@ -329,7 +369,7 @@ class Evolution {
 
         // Ajouter les skills
         selectedSkills.forEach(skill => {
-            oCreature.store.mutations.addSkill({ skill })
+            oCreature.store.mutations.addProficiency({ proficiency: skill })
             if (!('skills' in oJournal)) {
                 oJournal.skills = []
             }
