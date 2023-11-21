@@ -39,21 +39,22 @@ class EffectProcessor {
         return Effects[sEffect].create(...aArgs)
     }
 
-    invokeEffectMethod (oEffect, sMethod, oTarget, oSource) {
+    invokeEffectMethod (oEffect, sMethod, oTarget, oSource, data) {
         const oEffectProg = Effects[oEffect.type]
         if (sMethod in oEffectProg) {
             oEffectProg[sMethod]({
                 effect: oEffect,
                 source: oSource || oTarget,
-                target: oTarget
+                target: oTarget,
+                data
             }, this)
         }
     }
 
-    invokeAllEffectsMethod (oCreature, sMethod, oTarget, oSource) {
+    invokeAllEffectsMethod (oCreature, sMethod, oTarget, oSource, data) {
         const aEffects = oCreature.store.getters.getEffects
         for (let iEff = 0, l = aEffects.length; iEff < l; ++iEff) {
-            this.invokeEffectMethod(aEffects[iEff], sMethod, oTarget, oSource)
+            this.invokeEffectMethod(aEffects[iEff], sMethod, oTarget, oSource, data)
         }
     }
 

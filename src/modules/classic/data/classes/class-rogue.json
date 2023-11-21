@@ -354,6 +354,14 @@
           "feat": "feat-sneak-attack-10"
         }
       ]
+    },
+    {
+      "level": 20,
+      "feats": [
+        {
+          "feat": "feat-stroke-of-luck"
+        }
+      ]
     }
   ]
 }

@@ -817,16 +817,11 @@ class Creature {
         // 3: ne pas être avantagé en attaque mais la cible est occupée avec une autre cible
         // resultat = 1 && (2 || 3)
         const sneakable = bSneakableWeapon && (bAdvantaged || (!bDisadvantaged && bDistractedTarget))
-        let hit = bCriticalHit
+        const hit = bCriticalHit
             ? true
             : bCriticalFail
                 ? false
                 : roll >= ac
-        if (!hit) {
-            if (this.checkLuck()) {
-                hit = true
-            }
-        }
         const target = this.getTarget()
         const deflector = hit ? '' : target.getDeflectingArmorPart(bCriticalFail ? -1 : roll).type
         return {
@@ -943,19 +938,10 @@ class Creature {
         const nAbilityBonus = sg.getAbilityModifiers[sSkillAbility]
         const nTotalBonus = nAbilityBonus + nSkillBonus + nTotalProfBonus + nStackedExpertiseValue
         const { value, circumstances } = this.rollD20(CONSTS.ROLL_TYPE_CHECK, sSkillAbility, [sSkill])
-        let roll = Math.max(nMinimumRoll, value)
-        let nTotal = roll + nTotalBonus
-        let success = nTotal >= dc
-        if (!success) {
-            if ((20 + nTotalBonus) >= dc) {
-                if (this.checkLuck()) {
-                    roll = 20
-                    nTotal = roll + nTotalBonus
-                    success = nTotal >= dc
-                }
-            }
-        }
-        const output = {
+        const roll = Math.max(nMinimumRoll, value)
+        const nTotal = roll + nTotalBonus
+        const success = nTotal >= dc
+        const outcome = {
             bonus: nTotalBonus,
             roll,
             value: nTotal,
@@ -964,9 +950,10 @@ class Creature {
             ability: sSkillAbility,
             circumstance: this.getCircumstanceNumValue(circumstances)
         }
+        this.effectProcessor.invokeAllEffectsMethod(this, 'check', this, this, { outcome })
         // To unlock door : throw skill sleight of hand + ptoficiency bonus with thieves tools
-        this._events.emit('check-skill', output)
-        return output
+        this._events.emit('check-skill', outcome)
+        return outcome
     }
 
     /**
@@ -1218,6 +1205,17 @@ class Creature {
     }
 
     /**
+     * Transmet un évènement d'attaque au gestionnaire.
+     * Notifie à tous les effets de cette attaque
+     * @param outcome {AttackOutcome}
+     */
+    notifyAttack (outcome) {
+        this.effectProcessor.invokeAllEffectsMethod(this, 'attack', outcome.target, this, { outcome })
+        outcome.target.effectProcessor.invokeAllEffectsMethod(outcome.target, 'attacked', outcome.target, this, { outcome })
+        this._events.emit('attack', { outcome })
+    }
+
+    /**
      * Effectue une attaque contre la cible actuelle
      * @param target {Creature} définit une nouvelle cible
      * @returns {AttackOutcome|false}
@@ -1234,7 +1232,7 @@ class Creature {
                 failed: true,
                 failure: CONSTS.ATTACK_OUTCOME_NO_TARGET,
             })
-            this._events.emit('attack', { outcome })
+            this.notifyAttack(outcome)
             return outcome
         }
 
@@ -1258,7 +1256,7 @@ class Creature {
                     failed: true,
                     failure: CONSTS.ATTACK_OUTCOME_UNREACHABLE
                 })
-                this._events.emit('attack', { outcome })
+                this.notifyAttack(outcome)
                 return outcome
             }
         } else {
@@ -1270,7 +1268,7 @@ class Creature {
                 failed: true,
                 failure: CONSTS.ATTACK_OUTCOME_CONDITION,
             })
-            this._events.emit('attack', { outcome })
+            this.notifyAttack(outcome)
             return outcome
         }
         // Déterminer si on est à portée
@@ -1279,7 +1277,7 @@ class Creature {
                 failed: true,
                 failure: CONSTS.ATTACK_OUTCOME_UNREACHABLE,
             })
-            this._events.emit('attack', { outcome })
+            this.notifyAttack(outcome)
             return outcome
         }
         oTarget.setAggressor(this)
@@ -1331,7 +1329,7 @@ class Creature {
                 this.processOnHit(oTarget, oAtk)
             }
         }
-        this._events.emit('attack', { outcome: oAtk })
+        this.notifyAttack(oAtk)
         return oAtk
     }
 
