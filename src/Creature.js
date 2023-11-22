@@ -960,11 +960,10 @@ class Creature {
      * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
      * La valeur renvoyée ne fait pas intervenir des bonus liés aux effets de la créature ou à ses caractéristiques
      * @param critical {boolean} si true alors le coup est critique et tous les jets de dé doivent être doublés
-     * @param sneak {boolean} appliquer le sneak attack damage bonus si true
      * @param dice {Dice} dé à utiliser
      * return {Object<string, number>}
      */
-    rollWeaponDamage ({ critical = false, sneak = false } = {}) {
+    rollWeaponDamage ({ critical = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
         const nExtraDamageDice = this.store.getters.isWieldingHeavyMeleeWeapon
             ? this.store.getters.getSizeProperties.extraMeleeDamageDice
@@ -986,18 +985,6 @@ class Creature {
             oDamageBonus[oWeapon.damageType] = 0
         }
         oDamageBonus[oWeapon.damageType] = Math.max(1, oDamageBonus[oWeapon.damageType] + nDamage)
-        if (sneak) {
-            const amSneak = this.aggregateModifiers([
-                CONSTS.EFFECT_SNEAK_ATTACK
-            ])
-            const sSneakDice = amSneak.max.toString() + 'd6'
-            const nSneakDamage = this.roll(sSneakDice)
-            oDamageBonus[oWeapon.damageType] += nSneakDamage
-            this.events.emit('sneak-attack', {
-                dice: sSneakDice,
-                damage: nSneakDamage
-            })
-        }
         return oDamageBonus
     }
 
@@ -1286,13 +1273,15 @@ class Creature {
         // si ça touche, calculer les dégâts
         if (oAtk.hit) {
             const oDamages = this.rollWeaponDamage({
-                critical: oAtk.critical,
-                sneak: !this._hasUsedSneakAttack
+                critical: oAtk.critical
             })
-            this._hasUsedSneakAttack = true
             // générer les effets de dégâts
-            let amount = 0
             const oResisted = {}
+            // appliquer les effets sur la cible
+            oAtk.damages.resisted = oResisted
+            oAtk.damages.types = oDamages
+            oAtk.damages.amount = 0
+            this.notifyAttack(oAtk)
             Object
                 .entries(oDamages)
                 .forEach(([sType, nValue]) => {
@@ -1315,21 +1304,17 @@ class Creature {
                     } else {
                         oResisted[sType] += n
                     }
-                    amount += eMitigDam.amp
+                    oAtk.damages.amount += eMitigDam.amp
                     oDamages[sType] -= n
                     return eMitigDam
                 })
-            // appliquer les effets sur la cible
-            oAtk.damages.resisted = oResisted
-            oAtk.damages.types = oDamages
-            oAtk.damages.amount = amount
-
             // application d'effets on hit
-            if (amount > 0) {
+            if (oAtk.damages.amount > 0) {
                 this.processOnHit(oTarget, oAtk)
             }
+        } else {
+            this.notifyAttack(oAtk)
         }
-        this.notifyAttack(oAtk)
         return oAtk
     }
 
