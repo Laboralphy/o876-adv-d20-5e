@@ -88,7 +88,7 @@ class AssetManager {
             }
 
             case 'state/creature': {
-                this.storeManagers.creature.patchState(d.index())
+                this.storeManagers.creature.patchState(d.index)
                 break
             }
 
@@ -311,7 +311,8 @@ class AssetManager {
             'ammo-type',
             'skill',
             'feat',
-            'template'
+            'template',
+            'data'
         ]
         const getDataType = (sId) => {
             return DATA_TYPES.find(dt => sId.startsWith(dt + '-'))
@@ -319,7 +320,11 @@ class AssetManager {
         for (const [sId, data] of Object.entries(oData)) {
             const dt = getDataType(sId)
             if (dt) {
-                this.addData(sId, data, 'data-' + dt)
+                if (dt === 'data') {
+                    this.addData(sId, data)
+                } else {
+                    this.addData(sId, data, 'data-' + dt)
+                }
             } else {
                 const sSupportedTypes = DATA_TYPES.join(', ')
                 throw new Error('ERR_INVALID_DATA_TYPE: ' + sId + ' - supported item data types are : [' + sSupportedTypes + ']. but the specified data document is named : ' + sId + ' (does not start with any of the data types).')

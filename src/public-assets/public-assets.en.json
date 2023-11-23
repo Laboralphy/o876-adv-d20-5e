@@ -270,7 +270,7 @@
       "weapon-type-javelin": "Javelin",
       "weapon-type-light-hammer": "Light hammer",
       "weapon-type-mace": "Mace",
-      "weapon-type-quaterstaff": "Quaterstaff",
+      "weapon-type-quarterstaff": "Quarterstaff",
       "weapon-type-sickle": "Sickle",
       "weapon-type-spear": "Spear",
       "weapon-type-light-crossbow": "Light crossbow",
@@ -665,7 +665,7 @@
         "weight": 4,
         "attributes": []
       },
-      "weapon-type-quaterstaff": {
+      "weapon-type-quarterstaff": {
         "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
         "damage": "1d6",
         "versatileDamage": "1d8",

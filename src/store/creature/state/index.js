@@ -62,11 +62,11 @@ module.exports = function () {
         encumbrance: 0,
         areaFlags: [],
         feats: [],
-        skills: [],
         counters: {
             extraAttacks: {
                 value: 0
             }
-        }
+        },
+        data: {}
     }
 }

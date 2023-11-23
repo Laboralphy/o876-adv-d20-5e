@@ -1,4 +1,5 @@
 const Store = require('@laboralphy/store')
+const { deepClone, deepMerge} = require('@laboralphy/object-fusion')
 
 class StoreManager {
     constructor ({
@@ -8,6 +9,7 @@ class StoreManager {
         externals = {}
     }) {
         this._state = state
+        this._moduleStates = []
         this._getters = getters
         this._mutations = mutations
         this._storeCreated = 0
@@ -30,7 +32,7 @@ class StoreManager {
         }
     }
     patchState (oState) {
-        Object.assign(this._state, oState)
+        this._moduleStates.push(oState)
         this.tryWarn()
     }
 
@@ -66,8 +68,12 @@ class StoreManager {
 
     createStore () {
         ++this._storeCreated
+        const state = typeof this._state === 'function' ? this._state() : this._state
+        this._moduleStates.forEach(s => {
+            deepMerge(state, s)
+        })
         const storeDef = {
-            state: typeof this._state === 'function' ? this._state() : this._state,
+            state,
             mutations: this._mutations,
             getters: this._getters,
             externals: this._externals

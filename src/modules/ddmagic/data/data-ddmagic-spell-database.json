@@ -1,0 +1,92 @@
+{
+  "acid-splash": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false
+  },
+  "chill-touch": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false
+  },
+  "fire-bolt": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false
+  },
+  "light": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false
+  },
+  "mending": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false
+  },
+  "poison-spray": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false
+  },
+  "ray-of-frost": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false
+  },
+  "shocking-grasp": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false
+  },
+  "true-strike": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false
+  },
+  "charm-person": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false
+  },
+  "color-spray": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false
+  },
+  "false-life": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false
+  },
+  "magic-missile": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false
+  },
+  "mage-armor": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false
+  },
+  "invisibility": {
+    "level": 2,
+    "ritual": false,
+    "concentration": true
+  },
+  "acid-arrow": {
+    "level": 2,
+    "ritual": false,
+    "concentration": false
+  },
+  "hold-person": {
+    "level": 2,
+    "ritual": false,
+    "concentration": true
+  },
+  "ray-of-enfeeblement": {
+    "level": 2,
+    "ritual": false,
+    "concentration": true
+  }
+}

@@ -11,8 +11,6 @@ CONFIG.setModuleActive('classic', true)
 function buildStuff () {
     const r = new Manager()
     r.init()
-    const config = new Config()
-    config.setModuleActive('classic', true)
     const am = new AssetManager()
     am.init()
     const ev = new Evolution()

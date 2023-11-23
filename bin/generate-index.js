@@ -165,7 +165,8 @@ function main (sType) {
         case 'g': {
             console.log(generateGetterReturnType([
                 './src/store/creature/getters',
-                './src/modules/classic/store/creature/getters'
+                './src/modules/classic/store/creature/getters',
+                './src/modules/ddmagic/store/creature/getters'
             ]))
             break
         }

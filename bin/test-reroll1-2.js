@@ -69,7 +69,7 @@ function runWeapons(aWeapons) {
 }
 
 runWeapons([
-    { label: 'great club / quaterstaff / spear', damage: '1d8' },
+    { label: 'great club / quarterstaff / spear', damage: '1d8' },
     { label: 'battle axe / glaive / halberd', damage: '1d10' },
     { label: 'great axe / sword', damage: '1d12' },
     { label: 'maul', damage: '2d6' }

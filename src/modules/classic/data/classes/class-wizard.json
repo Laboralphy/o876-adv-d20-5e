@@ -1,0 +1,56 @@
+{
+  "playable": true,
+  "hitDice": 6,
+  "proficiencies": [
+    "PROFICIENCY_SAVING_THROW_INTELLIGENCE",
+    "PROFICIENCY_SAVING_THROW_WISDOM",
+    "weapon-type-dagger",
+    "weapon-type-quarterstaff",
+    "weapon-type-light-crossbow"
+  ],
+  "skillCount": 2,
+  "classSkills": [
+    "skill-arcana",
+    "skill-history",
+    "skill-insight",
+    "skill-investigation",
+    "skill-medicine",
+    "skill-religion"
+  ],
+  "multiclass": {
+    "abilities": "ABILITY_INTELLIGENCE",
+    "proficiencies": [
+    ],
+    "skillCount": 1
+  },
+  "evolution": [
+    {
+      "level": 1,
+      "feats": [
+        {
+          "feat": "feat-spellcasting"
+        }
+      ]
+    },
+    {
+      "level": 4,
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 8,
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 12,
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 16,
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 19,
+      "abilityScoreImprovement": true
+    }
+  ]
+}

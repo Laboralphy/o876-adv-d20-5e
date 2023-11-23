@@ -19,7 +19,8 @@ module.exports = ({ state }, { state: importState }) => {
         skills,
         equipment,
         counters,
-        encumbrance
+        encumbrance,
+        data
     } = importState
     state.abilities = abilities
     state.alignment = alignment
@@ -36,4 +37,5 @@ module.exports = ({ state }, { state: importState }) => {
     state.equipment = equipment
     state.counters = counters
     state.encumbrance = encumbrance
+    state.data = data
 }

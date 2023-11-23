@@ -10,6 +10,5 @@ module.exports = ({ state }) => {
     truncateArray(state.proficiencies)
     truncateArray(state.classes)
     truncateArray(state.feats)
-    truncateArray(state.skills)
     state.counters.extraAttacks = 0
 }

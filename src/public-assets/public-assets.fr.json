@@ -270,7 +270,7 @@
       "weapon-type-javelin": "Javeline",
       "weapon-type-light-hammer": "Marteau léger",
       "weapon-type-mace": "Masse",
-      "weapon-type-quaterstaff": "Bâton",
+      "weapon-type-quarterstaff": "Bâton",
       "weapon-type-sickle": "Faucille",
       "weapon-type-spear": "Lance courte",
       "weapon-type-light-crossbow": "Arbalète légère",
@@ -665,7 +665,7 @@
         "weight": 4,
         "attributes": []
       },
-      "weapon-type-quaterstaff": {
+      "weapon-type-quarterstaff": {
         "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
         "damage": "1d6",
         "versatileDamage": "1d8",

@@ -98,7 +98,7 @@ describe('feat-fighting-style-dueling', function () {
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-dueling'})
         const oSword = r.createEntity('wpn-shortsword')
         const oDagger = r.createEntity('wpn-dagger')
-        const oStaff = r.createEntity('wpn-quaterstaff')
+        const oStaff = r.createEntity('wpn-quarterstaff')
         r.createEntity('arm-shield');
         r.createEntity('arm-leather');
         c.store.mutations.equipItem({ item: oSword })
@@ -126,7 +126,7 @@ describe('feat-fighting-style-great-weapon', function() {
         const r = new Manager()
         r.init()
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-great-weapon'})
-        const oStaff = r.createEntity('wpn-quaterstaff')
+        const oStaff = r.createEntity('wpn-quarterstaff')
         const oDagger = r.createEntity('wpn-dagger')
         c.store.mutations.equipItem({ item: oDagger })
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
