@@ -46,15 +46,17 @@ function conditionAttack ({
  * @param damage {number} quantité de dégât
  * @param sType {string} type de dégâts (DAMAGE_TYPE_*)
  * @param dc {number} difficulté du jet de sauvegarde
+ * @param cantrip {boolean}
  * @return {D20Effect}
  */
 function evocationAttack ({
-                              caster,
-                              target,
-                              damage,
-                              type: sType,
-                              dc
-                          }) {
+    caster,
+    target,
+    damage,
+    type: sType,
+    dc,
+    cantrip = false
+}) {
     const { success } = target.rollSavingThrow(CONSTS.ABILITY_DEXTERITY, [CONSTS.THREAT_TYPE_SPELL], dc, caster)
     const bHasEvasion = target.aggregateModifiers([CONSTS.EFFECT_EVASION], {}).count > 0
     const nCase = (bHasEvasion ? 10 : 0) + (success ? 1 : 0)
@@ -66,14 +68,17 @@ function evocationAttack ({
 
         case 10:
         case 1: {
-            damage >>= 1
+            if (cantrip) {
+                damage = 0
+            } else {
+                damage >>= 1
+            }
             break
         }
     }
     const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, damage, sType)
     return target.applyEffect(eDam, 0, caster)
 }
-
 
 module.exports = {
     conditionAttack,

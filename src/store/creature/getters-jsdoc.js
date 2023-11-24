@@ -120,6 +120,7 @@
  * @property getMaxPreparableCantrips {number}
  * @property getMaxPreparableSpells {number}
  * @property getPreparedSpells {cantrips: string[], spells: string[]}
+ * @property getSpellDC {number}
  * @property getSpellSlotStatus {{ count: number, used: number }[]}
  * @property getWizardLevel {number}
  */

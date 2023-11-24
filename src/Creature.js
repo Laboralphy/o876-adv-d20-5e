@@ -116,8 +116,18 @@ class Creature {
         Creature._AssetManager = value
     }
 
+    /**
+     * @returns {AssetManager}
+     */
     static get AssetManager () {
         return Creature._AssetManager
+    }
+
+    /**
+     * @returns {AssetManager}
+     */
+    get assetManager () {
+        return Creature.AssetManager
     }
 
     get entityType () {
