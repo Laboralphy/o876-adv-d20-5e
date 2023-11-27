@@ -16,7 +16,6 @@ module.exports = ({ state }, { state: importState }) => {
         gauges,
         recentDamageTypes,
         feats,
-        skills,
         equipment,
         counters,
         encumbrance,

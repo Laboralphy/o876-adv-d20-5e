@@ -31,7 +31,7 @@
         {
           "property": "ITEM_PROPERTY_DAMAGE_BONUS",
           "amp": "6d6",
-          "type": "DAMAGE_TYPE_WITHERING"
+          "type": "DAMAGE_TYPE_NECROTIC"
         }
       ]
     },
@@ -94,7 +94,7 @@
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
           "amp": 0,
-          "type": "DAMAGE_TYPE_WITHERING"
+          "type": "DAMAGE_TYPE_NECROTIC"
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",

@@ -20,7 +20,7 @@
       "weaponType": "weapon-type-unarmed",
       "ref": "nwpn-c-wraith",
       "damage": "4d8",
-      "damageType": "DAMAGE_TYPE_WITHERING",
+      "damageType": "DAMAGE_TYPE_NECROTIC",
       "material": "MATERIAL_UNKNOWN",
       "properties": [
         {
@@ -85,7 +85,7 @@
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",
           "amp": 0,
-          "type": "DAMAGE_TYPE_WITHERING"
+          "type": "DAMAGE_TYPE_NECROTIC"
         },
         {
           "property": "ITEM_PROPERTY_DAMAGE_IMMUNITY",

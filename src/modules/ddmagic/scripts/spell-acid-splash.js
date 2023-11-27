@@ -1,6 +1,3 @@
-const SpellHelper = require('../../classic/common/spell-helper')
-const CONSTS = require('../../../consts')
-
 /**
  * script spell-acid-splash
  *
@@ -11,14 +8,20 @@ const CONSTS = require('../../../consts')
  * Le globe fait 1d6 de dégât d'acide, +1d6 niv 5 +1d6 niv 11 +1d6 niv 17
  * @date 2023-11-24
  * @author ralphy
- *
+ */
+
+const SpellHelper = require('../../classic/common/spell-helper')
+const DDMagicSpellHelper = require('../common/ddmagic-specific-spell-helper')
+const CONSTS = require('../../../consts')
+
+/**
  * @param caster {Creature}
  * @param power {number}
- * @param parameters {SpellCastingParameters}
+ * @param hostiles {Creature[]}
+ * @param parameters {{}}
  */
-module.exports = ({ caster, power, parameters }) => {
+module.exports = ({ caster, hostiles }) => {
     // déterminer un voisin de la cible
-    const { hostiles } = parameters
     const oTarget = caster.getTarget()
     splashAcid(oTarget, caster)
     const oAdditionalTarget = SpellHelper
@@ -29,24 +32,11 @@ module.exports = ({ caster, power, parameters }) => {
     }
 }
 
-function getDamage (caster) {
-    const nCasterLevel = caster.store.getters.getWizardLevel
-    if (nCasterLevel >= 17) {
-        return '4d6'
-    } else if (nCasterLevel >= 11) {
-        return '3d6'
-    } else if (nCasterLevel >= 5) {
-        return '2d6'
-    } else {
-        return '1d6'
-    }
-}
-
 function splashAcid (target, caster) {
     SpellHelper.evocationAttack({
         caster,
         target,
-        damage: caster.roll(getDamage(caster)),
+        damage: caster.roll(DDMagicSpellHelper.getCantripDamageDice(caster, 6)),
         type: CONSTS.DAMAGE_TYPE_ACID,
         dc: caster.store.getters.getSpellDC,
         cantrip: true

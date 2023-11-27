@@ -35,6 +35,5 @@ describe('acid-splash', function () {
             caster: oWizard,
             hostiles: [oTarget]
         })
-        console.log(oTarget.store.getters.getRecentDamageTypes)
     })
 })

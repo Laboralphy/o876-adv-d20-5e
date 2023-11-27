@@ -47,6 +47,7 @@ function conditionAttack ({
  * @param sType {string} type de dégâts (DAMAGE_TYPE_*)
  * @param dc {number} difficulté du jet de sauvegarde
  * @param cantrip {boolean}
+ * @param ability {string} caracteristique utilisée pour le jet de sauvegarde
  * @return {D20Effect}
  */
 function evocationAttack ({
@@ -55,11 +56,15 @@ function evocationAttack ({
     damage,
     type: sType,
     dc,
-    cantrip = false
+    cantrip = false,
+    ability = CONSTS.ABILITY_DEXTERITY
 }) {
-    const { success } = target.rollSavingThrow(CONSTS.ABILITY_DEXTERITY, [CONSTS.THREAT_TYPE_SPELL], dc, caster)
-    const bHasEvasion = target.aggregateModifiers([CONSTS.EFFECT_EVASION], {}).count > 0
-    const nCase = (bHasEvasion ? 10 : 0) + (success ? 1 : 0)
+    const { success } = target.rollSavingThrow(ability, [CONSTS.THREAT_TYPE_SPELL], dc, caster)
+    const isDexterityBased = ability === CONSTS.ABILITY_DEXTERITY
+    const bHasEvasion =
+        isDexterityBased &&
+        target.aggregateModifiers([CONSTS.EFFECT_EVASION], {}).count > 0
+    const nCase = (isDexterityBased ? 0 : 100) + (bHasEvasion ? 10 : 0) + (success ? 1 : 0)
     switch (nCase) {
         case 11: {
             damage = 0

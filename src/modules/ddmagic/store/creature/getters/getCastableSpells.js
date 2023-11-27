@@ -6,7 +6,7 @@
  * @returns {Object<string, boolean[]>}
  */
 module.exports = (state, getters, externals) => {
-    const aKnownSpells = state.data.spellbooks.knownSpells
+    const aKnownSpells = state.data.spellbook.knownSpells
     const oRegistry = {}
     const oSpellDB = externals.data['data-ddmagic-spell-database']
     const oSlotStatus = getters.getSpellSlotStatus

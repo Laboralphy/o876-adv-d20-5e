@@ -52,7 +52,7 @@ function consumeSpellSlot (caster, slot) {
  * @param friends {Creature[]}
  * @param parameters {{}}
  */
-module.exports = ({ spell, caster, power = 0, hostiles: [], friends: [], parameters = {} }) => {
+module.exports = ({ spell, caster, power = 0, hostiles = [], friends = [], parameters = {} }) => {
     if (isSpellAvailable(caster, spell, power)) {
         const sScript = 'spell-' + spell
         const pScript = Creature.AssetManager.scripts[sScript]

@@ -2,7 +2,7 @@
   "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
   "damage": "2d8",
   "versatileDamage": "",
-  "damageType": "DAMAGE_TYPE_WITHERING",
+  "damageType": "DAMAGE_TYPE_NECROTIC",
   "weight": 6,
   "attributes": [
     "WEAPON_ATTRIBUTE_RANGED",

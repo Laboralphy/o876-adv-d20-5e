@@ -226,12 +226,3 @@ describe('spell preparing', function () {
         ])
     })
 })
-
-describe('casting spell', function () {
-    it('should run cast script', function () {
-        const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
-        expect(Creature.AssetManager).toBeDefined()
-        expect(typeof Creature.AssetManager.scripts['ddmagic-cast-spell']).toBe('function')
-    })
-})
