@@ -4,7 +4,6 @@ const Creature = require('../src/Creature')
 const AssetManager = require('../src/AssetManager')
 const { Config, CONFIG } = require('../src/config')
 const CONSTS = require("../src/consts");
-const SpellHelper = require('../src/modules/classic/common/spell-helper')
 
 CONFIG.setModuleActive('classic', true)
 CONFIG.setModuleActive('ddmagic', true)

@@ -80,7 +80,26 @@ function evocationAttack ({
     return target.applyEffect(eDam, 0, caster)
 }
 
+/**
+ * Choisi nCount éléments au hasard dans la liste spécifiée
+ * @param aArray {[]}
+ * @param nCount {number}
+ * @returns {[]}
+ */
+function chooseRandomItems (aArray, nCount) {
+    if (aArray.length === 0) {
+        return aArray
+    }
+    if (nCount >= aArray.length) {
+        return aArray
+    }
+    const iChoice = Math.floor(Math.random() * aArray.length)
+    const aRemainers = aArray.filter((x, i) => i !== iChoice)
+    return [aArray[iChoice], ...chooseRandomItems(aRemainers, nCount - 1)]
+}
+
 module.exports = {
     conditionAttack,
-    evocationAttack
+    evocationAttack,
+    chooseRandomItems
 }

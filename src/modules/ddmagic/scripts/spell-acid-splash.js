@@ -20,10 +20,13 @@ module.exports = ({ caster, power, parameters }) => {
     // déterminer un voisin de la cible
     const { hostiles } = parameters
     const oTarget = caster.getTarget()
-    const aOtherHostiles = hostiles.filter(h => h !== oTarget)
-    const oAdditionalTarget = aOtherHostiles[Math.floor(Math.random() * aOtherHostiles.length)]
     splashAcid(oTarget, caster)
-    splashAcid(oAdditionalTarget, caster)
+    const oAdditionalTarget = SpellHelper
+        .chooseRandomItems(hostiles.filter(h => h !== oTarget), 1)
+        .shift()
+    if (oAdditionalTarget) {
+        splashAcid(oAdditionalTarget, caster)
+    }
 }
 
 function getDamage (caster) {
