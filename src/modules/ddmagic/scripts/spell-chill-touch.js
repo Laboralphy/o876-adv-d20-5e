@@ -9,7 +9,7 @@ const CONSTS = require('../../../consts')
 const EffectProcessor = require("../../../EffectProcessor");
 
 module.exports = ({ caster }) => {
-    const oTarget = caster.getTarget()
+    const target = caster.getTarget()
     const { hit } = DDMagicSpellHelper.rangedAttack(caster)
     if (hit) {
         const eDam = EffectProcessor.createEffect(
@@ -17,6 +17,11 @@ module.exports = ({ caster }) => {
             caster.roll(DDMagicSpellHelper.getCantripDamageDice(caster, 8)),
             CONSTS.DAMAGE_TYPE_NECROTIC
         )
-        oTarget.applyEffect(eDam, 0, caster)
+        DDMagicSpellHelper.declareSpellEffects({
+            spell: 'chill-touch',
+            effects: [eDam],
+            caster,
+            target
+        })
     }
 }

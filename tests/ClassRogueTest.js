@@ -378,7 +378,8 @@ describe('evasion', function () {
                 target: oRogue,
                 damage: 10,
                 dc: 50,
-                type: 'DAMAGE_TYPE_FIRE'
+                type: 'DAMAGE_TYPE_FIRE',
+                apply: true
             })
             const nHP2 = oRogue.store.getters.getHitPoints
             expect(nHP1 - nHP2).toBe(5)
@@ -396,7 +397,8 @@ describe('evasion', function () {
                 target: oRogue,
                 damage: 10,
                 dc: 1,
-                type: 'DAMAGE_TYPE_FIRE'
+                type: 'DAMAGE_TYPE_FIRE',
+                apply: true
             })
             const nHP2 = oRogue.store.getters.getHitPoints
             expect(nHP1 - nHP2).toBe(0)

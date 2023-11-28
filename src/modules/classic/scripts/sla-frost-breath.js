@@ -11,6 +11,7 @@ module.exports = function (caster) {
         target: caster.getTarget(),
         damage: caster.roll('2d4'),
         type: CONSTS.DAMAGE_TYPE_COLD,
-        dc: 10
+        dc: 10,
+        apply: true
     })
 }

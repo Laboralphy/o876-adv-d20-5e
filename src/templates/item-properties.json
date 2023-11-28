@@ -61,6 +61,7 @@
   "ITEM_PROPERTY_HP_BONUS": {
     "amp": "number"
   },
+  "ITEM_PROPERTY_LIGHT": {},
   "ITEM_PROPERTY_MASSIVE_CRITICAL": {
     "amp": "number"
   },

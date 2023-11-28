@@ -33,12 +33,19 @@ module.exports = ({ caster, hostiles }) => {
 }
 
 function splashAcid (target, caster) {
-    SpellHelper.evocationAttack({
+    DDMagicSpellHelper.declareSpellEffects({
+        spell: 'acid-splash',
+        effects: [
+            SpellHelper.evocationAttack({
+                caster,
+                target,
+                damage: caster.roll(DDMagicSpellHelper.getCantripDamageDice(caster, 6)),
+                type: CONSTS.DAMAGE_TYPE_ACID,
+                dc: caster.store.getters.getSpellDC,
+                cantrip: true
+            })
+        ],
         caster,
-        target,
-        damage: caster.roll(DDMagicSpellHelper.getCantripDamageDice(caster, 6)),
-        type: CONSTS.DAMAGE_TYPE_ACID,
-        dc: caster.store.getters.getSpellDC,
-        cantrip: true
+        target
     })
 }

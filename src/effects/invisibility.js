@@ -11,6 +11,7 @@ function create (bGreater) {
 }
 
 function attack ({ effect }) {
+    // lorsqu'on attaque et que l'amplitude est nulle, l'effet disparait
     if (effect.amp === 0) {
         effect.duration = 0
     }

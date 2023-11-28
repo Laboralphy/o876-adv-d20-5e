@@ -1,25 +1,5 @@
 const Creature = require('../../../Creature')
-
-/**
- *
- * @param spell {string}
- * @returns {*}
- */
-function getSpellData (spell) {
-    const spelldb = Creature.AssetManager.data['data-ddmagic-spell-database']
-    if (spell in spelldb) {
-        return spelldb[spell]
-    } else {
-        throw new Error('ERR_SPELL_NOT_FOUND')
-    }
-}
-
-function getSpellCastingLevel (spell, power) {
-    const oSpell = getSpellData(spell)
-    return oSpell.level === 0
-        ? 0
-        : Math.min(20, oSpell.level + Math.max(0, power))
-}
+const { getSpellData, getSpellCastingLevel } = require('../common/ddmagic-specific-spell-helper')
 
 /**
  * Permet de déterminer si le sort spécifié est disponible pour la créature au niveau

@@ -21,13 +21,19 @@ const CONSTS = require('../../../consts')
 module.exports = ({ caster }) => {
     // déterminer un voisin de la cible
     const oTarget = caster.getTarget()
-    SpellHelper.evocationAttack({
+    const eDam = SpellHelper.evocationAttack({
         caster,
         target: oTarget,
         damage: caster.roll(DDMagicSpellHelper.getCantripDamageDice(caster, 12)),
         type: CONSTS.DAMAGE_TYPE_POISON,
         dc: caster.store.getters.getSpellDC,
         ability: CONSTS.ABILITY_CONSTITUTION,
-        cantrip: true
+        cantrip: true,
+        apply: false
+    })
+    DDMagicSpellHelper.declareSpellEffects({
+        spell: 'poison-spray',
+        effects: [eDam],
+        caster
     })
 }

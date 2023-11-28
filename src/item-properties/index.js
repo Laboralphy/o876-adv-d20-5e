@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 24/11/2023, 15:34:43 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 28/11/2023, 10:11:30 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.ITEM_PROPERTY_ABILITY_BONUS]: require('./ability-bonus'),
@@ -18,6 +18,7 @@ module.exports = {
   [CONSTS.ITEM_PROPERTY_EXTRA_ATTACKS]: require('./extra-attacks'),
   [CONSTS.ITEM_PROPERTY_EXTRA_WEIGHT]: require('./extra-weight'),
   [CONSTS.ITEM_PROPERTY_HP_BONUS]: require('./hp-bonus'),
+  [CONSTS.ITEM_PROPERTY_LIGHT]: require('./light'),
   [CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.ITEM_PROPERTY_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),
   [CONSTS.ITEM_PROPERTY_MELEE_ATTACK_BONUS]: require('./melee-attack-bonus'),

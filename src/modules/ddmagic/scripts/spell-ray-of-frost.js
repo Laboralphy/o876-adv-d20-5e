@@ -17,6 +17,15 @@ module.exports = ({ caster }) => {
             caster.roll(DDMagicSpellHelper.getCantripDamageDice(caster, 10)),
             CONSTS.DAMAGE_TYPE_COLD
         )
-        oTarget.applyEffect(eDam, 0, caster)
+        const eSlow = EffectProcessor.createEffect(
+            CONSTS.EFFECT_SPEED_BONUS,
+            -10
+        )
+        eSlow.duration = 2
+        DDMagicSpellHelper.declareSpellEffects({
+            spell: 'ray-of-frost',
+            effects: [eDam, eSlow],
+            caster
+        })
     }
 }
