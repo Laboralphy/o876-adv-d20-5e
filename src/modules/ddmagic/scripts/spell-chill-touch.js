@@ -1,27 +1,27 @@
 /**
  * script spell-chill-touch
  *
- * A skeletal hand is thrown at target and deals 1d8 necrotic damage
+ * Niveau 0 Nécromancie
+ * Attaque à distance (projectile visé) / pas de jet de sauvegarde
+ * Le sort jette une main squelettique à la gorge de la cible
+ * occasionnant des dégâts nécrotique ne fonction du niveau de lanceur de sort
+ * niv 1 -> 1d8 ; niv 5 -> 2d8 ; niv 11 -> 3d8 ; niv 17 -> 4d8
+ * @date 2023-11-29
+ * @author ralphy
  */
 
-const DDMagicSpellHelper = require('../common/ddmagic-specific-spell-helper')
 const CONSTS = require('../../../consts')
-const EffectProcessor = require("../../../EffectProcessor");
 
-module.exports = ({ caster }) => {
-    const target = caster.getTarget()
-    const { hit } = DDMagicSpellHelper.rangedAttack(caster)
-    if (hit) {
-        const eDam = EffectProcessor.createEffect(
+/**
+ * @param oSpellCast {SpellCast}
+ */
+module.exports = (oSpellCast) => {
+    if (oSpellCast.rangedAttack().hit) {
+        const eDam = oSpellCast.createSpellEffect(
             CONSTS.EFFECT_DAMAGE,
-            caster.roll(DDMagicSpellHelper.getCantripDamageDice(caster, 8)),
+            oSpellCast.caster.roll(oSpellCast.getCantripDamageDice(8)),
             CONSTS.DAMAGE_TYPE_NECROTIC
         )
-        DDMagicSpellHelper.declareSpellEffects({
-            spell: 'chill-touch',
-            effects: [eDam],
-            caster,
-            target
-        })
+        oSpellCast.applyEffectToTarget(eDam)
     }
 }

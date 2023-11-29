@@ -12,6 +12,7 @@ module.exports = function (caster) {
         condition: CONSTS.CONDITION_BLINDED,
         duration: 10,
         savingAbility: CONSTS.ABILITY_DEXTERITY,
-        dc: 10
+        dc: 10,
+        apply: true
     })
 }

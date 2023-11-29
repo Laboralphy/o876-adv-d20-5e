@@ -26,7 +26,9 @@ function conditionAttack ({
     subtype = CONSTS.EFFECT_SUBTYPE_MAGICAL,
     apply = false
 }) {
-    const { success } = target.rollSavingThrow(savingAbility, [CONSTS.THREAT_TYPE_SPELL, ...threats], dc, caster)
+    const { success } = savingAbility === ''
+        ? { success: true }
+        : target.rollSavingThrow(savingAbility, [CONSTS.THREAT_TYPE_SPELL, ...threats], dc, caster)
     if (!success) {
         const eCond = EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition)
         eCond.subtype = subtype
