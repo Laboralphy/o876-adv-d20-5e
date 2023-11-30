@@ -32,6 +32,7 @@ function conditionAttack ({
     if (!success) {
         const eCond = EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, condition)
         eCond.subtype = subtype
+        eCond.data.savingThrowSuccess = success
         return apply ? target.applyEffect(eCond, duration, caster) : eCond
     } else {
         return null
@@ -88,6 +89,7 @@ function evocationAttack ({
         }
     }
     const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, damage, sType)
+    eDam.data.savingThrowSuccess = success
     return apply ? target.applyEffect(eDam, 0, caster) : eDam
 }
 

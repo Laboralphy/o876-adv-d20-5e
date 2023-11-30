@@ -7,25 +7,32 @@ const SpellHelper = require("../../classic/common/spell-helper");
  * @class SpellCast
  */
 module.exports = class SpellCast {
+    /**
+     *
+     * @param caster {Creature} creature qui lance le sort
+     * @param spell {string} ref du sort
+     * @param power {number} nombre de niveau de slot supplémentaire
+     * @param hostiles {Creature[]} liste des créatures hostiles présente aux alentours
+     * @param friends {Creature[]} liste des créatures amies présente aux alentours
+     * @param cheat {boolean} si TRUE alors, on n'a pas besoin d'avoir le sort mémorisé, et on ne consomme pas le slot.
+     */
     constructor ({
         caster,
         spell,
         power = 0,
         hostiles = [],
         friends = [],
-        parameters = {}
+        cheat = false
     }) {
         this._caster = caster
         this._spell = spell
         this._power = power
         this._hostiles = hostiles
-        this._firends = friends
-        this._parameters = parameters
+        this._friends = friends
         this._spelldb = Creature.AssetManager.data['data-ddmagic-spell-database']
         this._spellMark = null
-        this._hasClearConcentrationEffects = false
         this._effects = []
-        this._maxDuration = 0
+        this._cheat = cheat
     }
 
     /**
@@ -33,7 +40,23 @@ module.exports = class SpellCast {
      * @return {boolean}
      */
     get isCantrip () {
-        this.spellData.level === 0
+        return this.spellData.level === 0
+    }
+
+    get isTargetTypeHostile () {
+        return this.spellData.target === 'TARGET_TYPE_HOSTILE'
+    }
+
+    get isTargetTypeFriend () {
+        return this.spellData.target === 'TARGET_TYPE_FRIEND'
+    }
+
+    get isTargetTypeSelf () {
+        return this.spellData.target === 'TARGET_TYPE_SELF'
+    }
+
+    get isTargetTypeItem () {
+        return this.spellData.target === 'TARGET_TYPE_ITEM'
     }
 
     /**
@@ -49,7 +72,9 @@ module.exports = class SpellCast {
     }
 
     get target () {
-        return this._caster.getTarget()
+        return this.spellData.target === 'TARGET_TYPE_SELF'
+            ? this.caster
+            : this.caster.getTarget()
     }
 
     get spell () {
@@ -57,7 +82,7 @@ module.exports = class SpellCast {
     }
 
     get dc () {
-        return this._caster.store.getters.getSpellDC
+        return this.caster.store.getters.getSpellDC
     }
 
     get hostiles () {
@@ -70,7 +95,7 @@ module.exports = class SpellCast {
 
     /**
      * Renvoie les données relatives au sort
-     * @returns {{ level: number, ritual: boolean, concentration: boolean }}
+     * @returns {{ level: number, ritual: boolean, concentration: boolean, target: string }}
      */
     get spellData () {
         if (this.spell in this._spelldb) {
@@ -93,7 +118,7 @@ module.exports = class SpellCast {
      * @return {number}
      */
     get casterLevel () {
-        return this._caster.store.getters.getWizardLevel
+        return this.caster.store.getters.getWizardLevel
     }
 
     /**
@@ -117,7 +142,7 @@ module.exports = class SpellCast {
 
     rangedAttack ({ target = null } = {}) {
         const oTarget = target || this.target
-        const caster = this._caster
+        const caster = this.caster
         const nProfBonus = caster.store.getters.getProficiencyBonus
         const sAbility = CONSTS.ABILITY_INTELLIGENCE
         const nAbilityModifier = caster.store.getters.getAbilityModifiers[sAbility]
@@ -140,6 +165,17 @@ module.exports = class SpellCast {
         }
     }
 
+    /**
+     * @typedef SpellMark {object}
+     * @property id {string} identifiant du lancement de sort
+     * @property spell {string} ref du sort
+     * @property spellLevel {number} niveau natif du sort
+     * @property spellCastLevel {number} niveau effectif de lancement (compte tenu du slot utilisé)
+     * @property casterLevel {number} niveau de lanceur de sort
+     * @property concentration {boolean} si true alors le osrt est un sort de concentration
+     *
+     * @returns {SpellMark}
+     */
     get spellMark () {
         if (!this._spellMark) {
             const spellLevel = this.spellData.level
@@ -159,26 +195,9 @@ module.exports = class SpellCast {
         return this._spellMark
     }
 
-    clearOtherConcentrationEffects (oCreature) {
-        if (this._hasClearConcentrationEffects) {
-            return
-        }
-        this._hasClearConcentrationEffects = true
-        const idExcept = this.spellMark.id
-        const aSpells = new Set()
-        oCreature.store.getters.getEffects.forEach(eff => {
-            const d = eff.data.spell
-            if (d && d.concentration && d.id !== idExcept) {
-                aSpells.add(d.spell)
-                eff.duration = 0
-            }
-        })
-        aSpells.forEach(s => oCreature.events.emit('concentration-broken', { spell: s }))
-    }
-
     createSpellEffect (sEffect, ...args) {
         const oEffect = EffectProcessor.createEffect(sEffect, ...args)
-        oEffect.data.spell = this.spellMark
+        oEffect.data.spellmark = this.spellMark
         this._effects.push(oEffect)
         return oEffect
     }
@@ -191,7 +210,7 @@ module.exports = class SpellCast {
      */
     applyEffectToTarget (oEffect, duration = 0, target = null) {
         const oTarget = target || this.target
-        oTarget.applyEffect(oEffect, duration, this._caster)
+        oTarget.applyEffect(oEffect, duration, this.caster)
     }
 
     /**
@@ -200,7 +219,7 @@ module.exports = class SpellCast {
      * @param duration {number}
      */
     applyEffectToCaster (oEffect, duration = 0) {
-        this.applyEffectToTarget(oEffect, duration, this._caster)
+        this.applyEffectToTarget(oEffect, duration, this.caster)
     }
 
     evocationAttack ({
@@ -212,7 +231,7 @@ module.exports = class SpellCast {
     }) {
         const oTarget = target || this.target
         const oEffect = SpellHelper.evocationAttack({
-            caster: this._caster,
+            caster: this.caster,
             target: oTarget,
             damage,
             type,
@@ -221,8 +240,8 @@ module.exports = class SpellCast {
             ability,
             apply: false
         })
-        oEffect.data.spell = this.spellMark
-        return oTarget.applyEffect(oEffect, 0, this._caster)
+        oEffect.data.spellmark = this.spellMark
+        return oTarget.applyEffect(oEffect, 0, this.caster)
     }
 
     /**
@@ -247,7 +266,7 @@ module.exports = class SpellCast {
     }) {
         const oTarget = target || this.target
         const oEffect = SpellHelper.conditionAttack({
-            caster: this._caster,
+            caster: this.caster,
             target: oTarget,
             condition,
             savingAbility,
@@ -256,23 +275,47 @@ module.exports = class SpellCast {
             subtype,
             apply: false
         })
-        oEffect.data.spell = this.spellMark
-        return oTarget.applyEffect(oEffect, duration, this._caster)
+        oEffect.data.spellmark = this.spellMark
+        return oTarget.applyEffect(oEffect, duration, this.caster)
     }
 
-    get isSpellAvailable () {
-        const cs = this._caster.store.getters.getCastableSpells
+    getCheckTargetCompatibility () {
+        switch (this.spellData.target) {
+            case 'TARGET_TYPE_HOSTILE': {
+                return !!this.target && (this.hostiles.includes(this.target))
+            }
+            case 'TARGET_TYPE_FRIEND': {
+                return !!this.target && (this.friends.includes(this.target))
+            }
+            case 'TARGET_TYPE_ITEM': {
+                throw new Error('ERR_TARGET_TYPE_NOT_SUPPORTED_YET')
+            }
+            case 'TARGET_TYPE_SELF': {
+                return true
+            }
+            default: {
+                throw new Error('ERR_TARGET_TYPE_INVALID')
+            }
+        }
+    }
+
+    /**
+     *
+     * @returns {{usable: boolean, ritual: boolean, cantrip: boolean}}
+     */
+    get spellAvailability () {
+        const cs = this.caster.store.getters.getCastableSpells
         const oSpell = this.spellData
         const nCastLevel = this.spellCastingLevel
         return {
-            usable: cs[this.spell] && cs[this.spell][nCastLevel],
+            usable: this.spell in cs ? cs[this.spell][nCastLevel] : this._cheat,
             ritual: oSpell.ritual,
             cantrip: this.isCantrip
         }
     }
 
     consumeSpellSlot () {
-        this._caster.store.mutations.consumeSpellSlot({ level: this.spellCastingLevel })
+        this.caster.store.mutations.consumeSpellSlot({ level: this.spellCastingLevel })
     }
 
     /**
@@ -304,23 +347,76 @@ module.exports = class SpellCast {
                 .store
                 .getters
                 .getEffects
-                .find(eff =>
-                    eff.type === CONSTS.EFFECT_GROUP &&
-                    eff.tag === 'CONCENTRATION')
+                .find(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
             if (oPreviousConcentrationEffect) {
                 oPreviousConcentrationEffect.duration = 0
+                this.caster.events.emit('spellcast-concentration-end', {
+                    spell: oPreviousConcentrationEffect.data.spellmark.spell,
+                    reason: 'CONCENTRATION_CHANGE'
+                })
             }
             const duration = this
                 ._effects
-                .reduce((prev, curr) =>
-                    Math.max(prev, curr.duration))
+                .reduce((prev, curr) => Math.max(prev, curr.duration), 0)
             const eConcentrationGroup = this
                 .createSpellEffect(
-                    CONSTS.EFFECT_GROUP,
-                    this._effects,
-                    'CONCENTRATION'
+                    CONSTS.EFFECT_CONCENTRATION,
+                    this._effects
                 )
+            this.caster.events.emit('spellcast-concentration', {
+                spell: this.spellMark.spell
+            })
             this.caster.applyEffect(eConcentrationGroup, duration)
+        }
+    }
+
+    /**
+     * nom du script de sort
+     * @returns {string}
+     */
+    get spellScriptName () {
+        return 'spell-' + this.spell
+    }
+
+    /**
+     * renvoie le script du sort
+     * @returns {function}
+     */
+    get spellScript () {
+        return Creature.AssetManager.scripts[this.spellScriptName]
+    }
+
+    /**
+     * Lancement d'un sort
+     * @param parameters {{}} liste des paramètres
+     * @returns {boolean}
+     */
+    cast (parameters = undefined) {
+        if (this.spellScript) {
+            if (this.spellAvailability.usable) {
+                if (!this.getCheckTargetCompatibility()) {
+                    throw new Error('SPELLCAST_BAD_TARGET')
+                }
+                this.caster.events.emit('spellcast', {
+                    spell: this.spell,
+                    level: this.spellCastingLevel
+                })
+                this.target.events.emit('spellcast-at', {
+                    spell: this.spell,
+                    level: this.spellCastingLevel,
+                    caster: this.caster
+                })
+                if (!this._cheat) {
+                    this.consumeSpellSlot()
+                }
+                this.spellScript(this, parameters)
+                this.concentrate()
+                return true
+            } else {
+                return false
+            }
+        } else {
+            throw new Error('ERR_SPELL_SCRIPT_NOT_FOUND: ' + this.spellScriptName)
         }
     }
 }

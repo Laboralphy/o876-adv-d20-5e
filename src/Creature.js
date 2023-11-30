@@ -81,6 +81,10 @@ const { aggregateModifiers } = require("./store/creature/common/aggregate-modifi
  * @property equipmentSlots {string}
  */
 
+
+/**
+ * @class Creature
+ */
 class Creature {
     constructor () {
         this._id = uuidv4({}, null, 0)
@@ -139,7 +143,7 @@ class Creature {
     }
 
     /**
-     * Définie la reférence du blueprint qui a servit à construire la creature
+     * Définie la reférence du blueprint qui a servi à construire la creature
      * @param value {string}
      */
     set ref (value) {
@@ -148,7 +152,7 @@ class Creature {
     }
 
     /**
-     * Renvoie la référence du blueprint qui a servit a construre la creature
+     * Renvoie la référence du blueprint qui a servit à construire la creature
      * @returns {string}
      */
     get ref () {

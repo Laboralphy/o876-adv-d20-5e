@@ -10,26 +10,22 @@ const SpellCast = require('../common/SpellCast')
  * @param friends {Creature[]}
  * @param parameters {{}}
  */
-module.exports = ({ spell, caster, power = 0, hostiles = [], friends = [], parameters = {} }) => {
+module.exports = ({
+    spell,
+    caster,
+    power = 0,
+    hostiles = [],
+    friends = [],
+    parameters = {},
+    cheat = false
+}) => {
     const oSpellCast = new SpellCast({
         caster,
         spell,
         power,
         hostiles,
         friends,
-        parameters
+        cheat
     })
-    if (oSpellCast.isSpellAvailable) {
-        const sScript = 'spell-' + spell
-        const pScript = Creature.AssetManager.scripts[sScript]
-        if (pScript) {
-            oSpellCast.consumeSpellSlot()
-            pScript(oSpellCast)
-            return true
-        } else {
-            throw new Error('ERR_SPELL_SCRIPT_NOT_FOUND: ' + sScript)
-        }
-    } else {
-        return false
-    }
+    return oSpellCast.cast(parameters)
 }

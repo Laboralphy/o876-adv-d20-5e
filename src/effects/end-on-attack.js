@@ -1,10 +1,8 @@
-const createEffect = require("./abstract");
-const CONSTS = require("../consts");
+const createEffect = require('./abstract')
+const CONSTS = require('../consts')
 
 function create (oEffectToBreak) {
-    const oEffect = createEffect(CONSTS.EFFECT_END_ON_ATTACK)
-    oEffect.data.effect = oEffectToBreak
-    return oEffect
+    return createEffect(CONSTS.EFFECT_END_ON_ATTACK, 0, { effect: oEffectToBreak })
 }
 
 function attack ({ effect }) {

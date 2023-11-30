@@ -35,6 +35,5 @@ module.exports = (oSpellCast) => {
         eTS
     )
     oSpellCast.applyEffectToCaster(eTS, 2)
-    oSpellCast.applyEffectToCaster(eEndOnAttack, oSpellCast.getDurationHours(1))
-    oSpellCast.concentrate()
+    oSpellCast.applyEffectToCaster(eEndOnAttack, 2)
 }
