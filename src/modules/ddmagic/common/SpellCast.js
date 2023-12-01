@@ -43,22 +43,6 @@ module.exports = class SpellCast {
         return this.spellData.level === 0
     }
 
-    get isTargetTypeHostile () {
-        return this.spellData.target === 'TARGET_TYPE_HOSTILE'
-    }
-
-    get isTargetTypeFriend () {
-        return this.spellData.target === 'TARGET_TYPE_FRIEND'
-    }
-
-    get isTargetTypeSelf () {
-        return this.spellData.target === 'TARGET_TYPE_SELF'
-    }
-
-    get isTargetTypeItem () {
-        return this.spellData.target === 'TARGET_TYPE_ITEM'
-    }
-
     /**
      * Renvoie le niveau de puissance = nombre de slots au-dessus du niveau de slot natif du sort
      * @returns {number}
@@ -287,7 +271,7 @@ module.exports = class SpellCast {
             case 'TARGET_TYPE_FRIEND': {
                 return !!this.target && (this.friends.includes(this.target))
             }
-            case 'TARGET_TYPE_ITEM': {
+            case 'TARGET_TYPE_SPECIAL': {
                 throw new Error('ERR_TARGET_TYPE_NOT_SUPPORTED_YET')
             }
             case 'TARGET_TYPE_SELF': {

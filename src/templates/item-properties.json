@@ -103,5 +103,6 @@
   },
   "ITEM_PROPERTY_SPEED_BONUS": {
     "amp": "number"
-  }
+  },
+  "ITEM_PROPERTY_UNIDENTIFIED": {}
 }

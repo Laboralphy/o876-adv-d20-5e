@@ -27,7 +27,7 @@
     "level": 0,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_ITEM"
+    "target": "TARGET_TYPE_SPECIAL"
   },
   "poison-spray": {
     "level": 0,
@@ -53,6 +53,12 @@
     "concentration": true,
     "target": "TARGET_TYPE_SELF"
   },
+  "burning-hands": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILES"
+  },
   "charm-person": {
     "level": 1,
     "ritual": false,
@@ -70,6 +76,12 @@
     "ritual": false,
     "concentration": false,
     "target": "TARGET_TYPE_SELF"
+  },
+  "identify": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_SPECIAL"
   },
   "magic-missile": {
     "level": 1,
