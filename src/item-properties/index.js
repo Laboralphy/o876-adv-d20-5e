@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 01/12/2023, 13:41:45 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 02/12/2023 15:41:33 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.ITEM_PROPERTY_ABILITY_BONUS]: require('./ability-bonus'),
@@ -8,6 +8,7 @@ module.exports = {
   [CONSTS.ITEM_PROPERTY_AURA]: require('./aura'),
   [CONSTS.ITEM_PROPERTY_CONDITION_IMMUNITY]: require('./condition-immunity'),
   [CONSTS.ITEM_PROPERTY_CRITICAL_THREAT]: require('./critical-threat'),
+  [CONSTS.ITEM_PROPERTY_CURSED]: require('./cursed'),
   [CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]: require('./damage-bonus'),
   [CONSTS.ITEM_PROPERTY_DAMAGE_IMMUNITY]: require('./damage-immunity'),
   [CONSTS.ITEM_PROPERTY_DAMAGE_REDUCTION]: require('./damage-reduction'),

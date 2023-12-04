@@ -1462,6 +1462,7 @@
       "ITEM_PROPERTY_CRITICAL_THREAT": {
         "amp": "number"
       },
+      "ITEM_PROPERTY_CURSED": {},
       "ITEM_PROPERTY_DAMAGE_BONUS": {
         "amp": "dice",
         "type": "damageType"

@@ -221,6 +221,16 @@ class Creature {
             sES = aES.shift()
             oPrevItem = this.store.getters.getEquippedItems[sES]
         } while (oPrevItem !== null && aES.length > 0)
+        if (oPrevItem) {
+            // Verifier si l'objet est maudit
+            if (oPrevItem.properties.find(ip => ip.property === CONSTS.ITEM_PROPERTY_CURSED)) {
+                this.events.emit('cursed-item', {
+                    item: oPrevItem,
+                    owner: this
+                })
+                return null // On ne retire pas l'objet, on ne s'équipe pas du nouvel objet
+            }
+        }
         this.store.mutations.equipItem({ item: oItem, slot: sES })
         return oPrevItem
     }

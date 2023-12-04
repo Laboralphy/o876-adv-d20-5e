@@ -225,3 +225,4 @@ describe('zap', function () {
         expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
     })
 })
+
