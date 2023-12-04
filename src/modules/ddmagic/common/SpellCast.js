@@ -138,6 +138,7 @@ module.exports = class SpellCast {
         const ac = oTarget.store.getters.getArmorClass
         const hit = nAtkRoll >= ac
         caster.events.emit('spell-ranged-attack', {
+            caster: this.caster,
             target: oTarget,
             hit
         })
@@ -335,6 +336,7 @@ module.exports = class SpellCast {
             if (oPreviousConcentrationEffect) {
                 oPreviousConcentrationEffect.duration = 0
                 this.caster.events.emit('spellcast-concentration-end', {
+                    caster: this.caster,
                     spell: oPreviousConcentrationEffect.data.spellmark.spell,
                     reason: 'CONCENTRATION_CHANGE'
                 })
@@ -348,6 +350,7 @@ module.exports = class SpellCast {
                     this._effects
                 )
             this.caster.events.emit('spellcast-concentration', {
+                caster: this.caster,
                 spell: this.spellMark.spell
             })
             this.caster.applyEffect(eConcentrationGroup, duration)
@@ -382,13 +385,14 @@ module.exports = class SpellCast {
                     throw new Error('SPELLCAST_BAD_TARGET')
                 }
                 this.caster.events.emit('spellcast', {
+                    caster: this.caster,
                     spell: this.spell,
                     level: this.spellCastingLevel
                 })
                 this.target.events.emit('spellcast-at', {
+                    caster: this.caster,
                     spell: this.spell,
-                    level: this.spellCastingLevel,
-                    caster: this.caster
+                    level: this.spellCastingLevel
                 })
                 if (!this._cheat) {
                     this.consumeSpellSlot()
