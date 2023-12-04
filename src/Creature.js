@@ -208,8 +208,10 @@ class Creature {
      *
      * @param oItem {D20Item}
      * @param [sEquipmentSlot] {string}
+     * @param [bByPassCurse] {boolean} si true alors, on ne prend pas compte des items maudits
+     * @return {{ previousItem: D20Item|null, newItem: D20Item|null, slot: string, cursed: boolean }}
      */
-    equipItem (oItem, sEquipmentSlot = '') {
+    equipItem (oItem, sEquipmentSlot = '', bByPassCurse = false) {
         const aES = Array.isArray(sEquipmentSlot)
             ? sEquipmentSlot // C'est un tableau
             : sEquipmentSlot === ''
@@ -223,20 +225,26 @@ class Creature {
         } while (oPrevItem !== null && aES.length > 0)
         if (oPrevItem) {
             // Verifier si l'objet est maudit
-            if (oPrevItem.properties.find(ip => ip.property === CONSTS.ITEM_PROPERTY_CURSED)) {
-                this.events.emit('cursed-item', {
-                    item: oPrevItem,
-                    owner: this
-                })
-                return null // On ne retire pas l'objet, on ne s'équipe pas du nouvel objet
+            if (!bByPassCurse && !!oPrevItem.properties.find(ip => ip.property === CONSTS.ITEM_PROPERTY_CURSED)) {
+                return {
+                    previousItem: oPrevItem,
+                    newItem: oItem,
+                    slot: sES,
+                    cursed: true
+                } // On ne retire pas l'objet, on ne s'équipe pas du nouvel objet
             }
         }
         this.store.mutations.equipItem({ item: oItem, slot: sES })
-        return oPrevItem
+        return {
+            previousItem: oPrevItem,
+            newItem: oItem,
+            slot: sES,
+            cursed: false
+        }
     }
 
-    unequipItem (slot) {
-        return this.equipItem(null, slot)
+    unequipItem (slot, bByPassCurse = false) {
+        return this.equipItem(null, slot, bByPassCurse)
     }
 
     /*
