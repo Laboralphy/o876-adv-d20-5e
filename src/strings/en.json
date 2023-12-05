@@ -147,6 +147,7 @@
     "ITEM_PROPERTY_AURA": "Aura",
     "ITEM_PROPERTY_CONDITION_IMMUNITY": "Condition immunity",
     "ITEM_PROPERTY_CRITICAL_THREAT": "Critical threat",
+    "ITEM_PROPERTY_CURSED": "Cursed",
     "ITEM_PROPERTY_DAMAGE_BONUS": "Damage bonus",
     "ITEM_PROPERTY_DAMAGE_IMMUNITY": "Damage immunity",
     "ITEM_PROPERTY_DAMAGE_REDUCTION": "Damage reduction",
@@ -155,6 +156,7 @@
     "ITEM_PROPERTY_DISADVANTAGE": "Disadvantage",
     "ITEM_PROPERTY_ENHANCEMENT": "Enhancement",
     "ITEM_PROPERTY_HP_BONUS": "Extra hit points",
+    "ITEM_PROPERTY_LIGHT": "Light",
     "ITEM_PROPERTY_MASSIVE_CRITICAL": "Massive critical",
     "ITEM_PROPERTY_MATERIAL_VULNERABILITY": "Material vulnerability",
     "ITEM_PROPERTY_MELEE_ATTACK_BONUS": "Melee attack bonus",
@@ -167,7 +169,8 @@
     "ITEM_PROPERTY_REROLL": "Reroll",
     "ITEM_PROPERTY_SAVING_THROW_BONUS": "Saving throw bonus",
     "ITEM_PROPERTY_SKILL_BONUS": "Skill bonus",
-    "ITEM_PROPERTY_SPEED_BONUS": "Moving speed bonus"
+    "ITEM_PROPERTY_SPEED_BONUS": "Moving speed bonus",
+    "ITEM_PROPERTY_UNIDENTIFIED": "Unidentified"
   },
   "weaponAttribute": {
     "WEAPON_ATTRIBUTE_AMMUNITION": "ammunition",

@@ -147,6 +147,7 @@
     "ITEM_PROPERTY_AURA": "Aura",
     "ITEM_PROPERTY_CONDITION_IMMUNITY": "Immunité à la condition",
     "ITEM_PROPERTY_CRITICAL_THREAT": "Plage de coup critique",
+    "ITEM_PROPERTY_CURSED": "Maudit",
     "ITEM_PROPERTY_DAMAGE_BONUS": "Bonus aux dégâts",
     "ITEM_PROPERTY_DAMAGE_IMMUNITY": "Immunité aux dégâts",
     "ITEM_PROPERTY_DAMAGE_REDUCTION": "Réduction des dégâts",
@@ -155,6 +156,7 @@
     "ITEM_PROPERTY_DISADVANTAGE": "Désavantage",
     "ITEM_PROPERTY_ENHANCEMENT": "Altération",
     "ITEM_PROPERTY_HP_BONUS": "Points de vie supplémentaires",
+    "ITEM_PROPERTY_LIGHT": "Lumière",
     "ITEM_PROPERTY_MASSIVE_CRITICAL": "Critiques massifs",
     "ITEM_PROPERTY_MATERIAL_VULNERABILITY": "Vulnérabilité au matériau",
     "ITEM_PROPERTY_MELEE_ATTACK_BONUS": "Bonus au jet d'attaque au contact",
@@ -167,7 +169,8 @@
     "ITEM_PROPERTY_REROLL": "Relancer le dé",
     "ITEM_PROPERTY_SAVING_THROW_BONUS": "Bonus au jet de sauvegarde",
     "ITEM_PROPERTY_SKILL_BONUS": "Bonus de compétence",
-    "ITEM_PROPERTY_SPEED_BONUS": "Bonus vitesse de déplacement"
+    "ITEM_PROPERTY_SPEED_BONUS": "Bonus vitesse de déplacement",
+    "ITEM_PROPERTY_UNIDENTIFIED": "Non identifié"
   },
   "weaponAttribute": {
     "WEAPON_ATTRIBUTE_AMMUNITION": "à munitions",
