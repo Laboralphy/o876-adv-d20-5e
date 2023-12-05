@@ -9,6 +9,20 @@ class Manager {
     constructor () {
         this._ef = null
         this._events = new Events()
+        this._creatureHandlers = new Set([
+            'death',
+            'attack',
+            'action',
+            'target-distance',
+            'saving-throw',
+            'check-skill',
+            'damaged',
+            'offensive-slot'
+        ])
+    }
+
+    get creatureHandlers () {
+        return this._creatureHandlers
     }
 
     get config () {
@@ -21,8 +35,7 @@ class Manager {
      * @private
      */
     _defineCreatureEventHandlers (oCreature) {
-        const aEvents = ['death', 'attack', 'action', 'target-distance', 'saving-throw', 'check-skill', 'damaged', 'offensive-slot']
-        aEvents.forEach(evName => {
+        this.creatureHandlers.forEach(evName => {
             oCreature.events.on(evName, oPayload => {
                 this._events.emit(evName, {
                     ...oPayload,
@@ -55,6 +68,20 @@ class Manager {
         const ef = new EntityFactory()
         ef.init()
         this._ef = ef
+        // Lancement des inits de chaque module
+        CONFIG
+            .modules
+            .filter(m => m.active)
+            .map(m => m.id)
+            .forEach(m => {
+                const sInitScript = m + '.init'
+                if (sInitScript in this.assetManager.scripts) {
+                    this.assetManager.scripts[sInitScript]({
+                        manager: this
+                    })
+                }
+            })
+
     }
 
     /**

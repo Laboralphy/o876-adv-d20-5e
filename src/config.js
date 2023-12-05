@@ -16,6 +16,10 @@ class Config {
         this._modules = this.buildDefaultModules()
     }
 
+    /**
+     *
+     * @returns {{ id: string, active: boolean, path: string }[]}
+     */
     get modules () {
         return this._modules
     }
@@ -24,6 +28,10 @@ class Config {
         return this.getActiveModules()
     }
 
+    /**
+     *
+     * @returns {{path: string, active: boolean, id: string}[]}
+     */
     buildDefaultModules () {
         return BUILTIN_MODULE_LIST.map(m => ({
             id: m,
