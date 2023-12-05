@@ -58,7 +58,7 @@ module.exports = class SpellCast {
     get target () {
         return this.spellData.target === 'TARGET_TYPE_SELF'
             ? this.caster
-            : this.caster.getTarget()
+            : this.caster.getTarget() || this.caster
     }
 
     get spell () {

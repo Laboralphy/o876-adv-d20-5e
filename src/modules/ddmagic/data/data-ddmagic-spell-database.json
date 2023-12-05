@@ -118,5 +118,11 @@
     "ritual": false,
     "concentration": true,
     "target": "TARGET_TYPE_HOSTILE"
+  },
+  "remove-curse": {
+    "level": 3,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_FRIEND"
   }
 }

@@ -4,6 +4,7 @@ const Manager = require('../src/Manager')
 const AssetManager = require('../src/AssetManager')
 const { Config, CONFIG } = require('../src/config')
 const CONSTS = require("../src/consts");
+const itemProperties = require('../src/item-properties')
 
 CONFIG.setModuleActive('classic', true)
 CONFIG.setModuleActive('ddmagic', true)
@@ -226,3 +227,52 @@ describe('zap', function () {
     })
 })
 
+describe('remove-curse', function () {
+    it ('should not be able to remove cursed item', function () {
+        const {manager, evolution} = buildStuff()
+        const oWizard = evolution
+            .setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+
+        const oCursedDagger = manager.createEntity('wpn-dagger')
+        oCursedDagger.properties.push(itemProperties[CONSTS.ITEM_PROPERTY_CURSED]())
+        const oNormalDagger = manager.createEntity('wpn-dagger')
+
+        oWizard.equipItem(oCursedDagger)
+        oWizard.equipItem(oNormalDagger)
+        expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toEqual(oCursedDagger)
+        const {cursed: c1} = oWizard.unequipItem(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toEqual(oCursedDagger)
+        expect(c1).toBeTrue()
+    })
+
+    it('should be able to remove cursed item when remove curse is cast', function () {
+        const {manager, evolution} = buildStuff()
+        const oWizard = evolution
+            .setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+
+        const oCursedDagger = manager.createEntity('wpn-dagger')
+        oCursedDagger.properties.push(itemProperties[CONSTS.ITEM_PROPERTY_CURSED]())
+        const oNormalDagger = manager.createEntity('wpn-dagger')
+
+        oWizard.equipItem(oCursedDagger)
+        oWizard.equipItem(oNormalDagger)
+        expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toEqual(oCursedDagger)
+        const {cursed: c1} = oWizard.unequipItem(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toEqual(oCursedDagger)
+        expect(c1).toBeTrue()
+
+        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+
+        oWizard.setTarget(oWizard)
+
+        pCast({
+            caster: oWizard,
+            spell: 'remove-curse',
+            cheat: true,
+            hostiles: [],
+            friends: [oWizard]
+        })
+
+        expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toBeNull()
+    })
+})

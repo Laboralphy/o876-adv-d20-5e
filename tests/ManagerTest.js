@@ -297,7 +297,7 @@ describe('attack outcome disadvantage', function () {
         c1.setDistanceToTarget(5)
         const a = c1.attack()
         expect(a.disadvantages).toEqual({ rules: [ 'TARGET_TOO_CLOSE' ], value: true })
-        c1.equipItem(ss)
+        c1.equipItem(ss.previousItem)
         const a2 = c1.attack()
         expect(a2.disadvantages).toEqual({ rules: [], value: false })
     })

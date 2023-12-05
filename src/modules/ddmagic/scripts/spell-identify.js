@@ -8,7 +8,6 @@
  */
 
 const CONSTS = require('../../../consts')
-const itemProperties = require('../../../item-properties')
 
 module.exports = (oSpellCast, { item }) => {
     let i
@@ -16,9 +15,6 @@ module.exports = (oSpellCast, { item }) => {
         i = item.properties.findIndex(ip => ip.property === CONSTS.ITEM_PROPERTY_UNIDENTIFIED)
         const u = item.properties[i]
         if (u) {
-            u.data.hiddenProperties.forEach(hp => {
-                item.properties.push(itemProperties[hp.property](hp))
-            })
             item.properties.splice(i, 1)
         }
     } while (i >= 0)
