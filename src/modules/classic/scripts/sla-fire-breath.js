@@ -11,6 +11,7 @@ module.exports = function (caster) {
         target: caster.getTarget(),
         damage: caster.roll('2d6'),
         type: CONSTS.DAMAGE_TYPE_FIRE,
-        dc: 11
+        dc: 11,
+        apply: true
     })
 }

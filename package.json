@@ -1,6 +1,6 @@
 {
   "name": "@laboralphy/addv-srd",
-  "version": "0.10.2",
+  "version": "0.11.0",
   "description": "A set of rules based on the System Reference Document of OGL version Dungeons and Dragons 5e. ",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@laboralphy/object-fusion": "^1.0.0",
     "@laboralphy/store": "^1.2.5",
     "jsonschema": "^1.4.1",
     "uuid": "^9.0.0"

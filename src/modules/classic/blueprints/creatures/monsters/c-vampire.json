@@ -58,7 +58,7 @@
         {
           "property": "ITEM_PROPERTY_DAMAGE_RESISTANCE",
           "amp": 0,
-          "type": "DAMAGE_TYPE_WITHERING"
+          "type": "DAMAGE_TYPE_NECROTIC"
         },
         {
           "property": "ITEM_PROPERTY_MATERIAL_VULNERABILITY",

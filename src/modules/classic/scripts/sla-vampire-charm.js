@@ -17,7 +17,8 @@ module.exports = function (caster) {
             duration: 10,
             savingAbility: CONSTS.ABILITY_WISDOM,
             dc: 17,
-            subtype: CONSTS.EFFECT_SUBTYPE_BREAKABLE
+            subtype: CONSTS.EFFECT_SUBTYPE_BREAKABLE,
+            apply: true
         })
     }
 }

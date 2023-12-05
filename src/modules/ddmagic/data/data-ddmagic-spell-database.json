@@ -1,0 +1,128 @@
+{
+  "acid-splash": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "chill-touch": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "fire-bolt": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "light": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_FRIEND"
+  },
+  "mending": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_SPECIAL"
+  },
+  "poison-spray": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "ray-of-frost": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "zap": {
+    "level": 0,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "true-strike": {
+    "level": 0,
+    "ritual": false,
+    "concentration": true,
+    "target": "TARGET_TYPE_SELF"
+  },
+  "burning-hands": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILES"
+  },
+  "charm-person": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "color-spray": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "false-life": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_SELF"
+  },
+  "identify": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_SPECIAL"
+  },
+  "magic-missile": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "mage-armor": {
+    "level": 1,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_FRIEND"
+  },
+  "invisibility": {
+    "level": 2,
+    "ritual": false,
+    "concentration": true,
+    "target": "TARGET_TYPE_FRIEND"
+  },
+  "acid-arrow": {
+    "level": 2,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "hold-person": {
+    "level": 2,
+    "ritual": false,
+    "concentration": true,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "ray-of-enfeeblement": {
+    "level": 2,
+    "ritual": false,
+    "concentration": true,
+    "target": "TARGET_TYPE_HOSTILE"
+  },
+  "remove-curse": {
+    "level": 3,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_FRIEND"
+  }
+}

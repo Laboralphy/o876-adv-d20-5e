@@ -81,6 +81,10 @@ const { aggregateModifiers } = require("./store/creature/common/aggregate-modifi
  * @property equipmentSlots {string}
  */
 
+
+/**
+ * @class Creature
+ */
 class Creature {
     constructor () {
         this._id = uuidv4({}, null, 0)
@@ -116,8 +120,18 @@ class Creature {
         Creature._AssetManager = value
     }
 
+    /**
+     * @returns {AssetManager}
+     */
     static get AssetManager () {
         return Creature._AssetManager
+    }
+
+    /**
+     * @returns {AssetManager}
+     */
+    get assetManager () {
+        return Creature.AssetManager
     }
 
     get entityType () {
@@ -129,7 +143,7 @@ class Creature {
     }
 
     /**
-     * Définie la reférence du blueprint qui a servit à construire la creature
+     * Définie la reférence du blueprint qui a servi à construire la creature
      * @param value {string}
      */
     set ref (value) {
@@ -138,7 +152,7 @@ class Creature {
     }
 
     /**
-     * Renvoie la référence du blueprint qui a servit a construre la creature
+     * Renvoie la référence du blueprint qui a servit à construire la creature
      * @returns {string}
      */
     get ref () {
@@ -194,8 +208,10 @@ class Creature {
      *
      * @param oItem {D20Item}
      * @param [sEquipmentSlot] {string}
+     * @param [bByPassCurse] {boolean} si true alors, on ne prend pas compte des items maudits
+     * @return {{ previousItem: D20Item|null, newItem: D20Item|null, slot: string, cursed: boolean }}
      */
-    equipItem (oItem, sEquipmentSlot = '') {
+    equipItem (oItem, sEquipmentSlot = '', bByPassCurse = false) {
         const aES = Array.isArray(sEquipmentSlot)
             ? sEquipmentSlot // C'est un tableau
             : sEquipmentSlot === ''
@@ -207,12 +223,28 @@ class Creature {
             sES = aES.shift()
             oPrevItem = this.store.getters.getEquippedItems[sES]
         } while (oPrevItem !== null && aES.length > 0)
+        if (oPrevItem) {
+            // Verifier si l'objet est maudit
+            if (!bByPassCurse && !!oPrevItem.properties.find(ip => ip.property === CONSTS.ITEM_PROPERTY_CURSED)) {
+                return {
+                    previousItem: oPrevItem,
+                    newItem: oItem,
+                    slot: sES,
+                    cursed: true
+                } // On ne retire pas l'objet, on ne s'équipe pas du nouvel objet
+            }
+        }
         this.store.mutations.equipItem({ item: oItem, slot: sES })
-        return oPrevItem
+        return {
+            previousItem: oPrevItem,
+            newItem: oItem,
+            slot: sES,
+            cursed: false
+        }
     }
 
-    unequipItem (slot) {
-        return this.equipItem(null, slot)
+    unequipItem (slot, bByPassCurse = false) {
+        return this.equipItem(null, slot, bByPassCurse)
     }
 
     /*
@@ -960,11 +992,10 @@ class Creature {
      * Lancer un dé pour déterminer les dégâts occasionné par un coup porté par l'arme actuellement sélectionnée
      * La valeur renvoyée ne fait pas intervenir des bonus liés aux effets de la créature ou à ses caractéristiques
      * @param critical {boolean} si true alors le coup est critique et tous les jets de dé doivent être doublés
-     * @param sneak {boolean} appliquer le sneak attack damage bonus si true
      * @param dice {Dice} dé à utiliser
      * return {Object<string, number>}
      */
-    rollWeaponDamage ({ critical = false, sneak = false } = {}) {
+    rollWeaponDamage ({ critical = false } = {}) {
         const oWeapon = this.store.getters.getSelectedWeapon
         const nExtraDamageDice = this.store.getters.isWieldingHeavyMeleeWeapon
             ? this.store.getters.getSizeProperties.extraMeleeDamageDice
@@ -986,18 +1017,6 @@ class Creature {
             oDamageBonus[oWeapon.damageType] = 0
         }
         oDamageBonus[oWeapon.damageType] = Math.max(1, oDamageBonus[oWeapon.damageType] + nDamage)
-        if (sneak) {
-            const amSneak = this.aggregateModifiers([
-                CONSTS.EFFECT_SNEAK_ATTACK
-            ])
-            const sSneakDice = amSneak.max.toString() + 'd6'
-            const nSneakDamage = this.roll(sSneakDice)
-            oDamageBonus[oWeapon.damageType] += nSneakDamage
-            this.events.emit('sneak-attack', {
-                dice: sSneakDice,
-                damage: nSneakDamage
-            })
-        }
         return oDamageBonus
     }
 
@@ -1286,13 +1305,15 @@ class Creature {
         // si ça touche, calculer les dégâts
         if (oAtk.hit) {
             const oDamages = this.rollWeaponDamage({
-                critical: oAtk.critical,
-                sneak: !this._hasUsedSneakAttack
+                critical: oAtk.critical
             })
-            this._hasUsedSneakAttack = true
             // générer les effets de dégâts
-            let amount = 0
             const oResisted = {}
+            // appliquer les effets sur la cible
+            oAtk.damages.resisted = oResisted
+            oAtk.damages.types = oDamages
+            oAtk.damages.amount = 0
+            this.notifyAttack(oAtk)
             Object
                 .entries(oDamages)
                 .forEach(([sType, nValue]) => {
@@ -1315,21 +1336,17 @@ class Creature {
                     } else {
                         oResisted[sType] += n
                     }
-                    amount += eMitigDam.amp
+                    oAtk.damages.amount += eMitigDam.amp
                     oDamages[sType] -= n
                     return eMitigDam
                 })
-            // appliquer les effets sur la cible
-            oAtk.damages.resisted = oResisted
-            oAtk.damages.types = oDamages
-            oAtk.damages.amount = amount
-
             // application d'effets on hit
-            if (amount > 0) {
+            if (oAtk.damages.amount > 0) {
                 this.processOnHit(oTarget, oAtk)
             }
+        } else {
+            this.notifyAttack(oAtk)
         }
-        this.notifyAttack(oAtk)
         return oAtk
     }
 

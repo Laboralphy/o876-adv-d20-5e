@@ -1,0 +1,22 @@
+[
+  { "wizardLevel": 1, "knownCantripCount": 3, "slotCountPerLevel": [ 2, 0, 0, 0, 0, 0, 0, 0, 0 ] },
+  { "wizardLevel": 2, "knownCantripCount": 3, "slotCountPerLevel": [ 3, 0, 0, 0, 0, 0, 0, 0, 0 ] },
+  { "wizardLevel": 3, "knownCantripCount": 3, "slotCountPerLevel": [ 4, 2, 0, 0, 0, 0, 0, 0, 0 ] },
+  { "wizardLevel": 4, "knownCantripCount": 4, "slotCountPerLevel": [ 4, 3, 0, 0, 0, 0, 0, 0, 0 ] },
+  { "wizardLevel": 5, "knownCantripCount": 4, "slotCountPerLevel": [ 4, 3, 2, 0, 0, 0, 0, 0, 0 ] },
+  { "wizardLevel": 6, "knownCantripCount": 4, "slotCountPerLevel": [ 4, 3, 3, 0, 0, 0, 0, 0, 0 ] },
+  { "wizardLevel": 7, "knownCantripCount": 4, "slotCountPerLevel": [ 4, 3, 3, 1, 0, 0, 0, 0, 0 ] },
+  { "wizardLevel": 8, "knownCantripCount": 4, "slotCountPerLevel": [ 4, 3, 3, 2, 0, 0, 0, 0, 0 ] },
+  { "wizardLevel": 9, "knownCantripCount": 4, "slotCountPerLevel": [ 4, 3, 3, 3, 1, 0, 0, 0, 0 ] },
+  { "wizardLevel": 10, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 2, 0, 0, 0, 0 ] },
+  { "wizardLevel": 11, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 2, 1, 0, 0, 0 ] },
+  { "wizardLevel": 12, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 2, 1, 0, 0, 0 ] },
+  { "wizardLevel": 13, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 2, 1, 1, 0, 0 ] },
+  { "wizardLevel": 14, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 2, 1, 1, 0, 0 ] },
+  { "wizardLevel": 15, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 2, 1, 1, 1, 0 ] },
+  { "wizardLevel": 16, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 2, 1, 1, 1, 0 ] },
+  { "wizardLevel": 17, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 2, 1, 1, 1, 1 ] },
+  { "wizardLevel": 18, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 3, 1, 1, 1, 1 ] },
+  { "wizardLevel": 19, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 3, 2, 1, 1, 1 ] },
+  { "wizardLevel": 20, "knownCantripCount": 5, "slotCountPerLevel": [ 4, 3, 3, 3, 3, 2, 2, 1, 1 ] }
+]

@@ -118,7 +118,7 @@
     "DAMAGE_TYPE_ACID": "Acide",
     "DAMAGE_TYPE_ELECTRICITY": "Électricité",
     "DAMAGE_TYPE_FORCE": "Force",
-    "DAMAGE_TYPE_WITHERING": "Flétrissement",
+    "DAMAGE_TYPE_NECROTIC": "Flétrissement",
     "DAMAGE_TYPE_POISON": "Poison",
     "DAMAGE_TYPE_PSYCHIC": "Psychique",
     "DAMAGE_TYPE_RADIANT": "Radiant",

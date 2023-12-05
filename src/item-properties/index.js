@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 20/11/2023, 18:02:46 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 02/12/2023 15:41:33 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.ITEM_PROPERTY_ABILITY_BONUS]: require('./ability-bonus'),
@@ -8,6 +8,7 @@ module.exports = {
   [CONSTS.ITEM_PROPERTY_AURA]: require('./aura'),
   [CONSTS.ITEM_PROPERTY_CONDITION_IMMUNITY]: require('./condition-immunity'),
   [CONSTS.ITEM_PROPERTY_CRITICAL_THREAT]: require('./critical-threat'),
+  [CONSTS.ITEM_PROPERTY_CURSED]: require('./cursed'),
   [CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]: require('./damage-bonus'),
   [CONSTS.ITEM_PROPERTY_DAMAGE_IMMUNITY]: require('./damage-immunity'),
   [CONSTS.ITEM_PROPERTY_DAMAGE_REDUCTION]: require('./damage-reduction'),
@@ -18,6 +19,7 @@ module.exports = {
   [CONSTS.ITEM_PROPERTY_EXTRA_ATTACKS]: require('./extra-attacks'),
   [CONSTS.ITEM_PROPERTY_EXTRA_WEIGHT]: require('./extra-weight'),
   [CONSTS.ITEM_PROPERTY_HP_BONUS]: require('./hp-bonus'),
+  [CONSTS.ITEM_PROPERTY_LIGHT]: require('./light'),
   [CONSTS.ITEM_PROPERTY_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.ITEM_PROPERTY_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),
   [CONSTS.ITEM_PROPERTY_MELEE_ATTACK_BONUS]: require('./melee-attack-bonus'),
@@ -30,6 +32,7 @@ module.exports = {
   [CONSTS.ITEM_PROPERTY_REROLL]: require('./reroll'),
   [CONSTS.ITEM_PROPERTY_SAVING_THROW_BONUS]: require('./saving-throw-bonus'),
   [CONSTS.ITEM_PROPERTY_SKILL_BONUS]: require('./skill-bonus'),
-  [CONSTS.ITEM_PROPERTY_SPEED_BONUS]: require('./speed-bonus')
+  [CONSTS.ITEM_PROPERTY_SPEED_BONUS]: require('./speed-bonus'),
+  [CONSTS.ITEM_PROPERTY_UNIDENTIFIED]: require('./unidentified')
 }
 

@@ -9,6 +9,7 @@ const CONSTS = require('../consts')
  */
 function create (effects, tag) {
     // GROUP_TYPE_MAGICAL : les effets de ce groupe peuvent être dissipés
+    // GROUP_TYPE_CONCENTRATION
     // GROUP_TYPE
     return createEffect(CONSTS.EFFECT_GROUP, 0, { effects, applied: false, appliedEffects: [] }, tag)
 }

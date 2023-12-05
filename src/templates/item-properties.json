@@ -27,6 +27,7 @@
   "ITEM_PROPERTY_CRITICAL_THREAT": {
     "amp": "number"
   },
+  "ITEM_PROPERTY_CURSED": {},
   "ITEM_PROPERTY_DAMAGE_BONUS": {
     "amp": "dice",
     "type": "damageType"
@@ -61,6 +62,7 @@
   "ITEM_PROPERTY_HP_BONUS": {
     "amp": "number"
   },
+  "ITEM_PROPERTY_LIGHT": {},
   "ITEM_PROPERTY_MASSIVE_CRITICAL": {
     "amp": "number"
   },
@@ -102,5 +104,6 @@
   },
   "ITEM_PROPERTY_SPEED_BONUS": {
     "amp": "number"
-  }
+  },
+  "ITEM_PROPERTY_UNIDENTIFIED": {}
 }

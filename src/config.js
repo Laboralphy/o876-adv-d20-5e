@@ -7,7 +7,8 @@ const BUILTIN_MODULE_LIST = [
     BASE_MODULE_NAME,
     'classic',
     'modern',
-    'future'
+    'future',
+    'ddmagic'
 ]
 
 class Config {
@@ -89,6 +90,8 @@ class Config {
             const m = this.getModule(id)
             if (m) {
                 m.active = value
+            } else {
+                throw new Error('Module "' + id + '" not found')
             }
         }
     }

@@ -196,7 +196,14 @@ class Evolution {
     }
 
     setupCreatureFromTemplate (oCreature, sTemplate, nTargetLevel) {
-        const oTemplate = this._data[sTemplate]
+        const oTemplate = typeof sTemplate === 'string'
+            ? this._data[sTemplate]
+            : typeof sTemplate === 'object'
+                ? sTemplate
+                : null
+        if (!oTemplate) {
+            throw new TypeError('template not found or invalid type')
+        }
         const cm = oCreature.store.mutations
         cm.resetCharacter()
         for (const [ability, value] of Object.entries(oTemplate.abilities)) {

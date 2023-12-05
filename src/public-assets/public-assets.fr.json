@@ -119,7 +119,7 @@
       "DAMAGE_TYPE_ACID": "Acide",
       "DAMAGE_TYPE_ELECTRICITY": "Électricité",
       "DAMAGE_TYPE_FORCE": "Force",
-      "DAMAGE_TYPE_WITHERING": "Flétrissement",
+      "DAMAGE_TYPE_NECROTIC": "Flétrissement",
       "DAMAGE_TYPE_POISON": "Poison",
       "DAMAGE_TYPE_PSYCHIC": "Psychique",
       "DAMAGE_TYPE_RADIANT": "Radiant",
@@ -270,7 +270,7 @@
       "weapon-type-javelin": "Javeline",
       "weapon-type-light-hammer": "Marteau léger",
       "weapon-type-mace": "Masse",
-      "weapon-type-quaterstaff": "Bâton",
+      "weapon-type-quarterstaff": "Bâton",
       "weapon-type-sickle": "Faucille",
       "weapon-type-spear": "Lance courte",
       "weapon-type-light-crossbow": "Arbalète légère",
@@ -665,7 +665,7 @@
         "weight": 4,
         "attributes": []
       },
-      "weapon-type-quaterstaff": {
+      "weapon-type-quarterstaff": {
         "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
         "damage": "1d6",
         "versatileDamage": "1d8",
@@ -1080,7 +1080,7 @@
         "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
         "damage": "2d8",
         "versatileDamage": "",
-        "damageType": "DAMAGE_TYPE_WITHERING",
+        "damageType": "DAMAGE_TYPE_NECROTIC",
         "weight": 6,
         "attributes": [
           "WEAPON_ATTRIBUTE_RANGED",
@@ -1158,7 +1158,7 @@
         "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
         "damage": "2d6",
         "versatileDamage": "",
-        "damageType": "DAMAGE_TYPE_WITHERING",
+        "damageType": "DAMAGE_TYPE_NECROTIC",
         "weight": 3,
         "attributes": [
           "WEAPON_ATTRIBUTE_RANGED",
@@ -1462,6 +1462,7 @@
       "ITEM_PROPERTY_CRITICAL_THREAT": {
         "amp": "number"
       },
+      "ITEM_PROPERTY_CURSED": {},
       "ITEM_PROPERTY_DAMAGE_BONUS": {
         "amp": "dice",
         "type": "damageType"
@@ -1496,6 +1497,7 @@
       "ITEM_PROPERTY_HP_BONUS": {
         "amp": "number"
       },
+      "ITEM_PROPERTY_LIGHT": {},
       "ITEM_PROPERTY_MASSIVE_CRITICAL": {
         "amp": "number"
       },
@@ -1537,7 +1539,8 @@
       },
       "ITEM_PROPERTY_SPEED_BONUS": {
         "amp": "number"
-      }
+      },
+      "ITEM_PROPERTY_UNIDENTIFIED": {}
     }
   },
   "templates": {

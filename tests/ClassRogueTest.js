@@ -11,8 +11,6 @@ CONFIG.setModuleActive('classic', true)
 function buildStuff () {
     const r = new Manager()
     r.init()
-    const config = new Config()
-    config.setModuleActive('classic', true)
     const am = new AssetManager()
     am.init()
     const ev = new Evolution()
@@ -380,7 +378,8 @@ describe('evasion', function () {
                 target: oRogue,
                 damage: 10,
                 dc: 50,
-                type: 'DAMAGE_TYPE_FIRE'
+                type: 'DAMAGE_TYPE_FIRE',
+                apply: true
             })
             const nHP2 = oRogue.store.getters.getHitPoints
             expect(nHP1 - nHP2).toBe(5)
@@ -398,7 +397,8 @@ describe('evasion', function () {
                 target: oRogue,
                 damage: 10,
                 dc: 1,
-                type: 'DAMAGE_TYPE_FIRE'
+                type: 'DAMAGE_TYPE_FIRE',
+                apply: true
             })
             const nHP2 = oRogue.store.getters.getHitPoints
             expect(nHP1 - nHP2).toBe(0)
@@ -528,5 +528,177 @@ describe('stroke-of-luck', function () {
         const o3 = oRogue.rollSkill('skill-arcana', 10)
         expect(o3.success).toBeFalse()
         expect(o3.roll).toBe(3)
+    })
+})
+
+describe('sneak attacks', function () {
+    it('should have sneak attack feat when having rogue class', function () {
+        const { manager: r, evolution: ev } = buildStuff()
+        const c = new Creature()
+        c.store.mutations.resetCharacter()
+        ev.creatureLevelUp(c, {
+            selectedClass: 'rogue',
+            selectedSkills: [
+                'skill-acrobatics',
+                'skill-athletics',
+                'skill-deception',
+                'skill-insight'
+            ],
+            selectedFeats: [
+                'feat-expertise-thieves-tools',
+                'feat-expertise-sleight-of-hand'
+            ]
+        })
+        c.processEffects()
+        expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
+        expect(c.aggregateModifiers(['EFFECT_SNEAK_ATTACK']).max).toBe(1)
+
+        ev.creatureLevelUp(c, {
+            selectedClass: 'rogue'
+        })
+        c.processEffects()
+        expect(c.store.getters.getLevel).toBe(2)
+        expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
+        expect(c.aggregateModifiers(['EFFECT_SNEAK_ATTACK']).max).toBe(1)
+
+        ev.creatureLevelUp(c, {
+            selectedClass: 'rogue'
+        })
+        c.processEffects()
+        expect(c.store.getters.getLevel).toBe(3)
+        expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
+        expect(c.store.state.feats.includes('feat-sneak-attack-2')).toBeTrue()
+        const am3 = c.aggregateModifiers(['EFFECT_SNEAK_ATTACK'])
+        expect(am3.max).toBe(2)
+        expect(am3.count).toBe(1)
+    })
+    it ('should not have sneak attack when having a non finesse weapon', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 1)
+        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        oRogue.equipItem(manager.createEntity('wpn-club'))
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oRogue.dice.cheat(0.5)
+        oRogue.setTarget(oFighter)
+        oRogue.setDistanceToTarget(5)
+        const outcome = oRogue.attack(oFighter)
+        expect(oRogue.store.getters.getAbilityModifiers['ABILITY_STRENGTH']).toBe(1)
+        expect(oRogue.store.getters.getAbilityModifiers['ABILITY_DEXTERITY']).toBe(3)
+        // un dé pipé de 0.5 donnera pour 1D4 la valeur de 3
+        // a laquelle il faut ajouter le bonus de force : 1 car ce n'est pas une arme de finesse
+        // soit un total des dégats de 4
+        expect(outcome.damages.amount).toBe(4) // 0.5 -> 1d4 -> 3 + strength = 4
+    })
+    it ('should have sneak attack when having a dagger', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 1)
+        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oDagger = manager.createEntity('wpn-dagger')
+        oRogue.equipItem(oDagger)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oRogue.dice.cheat(0.5)
+        oRogue.setTarget(oFighter)
+        oRogue.setDistanceToTarget(5)
+        expect(oRogue.store.getters.getSelectedWeapon).toEqual(oDagger)
+        expect(oRogue.store.getters.getSelectedWeapon.attributes.includes('WEAPON_ATTRIBUTE_FINESSE')).toBeTrue()
+        expect(oRogue.store.getters.getSuitableOffensiveSlot).toEqual('EQUIPMENT_SLOT_WEAPON_MELEE')
+        expect(oRogue.store.getters.isWieldingFinesseWeapon).toBeTrue()
+        expect(oRogue.store.getters.getEffectList.has('EFFECT_SNEAK_ATTACK')).toBeTrue()
+        expect(oRogue.store.getters.getEffects.find(({ type }) => type === 'EFFECT_SNEAK_ATTACK').amp).toBe(1)
+        const outcome = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +4 de sneak attack
+        expect(outcome.damages.amount).toBe(10)
+    })
+    it ('should have sneak attack of +8 when being level 3', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 3)
+        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oDagger = manager.createEntity('wpn-dagger')
+        oRogue.equipItem(oDagger)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oRogue.dice.cheat(0.5)
+        oRogue.setTarget(oFighter)
+        oRogue.setDistanceToTarget(5)
+        const outcome = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +8 de sneak attack
+        expect(outcome.damages.amount).toBe(14)
+    })
+    it ('should have sneak attack of +12 when being level 5', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
+        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oDagger = manager.createEntity('wpn-dagger')
+        oRogue.equipItem(oDagger)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oRogue.dice.cheat(0.5)
+        oRogue.setTarget(oFighter)
+        oRogue.setDistanceToTarget(5)
+        const outcome = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +12 de sneak attack
+        expect(outcome.damages.amount).toBe(18)
+    })
+    it ('should not have sneak attack when attacking several times', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
+        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oDagger = manager.createEntity('wpn-dagger')
+        oRogue.equipItem(oDagger)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oRogue.dice.cheat(0.5)
+        oRogue.setTarget(oFighter)
+        oRogue.setDistanceToTarget(5)
+        const outcome = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +12 de sneak attack
+        expect(outcome.damages.amount).toBe(18)
+        const outcome2 = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +0 de sneak attack (déja fait ce tour)
+        expect(outcome2.damages.amount).toBe(6)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        const outcome3 = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +12 de sneak attack
+        expect(outcome3.damages.amount).toBe(18)
+    })
+    it ('should not have sneak attack of when target is unaware', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
+        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oDagger = manager.createEntity('wpn-dagger')
+        oRogue.equipItem(oDagger)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oRogue.dice.cheat(0.5)
+        oRogue.setTarget(oFighter)
+        oRogue.setDistanceToTarget(5)
+        const outcome = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +12 de sneak attack
+        expect(outcome.damages.amount).toBe(18)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oFighter.setTarget(oRogue)
+        const outcome2 = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +0 de sneak attack (cible non prise par surprise)
+        expect(outcome2.damages.amount).toBe(6)
     })
 })

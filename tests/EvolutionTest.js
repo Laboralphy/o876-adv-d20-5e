@@ -425,49 +425,6 @@ describe('retrieve available actions for player and creatures', function () {
 })
 
 
-describe('rogue class', function () {
-    it('should have sneak attack feat when having rogue class', function () {
-        const { manager: r, evolution: ev } = buildStuff()
-        const c = new Creature()
-        c.store.mutations.resetCharacter()
-        ev.creatureLevelUp(c, {
-            selectedClass: 'rogue',
-            selectedSkills: [
-                'skill-acrobatics',
-                'skill-athletics',
-                'skill-deception',
-                'skill-insight'
-            ],
-            selectedFeats: [
-                'feat-expertise-thieves-tools',
-                'feat-expertise-sleight-of-hand'
-            ]
-        })
-        c.processEffects()
-        expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
-        expect(c.aggregateModifiers(['EFFECT_SNEAK_ATTACK']).max).toBe(1)
-
-        ev.creatureLevelUp(c, {
-            selectedClass: 'rogue'
-        })
-        c.processEffects()
-        expect(c.store.getters.getLevel).toBe(2)
-        expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
-        expect(c.aggregateModifiers(['EFFECT_SNEAK_ATTACK']).max).toBe(1)
-
-        ev.creatureLevelUp(c, {
-            selectedClass: 'rogue'
-        })
-        c.processEffects()
-        expect(c.store.getters.getLevel).toBe(3)
-        expect(c.store.state.feats.includes('feat-sneak-attack-1')).toBeTrue()
-        expect(c.store.state.feats.includes('feat-sneak-attack-2')).toBeTrue()
-        const am3 = c.aggregateModifiers(['EFFECT_SNEAK_ATTACK'])
-        expect(am3.max).toBe(2)
-        expect(am3.count).toBe(1)
-    })
-})
-
 describe('initial autoleveling of creature blueprint', function () {
     it('c-soldier should have acrobatics when creating creature', function () {
         const { manager, evolution } = buildStuff()
