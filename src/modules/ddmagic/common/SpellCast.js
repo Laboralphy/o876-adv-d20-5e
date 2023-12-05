@@ -387,12 +387,14 @@ module.exports = class SpellCast {
                 this.caster.events.emit('spellcast', {
                     caster: this.caster,
                     spell: this.spell,
-                    level: this.spellCastingLevel
+                    level: this.spellCastingLevel,
+                    parameters
                 })
                 this.target.events.emit('spellcast-at', {
                     caster: this.caster,
                     spell: this.spell,
-                    level: this.spellCastingLevel
+                    level: this.spellCastingLevel,
+                    parameters
                 })
                 if (!this._cheat) {
                     this.consumeSpellSlot()
