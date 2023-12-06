@@ -1072,3 +1072,18 @@ describe('prone condition test', function () {
         expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTrue()
     })
 })
+
+describe('getActions', function () {
+    it('should list all action when creating a soldier', function () {
+        const r = new Manager()
+        r.init()
+        const oSoldier = r.createEntity('c-soldier')
+        expect(oSoldier.store.getters.getActions).toEqual([
+            {
+                action: 'feat-second-wind',
+                uses: { value: 1, max: 1 },
+                innate: false
+            }
+        ])
+    })
+})
