@@ -1,0 +1,25 @@
+{
+  "spells": {
+    "acid-splash": "Acid splash",
+    "chill-touch": "Chill touch",
+    "fire-bolt": "Fire bolt",
+    "light": "Light",
+    "mending": "Mending",
+    "poison-spray": "Poison spray",
+    "ray-of-frost": "Ray of frost",
+    "zap": "Zap",
+    "true-strike": "True strike",
+    "burning-hands": "Burning hands",
+    "charm-person": "Charm person",
+    "color-spray": "Color spray",
+    "false-life": "False life",
+    "identify": "Identify",
+    "magic-missile": "Magic missile",
+    "mage-armor": "Mage armor",
+    "invisibility": "Invisibility",
+    "acid-arrow": "Acide arrow",
+    "hold-person": "Hold person",
+    "ray-of-enfeeblement": "Ray of enfeeblement",
+    "remove-curse": "Remove curse"
+  }
+}

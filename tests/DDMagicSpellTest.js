@@ -30,10 +30,19 @@ describe('acid-splash', function () {
         oWizard.store.mutations.learnSpell({ spell: 'acid-splash' })
         oWizard.store.mutations.prepareSpell({ spell: 'acid-splash' })
         expect(typeof Creature.AssetManager.scripts['ddmagic-cast-spell']).toBe('function')
-        Creature.AssetManager.scripts['ddmagic-cast-spell']({
-            spell: 'acid-splash',
-            caster: oWizard,
-            hostiles: [oTarget]
-        })
+        expect(() => {
+            Creature.AssetManager.scripts['ddmagic-cast-spell']({
+                spell: 'acid-splash',
+                caster: oWizard,
+                hostiles: [oTarget]
+            })
+        }).not.toThrow()
+    })
+})
+
+describe('Spell names', function () {
+    it('should be able to enumerate spell names', function () {
+        const { manager, evolution } = buildStuff()
+        expect(manager.assetManager.publicAssets.strings.spells['acid-splash']).toBeDefined()
     })
 })

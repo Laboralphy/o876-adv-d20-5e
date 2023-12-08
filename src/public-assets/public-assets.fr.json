@@ -148,6 +148,7 @@
       "ITEM_PROPERTY_AURA": "Aura",
       "ITEM_PROPERTY_CONDITION_IMMUNITY": "Immunité à la condition",
       "ITEM_PROPERTY_CRITICAL_THREAT": "Plage de coup critique",
+      "ITEM_PROPERTY_CURSED": "Maudit",
       "ITEM_PROPERTY_DAMAGE_BONUS": "Bonus aux dégâts",
       "ITEM_PROPERTY_DAMAGE_IMMUNITY": "Immunité aux dégâts",
       "ITEM_PROPERTY_DAMAGE_REDUCTION": "Réduction des dégâts",
@@ -156,6 +157,7 @@
       "ITEM_PROPERTY_DISADVANTAGE": "Désavantage",
       "ITEM_PROPERTY_ENHANCEMENT": "Altération",
       "ITEM_PROPERTY_HP_BONUS": "Points de vie supplémentaires",
+      "ITEM_PROPERTY_LIGHT": "Lumière",
       "ITEM_PROPERTY_MASSIVE_CRITICAL": "Critiques massifs",
       "ITEM_PROPERTY_MATERIAL_VULNERABILITY": "Vulnérabilité au matériau",
       "ITEM_PROPERTY_MELEE_ATTACK_BONUS": "Bonus au jet d'attaque au contact",
@@ -168,7 +170,8 @@
       "ITEM_PROPERTY_REROLL": "Relancer le dé",
       "ITEM_PROPERTY_SAVING_THROW_BONUS": "Bonus au jet de sauvegarde",
       "ITEM_PROPERTY_SKILL_BONUS": "Bonus de compétence",
-      "ITEM_PROPERTY_SPEED_BONUS": "Bonus vitesse de déplacement"
+      "ITEM_PROPERTY_SPEED_BONUS": "Bonus vitesse de déplacement",
+      "ITEM_PROPERTY_UNIDENTIFIED": "Non identifié"
     },
     "weaponAttribute": {
       "WEAPON_ATTRIBUTE_AMMUNITION": "à munitions",
@@ -334,6 +337,29 @@
     },
     "shieldType": {
       "shield-type-heavy": "Grand bouclier"
+    },
+    "spells": {
+      "acid-splash": "Aspersion acide",
+      "chill-touch": "Toucher glacial",
+      "fire-bolt": "Éclat de feu",
+      "light": "Lumière",
+      "mending": "Réparation",
+      "poison-spray": "Bombe au poivre",
+      "ray-of-frost": "Rayon de givre",
+      "zap": "Électrocution",
+      "true-strike": "Coup au but",
+      "burning-hands": "Mains brûlantes",
+      "charm-person": "Charme personne",
+      "color-spray": "Couleurs dansantes",
+      "false-life": "Simulâcre de vie",
+      "identify": "Identification",
+      "magic-missile": "Projectile magique",
+      "mage-armor": "Armure de mage",
+      "invisibility": "Invisibilité",
+      "acid-arrow": "Flèche acide",
+      "hold-person": "Immobilisation de personne",
+      "ray-of-enfeeblement": "Rayon affaiblissant",
+      "remove-curse": "Délivrance des malédictions"
     }
   },
   "data": {
