@@ -1,0 +1,25 @@
+{
+  "spells": {
+    "acid-splash": "Aspersion acide",
+    "chill-touch": "Toucher glacial",
+    "fire-bolt": "Éclat de feu",
+    "light": "Lumière",
+    "mending": "Réparation",
+    "poison-spray": "Bombe au poivre",
+    "ray-of-frost": "Rayon de givre",
+    "zap": "Électrocution",
+    "true-strike": "Coup au but",
+    "burning-hands": "Mains brûlantes",
+    "charm-person": "Charme personne",
+    "color-spray": "Couleurs dansantes",
+    "false-life": "Simulâcre de vie",
+    "identify": "Identification",
+    "magic-missile": "Projectile magique",
+    "mage-armor": "Armure de mage",
+    "invisibility": "Invisibilité",
+    "acid-arrow": "Flèche acide",
+    "hold-person": "Immobilisation de personne",
+    "ray-of-enfeeblement": "Rayon affaiblissant",
+    "remove-curse": "Délivrance des malédictions"
+  }
+}
