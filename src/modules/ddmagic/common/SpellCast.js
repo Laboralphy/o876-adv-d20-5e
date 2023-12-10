@@ -10,6 +10,7 @@ module.exports = class SpellCast {
     /**
      *
      * @param caster {Creature} creature qui lance le sort
+     * @param target {Creature} créature sur laquelle lancer le sort
      * @param spell {string} ref du sort
      * @param power {number} nombre de niveau de slot supplémentaire
      * @param hostiles {Creature[]} liste des créatures hostiles présente aux alentours
@@ -18,6 +19,7 @@ module.exports = class SpellCast {
      */
     constructor ({
         caster,
+        target,
         spell,
         power = 0,
         hostiles = [],
@@ -25,6 +27,7 @@ module.exports = class SpellCast {
         cheat = false
     }) {
         this._caster = caster
+        this._target = target
         this._spell = spell
         this._power = power
         this._hostiles = hostiles
@@ -58,7 +61,7 @@ module.exports = class SpellCast {
     get target () {
         return this.spellData.target === 'TARGET_TYPE_SELF'
             ? this.caster
-            : this.caster.getTarget() || this.caster
+            : this._target || this.caster.getTarget() || this.caster
     }
 
     get spell () {
