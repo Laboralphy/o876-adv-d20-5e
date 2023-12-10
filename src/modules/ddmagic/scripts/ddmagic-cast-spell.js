@@ -9,10 +9,12 @@ const SpellCast = require('../common/SpellCast')
  * @param hostiles {Creature[]}
  * @param friends {Creature[]}
  * @param parameters {{}}
+ * @param cheat {boolean}
  */
 module.exports = ({
     spell,
     caster,
+    target,
     power = 0,
     hostiles = [],
     friends = [],
@@ -21,6 +23,7 @@ module.exports = ({
 }) => {
     const oSpellCast = new SpellCast({
         caster,
+        target,
         spell,
         power,
         hostiles,
