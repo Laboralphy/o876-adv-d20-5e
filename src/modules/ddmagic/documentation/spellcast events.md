@@ -12,6 +12,13 @@ d'indiquer si le projectile du sort atteint ou rate sa cible.
 - **caster** : {Creature} qui lance le sort.
 - **target** : {Creature} cible sur qui le sort est lancé.
 - **hit** : {boolean} true indique que le project touche la cible
+- **ability** : {string} Caractéristique utilisée pour l'attaque à distance
+- **abilityModifier** : {number} bonus de caractéristique
+- **roll** : {number} valeur du dé d'attaque
+- **circumstances** : {number} 1 avantage, -1 désavantage, 0 rien
+- **attack** : jet d'attaque total
+- **ac** : {number} Classe d'armure adverse
+
 
 ### spellcast-concentration-end
 
