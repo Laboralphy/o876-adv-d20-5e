@@ -140,17 +140,20 @@ module.exports = class SpellCast {
         }
         const ac = oTarget.store.getters.getArmorClass
         const hit = nAtkRoll >= ac
-        caster.events.emit('spell-ranged-attack', {
-            caster: this.caster,
+        const oOutcome = {
+            type: 'ranged-attack',
+            caster,
             target: oTarget,
-            hit
-        })
-        return {
+            ability: sAbility,
+            abilityModifier: nAbilityModifier,
+            roll: value,
+            circumstances,
             attack: nAtkRoll,
-            ac,
             hit,
-            circumstances
+            ac
         }
+        caster.events.emit('spell-ranged-attack', oOutcome)
+        return oOutcome
     }
 
     /**
@@ -389,12 +392,14 @@ module.exports = class SpellCast {
                 }
                 this.caster.events.emit('spellcast', {
                     caster: this.caster,
+                    target: this.target,
                     spell: this.spell,
                     level: this.spellCastingLevel,
                     parameters
                 })
                 this.target.events.emit('spellcast-at', {
                     caster: this.caster,
+                    target: this.target,
                     spell: this.spell,
                     level: this.spellCastingLevel,
                     parameters
