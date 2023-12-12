@@ -232,6 +232,7 @@ module.exports = class SpellCast {
             apply: false
         })
         oEffect.data.spellmark = this.spellMark
+        console.log(oEffect)
         return oTarget.applyEffect(oEffect, 0, this.caster)
     }
 

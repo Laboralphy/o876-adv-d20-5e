@@ -66,29 +66,123 @@ function evocationAttack ({
     ability = CONSTS.ABILITY_DEXTERITY,
     apply = false
 }) {
+    let nDamage = damage
     const { success } = target.rollSavingThrow(ability, [CONSTS.THREAT_TYPE_SPELL], dc, caster)
     const isDexterityBased = ability === CONSTS.ABILITY_DEXTERITY
     const bHasEvasion =
         isDexterityBased &&
         target.aggregateModifiers([CONSTS.EFFECT_EVASION], {}).count > 0
-    const nCase = (isDexterityBased ? 0 : 100) + (bHasEvasion ? 10 : 0) + (success ? 1 : 0)
+    const nCase = (cantrip ? 1000 : 0) + (isDexterityBased ? 100 : 0) + (bHasEvasion ? 10 : 0) + (success ? 1 : 0)
+    console.log(nCase)
     switch (nCase) {
-        case 11: {
-            damage = 0
+        case 0: {
+            // sort normal, non dex, non évasion, js raté
+            // pas de changement dans les dégâts
             break
         }
 
-        case 10:
         case 1: {
-            if (cantrip) {
-                damage = 0
-            } else {
-                damage >>= 1
-            }
+            // sort normal, non dex, non évasion, js réussi
+            // reduction des dégats
+            nDamage >>= 1
+            break
+        }
+
+        case 10: {
+            // sort normal, non dex, evasion, js raté
+            // pas de changement de dégâts
+            break
+        }
+
+        case 11: {
+            // sort normal, non dex, evasion, js réussi
+            // reduction des dégâts
+            nDamage >>= 1
+            break
+        }
+
+        case 100: {
+            // sort normal, dex, pas d'évasion, js raté
+            // pas de changement des dégâts
+            break
+        }
+
+        case 101: {
+            // sort normal, dex, pas d'évasion, js réussi
+            // réduction des dégâts
+            nDamage >>= 1
+            break
+        }
+
+        case 110: {
+            // sort normal, dex, évasion, js raté
+            // reduction des dégâts quand même
+            nDamage >>= 1
+            break
+        }
+
+        case 111: {
+            // sort normal, dex, évasion, js réussi
+            // annulation des dégâts
+            nDamage = 0
+            break
+        }
+
+        case 1000: {
+            // cantrip, non-dex, pas d'évasion, js raté
+            // pas de changement des dégâts
+            break
+        }
+
+        case 1001: {
+            // cantrip, non-dex, pas d'évasion, js réussi
+            // annulation des dégâts
+            nDamage = 0
+            break
+        }
+
+        case 1010: {
+            // cantrip, non-dex, évasion, js raté
+            // dégât réduits
+            nDamage >>= 1
+            break
+        }
+
+        case 1011: {
+            // cantrip, non-dex, évasion, js réussi
+            // annulation des dégâts
+            nDamage = 0
+            break
+        }
+
+        case 1100: {
+            // cantrip, dex, pas d'évasion, js raté
+            // pas de changement des dégâts
+            break
+        }
+
+        case 1101: {
+            // cantrip, dex, pas d'évasion, js réussi
+            // annulation des dégâts
+            nDamage = 0
+            break
+        }
+
+        case 1110: {
+            // cantrip, dex, évasion, js raté
+            // réduction des dégâts
+            nDamage >>= 1
+            break
+        }
+
+        case 1111: {
+            // cantrip, dex, évasion, js réussi
+            // annulation des dégâts
+            nDamage = 0
             break
         }
     }
-    const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, damage, sType)
+    const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nDamage, sType)
     eDam.data.savingThrowSuccess = success
     return apply ? target.applyEffect(eDam, 0, caster) : eDam
 }

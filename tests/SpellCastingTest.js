@@ -112,6 +112,49 @@ describe('fire-bolt', function () {
     })
 })
 
+describe('poison-spray', function () {
+    it('should deal 0 poison damage when success saving throw', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oTarget = manager.createEntity('c-soldier')
+        oWizard.dice.cheat(0.5)
+        oWizard.setTarget(oTarget)
+        oTarget.dice.cheat(0.9999)
+        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const aHostiles = [oTarget]
+        const nTargetHP = oTarget.store.getters.getHitPoints
+        pCast({
+            caster: oWizard,
+            spell: 'poison-spray',
+            hostiles: aHostiles,
+            friends: [oWizard],
+            cheat: true
+        })
+        expect(oTarget.store.getters.getRecentDamageTypes).toEqual({ })
+        expect(oTarget.store.getters.getHitPoints).toBe(nTargetHP)
+    })
+    it('should deal full poison damage when failing saving throw', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oTarget = manager.createEntity('c-soldier')
+        oWizard.dice.cheat(0.5)
+        oWizard.setTarget(oTarget)
+        oTarget.dice.cheat(0.0)
+        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const aHostiles = [oTarget]
+        const nTargetHP = oTarget.store.getters.getHitPoints
+        pCast({
+            caster: oWizard,
+            spell: 'poison-spray',
+            hostiles: aHostiles,
+            friends: [oWizard],
+            cheat: true
+        })
+        expect(oTarget.store.getters.getRecentDamageTypes).toEqual({ DAMAGE_TYPE_POISON: 7 })
+        expect(oTarget.store.getters.getHitPoints).toBeLessThan(nTargetHP)
+    })
+})
+
 describe('true-strike', function () {
     it('should change concentration when casting spell two times', function () {
         const { manager, evolution } = buildStuff()
