@@ -20,7 +20,7 @@ module.exports = (oSpellCast) => {
         damage: oSpellCast.caster.roll(oSpellCast.getCantripDamageDice(6)),
         type: CONSTS.DAMAGE_TYPE_ELECTRICITY
     })
-    if (!eDam.data.savingThrowSuccess) {
+    if (!!eDam && !eDam.data.savingThrowSuccess) {
         const eStunned = oSpellCast.createSpellEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_STUNNED)
         oSpellCast.applyEffectToTarget(eStunned, 2, oSpellCast.target)
     }

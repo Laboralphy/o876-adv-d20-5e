@@ -46,3 +46,4 @@ describe('Spell names', function () {
         expect(manager.assetManager.publicAssets.strings.spells['acid-splash']).toBeDefined()
     })
 })
+
