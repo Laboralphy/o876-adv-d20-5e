@@ -20,5 +20,4 @@ module.exports = (oSpellCast) => {
         type: CONSTS.DAMAGE_TYPE_POISON,
         ability: CONSTS.ABILITY_CONSTITUTION
     })
-    console.log(eDam)
 }
