@@ -19,7 +19,7 @@ module.exports = (state, getters, externals) => {
             const nSpellLevel = oSpell.level
             if (oSpell.ritual) {
                 // les rituels sont toujours disponibles
-                oRegistry[spell] = [true, true, true, true, true, true, true, true, true, true]
+                oRegistry[spell] = [false, false, false, false, false, false, false, false, false, false]
             } else if (oSpell.level === 0) {
                 // les cantrips sont castable si préparé
                 oRegistry[spell] = [aPrepCantrips.has(spell), false, false, false, false, false, false, false]
