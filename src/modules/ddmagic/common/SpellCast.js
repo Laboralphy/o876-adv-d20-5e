@@ -231,8 +231,12 @@ module.exports = class SpellCast {
             ability,
             apply: false
         })
-        oEffect.data.spellmark = this.spellMark
-        return oTarget.applyEffect(oEffect, 0, this.caster)
+        if (oEffect) {
+            oEffect.data.spellmark = this.spellMark
+            return oTarget.applyEffect(oEffect, 0, this.caster)
+        } else {
+            return null
+        }
     }
 
     /**
@@ -266,8 +270,12 @@ module.exports = class SpellCast {
             subtype,
             apply: false
         })
-        oEffect.data.spellmark = this.spellMark
-        return oTarget.applyEffect(oEffect, duration, this.caster)
+        if (oEffect) {
+            oEffect.data.spellmark = this.spellMark
+            return oTarget.applyEffect(oEffect, duration, this.caster)
+        } else {
+            return null
+        }
     }
 
     getCheckTargetCompatibility () {

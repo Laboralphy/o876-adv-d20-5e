@@ -13,7 +13,7 @@ const EffectProcessor = require('../../../EffectProcessor')
  * @param dc {number} difficulté du jet de sauvegarde
  * @param subtype {string} sous type de l'effet
  * @param apply {boolean} si true alors applique l'effet
- * @return {D20Effect}
+ * @return {D20Effect|null}
  */
 function conditionAttack ({
     caster,
@@ -54,7 +54,7 @@ function conditionAttack ({
  * @param cantrip {boolean}
  * @param ability {string} caracteristique utilisée pour le jet de sauvegarde
  * @param apply {boolean} si true alors on applique l'effet
- * @return {D20Effect}
+ * @return {D20Effect|null}
  */
 function evocationAttack ({
     caster,
@@ -181,9 +181,13 @@ function evocationAttack ({
             break
         }
     }
-    const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nDamage, sType)
-    eDam.data.savingThrowSuccess = success
-    return apply ? target.applyEffect(eDam, 0, caster) : eDam
+    if (nDamage > 0) {
+        const eDam = EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, nDamage, sType)
+        eDam.data.savingThrowSuccess = success
+        return apply ? target.applyEffect(eDam, 0, caster) : eDam
+    } else {
+        return null
+    }
 }
 
 /**
