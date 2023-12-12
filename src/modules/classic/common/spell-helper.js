@@ -73,7 +73,6 @@ function evocationAttack ({
         isDexterityBased &&
         target.aggregateModifiers([CONSTS.EFFECT_EVASION], {}).count > 0
     const nCase = (cantrip ? 1000 : 0) + (isDexterityBased ? 100 : 0) + (bHasEvasion ? 10 : 0) + (success ? 1 : 0)
-    console.log(nCase)
     switch (nCase) {
         case 0: {
             // sort normal, non dex, non évasion, js raté
