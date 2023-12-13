@@ -3,126 +3,147 @@
     "level": 0,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_CONJURATION"
   },
   "chill-touch": {
     "level": 0,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_NECROMANCY"
   },
   "fire-bolt": {
     "level": 0,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_EVOCATION"
   },
   "light": {
     "level": 0,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_FRIEND"
+    "target": "TARGET_TYPE_FRIEND",
+    "school": "SPELL_SCHOOL_EVOCATION"
   },
   "mending": {
     "level": 0,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_SPECIAL"
+    "target": "TARGET_TYPE_SPECIAL",
+    "school": "SPELL_SCHOOL_TRANSMUTATION"
   },
   "poison-spray": {
     "level": 0,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_CONJURATION"
   },
   "ray-of-frost": {
     "level": 0,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_EVOCATION"
   },
   "zap": {
     "level": 0,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_EVOCATION"
   },
   "true-strike": {
     "level": 0,
     "ritual": false,
     "concentration": true,
-    "target": "TARGET_TYPE_SELF"
+    "target": "TARGET_TYPE_SELF",
+    "school": "SPELL_SCHOOL_DIVINATION"
   },
   "burning-hands": {
     "level": 1,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILES"
+    "target": "TARGET_TYPE_HOSTILES",
+    "school": "SPELL_SCHOOL_EVOCATION"
   },
   "charm-person": {
     "level": 1,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_ENCHANTMENT"
   },
   "color-spray": {
     "level": 1,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_ILLUSION"
   },
   "false-life": {
     "level": 1,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_SELF"
+    "target": "TARGET_TYPE_SELF",
+    "school": "SPELL_SCHOOL_NECROMANCY"
   },
   "identify": {
     "level": 1,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_SPECIAL"
+    "target": "TARGET_TYPE_SPECIAL",
+    "school": "SPELL_SCHOOL_DIVINATION"
   },
   "magic-missile": {
     "level": 1,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_EVOCATION"
   },
   "mage-armor": {
     "level": 1,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_FRIEND"
+    "target": "TARGET_TYPE_FRIEND",
+    "school": "SPELL_SCHOOL_ABJURATION"
   },
   "invisibility": {
     "level": 2,
     "ritual": false,
     "concentration": true,
-    "target": "TARGET_TYPE_FRIEND"
+    "target": "TARGET_TYPE_FRIEND",
+    "school": "SPELL_SCHOOL_ILLUSION"
   },
   "acid-arrow": {
     "level": 2,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_EVOCATION"
   },
   "hold-person": {
     "level": 2,
     "ritual": false,
     "concentration": true,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_ENCHANTMENT"
   },
   "ray-of-enfeeblement": {
     "level": 2,
     "ritual": false,
     "concentration": true,
-    "target": "TARGET_TYPE_HOSTILE"
+    "target": "TARGET_TYPE_HOSTILE",
+    "school": "SPELL_SCHOOL_NECROMANCY"
   },
   "remove-curse": {
     "level": 3,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_FRIEND"
+    "target": "TARGET_TYPE_FRIEND",
+    "school": "SPELL_SCHOOL_ABJURATION"
   }
 }
