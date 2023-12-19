@@ -29,6 +29,9 @@
       "feats": [
         {
           "feat": "feat-spellcasting"
+        },
+        {
+          "feat": "feat-arcane-recovery"
         }
       ]
     },

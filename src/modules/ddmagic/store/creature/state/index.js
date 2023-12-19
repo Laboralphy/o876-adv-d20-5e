@@ -4,7 +4,7 @@ module.exports = {
             knownSpells: [],
             preparedSpells: [],
             preparedCantrips: [],
-            slots: [0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+            slots: [0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
     }
 }

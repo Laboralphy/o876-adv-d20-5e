@@ -226,3 +226,49 @@ describe('spell preparing', function () {
         ])
     })
 })
+
+describe('arcane recovery', function () {
+    it('should not restore spell slot when none is spent', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+        let oSpellSlotRestoreEvent = {}
+        oWizard.events.on('spell-slot-restore', ev => {
+            oSpellSlotRestoreEvent = ev
+        })
+        oWizard.featAction('feat-arcane-recovery')
+        expect(oSpellSlotRestoreEvent).toEqual({ optimal: false, remain: 3, restored: [] })
+    })
+    it('should restore spell slot 1 when 1 is spent', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+        oWizard.store.mutations.consumeSpellSlot({ level: 1 })
+        let oSpellSlotRestoreEvent = {}
+        oWizard.events.on('spell-slot-restore', ev => {
+            oSpellSlotRestoreEvent = ev
+        })
+        oWizard.featAction('feat-arcane-recovery')
+        expect(oSpellSlotRestoreEvent).toEqual({ optimal: false, remain: 2, restored: [{ level: 1, count: 1 }] })
+    })
+    it('should restore spell slots 3 2 1 when spent', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+        oWizard.store.mutations.consumeSpellSlot({ level: 1 })
+        oWizard.store.mutations.consumeSpellSlot({ level: 1 })
+        oWizard.store.mutations.consumeSpellSlot({ level: 2 })
+        oWizard.store.mutations.consumeSpellSlot({ level: 2 })
+        oWizard.store.mutations.consumeSpellSlot({ level: 2 })
+        let oSpellSlotRestoreEvent = {}
+        oWizard.events.on('spell-slot-restore', ev => {
+            oSpellSlotRestoreEvent = ev
+        })
+        oWizard.featAction('feat-arcane-recovery')
+        expect(oSpellSlotRestoreEvent).toEqual({
+            optimal: true,
+            remain: 0,
+            restored: [
+                { level: 2, count: 1 },
+                { level: 1, count: 1 }
+            ]
+        })
+    })
+})
