@@ -117,8 +117,10 @@
  * @property isHPBelow50Percent {boolean}
  * @property isWearingArmor {boolean}
  * @property getCastableSpells {Object<string, boolean[]>}
+ * @property getKnownSpells {Set<string>}
  * @property getMaxPreparableCantrips {number}
  * @property getMaxPreparableSpells {number}
+ * @property getMaxSlotLevel {number}
  * @property getPreparedSpells {cantrips: string[], spells: string[], repository: D20SpellRepositoryEntry[]}
  * @property getSpellDC {number}
  * @property getSpellSlotStatus {{ count: number, used: number }[]}

@@ -1,3 +1,9 @@
+/**
+ *
+ * @param state
+ * @param getters
+ * @returns {number}
+ */
 module.exports = (state, getters) => {
     const ss = getters.getSpellSlotStatus
     let nMaxSlotLevel = 0
