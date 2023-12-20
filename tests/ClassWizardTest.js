@@ -272,3 +272,9 @@ describe('arcane recovery', function () {
         })
     })
 })
+
+describe('spell-mastery', function () {
+    it('should cast invisibility at will when having spell mastery', function () {
+
+    })
+})

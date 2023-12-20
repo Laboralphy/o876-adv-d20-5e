@@ -313,7 +313,26 @@ module.exports = class SpellCast {
         }
     }
 
+    /**
+     * Consommer les slots le cas échéant
+     */
     consumeSpellSlot () {
+        // Déterminer si c'est un rituel ou un cantrip -> pas de consomation
+        if (this.isCantrip || this.spellData.ritual) {
+            return
+        }
+        const csg = this.caster.store.getters
+        const bCastAtInnateLevel = this.spellCastingLevel === this.spellData.level
+        // Déterminer si c'est un sort maîtrisé et que le niveau de lancement est le niveau natif du sort
+        if (bCastAtInnateLevel && csg.getCastableMasteredSpells.has(this.spell)) {
+            return
+        }
+        // Déterminer si c'est un sort de signature -> on consomme en premier les slot de signature
+        if (bCastAtInnateLevel && csg.getCastableSignatureSpells.has(this.spell)) {
+            // reduire l'utilisation du slot de signature
+            this.caster.store.mutations.consumeSignatureSpellSlot({ spell: this.spell })
+            return
+        }
         this.caster.store.mutations.consumeSpellSlot({ level: this.spellCastingLevel })
     }
 

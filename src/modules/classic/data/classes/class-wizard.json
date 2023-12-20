@@ -53,8 +53,24 @@
       "abilityScoreImprovement": true
     },
     {
+      "level": 18,
+      "feats": [
+        {
+          "feat": "feat-spell-mastery"
+        }
+      ]
+    },
+    {
       "level": 19,
       "abilityScoreImprovement": true
+    },
+    {
+      "level": 20,
+      "feats": [
+        {
+          "feat": "feat-spell-signature"
+        }
+      ]
     }
   ]
 }

@@ -116,10 +116,10 @@
  * @property hasNoSneakAttack9 {boolean}
  * @property isHPBelow50Percent {boolean}
  * @property isWearingArmor {boolean}
+ * @property getCastableMasteredSpells {Set<string>}
  * @property getCastableSignatureSpells {Set<string>}
  * @property getCastableSpells {Object<string, boolean[]>}
  * @property getKnownSpells {Set<string>}
- * @property getMasteredSpellCount {number}
  * @property getMaxPreparableCantrips {number}
  * @property getMaxPreparableSpells {number}
  * @property getMaxSlotLevel {number}
