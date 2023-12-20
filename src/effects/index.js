@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 18/12/2023 20:56:26 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 20/12/2023, 15:06:05 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),

@@ -6,30 +6,45 @@
  * @returns {Object<string, boolean[]>}
  */
 module.exports = (state, getters, externals) => {
-    const aKnownSpells = state.data.spellbook.knownSpells
+    const oSpellBook = state.data.spellbook
+    const aKnownSpells = oSpellBook.knownSpells
+    const aMasteredSpells = oSpellBook.masteredSpells
     const oRegistry = {}
     const oSpellDB = externals.data['data-ddmagic-spell-database']
     const oSlotStatus = getters.getSpellSlotStatus
     const oPrepared = getters.getPreparedSpells
     const aPrepCantrips = new Set(oPrepared.cantrips)
-    const aPrepSpells = new Set(oPrepared.spell)
+    const aPrepSpells = new Set(oPrepared.spells)
+    const bFeatSpellMastery = getters.getFeats.has('feat-spell-mastery')
+    const aCastableSignatureSpells = getters.getCastableSignatureSpells
     aKnownSpells.forEach(spell => {
         if (spell in oSpellDB) {
             const oSpell = oSpellDB[spell]
             const nSpellLevel = oSpell.level
-            if (oSpell.ritual) {
+            const bCantrip = nSpellLevel === 0
+            const bSpellPrepared = bCantrip
+                ? aPrepCantrips.has(spell)
+                : aPrepSpells.has(spell)
+            if (bCantrip) {
+                // les cantrips sont castables si préparés
+                oRegistry[spell] = [bSpellPrepared, false, false, false, false, false, false, false]
+            } else if (oSpell.ritual || (bFeatSpellMastery && nSpellLevel <= 2 && aMasteredSpells.includes(spell) && bSpellPrepared)) {
                 // les rituels sont toujours disponibles
+                // le sort fait partie des sorts maîtrisés (il faut qu'ils soient également préparés)
+                // On peut donc les caster au niveau natif du sort
                 oRegistry[spell] = [false, false, false, false, false, false, false, false, false, false]
                 oRegistry[spell][nSpellLevel] = true
-            } else if (oSpell.level === 0) {
-                // les cantrips sont castable si préparé
-                oRegistry[spell] = [aPrepCantrips.has(spell), false, false, false, false, false, false, false]
+            } else if (
+                aCastableSignatureSpells &&
+                nSpellLevel === 3
+            ) {
+                oRegistry[spell] = [false, false, false, false, false, false, false, false, false, false]
+                oRegistry[spell][nSpellLevel] = true
             } else {
                 const a = [false]
-                const b = aPrepSpells.has(spell)
                 for (let i = 1; i <= 9; ++i) {
                     const { count, uses } = oSlotStatus[i - 1]
-                    a[i] = b && nSpellLevel <= i && uses < count
+                    a[i] = bSpellPrepared && nSpellLevel <= i && uses < count
                 }
                 oRegistry[spell] = a
             }
