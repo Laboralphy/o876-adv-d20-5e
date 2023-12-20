@@ -33,4 +33,6 @@
  * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[], effects: string[] })}
  * @property updateFeatEffects {function()}
  * @property updateTargetConditions {function({ [id]: number, conditions: Set|[], effects: string[] })}
+ * @property learnSpell {function({spell: string}}
+ * @property restoreSpellSlot {function({level: number, count: number}}
  */

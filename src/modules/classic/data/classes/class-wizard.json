@@ -31,7 +31,8 @@
           "feat": "feat-spellcasting"
         },
         {
-          "feat": "feat-arcane-recovery"
+          "feat": "feat-arcane-recovery",
+          "uses": 1
         }
       ]
     },
