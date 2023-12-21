@@ -15,26 +15,17 @@ module.exports = ({ state, getters, externals }, { spell}) => {
         const nSpellLevel = spell.level
         if (nSpellLevel === 0) {
             // memorisation d'un cantrip
-            const nMaxCantrip = getters.getMaxPreparableCantrips
             const m = state.data.spellbook.preparedCantrips
             const iSpell = m.indexOf(spell)
             if (iSpell >= 0) {
                 m.splice(iSpell, 1)
             }
-            m.push(spell)
-            while (m.length > nMaxCantrip) {
-                m.shift()
-            }
         } else {
             // memorisation d'un spell
-            const nMaxSpell = getters.getMaxPreparableSpells
             const m = state.data.spellbook.preparedSpells
             const iSpell = m.indexOf(spell)
             if (iSpell >= 0) {
                 m.splice(iSpell, 1)
-            }
-            while (m.length > nMaxSpell) {
-                m.shift()
             }
         }
     } else {

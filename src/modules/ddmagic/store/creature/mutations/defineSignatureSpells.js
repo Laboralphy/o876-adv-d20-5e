@@ -1,26 +1,22 @@
-function isSpellSignature (state, spell) {
-    return !!state.data.spellbook.signatureSpells.find(s => s.spell === spell)
-}
-
+/**
+ *
+ * @param state
+ * @param getters
+ * @param externals
+ * @param spells
+ */
 module.exports = ({ state, getters, externals }, { spells }) => {
-    const nMaxSpells = externals.data['data-ddmagic-constants'].featSpellSignatureSpellCount
     if (getters.getFeats.has('feat-spell-signature')) {
-        // raboter (en cas)
-        state.data.spellbook.signatureSpells = state.data.spellbook.signatureSpells.slice(0, nMaxSpells)
+        const aStateSignatureSpells = state.data.spellbook.signatureSpells
+        const nMaxSpells = externals.data['data-ddmagic-constants'].featSpellSignatureSpellCount
+        const aCurrentSignatureSpells = new Set(aStateSignatureSpells)
         const aSpellToPush = spells
-            .filter(s => !isSpellSignature(state, s))
+            .filter(s => !aCurrentSignatureSpells.has(s))
             .slice(0, nMaxSpells)
-            .map(spell => ({
-                spell,
-                used: 0
-            }))
-        state
-            .data
-            .spellbook
-            .signatureSpells
-            .push(...aSpellToPush)
-        while (state.data.spellbook.masteredSpells.length > nMaxSpells) {
-            state.data.spellbook.masteredSpells.shift()
+            .map(spell => ({ spell, used: 0 }))
+        aStateSignatureSpells.push(...aSpellToPush)
+        while (aStateSignatureSpells.length > nMaxSpells) {
+            aStateSignatureSpells.shift()
         }
     }
 }

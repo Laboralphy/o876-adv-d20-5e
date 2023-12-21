@@ -274,7 +274,21 @@ describe('arcane recovery', function () {
 })
 
 describe('spell-mastery', function () {
-    it('should cast invisibility at will when having spell mastery', function () {
-
+    it('have spell mastery when building wizard level 18', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 18)
+        expect(oWizard.store.getters.getFeats.has('feat-spell-mastery')).toBeTrue()
+    })
+    it('have spell mastery when building wizard level 18', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 18)
+        expect(oWizard.store.getters.getFeats.has('feat-spell-mastery')).toBeTrue()
+        oWizard.store.mutations.learnSpell({ spell: 'acid-arrow' })
+        oWizard.store.mutations.learnSpell({ spell: 'invisibility' })
+        oWizard.store.mutations.learnSpell({ spell: 'magic-missile' })
+        oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
+        oWizard.store.mutations.learnSpell({ spell: 'acid-splash' })
+        oWizard.store.mutations.learnSpell({ spell: 'light' })
+        expect(oWizard.store.getters.getMaxPreparableSpells).toBe(23)
     })
 })
