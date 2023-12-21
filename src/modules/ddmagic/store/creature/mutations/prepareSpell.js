@@ -36,7 +36,7 @@ function prepareSpell (aStorage, spell, nMax, bAutoSize) {
  * @param spell {string} identifiant du sort
  * @param externals
  */
-module.exports = ({ state, getters, externals }, { spell}) => {
+module.exports = ({ state, getters, externals }, { spell }) => {
     // il faut que le sort existe
     const oSpellDB = externals.data['data-ddmagic-spell-database']
     if (spell in oSpellDB) {
