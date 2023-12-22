@@ -334,4 +334,15 @@ describe('spell-mastery', function () {
         expect(() => oWizard.store.mutations.defineMasteredSpell({ spell: 'light' }))
             .toThrowError('Spell light is level 0, thus cannot be mastered (only level 1 and level 2)')
     })
+    it('should consume spell slot when level 18 wizard cast 2nd level spells', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 18)
+        oWizard.store.mutations.learnSpell({ spell: 'acid-arrow' })
+        oWizard.store.mutations.learnSpell({ spell: 'invisibility' })
+        oWizard.store.mutations.learnSpell({ spell: 'magic-missile' })
+        oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
+        oWizard.store.mutations.learnSpell({ spell: 'acid-splash' })
+        oWizard.store.mutations.learnSpell({ spell: 'light' })
+
+    })
 })
