@@ -6,7 +6,7 @@
  * @returns {{ count: number, used: number }[]}
  */
 module.exports = (state, getters, externals) => {
-    const nLevel = getters.getWizardLevel
+    const nLevel = getters.getSpellCasterLevel
     const data = externals.data['data-ddmagic-spell-count']
     const aSpellSlots = nLevel === 0
         ? [0, 0, 0, 0, 0, 0, 0, 0, 0]

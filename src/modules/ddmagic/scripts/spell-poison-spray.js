@@ -16,7 +16,7 @@ const CONSTS = require('../../../consts')
  */
 module.exports = (oSpellCast) => {
     oSpellCast.evocationAttack({
-        damage: oSpellCast.caster.roll(oSpellCast.getCantripDamageDice(12)),
+        damage: oSpellCast.rollCasterDamageDice(oSpellCast.getCantripDamageDice(12)),
         type: CONSTS.DAMAGE_TYPE_POISON,
         ability: CONSTS.ABILITY_CONSTITUTION
     })

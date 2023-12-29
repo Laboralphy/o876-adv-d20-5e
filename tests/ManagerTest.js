@@ -1038,3 +1038,4 @@ describe('getArmorClassDetail', function () {
         expect(g.getDeflectingArmorPart(16).type).toBe(CONSTS.ARMOR_DEFLECTOR_HIT)
     })
 })
+

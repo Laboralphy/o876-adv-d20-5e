@@ -60,6 +60,10 @@
                 "uses": {
                   "description": "limitation du nombre d'utilisation par jour",
                   "type": "number"
+                },
+                "requires": {
+                  "description": "nom du feat qui est nécessaire à l'obtention de celui ci",
+                  "type": "string"
                 }
               }
             }

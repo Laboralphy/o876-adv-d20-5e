@@ -4,6 +4,13 @@ const EffectProcessor = require("../../../EffectProcessor");
 const SpellHelper = require("../../classic/common/spell-helper");
 
 /**
+ * @typedef D20SpellParameters {object}
+ * @property item {string}
+ * @property overchannel {boolean}
+ *
+ */
+
+/**
  * @class SpellCast
  */
 module.exports = class SpellCast {
@@ -35,6 +42,8 @@ module.exports = class SpellCast {
         this._spelldb = Creature.AssetManager.data['data-ddmagic-spell-database']
         this._spellMark = null
         this._effects = []
+        this._hasEmpowered = false
+        this._hasOverchannel = false
         this._cheat = cheat
     }
 
@@ -82,7 +91,7 @@ module.exports = class SpellCast {
 
     /**
      * Renvoie les données relatives au sort
-     * @returns {{ level: number, ritual: boolean, concentration: boolean, target: string }}
+     * @returns {{ level: number, ritual: boolean, concentration: boolean, target: string, school: string }}
      */
     get spellData () {
         if (this.spell in this._spelldb) {
@@ -105,7 +114,7 @@ module.exports = class SpellCast {
      * @return {number}
      */
     get casterLevel () {
-        return this.caster.store.getters.getWizardLevel
+        return this.caster.store.getters.getSpellCasterLevel
     }
 
     /**
@@ -174,11 +183,13 @@ module.exports = class SpellCast {
             const id = Math.random().toString(36).slice(2)
             const casterLevel = this.casterLevel
             const concentration = this.spellData.concentration
+            const spellSchool = this.spellData.school
             this._spellMark = {
                 spell: this.spell,
                 id,
                 spellLevel,
                 spellCastLevel,
+                spellSchool,
                 casterLevel,
                 concentration
             }
@@ -186,9 +197,43 @@ module.exports = class SpellCast {
         return this._spellMark
     }
 
+    /**
+     * If caster has empowered evocation, adds intelligence modifier to damage effect amp
+     * @param oDamageEffect {D20Effect}
+     */
+    empowerEvocationDamageEffect (oDamageEffect) {
+        const cg = this.caster.store.getters
+        if (
+            cg.getFeats.has('feat-empowered-evocation') &&
+            this.spellData.school === 'SPELL_SCHOOL_EVOCATION' &&
+            !this._hasEmpowered &&
+            oDamageEffect.type === CONSTS.EFFECT_DAMAGE
+        ) {
+            oDamageEffect.amp += cg.getAbilityModifiers[CONSTS.ABILITY_INTELLIGENCE]
+            this._hasEmpowered = true
+        }
+    }
+
+    /**
+     * If caster has used overchannel, maximize damage
+     * @param oDamageEffect {D20Effect}
+     */
+    overchannelDamageEffect (oDamageEffect) {
+        const cg = this.caster.store.getters
+        if (
+            cg.getFeats.has('feat-overchannel') &&
+            !this._hasOverchannel &&
+            oDamageEffect.type === CONSTS.EFFECT_DAMAGE
+        ) {
+            oDamageEffect.amp += cg.getAbilityModifiers[CONSTS.ABILITY_INTELLIGENCE]
+            this._hasEmpowered = true
+        }
+    }
+
     createSpellEffect (sEffect, ...args) {
         const oEffect = EffectProcessor.createEffect(sEffect, ...args)
         oEffect.data.spellmark = this.spellMark
+        this.empowerEvocationDamageEffect(oEffect)
         this._effects.push(oEffect)
         return oEffect
     }
@@ -213,6 +258,17 @@ module.exports = class SpellCast {
         this.applyEffectToTarget(oEffect, duration, this.caster)
     }
 
+    /**
+     *
+     * @param sDice {string|number}
+     * @returns {number}
+     */
+    rollCasterDamageDice (sDice) {
+        return typeof sDice === 'number'
+            ? sDice
+            : this.caster.roll(sDice)
+    }
+
     evocationAttack ({
         target = null,
         damage,
@@ -227,11 +283,12 @@ module.exports = class SpellCast {
             damage,
             type,
             dc: dc < 0 ? this.dc : dc,
-            cantrip: this.isCantrip,
+            cantrip: this.isCantrip && !this.caster.store.getters.getFeats.has('feat-potent-cantrip'),
             ability,
             apply: false
         })
         if (oEffect) {
+            this.empowerEvocationDamageEffect(oEffect)
             oEffect.data.spellmark = this.spellMark
             return oTarget.applyEffect(oEffect, 0, this.caster)
         } else {
@@ -271,6 +328,7 @@ module.exports = class SpellCast {
             apply: false
         })
         if (oEffect) {
+            this.empowerEvocationDamageEffect(oEffect)
             oEffect.data.spellmark = this.spellMark
             return oTarget.applyEffect(oEffect, duration, this.caster)
         } else {
@@ -408,7 +466,7 @@ module.exports = class SpellCast {
 
     /**
      * Lancement d'un sort
-     * @param parameters {{}} liste des paramètres
+     * @param parameters {D20SpellParameters|undefined} liste des paramètres
      * @returns {boolean}
      */
     cast (parameters = undefined) {
@@ -416,6 +474,9 @@ module.exports = class SpellCast {
             if (this.spellAvailability.usable) {
                 if (!this.getCheckTargetCompatibility()) {
                     throw new Error('SPELLCAST_BAD_TARGET')
+                }
+                if (parameters.overchannel) {
+                    this._hasOverchannel = true
                 }
                 this.caster.events.emit('spellcast', {
                     caster: this.caster,

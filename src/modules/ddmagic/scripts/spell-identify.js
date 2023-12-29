@@ -1,6 +1,7 @@
 /**
  * script spell-mending
  *
+ * Niveau 1 divination
  * Le sort permet d'identifier les objets non identifiés.
  *
  * Les objets ayant des propriétés cachées sont dits : non identifiés.

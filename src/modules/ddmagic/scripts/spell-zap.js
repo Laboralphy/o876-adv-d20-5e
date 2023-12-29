@@ -17,7 +17,7 @@ const CONSTS = require('../../../consts')
  */
 module.exports = (oSpellCast) => {
     const eDam = oSpellCast.evocationAttack({
-        damage: oSpellCast.caster.roll(oSpellCast.getCantripDamageDice(6)),
+        damage: oSpellCast.rollCasterDamageDice(oSpellCast.getCantripDamageDice(6)),
         type: CONSTS.DAMAGE_TYPE_ELECTRICITY
     })
     if (!!eDam && !eDam.data.savingThrowSuccess) {

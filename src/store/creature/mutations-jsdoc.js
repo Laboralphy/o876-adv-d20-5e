@@ -37,5 +37,7 @@
  * @property restoreSpellSlot {function({level: number, count: number}}
  * @property defineMasteredSpell {function({spell: string})}
  * @property defineSignatureSpell {function({spell: string})}
- * @property prepareSpell {function({ spell }}
+ * @property prepareSpell {function({ spell })}
+ * @property consumeSignatureSpellSlot {function({ spell })}
+ * @property consumeSpellSlot {function({ level }}
  */

@@ -1,0 +1,6 @@
+{
+  "description": "Once per turn when you kill one or more creatures with a spell of 1st level or higher, you regain hit points equal to twice the spell's level, or three times its level if the spell belongs to the School of Necromancy. You don't gain this benefit for killing constructs or undead.",
+  "effects": [
+    ["EFFECT_GRIM_REAPER"]
+  ]
+}

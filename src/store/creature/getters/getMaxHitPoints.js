@@ -13,10 +13,22 @@ module.exports = (state, getters, externals) => {
     const oClasses = getters.getLevelByClass
     let bFirstLevel = true
     let nMaxHitPoints = 0
-    const { sum: nHPBonus } = aggregateModifiers([
+    let { sum: nHPBonus } = aggregateModifiers([
         CONSTS.EFFECT_HP_BONUS,
         CONSTS.ITEM_PROPERTY_HP_BONUS
     ], getters, {})
+    const { count, max, min } = aggregateModifiers([
+        CONSTS.EFFECT_HP_BONUS_BLOCKER,
+        CONSTS.ITEM_PROPERTY_HP_BONUS_BLOCKER
+    ], getters, {})
+    const bNoHPRaise = count > 0 && max > 0
+    const bNoHPLower = count > 0 && min < 0
+    if (bNoHPRaise && nHPBonus > 0) {
+        nHPBonus = 0
+    }
+    if (bNoHPLower && nHPBonus < 0) {
+        nHPBonus = 0
+    }
     const nConModifier = getters.getAbilityModifiers[CONSTS.ABILITY_CONSTITUTION]
     for (const [ ref, levels ] of Object.entries(oClasses)) {
         const sClassName = 'class-' + ref

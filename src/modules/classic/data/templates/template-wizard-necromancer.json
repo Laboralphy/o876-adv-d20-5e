@@ -14,13 +14,13 @@
       "class": "wizard",
       "skills": [
         "skill-arcana",
-        "skill-investigation"
+        "skill-medicine"
       ]
     },
     {
       "level": 2,
       "class": "wizard",
-      "feats": ["feat-arcane-tradition-evocation"]
+      "feats": ["feat-arcane-tradition-necromancy"]
     },
     {
       "level": 3,

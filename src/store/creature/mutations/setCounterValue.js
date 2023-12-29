@@ -6,11 +6,12 @@ module.exports = ({ state }, { counter, value = undefined, max = undefined, crea
                 value: 0
             }
         }
-        if (value !== undefined) {
-            state.counters[counter].value = value
-        }
         if (max !== undefined) {
             state.counters[counter].max = max
+        }
+        if (value !== undefined) {
+            const nMax = state.counters[counter].max || Infinity
+            state.counters[counter].value = Math.min(value, nMax)
         }
     } else {
         throw new Error('Cannot create new counter ("create" property must be set to "true")')

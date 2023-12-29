@@ -8,5 +8,5 @@ const CONSTS = require('../../../../../consts')
  */
 module.exports = (state, getters) => {
     // niveau de mage + modificateur d'intelligence
-    return Math.max(1, getters.getWizardLevel + getters.getAbilityModifiers[CONSTS.ABILITY_INTELLIGENCE])
+    return Math.max(1, getters.getSpellCasterLevel + getters.getAbilityModifiers[CONSTS.ABILITY_INTELLIGENCE])
 }

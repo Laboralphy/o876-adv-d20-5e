@@ -31,7 +31,7 @@
  * @property getConditions {Set<string>}
  * @property getCounters {Object<string, { value: number, max: value }>}
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
- * @property getDamageRerollThreshold {[]}
+ * @property getDamageRerollThreshold {number}
  * @property getDeadEffects {D20Effect[]}
  * @property getDefensiveApplicableConditions {{condition: string, dc: number, ability: number, duration: number}[]}
  * @property getDefensiveEquipmentList {D20Item[]}
@@ -124,7 +124,7 @@
  * @property getMaxPreparableSpells {number}
  * @property getMaxSlotLevel {number}
  * @property getPreparedSpells {cantrips: string[], spells: string[], repository: D20SpellRepositoryEntry[]}
+ * @property getSpellCasterLevel {number}
  * @property getSpellDC {number}
  * @property getSpellSlotStatus {{ count: number, used: number }[]}
- * @property getWizardLevel {number}
  */

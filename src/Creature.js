@@ -113,7 +113,6 @@ class Creature {
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
         this._store.mutations.setId({ value: this._id })
-        this._hasUsedSneakAttack = false
     }
 
     static set AssetManager (value) {
@@ -261,7 +260,7 @@ class Creature {
      * Aggrège les effets spécifiés dans la liste, selon un prédicat
      * @param aTags {string[]} liste des effets désirés
      * @param filters {Object} voir la fonction store/creature/common/aggregate-modifiers
-     * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, sum: number, count: number, effects: number, ip: number}}
+     * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, min: number, sum: number, count: number, effects: number, ip: number}}
      */
     aggregateModifiers (aTags, filters) {
         return aggregateModifiers(aTags, this.store.getters, filters)
@@ -563,7 +562,10 @@ class Creature {
             })
         }
         if (this.store.getters.getHitPoints <= 0) {
-            this.events.emit('death', { killer: source })
+            this.events.emit('death', { killer: source, effect: oEffect })
+            if (source) {
+                this.effectProcessor.invokeAllEffectsMethod(source, 'kill', this, source, { effect: oEffect })
+            }
         }
 
         return eEffect

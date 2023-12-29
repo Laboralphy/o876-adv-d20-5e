@@ -104,8 +104,8 @@ describe('creatureLevelUp', function () {
             .toThrow(new Error('ERR_EVOL_GROUP_ALREADY_SELECTED: feat-group-fighting-style feat: feat-fighting-style-dueling'))
     })
     it('should successfully add a fighter level', function () {
-        const { manager: r, evolution: ev } = buildStuff()
-        const c = r.createEntity('c-pilgrim')
+        const { manager: r } = buildStuff()
+        r.createEntity('c-pilgrim')
     })
 })
 
@@ -213,7 +213,7 @@ describe('checkLevelUp', function () {
         expect(lup2).toEqual({
             class: 'fighter',
             feats: {
-                newFeats: ['feat-second-wind'],
+                newFeats: ['feat-second-wind', 'feat-martial-archetype-champion'],
                 newFeatUses: [{ feat: 'feat-second-wind', uses: 1 }]
             }
         })
@@ -296,7 +296,7 @@ describe('checkLevelUp', function () {
 
 describe('getClassLevelData with tourist evolution', function () {
     it('should not crash when asking for tourist', function () {
-        const { manager: r, evolution: ev } = buildStuff()
+        const { evolution: ev } = buildStuff()
         const c = new Creature()
         ev.getClassLevelData(c, 'tourist', 1)
     })
@@ -304,7 +304,7 @@ describe('getClassLevelData with tourist evolution', function () {
 
 describe('retrieve available actions for player and creatures', function () {
     it('should return [second wind] when leveling fighter to level 2', function () {
-        const { manager: r, evolution: ev } = buildStuff()
+        const { evolution: ev } = buildStuff()
         const c = new Creature()
         c.store.mutations.resetCharacter()
         ev.creatureLevelUp(c, {
@@ -358,6 +358,7 @@ describe('retrieve available actions for player and creatures', function () {
         expect(c.store.getters.getLevel).toBe(10)
         expect(c.store.getters.getActions).toEqual([{
             action: 'feat-second-wind',
+            script: 'fa-second-wind',
             uses: {
                 value: 1,
                 max: 1
@@ -399,6 +400,7 @@ describe('retrieve available actions for player and creatures', function () {
 
         expect(c.store.getters.getActions).toEqual([{
             action: 'feat-second-wind',
+            script: 'fa-second-wind',
             uses: {
                 value: 2,
                 max: 2
@@ -417,7 +419,8 @@ describe('retrieve available actions for player and creatures', function () {
         expect(c.store.getters.getActions).toEqual([
             {
                 action: 'sla-fire-breath',
-                uses: { value: Infinity, max: Infinity },
+                script: 'sla-fire-breath',
+                uses: { value: 0, max: Infinity },
                 innate: true
             }
         ])
@@ -427,11 +430,12 @@ describe('retrieve available actions for player and creatures', function () {
 
 describe('initial autoleveling of creature blueprint', function () {
     it('c-soldier should have acrobatics when creating creature', function () {
-        const { manager, evolution } = buildStuff()
+        const { manager } = buildStuff()
         const c = manager.createEntity('c-soldier')
         expect(c.store.getters.getActions).toEqual([
           {
             action: 'feat-second-wind',
+            script: 'fa-second-wind',
             uses: { value: 1, max: 1 },
             innate: false
           }
@@ -441,7 +445,7 @@ describe('initial autoleveling of creature blueprint', function () {
 
 describe('testing if a rogue has good skill throw in sleaith of hand', function () {
     it('should', function () {
-        const { manager, evolution } = buildStuff()
-        const c = manager.createEntity('c-soldier')
+        const { manager } = buildStuff()
+        manager.createEntity('c-soldier')
     })
 })
