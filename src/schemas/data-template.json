@@ -29,6 +29,17 @@
         }
       }
     },
+    "multiclass": {
+      "type": "object",
+      "description": "multiclass data",
+      "required": ["skillCount"],
+      "properties": {
+        "skillCount": {
+          "description": "number of skills that can be selected when multiclass",
+          "type": "number"
+        }
+      }
+    },
     "levels": {
       "description": "list of things to select when reaching each level",
       "type": "array",

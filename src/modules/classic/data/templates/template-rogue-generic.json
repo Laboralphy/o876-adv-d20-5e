@@ -8,6 +8,9 @@
     "ABILITY_WISDOM": 10,
     "ABILITY_CHARISMA": 12
   },
+  "multiclass": {
+    "skillCount": 1
+  },
   "levels": [
     {
       "level": 1,
