@@ -8,13 +8,13 @@
     "ABILITY_WISDOM": 11,
     "ABILITY_CHARISMA": 10
   },
+  "class": "wizard",
   "multiclass": {
     "skillCount": 0
   },
   "levels": [
     {
       "level": 1,
-      "class": "wizard",
       "skills": [
         "skill-arcana",
         "skill-medicine"
@@ -22,85 +22,66 @@
     },
     {
       "level": 2,
-      "class": "wizard",
       "feats": ["feat-arcane-tradition-necromancy"]
     },
     {
-      "level": 3,
-      "class": "wizard"
+      "level": 3
     },
     {
       "level": 4,
-      "class": "wizard",
       "ability": "ABILITY_INTELLIGENCE"
     },
     {
-      "level": 5,
-      "class": "wizard"
+      "level": 5
     },
     {
-      "level": 6,
-      "class": "wizard"
+      "level": 6
     },
     {
-      "level": 7,
-      "class": "wizard"
+      "level": 7
     },
     {
       "level": 8,
-      "class": "wizard",
       "ability": "ABILITY_INTELLIGENCE"
     },
     {
-      "level": 9,
-      "class": "wizard"
+      "level": 9
     },
     {
-      "level": 10,
-      "class": "wizard"
+      "level": 10
     },
     {
-      "level": 11,
-      "class": "wizard"
+      "level": 11
     },
     {
       "level": 12,
-      "class": "wizard",
       "ability": "ABILITY_INTELLIGENCE"
     },
     {
-      "level": 13,
-      "class": "wizard"
+      "level": 13
     },
     {
-      "level": 14,
-      "class": "wizard"
+      "level": 14
     },
     {
-      "level": 15,
-      "class": "wizard"
+      "level": 15
     },
     {
       "level": 16,
-      "class": "wizard",
       "ability": "ABILITY_INTELLIGENCE"
     },
     {
-      "level": 17,
-      "class": "wizard"
+      "level": 17
     },
     {
-      "level": 18,
-      "class": "wizard"
+      "level": 18
     },
     {
       "level": 19,
-      "class": "wizard",
       "ability": "ABILITY_INTELLIGENCE"
     },
     {
-      "level": 20,
-      "class": "wizard"
+      "level": 20
     }
   ]
 }

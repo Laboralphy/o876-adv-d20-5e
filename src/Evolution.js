@@ -222,7 +222,7 @@ class Evolution {
                 .levels
                 .find(({ level }) => level === iLevel)
             const oParams = {
-                selectedClass: level.class
+                selectedClass: oTemplate.class
             }
             if ('skills' in level) {
                 oParams.selectedSkills = level.skills
