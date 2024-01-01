@@ -66,7 +66,7 @@
     "level": 1,
     "ritual": false,
     "concentration": false,
-    "target": "TARGET_TYPE_HOSTILES",
+    "target": "TARGET_TYPE_HOSTILE",
     "school": "SPELL_SCHOOL_EVOCATION"
   },
   "charm-person": {
