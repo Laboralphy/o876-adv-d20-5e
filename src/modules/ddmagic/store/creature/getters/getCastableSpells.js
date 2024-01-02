@@ -11,6 +11,9 @@ module.exports = (state, getters, externals) => {
     const aMasteredSpells = oSpellBook.masteredSpells
     const oRegistry = {}
     const oSpellDB = externals.data['data-ddmagic-spell-database']
+    /**
+     * @type {{ count: number, used: number }[]}
+     */
     const oSlotStatus = getters.getSpellSlotStatus
     const oPrepared = getters.getPreparedSpells
     const aPrepCantrips = new Set(oPrepared.cantrips)
@@ -43,8 +46,8 @@ module.exports = (state, getters, externals) => {
             } else {
                 const a = [false]
                 for (let i = 1; i <= 9; ++i) {
-                    const { count, uses } = oSlotStatus[i - 1]
-                    a[i] = bSpellPrepared && nSpellLevel <= i && uses < count
+                    const { count, used } = oSlotStatus[i - 1]
+                    a[i] = bSpellPrepared && nSpellLevel <= i && used < count
                 }
                 oRegistry[spell] = a
             }
