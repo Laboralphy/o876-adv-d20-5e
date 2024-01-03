@@ -1,4 +1,4 @@
-const BinPacker = require('../libs/bin-packer')
+const BinPacker = require('../src/libs/bin-packer')
 
 describe('new', function () {
     it('should instanciate bin packer without error', function () {

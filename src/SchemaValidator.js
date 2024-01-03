@@ -1,6 +1,6 @@
 const jsonschema = require('jsonschema')
 const Validator = jsonschema.Validator
-const TreeSync = require('../libs/tree-sync')
+const TreeSync = require('./libs/tree-sync')
 const path = require('path')
 
 class SchemaValidator {

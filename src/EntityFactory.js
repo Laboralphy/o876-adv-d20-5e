@@ -268,7 +268,7 @@ class EntityFactory {
     }
 
     exportCreature (oCreature) {
-        const c = oCreature.store.getters.getExportedState
+        const c = oCreature.state
         c.name = oCreature.name
         c.ref = oCreature.ref
         return c

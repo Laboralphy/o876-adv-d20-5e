@@ -7,8 +7,11 @@
  */
 module.exports = (state, getters, externals) => {
     const nLevel = getters.getSpellCasterLevel
-    const data = externals.data['data-ddmagic-spell-count']
-    return nLevel === 0
-        ? 0
-        : data[nLevel - 1].knownCantripCount
+    const data = externals
+        .data['data-ddmagic-spell-count']
+        .find(d => d.wizardLevel === nLevel)
+    if (!data) {
+        throw new Error('this wizard level is invalid : ' + nLevel)
+    }
+    return data.knownCantripCount
 }

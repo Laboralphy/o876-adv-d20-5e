@@ -1,6 +1,6 @@
 const CONSTS = require('./consts')
 const EffectProcessor = require('./EffectProcessor')
-const Dice = require('../libs/dice')
+const Dice = require('./libs/dice')
 const { v4: uuidv4 } = require('uuid')
 const Events = require('events')
 const PHYSICAL_DAMAGE_TYPES = require('./data/physical-damage-types.json')
@@ -8,6 +8,7 @@ const Comparator = require('./Comparator')
 
 // Store
 const { aggregateModifiers } = require("./store/creature/common/aggregate-modifiers");
+const { deepClone } = require("@laboralphy/object-fusion");
 
 
 /**
@@ -196,7 +197,26 @@ class Creature {
     }
 
     get state () {
-        return this._store.getters.getExportedState
+        const state = this.store.state
+        return deepClone({
+            id: state.id,
+            abilities: state.abilities,
+            alignment: state.alignment,
+            specie: state.specie,
+            size: state.size,
+            offensiveSlot: state.offensiveSlot,
+            proficiencies: state.proficiencies,
+            speed: state.speed,
+            effects: state.effects,
+            classes: state.classes,
+            gauges: state.gauges,
+            recentDamageTypes: state.recentDamageTypes,
+            feats: state.feats,
+            equipment: state.equipment,
+            counters: state.counters,
+            encumbrance: state.encumbrance,
+            data: state.data
+        })
     }
 
     set state (state) {

@@ -1,3 +1,4 @@
+const { clone } = require('../../../libs/array-mutations')
 /**
  *
  * @param state
@@ -11,13 +12,13 @@ module.exports = state => {
         specie: state.specie,
         size: state.size,
         offensiveSlot: state.offensiveSlot,
-        proficiencies: state.proficiencies,
+        proficiencies: clone(state.proficiencies),
         speed: state.speed,
-        effects: state.effects,
-        classes: state.classes,
+        effects: clone(state.effects),
+        classes: clone(state.classes),
         gauges: state.gauges,
         recentDamageTypes: state.recentDamageTypes,
-        feats: state.feats,
+        feats: clone(state.feats),
         equipment: state.equipment,
         counters: state.counters,
         encumbrance: state.encumbrance,

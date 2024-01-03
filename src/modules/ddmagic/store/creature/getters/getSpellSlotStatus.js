@@ -1,3 +1,4 @@
+const { getItem } = require('../../../../../libs/array-mutations')
 /**
  *
  * @param state
@@ -7,12 +8,16 @@
  */
 module.exports = (state, getters, externals) => {
     const nLevel = getters.getSpellCasterLevel
-    const data = externals.data['data-ddmagic-spell-count']
-    const aSpellSlots = nLevel === 0
-        ? [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        : data[nLevel - 1].slotCountPerLevel
-    return aSpellSlots.map((n, i) => ({
-        count: n,
-        used: state.data.spellbook.slots[i]
-    }))
+    const data = externals
+        .data['data-ddmagic-spell-count']
+        .find(dx => dx.wizardLevel === nLevel)
+    if (!data) {
+        throw new Error('this wizard level is invalid : ' + nLevel)
+    }
+    return data
+        .slotCountPerLevel
+        .map((n, i) => ({
+            count: n,
+            used: getItem(state.data.spellbook.slots, i)
+        }))
 }

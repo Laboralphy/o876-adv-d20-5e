@@ -1,4 +1,4 @@
-const TreeSync = require('../libs/tree-sync')
+const TreeSync = require('../src/libs/tree-sync')
 const fs = require('fs')
 const path = require('path')
 

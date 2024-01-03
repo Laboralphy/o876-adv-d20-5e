@@ -240,12 +240,15 @@ describe('arcane recovery', function () {
     it('should restore spell slot 1 when 1 is spent', function () {
         const { evolution } = buildStuff()
         const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+        expect(oWizard.store.state.data.spellbook.slots[0]).toBe(0)
         oWizard.store.mutations.consumeSpellSlot({ level: 1 })
+        expect(oWizard.store.state.data.spellbook.slots[0]).toBe(1)
         let oSpellSlotRestoreEvent = {}
         oWizard.events.on('spell-slot-restore', ev => {
             oSpellSlotRestoreEvent = ev
         })
         oWizard.featAction('feat-arcane-recovery')
+        expect(oWizard.store.state.data.spellbook.slots[0]).toBe(0)
         expect(oSpellSlotRestoreEvent).toEqual({ optimal: false, remain: 2, restored: [{ level: 1, count: 1 }] })
     })
     it('should restore spell slots 3 2 1 when spent', function () {

@@ -106,3 +106,48 @@ describe('Spell names', function () {
     })
 })
 
+describe('Burning hands', function () {
+    it('should change exported state when changing slot consumed', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
+        oWizard.store.mutations.prepareSpell({ spell: 'burning-hands' })
+        const a1 = oWizard.state
+        expect(a1.abilities['ABILITY_CHARISMA']).toBe(10)
+        ++oWizard.store.state.abilities['ABILITY_CHARISMA']
+        const a2 = oWizard.state
+        expect(a1.abilities['ABILITY_CHARISMA']).toBe(10)
+        expect(a2.abilities['ABILITY_CHARISMA']).toBe(11)
+        oWizard.store.mutations.consumeSpellSlot({ level: 1 })
+        const a3 = oWizard.state
+        expect(a1).not.toEqual(a2)
+        expect(a2).not.toEqual(a3)
+    })
+    it('should consume level 1 spell slot when casting spell', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        const oTarget = manager.createEntity('c-soldier')
+        oWizard.setTarget(oTarget)
+        oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
+        oWizard.store.mutations.prepareSpell({ spell: 'burning-hands' })
+        console.log('SLOT STATUS')
+        expect(oWizard.store.getters.getSpellSlotStatus[0]).toEqual({ count: 3, used: 0 })
+        expect(oWizard.store.state.data.spellbook.slots[0]).toBe(0)
+        expect(Creature.AssetManager.scripts['ddmagic-cast-spell']({
+                spell: 'burning-hands',
+                caster: oWizard,
+                hostiles: [oTarget]
+            })
+        ).toBeTrue()
+        const nWL = oWizard.store.getters.getSpellCasterLevel
+        expect(nWL).toBe(2)
+        const ssc = Creature.AssetManager.data['data-ddmagic-spell-count'].find(dx => dx.wizardLevel === 2)
+        expect(ssc.wizardLevel).toBe(2)
+        expect(ssc.slotCountPerLevel).toEqual([3, 0, 0, 0, 0, 0, 0, 0, 0])
+        expect(ssc.slotCountPerLevel.map((n, i) => oWizard.store.state.data.spellbook.slots[i]))
+            .toEqual([1, 0, 0, 0, 0, 0, 0, 0, 0])
+        expect(oWizard.store.state.data.spellbook.slots[0]).toBe(1)
+        console.log('SLOT STATUS')
+        expect(oWizard.store.getters.getSpellSlotStatus[0]).toEqual({ count: 3, used: 1 })
+    })
+})
