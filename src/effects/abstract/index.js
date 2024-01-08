@@ -11,6 +11,7 @@ const CONSTS = require('../../consts')
  * @property tag {string}
  * @property subtype {string} sous type de l'effet
  * @property unicity {boolean} l'effet est unique. Lorsqu'on l'applique, il
+ * @property parent {{creature: string, effect: string}} un effet peut avoir un lien de parenté avec un autre effet placé sur quiconque
  *
  *
  * EFFECT_SUBTYPE_MAGICAL : L'effet peut être dissipé
@@ -27,6 +28,7 @@ const CONSTS = require('../../consts')
  * @param amp {number|string}
  * @param data {object}
  * @param tag {string}
+ *
  * @returns {D20Effect}
  */
 module.exports = function create (sType, amp = 0, data = {}, tag = '') {
@@ -39,6 +41,10 @@ module.exports = function create (sType, amp = 0, data = {}, tag = '') {
         data,
         tag,
         subtype: CONSTS.EFFECT_SUBTYPE_MAGICAL,
-        unicity: CONSTS.EFFECT_UNICITY_STACK
+        unicity: CONSTS.EFFECT_UNICITY_STACK,
+        parent: {
+            creature: '',
+            effect: ''
+        }
     }
 }

@@ -1,3 +1,9 @@
+/**
+ * Rend un objet immutable : toutes ses propriétés passent en lecture seule
+ * L'opération est récursive.
+ * @param o {object}
+ * @returns {object}
+ */
 function deepFreeze (o) {
     if (Object.isFrozen(o)) {
         return o

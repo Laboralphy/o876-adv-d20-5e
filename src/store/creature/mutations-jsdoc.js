@@ -16,7 +16,6 @@
  * @property equipItem {function({ item: object, slot: string })}
  * @property heal {function({ amount })}
  * @property importCreatureState {function({ state })}
- * @property patchEffect {function({ effect: D20Effect })}
  * @property resetCharacter {function}
  * @property setAbility {function({ ability: string, value: number })}
  * @property setAreaFlags {function({ flags: string[] })}

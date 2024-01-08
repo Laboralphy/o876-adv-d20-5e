@@ -130,7 +130,6 @@ describe('Burning hands', function () {
         oWizard.setTarget(oTarget)
         oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
         oWizard.store.mutations.prepareSpell({ spell: 'burning-hands' })
-        console.log('SLOT STATUS')
         expect(oWizard.store.getters.getSpellSlotStatus[0]).toEqual({ count: 3, used: 0 })
         expect(oWizard.store.state.data.spellbook.slots[0]).toBe(0)
         expect(Creature.AssetManager.scripts['ddmagic-cast-spell']({
@@ -147,7 +146,17 @@ describe('Burning hands', function () {
         expect(ssc.slotCountPerLevel.map((n, i) => oWizard.store.state.data.spellbook.slots[i]))
             .toEqual([1, 0, 0, 0, 0, 0, 0, 0, 0])
         expect(oWizard.store.state.data.spellbook.slots[0]).toBe(1)
-        console.log('SLOT STATUS')
         expect(oWizard.store.getters.getSpellSlotStatus[0]).toEqual({ count: 3, used: 1 })
+    })
+})
+
+describe('masteredSpells', function () {
+    it('should not have mastered spell defined when creating creature', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        const oTarget = manager.createEntity('c-soldier')
+        oWizard.setTarget(oTarget)
+        oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
+        oWizard.store.mutations.prepareSpell({ spell: 'burning-hands' })
     })
 })
