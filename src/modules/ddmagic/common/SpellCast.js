@@ -38,7 +38,7 @@ module.exports = class SpellCast {
         this._spell = spell
         this._power = power
         this._hostiles = hostiles.filter(f => f !== target)
-        this._friends = friends.filter(f => f !== target && f !== caster)
+        this._friends = friends.filter(f => f !== target)
         this._spelldb = Creature.AssetManager.data['data-ddmagic-spell-database']
         this._spellMark = null
         this._effects = []

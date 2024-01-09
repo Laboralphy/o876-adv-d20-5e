@@ -197,11 +197,11 @@ function evocationAttack ({
  * @returns {[]}
  */
 function chooseRandomItems (aArray, nCount) {
-    if (aArray.length === 0) {
+    if (aArray.length === 0 || nCount >= aArray.length) {
         return aArray
     }
-    if (nCount >= aArray.length) {
-        return aArray
+    if (nCount === 0) {
+        return []
     }
     const iChoice = Math.floor(Math.random() * aArray.length)
     const aRemainers = aArray.filter((x, i) => i !== iChoice)

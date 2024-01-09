@@ -23,7 +23,7 @@ module.exports = oSpellCast => {
     })
     SpellHelper.chooseRandomItems(
         oSpellCast.hostiles.filter(h => h !== oSpellCast.target),
-        caster.roll('1d3')
+        caster.roll('1d3-1')
     ).forEach(h => {
         oSpellCast.evocationAttack({
             target: h,
