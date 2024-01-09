@@ -339,10 +339,10 @@ module.exports = class SpellCast {
     getCheckTargetCompatibility () {
         switch (this.spellData.target) {
             case 'TARGET_TYPE_HOSTILE': {
-                return !!this.target && (this.hostiles.includes(this.target))
+                return !!this.target // TODO Check reputation
             }
             case 'TARGET_TYPE_FRIEND': {
-                return !!this.target && (this.friends.includes(this.target))
+                return !!this.target // TODO Check reputation
             }
             case 'TARGET_TYPE_SPECIAL': {
                 throw new Error('ERR_TARGET_TYPE_NOT_SUPPORTED_YET')
