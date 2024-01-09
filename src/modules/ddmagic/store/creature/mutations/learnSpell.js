@@ -1,7 +1,7 @@
 module.exports = ({ state, getters, externals }, { spell }) => {
     const oSpellDB = externals.data['data-ddmagic-spell-database']
     if (spell in oSpellDB) {
-        if (!state.data.spellbook.knownSpells.includes(spell)) {
+        if (!getters.getKnownSpells.has(spell)) {
             state.data.spellbook.knownSpells.push(spell)
         }
     } else {

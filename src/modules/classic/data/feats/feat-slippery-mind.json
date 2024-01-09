@@ -1,0 +1,6 @@
+{
+  "description": "You have acquired greater mental strength. You gain proficiency in Wisdom saving throws",
+  "effects": [
+    ["EFFECT_EXTRA_PROFICIENCY", "PROFICIENCY_SAVING_THROW_WISDOM"]
+  ]
+}

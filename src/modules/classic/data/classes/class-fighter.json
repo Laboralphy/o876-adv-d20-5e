@@ -5,7 +5,7 @@
     "PROFICIENCY_ARMOR_LIGHT",
     "PROFICIENCY_ARMOR_MEDIUM",
     "PROFICIENCY_ARMOR_HEAVY",
-    "PROFICIENCY_ARMOR_SHIELD",
+    "PROFICIENCY_SHIELD",
     "PROFICIENCY_WEAPON_SIMPLE",
     "PROFICIENCY_WEAPON_MARTIAL",
     "PROFICIENCY_SAVING_THROW_STRENGTH",
@@ -26,7 +26,7 @@
     "proficiencies": [
       "PROFICIENCY_ARMOR_LIGHT",
       "PROFICIENCY_ARMOR_MEDIUM",
-      "PROFICIENCY_ARMOR_SHIELD",
+      "PROFICIENCY_SHIELD",
       "PROFICIENCY_WEAPON_SIMPLE",
       "PROFICIENCY_WEAPON_MARTIAL"
     ],
@@ -59,13 +59,17 @@
         {
           "feat": "feat-second-wind",
           "uses": 1
+        },
+        {
+          "feat": "feat-martial-archetype-champion"
         }
       ]
     }, {
       "level": 3,
       "feats": [
         {
-          "feat": "feat-improve-critical"
+          "feat": "feat-improve-critical",
+          "requires": "feat-martial-archetype-champion"
         }
       ]
     }, {
@@ -76,13 +80,13 @@
       "extraAttacks": 1
     }, {
       "level": 6,
-      "feats": [],
       "abilityScoreImprovement": true
     }, {
       "level": 7,
       "feats": [
         {
-          "feat": "feat-remarkable-athlete"
+          "feat": "feat-remarkable-athlete",
+          "requires": "feat-martial-archetype-champion"
         }
       ]
     }, {
@@ -95,19 +99,23 @@
       "feats": [
         {
           "group": "feat-group-fighting-style",
-          "feat": "feat-fighting-style-archery"
+          "feat": "feat-fighting-style-archery",
+          "requires": "feat-martial-archetype-champion"
         },
         {
           "group": "feat-group-fighting-style",
-          "feat": "feat-fighting-style-defense"
+          "feat": "feat-fighting-style-defense",
+          "requires": "feat-martial-archetype-champion"
         },
         {
           "group": "feat-group-fighting-style",
-          "feat": "feat-fighting-style-dueling"
+          "feat": "feat-fighting-style-dueling",
+          "requires": "feat-martial-archetype-champion"
         },
         {
           "group": "feat-group-fighting-style",
-          "feat": "feat-fighting-style-great-weapon"
+          "feat": "feat-fighting-style-great-weapon",
+          "requires": "feat-martial-archetype-champion"
         }
       ]
     }, {
@@ -125,7 +133,8 @@
       "level": 15,
       "feats": [
         {
-          "feat": "feat-superior-critical"
+          "feat": "feat-superior-critical",
+          "requires": "feat-martial-archetype-champion"
         }
       ]
     }, {
@@ -143,7 +152,8 @@
       "level": 18,
       "feats": [
         {
-          "feat": "feat-survivor"
+          "feat": "feat-survivor",
+          "requires": "feat-martial-archetype-champion"
         }
       ]
     }, {

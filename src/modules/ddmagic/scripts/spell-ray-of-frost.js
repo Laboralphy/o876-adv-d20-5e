@@ -19,7 +19,7 @@ module.exports = (oSpellCast) => {
     if (oSpellCast.rangedAttack().hit) {
         const eDam = oSpellCast.createSpellEffect(
             CONSTS.EFFECT_DAMAGE,
-            oSpellCast.caster.roll(oSpellCast.getCantripDamageDice(10)),
+            oSpellCast.rollCasterDamageDice(oSpellCast.getCantripDamageDice(10)),
             CONSTS.DAMAGE_TYPE_COLD
         )
         const eSlow = oSpellCast.createSpellEffect(

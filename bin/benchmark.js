@@ -2,6 +2,7 @@ const Manager = require('../src/Manager')
 
 function main () {
         const r = new Manager()
+        r.config.setModuleActive('classic', true)
         r.init()
         const aSoldiers = []
         let aCombats = []
@@ -34,25 +35,24 @@ function main () {
                 if (fighter.store.getters.getHitPoints <= 0 && target.store.getters.getHitPoints <= 0) {
                     aCombats = aCombats.filter(c => c.fighter === fighter || c.target === target)
                 }
-                target.store.mutations.heal({ amount: Infinity })
-                fighter.store.mutations.heal({ amount: Infinity })
+                // target.store.mutations.heal({ amount: Infinity })
+                // fighter.store.mutations.heal({ amount: Infinity })
             })
             const t2 = Date.now()
-            const t = t2 - t1
-            return t
+            return t2 - t1
         }
 
         for (let i = 0; i < nSoldierCount; ++i) {
             createCombat()
         }
 
-        for (let i = 0; i < 200; ++i) {
+        for (let i = 0; i < 250; ++i) {
             const nMoreCombat = 1 // 10 + (i % 5)
             for (let n = 0; n < nMoreCombat; ++n) {
                 createCombat()
             }
             times.push({ combat: aCombats.length, time: playCombats() })
         }
-        console.log(times)
+        times.forEach(x => console.log(x))
 }
  main()

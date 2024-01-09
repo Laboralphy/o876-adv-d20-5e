@@ -16,7 +16,6 @@
  * @property equipItem {function({ item: object, slot: string })}
  * @property heal {function({ amount })}
  * @property importCreatureState {function({ state })}
- * @property patchEffect {function({ effect: D20Effect })}
  * @property resetCharacter {function}
  * @property setAbility {function({ ability: string, value: number })}
  * @property setAreaFlags {function({ flags: string[] })}
@@ -33,4 +32,11 @@
  * @property updateAggressorConditions {function({ [id]: number, conditions: Set|[], effects: string[] })}
  * @property updateFeatEffects {function()}
  * @property updateTargetConditions {function({ [id]: number, conditions: Set|[], effects: string[] })}
+ * @property learnSpell {function({spell: string}}
+ * @property restoreSpellSlot {function({level: number, count: number}}
+ * @property defineMasteredSpell {function({spell: string})}
+ * @property defineSignatureSpell {function({spell: string})}
+ * @property prepareSpell {function({ spell })}
+ * @property consumeSignatureSpellSlot {function({ spell })}
+ * @property consumeSpellSlot {function({ level }}
  */

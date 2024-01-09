@@ -1,0 +1,7 @@
+{
+  "description": "you have resistance to necrotic damage, and your hit point maximum can't be reduced.",
+  "effects": [
+    ["EFFECT_DAMAGE_RESISTANCE", "DAMAGE_TYPE_NECROTIC"],
+    ["EFFECT_HP_BONUS_BLOCKER", -1]
+  ]
+}

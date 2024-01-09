@@ -8,10 +8,13 @@
     "ABILITY_WISDOM": 10,
     "ABILITY_CHARISMA": 10
   },
+  "multiclass": {
+    "skillCount": 0
+  },
+  "class": "fighter",
   "levels": [
     {
       "level": 1,
-      "class": "fighter",
       "skills": [
         "skill-athletics",
         "skill-acrobatics"
@@ -21,90 +24,71 @@
       ]
     },
     {
-      "level": 2,
-      "class": "fighter"
+      "level": 2
     },
     {
-      "level": 3,
-      "class": "fighter"
+      "level": 3
     },
     {
       "level": 4,
-      "class": "fighter",
       "ability": "ABILITY_STRENGTH"
     },
     {
-      "level": 5,
-      "class": "fighter"
+      "level": 5
     },
     {
       "level": 6,
-      "class": "fighter",
       "ability": "ABILITY_STRENGTH"
     },
     {
-      "level": 7,
-      "class": "fighter"
+      "level": 7
     },
     {
       "level": 8,
-      "class": "fighter",
       "ability": "ABILITY_STRENGTH"
     },
     {
-      "level": 9,
-      "class": "fighter"
+      "level": 9
     },
     {
       "level": 10,
-      "class": "fighter",
       "feats": [
         "feat-fighting-style-archery"
       ]
     },
     {
-      "level": 11,
-      "class": "fighter"
+      "level": 11
     },
     {
       "level": 12,
-      "class": "fighter",
       "ability": "ABILITY_STRENGTH"
     },
     {
-      "level": 13,
-      "class": "fighter"
+      "level": 13
     },
     {
       "level": 14,
-      "class": "fighter",
       "ability": "ABILITY_STRENGTH"
     },
     {
-      "level": 15,
-      "class": "fighter"
+      "level": 15
     },
     {
       "level": 16,
-      "class": "fighter",
       "ability": "ABILITY_STRENGTH"
     },
     {
-      "level": 17,
-      "class": "fighter"
+      "level": 17
     },
     {
-      "level": 18,
-      "class": "fighter"
+      "level": 18
     },
     {
       "level": 19,
-      "class": "fighter",
       "ability": "ABILITY_STRENGTH"
     },
     {
-      "level": 20,
-      "class": "fighter"
+      "level": 20
     }
   ]
 }

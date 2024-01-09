@@ -143,6 +143,9 @@
       "feats": [
         {
           "feat": "feat-sneak-attack-2"
+        },
+        {
+          "feat": "feat-roguish-archetype-thief"
         }
       ]
     },
@@ -284,7 +287,8 @@
           "feat": "feat-sneak-attack-5"
         },
         {
-          "feat": "feat-supreme-sneak"
+          "feat": "feat-supreme-sneak",
+          "requires": "feat-roguish-archetype-thief"
         }
       ]
     },
@@ -314,7 +318,16 @@
           "feat": "feat-sneak-attack-7"
         },
         {
-          "feat": "feat-use-magic-device"
+          "feat": "feat-use-magic-device",
+          "requires": "feat-roguish-archetype-thief"
+        }
+      ]
+    },
+    {
+      "level": 14,
+      "feats": [
+        {
+          "feat": "feat-blindsense"
         }
       ]
     },
@@ -323,6 +336,9 @@
       "feats": [
         {
           "feat": "feat-sneak-attack-8"
+        },
+        {
+          "feat": "feat-slippery-mind"
         }
       ]
     },

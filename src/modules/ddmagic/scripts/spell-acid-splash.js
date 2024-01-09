@@ -11,14 +11,13 @@
 
 const SpellHelper = require('../../classic/common/spell-helper')
 const CONSTS = require('../../../consts')
-const SpellCast = require('../common/SpellCast')
 
 /**
  * @param oSpellCast {SpellCast}
  */
 module.exports = (oSpellCast) => {
     oSpellCast.evocationAttack({
-        damage: oSpellCast.caster.roll(oSpellCast.getCantripDamageDice(6)),
+        damage: oSpellCast.rollCasterDamageDice(oSpellCast.getCantripDamageDice(6)),
         type: CONSTS.DAMAGE_TYPE_ACID,
     })
     const oAdditionalTarget = SpellHelper
@@ -26,7 +25,7 @@ module.exports = (oSpellCast) => {
         .shift()
     if (oAdditionalTarget) {
         oSpellCast.evocationAttack({
-            damage: oSpellCast.caster.roll(oSpellCast.getCantripDamageDice(6)),
+            damage: oSpellCast.rollCasterDamageDice(oSpellCast.getCantripDamageDice(6)),
             type: CONSTS.DAMAGE_TYPE_ACID,
             target: oAdditionalTarget
         })

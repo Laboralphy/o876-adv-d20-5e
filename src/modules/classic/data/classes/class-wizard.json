@@ -29,6 +29,32 @@
       "feats": [
         {
           "feat": "feat-spellcasting"
+        },
+        {
+          "feat": "feat-arcane-recovery",
+          "uses": 1
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "feats": [
+        {
+          "feat": "feat-arcane-tradition-evocation",
+          "group": "feat-group-arcane-tradition"
+        },
+        {
+          "feat": "feat-arcane-tradition-necromancy",
+          "group": "feat-group-arcane-tradition"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "feats": [
+        {
+          "feat": "feat-grim-harvest",
+          "requires": "feat-arcane-tradition-necromancy"
         }
       ]
     },
@@ -37,20 +63,72 @@
       "abilityScoreImprovement": true
     },
     {
+      "level": 6,
+      "feats": [
+        {
+          "feat": "feat-potent-cantrip",
+          "requires": "feat-arcane-tradition-evocation"
+        },
+        {
+          "feat": "feat-undead-thralls",
+          "requires": "feat-arcane-tradition-necromancy"
+        }
+      ]
+    },
+    {
       "level": 8,
       "abilityScoreImprovement": true
+    },
+    {
+      "level": 10,
+      "feats": [
+        {
+          "feat": "feat-empowered-evocation",
+          "requires": "feat-arcane-tradition-evocation"
+        },
+        {
+          "feat": "feat-inured-to-undeath",
+          "requires": "feat-arcane-tradition-necromancy"
+        }
+      ]
     },
     {
       "level": 12,
       "abilityScoreImprovement": true
     },
     {
+      "level": 14,
+      "feats": [
+        {
+          "feat": "feat-overchannel",
+          "requires": "feat-arcane-tradition-evocation",
+          "uses": 1
+        }
+      ]
+    },
+    {
       "level": 16,
       "abilityScoreImprovement": true
     },
     {
+      "level": 18,
+      "feats": [
+        {
+          "feat": "feat-spell-mastery"
+        }
+      ]
+    },
+    {
       "level": 19,
       "abilityScoreImprovement": true
+    },
+    {
+      "level": 20,
+      "feats": [
+        {
+          "feat": "feat-spell-signature"
+        }
+      ]
     }
   ]
 }

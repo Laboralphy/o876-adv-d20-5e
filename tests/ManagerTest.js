@@ -755,7 +755,7 @@ describe('import/export creature', function () {
         r.addItemProperty(daggerx, CONSTS.ITEM_PROPERTY_ENHANCEMENT, { amp: 1 })
         gob1.equipItem(daggerx)
         gob1.id = 'gob1'
-        const s1 = gob1.store.getters.getExportedState
+        const s1 = gob1.state
         expect(s1.equipment.EQUIPMENT_SLOT_WEAPON_MELEE.id).toBe('daggerx')
     })
     it('should create a goblin when importing data', function () {
@@ -1038,3 +1038,4 @@ describe('getArmorClassDetail', function () {
         expect(g.getDeflectingArmorPart(16).type).toBe(CONSTS.ARMOR_DEFLECTOR_HIT)
     })
 })
+

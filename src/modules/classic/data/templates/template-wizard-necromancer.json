@@ -1,0 +1,87 @@
+{
+  "description": "A generic wizard template",
+  "abilities": {
+    "ABILITY_STRENGTH": 10,
+    "ABILITY_DEXTERITY": 14,
+    "ABILITY_CONSTITUTION": 14,
+    "ABILITY_INTELLIGENCE": 17,
+    "ABILITY_WISDOM": 11,
+    "ABILITY_CHARISMA": 10
+  },
+  "class": "wizard",
+  "multiclass": {
+    "skillCount": 0
+  },
+  "levels": [
+    {
+      "level": 1,
+      "skills": [
+        "skill-arcana",
+        "skill-medicine"
+      ]
+    },
+    {
+      "level": 2,
+      "feats": ["feat-arcane-tradition-necromancy"]
+    },
+    {
+      "level": 3
+    },
+    {
+      "level": 4,
+      "ability": "ABILITY_INTELLIGENCE"
+    },
+    {
+      "level": 5
+    },
+    {
+      "level": 6
+    },
+    {
+      "level": 7
+    },
+    {
+      "level": 8,
+      "ability": "ABILITY_INTELLIGENCE"
+    },
+    {
+      "level": 9
+    },
+    {
+      "level": 10
+    },
+    {
+      "level": 11
+    },
+    {
+      "level": 12,
+      "ability": "ABILITY_INTELLIGENCE"
+    },
+    {
+      "level": 13
+    },
+    {
+      "level": 14
+    },
+    {
+      "level": 15
+    },
+    {
+      "level": 16,
+      "ability": "ABILITY_INTELLIGENCE"
+    },
+    {
+      "level": 17
+    },
+    {
+      "level": 18
+    },
+    {
+      "level": 19,
+      "ability": "ABILITY_INTELLIGENCE"
+    },
+    {
+      "level": 20
+    }
+  ]
+}

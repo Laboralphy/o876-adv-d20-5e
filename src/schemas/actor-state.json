@@ -18,7 +18,6 @@
     "gauges",
     "recentDamageTypes",
     "feats",
-    "skills",
     "equipment",
     "encumbrance",
     "counters"
@@ -136,13 +135,6 @@
         "type": "string"
       }
     },
-    "skills": {
-      "description": "Liste des compétences débloquées",
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
     "equipment": {
       "type": "object",
       "patternProperties": {
@@ -168,7 +160,16 @@
       "type": "object",
       "patternProperties": {
         "^.*$": {
-          "type": "number"
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            }
+          }
         }
       }
     }

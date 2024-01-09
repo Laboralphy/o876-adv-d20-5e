@@ -1,5 +1,5 @@
 const path = require('path')
-const TreeSync = require('../../../libs/tree-sync')
+const TreeSync = require('../../libs/tree-sync')
 require('./getters-jsdoc')
 require('./mutations-jsdoc')
 

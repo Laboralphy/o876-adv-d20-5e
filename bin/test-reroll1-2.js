@@ -1,4 +1,4 @@
-const Dice = require('../libs/dice')
+const Dice = require('../src/libs/dice')
 const dice = new Dice()
 
 function rollDamage (sFormula, bApplyFeat) {

@@ -1,19 +1,3 @@
-function rollRandomItemProperties (aEffects) {
-    let n = 0
-    aEffects
-        .forEach(f => {
-            if (('random' in f) && f.random !== '') {
-                n += this.roll(f.random)
-            }
-        })
-    return n
-}
-
-function rollRandomEffects (aEffects) {
-    return rollRandomItemProperties(aEffects.map(f => f.data || {}))
-}
-
-
 /**
  * Aggrège les effets spécifiés dans la liste, selon un prédicat
  * @param aTags {string[]} liste des effets désirés
@@ -26,7 +10,7 @@ function rollRandomEffects (aEffects) {
  * @param propAmpMapper {function}
  * @param propSorter {function}
  * @param propForEach {function}
- * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, sum: number, count: number, effects: number, ip: number }}
+ * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, min: number, sum: number, count: number, effects: number, ip: number }}
  */
 function aggregateModifiers (aTags, getters, {
     effectFilter = null,
@@ -107,15 +91,23 @@ function aggregateModifiers (aTags, getters, {
         })
     }
 
-    const nEffAcc = aFilteredEffects.reduce((prev, curr) => prev + curr.amp, 0)
-    const nEffMax = aFilteredEffects.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
-    const nIPAcc = aFilteredItemProperties.reduce((prev, curr) => prev + curr.amp, 0)
-    const nIPMax = aFilteredItemProperties.reduce((prev, curr) => Math.max(prev, curr.amp), 0)
+    let nIPAcc = 0, nEffAcc = 0, nMin = Infinity, nMax = -Infinity
+    aFilteredEffects.forEach(({ amp }) => {
+        nEffAcc += amp
+        nMax = Math.max(nMax, amp)
+        nMin = Math.max(nMin, amp)
+    })
+    aFilteredItemProperties.forEach(({ amp }) => {
+        nIPAcc += amp
+        nMax = Math.max(nMax, amp)
+        nMin = Math.max(nMin, amp)
+    })
     return {
         sum: nEffAcc + nIPAcc,
         effects: nEffAcc,
         ip: nIPAcc,
-        max: Math.max(nEffMax, nIPMax),
+        max: nMax,
+        min: nMin,
         count: aFilteredEffects.length + aFilteredItemProperties.length,
         sorter: oSorter
     }

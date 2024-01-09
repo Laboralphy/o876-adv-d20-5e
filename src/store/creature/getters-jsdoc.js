@@ -31,7 +31,7 @@
  * @property getConditions {Set<string>}
  * @property getCounters {Object<string, { value: number, max: value }>}
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
- * @property getDamageRerollThreshold {[]}
+ * @property getDamageRerollThreshold {number}
  * @property getDeadEffects {D20Effect[]}
  * @property getDefensiveApplicableConditions {{condition: string, dc: number, ability: number, duration: number}[]}
  * @property getDefensiveEquipmentList {D20Item[]}
@@ -48,7 +48,6 @@
  * @property getEquippedItems {{[slot: string]: D20Item}}
  * @property getEquippedWeapons {{ ranged: D20Item, melee: D20Item, natural: D20Item, ammo: D20Item }}
  * @property getExhaustionLevel {number}
- * @property getExportedState {{id: number, specie: (string|*), counters: (*|{}), classes: ([]|*), equipment: ([{damage: string, itemType: string, entityType: string, weaponType: string, attributes: [], damageType: string, properties: [{amp: number, property: string},{amp: string, property: string, type: string}]},{itemType: string, material: string, entityType: string, armorType: string, properties: [{property: string, type: string},{property: string, type: string},{property: string, type: string},{condition: string, property: string},{amp: number, skill: string, property: string}]}]|*), gauges: ({damage: number}|*), feats: ([]|*), speed: *, encumbrance: (number|*), abilities, skills: ([]|*), effects: (number|[]|*), size, proficiencies: ([]|*), offensiveSlot: *, recentDamageTypes: *, alignment: ({entropy: number, morality: number}|*)}, data: any}
  * @property getFeatReport {FeatReport[]}
  * @property getFeats {Set<string>}
  * @property getHealMitigation {{pharma: boolean, negateheal: boolean, factor: number}}
@@ -116,11 +115,15 @@
  * @property hasNoSneakAttack9 {boolean}
  * @property isHPBelow50Percent {boolean}
  * @property isWearingArmor {boolean}
+ * @property getCastableMasteredSpells {Set<string>}
+ * @property getCastableSignatureSpells {Set<string>}
  * @property getCastableSpells {Object<string, boolean[]>}
+ * @property getKnownSpells {Set<string>}
  * @property getMaxPreparableCantrips {number}
  * @property getMaxPreparableSpells {number}
+ * @property getMaxSlotLevel {number}
  * @property getPreparedSpells {cantrips: string[], spells: string[], repository: D20SpellRepositoryEntry[]}
+ * @property getSpellCasterLevel {number}
  * @property getSpellDC {number}
  * @property getSpellSlotStatus {{ count: number, used: number }[]}
- * @property getWizardLevel {number}
  */

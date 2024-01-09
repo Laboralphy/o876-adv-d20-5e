@@ -1,4 +1,5 @@
 [
+  { "wizardLevel": 0, "knownCantripCount": 0, "slotCountPerLevel": [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ] },
   { "wizardLevel": 1, "knownCantripCount": 3, "slotCountPerLevel": [ 2, 0, 0, 0, 0, 0, 0, 0, 0 ] },
   { "wizardLevel": 2, "knownCantripCount": 3, "slotCountPerLevel": [ 3, 0, 0, 0, 0, 0, 0, 0, 0 ] },
   { "wizardLevel": 3, "knownCantripCount": 3, "slotCountPerLevel": [ 4, 2, 0, 0, 0, 0, 0, 0, 0 ] },

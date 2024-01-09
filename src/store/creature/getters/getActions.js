@@ -1,5 +1,3 @@
-const CONSTS = require("../../../consts");
-
 /**
  *
  * @param state
@@ -14,10 +12,11 @@ module.exports = (state, getters, externals) => {
         .filter(feat => 'action' in data[feat])
         .map(feat => {
             const oCounters = state.counters
-            const uses = oCounters[feat]?.value || Infinity
+            const uses = oCounters[feat]?.value || 0
             const usesMax = oCounters[feat]?.max || Infinity
             return {
                 action: feat,
+                script: data[feat].action,
                 uses: {
                     value: uses,
                     max: usesMax
@@ -32,8 +31,9 @@ module.exports = (state, getters, externals) => {
             .forEach(sAction => {
                 aActions.push({
                     action: sAction,
+                    script: sAction,
                     uses: {
-                        value: Infinity,
+                        value: 0,
                         max: Infinity
                     },
                     innate: true

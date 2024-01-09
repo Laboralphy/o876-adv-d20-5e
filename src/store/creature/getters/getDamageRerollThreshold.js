@@ -8,7 +8,8 @@ function filterRollTypeDamage (x) {
 /**
  * Liste des effets actifs sur la créature
  * @param state
- * @returns {[]}
+ * @param getters {D20CreatureStoreGetters}
+ * @returns {number}
  */
 module.exports = (state, getters) => aggregateModifiers(
     [CONSTS.EFFECT_REROLL, CONSTS.ITEM_PROPERTY_REROLL],

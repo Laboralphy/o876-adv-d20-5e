@@ -56,10 +56,18 @@ class Evolution {
             const aAlreadyHaveFeats = oCreature.store.getters.getFeatReport.map(f => f.feat)
             // déterminer la liste des prochains feat susceptible d'etre ajouté par le niveau
             /**
-             * @type {{ feat: string, uses?: number, group?: string}[]}
+             * @type {{ feat: string, uses?: number, group?: string, requires?: boolean }[]}
              */
             const aNextLevelFeats = 'feats' in cdl ? cdl.feats : []
-            const feats = aNextLevelFeats.filter(f => 'uses' in f || !aAlreadyHaveFeats.includes(f.feat))
+            const feats = aNextLevelFeats.filter(f => {
+                const bHasUsed = 'uses' in f
+                const bAlreadyHaveFeat = aAlreadyHaveFeats.includes(f.feat)
+                const bDoesNotHaveFeat = !bAlreadyHaveFeat
+                const bCanBeAddedOrUpgraded = bHasUsed || bDoesNotHaveFeat
+                const bHasRequires = 'requires' in f
+                const bRequirementOk = bHasRequires ? aAlreadyHaveFeats.includes(f.requires) : true
+                return bRequirementOk && bCanBeAddedOrUpgraded
+            })
             return {
                 level: nLevel,
                 feats,
@@ -214,7 +222,7 @@ class Evolution {
                 .levels
                 .find(({ level }) => level === iLevel)
             const oParams = {
-                selectedClass: level.class
+                selectedClass: oTemplate.class
             }
             if ('skills' in level) {
                 oParams.selectedSkills = level.skills

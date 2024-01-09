@@ -17,7 +17,8 @@ class Manager {
             'saving-throw',
             'check-skill',
             'damaged',
-            'offensive-slot'
+            'offensive-slot',
+            'effect-applied'
         ])
     }
 
@@ -46,7 +47,7 @@ class Manager {
     }
 
     /**
-     * instance du gestionaire d'évènements
+     * instance du gestionnaire d'évènements
      * @returns {module:events.EventEmitter}
      */
     get events () {

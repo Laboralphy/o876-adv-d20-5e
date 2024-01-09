@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "description": {
-      "description": "template description",
+      "description": "theses templates are used to define optimal archetypes for automatique evolution",
       "type": "string"
     },
     "abilities": {
@@ -29,6 +29,21 @@
         }
       }
     },
+    "class": {
+      "description": "base class of this template",
+      "type": "string"
+    },
+    "multiclass": {
+      "type": "object",
+      "description": "multiclass data",
+      "required": ["skillCount"],
+      "properties": {
+        "skillCount": {
+          "description": "number of skills that can be selected when multiclass",
+          "type": "number"
+        }
+      }
+    },
     "levels": {
       "description": "list of things to select when reaching each level",
       "type": "array",
@@ -38,10 +53,6 @@
           "level": {
             "description": "level rank of the class",
             "type": "number"
-          },
-          "class": {
-            "description": "class to pick at this level",
-            "type": "string"
           },
           "skills": {
             "description": "list of skills to select (if multiclassing then first skill are selected first)",

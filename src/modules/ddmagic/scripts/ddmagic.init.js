@@ -4,4 +4,5 @@ module.exports = ({ manager }) => {
     manager.creatureHandlers.add('spellcast-concentration')
     manager.creatureHandlers.add('spellcast')
     manager.creatureHandlers.add('spellcast-at')
+    manager.creatureHandlers.add('spell-slot-restore')
 }

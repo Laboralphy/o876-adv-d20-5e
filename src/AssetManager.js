@@ -1,10 +1,9 @@
 const CONSTS = require('./consts')
-const TreeSync = require('../libs/tree-sync')
+const TreeSync = require('./libs/tree-sync')
 const path = require('path')
 const SchemaValidator = require("./SchemaValidator")
 const StoreManager = require('./StoreManager')
-const deepMerge = require('../libs/deep-merge')
-const deepClone = require('../libs/deep-clone')
+const { deepMerge, deepClone } = require('@laboralphy/object-fusion')
 const { CONFIG } = require('./config')
 const STRINGS = {
     fr: require('./strings/fr.json'),
