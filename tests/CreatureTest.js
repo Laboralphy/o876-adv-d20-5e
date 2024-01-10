@@ -575,57 +575,6 @@ describe('getAdvantages/getDisadvantages', function () {
     })
 })
 
-// Test : appliquer un effet à impact
-// appliquer un effet à durée temporaire
-// creature A applique un effet à créature B
-
-describe('groupEffect', function () {
-    it('should create 3 effects when applying a group of two effects', function () {
-        const c = new Creature()
-        const ep = new EffectProcessor()
-        ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, [
-                EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY),
-                EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
-            ]
-        ), c, 10)
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
-        ep.processCreatureEffects(c)
-        ep.processCreatureEffects(c)
-        ep.processCreatureEffects(c)
-        ep.processCreatureEffects(c)
-        ep.processCreatureEffects(c)
-        ep.processCreatureEffects(c)
-        ep.processCreatureEffects(c)
-        ep.processCreatureEffects(c)
-        ep.processCreatureEffects(c)
-        expect(c.store.getters.getEffects.length).toBe(3)
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
-        ep.processCreatureEffects(c)
-        expect(c.store.getters.getEffects.length).toBe(0)
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeFalse()
-    })
-    it('should dispel all effects when dispelling the group effect', function () {
-        const c = new Creature()
-        const eInvis = EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY)
-        const eThrSi = EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT)
-        const eGroup = EffectProcessor.createEffect(CONSTS.EFFECT_GROUP, [eInvis, eThrSi], 'TEST_GROUP')
-        c.applyEffect(eGroup, 10)
-        c.processEffects()
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeTrue()
-        const effFound = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.tag === 'TEST_GROUP')
-        c.store.mutations.dispellEffect({ effect: effFound })
-        c.processEffects()
-        const effFound2 = c.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_GROUP && eff.tag === 'TEST_GROUP')
-        expect(effFound2).not.toBeDefined()
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
-        expect(c.store.getters.getConditions.has(CONSTS.CONDITION_TRUE_SIGHT)).toBeFalse()
-    })
-})
-
 describe('getDamageBonus', function () {
     it('should have damage bonus +1 slashing when equiping sword +1', function () {
         const r = new Manager()

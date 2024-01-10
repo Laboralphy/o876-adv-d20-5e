@@ -46,6 +46,7 @@ class EffectProcessor {
         const oEffectProg = Effects[oEffect.type]
         if (sMethod in oEffectProg) {
             oEffectProg[sMethod]({
+                processor: this,
                 effect: oEffect,
                 source: oSource || oTarget,
                 target: oTarget,

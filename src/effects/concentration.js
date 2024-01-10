@@ -7,7 +7,9 @@ const CONSTS = require('../consts')
  * @returns {D20Effect}
  */
 function create (effects) {
-    return createEffect(CONSTS.EFFECT_CONCENTRATION)
+    // La concentration peut affecter des effets placer sur d'autres créatures
+    const aEffects = effects.map(eff => eff.id)
+    return createEffect(CONSTS.EFFECT_CONCENTRATION, 0, { effects: aEffects })
 }
 
 function attacked ({
