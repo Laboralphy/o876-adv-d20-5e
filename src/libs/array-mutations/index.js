@@ -59,11 +59,23 @@ function mutateItem (a, i, f) {
     return a
 }
 
+/**
+ * Remplace le contenu (tous les items) d'un tableau
+ * @param a {[]}
+ * @param a2 {[]}
+ * @return {[]}
+ */
+function update (a, a2) {
+    a.splice(0, a.length, ...a2)
+    return a
+}
+
 module.exports = {
     setItem,
     getItem,
     truncate,
     removeItem,
     clone,
-    mutateItem
+    mutateItem,
+    update
 }

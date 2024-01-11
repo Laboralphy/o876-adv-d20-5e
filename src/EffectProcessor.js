@@ -103,33 +103,13 @@ class EffectProcessor {
     }
 
     /**
-     * Renvoie la liste des créatures qui ne sont la source d'aucun effet appliqué à d'autre créature
-     * Si une créature qu'on veut supprimer du registre n'est la source d'aucun effet appliqué à une autre
-     * créature qu'elle, on peut la supprimer
+     * Une créature sortante va disparaitre du système : on souhaite la supprimer du registre de la créature spécifiée
+     * Ceci va supprimer certains effets de la créature spécifiée : ceux qui ont pour source la créature sortante.
+     * @param oCreature {Creature} Créature dont on veut que les effets, dont la créature sortante est la source, soient purgés
+     * @param oLeavingCreature {Creature} Créature sortante
      */
-    getSourceCreatures () {
-        const aCreatureKeys = Object.keys(this._creatures)
-        const aSourceCreatures = new Set(aCreatureKeys)
-        for (const [id, oCreature] of aCreatureKeys) {
-            oCreature
-                .store
-                .getters
-                .getEffectSources
-                .forEach(eff => {
-                    if (eff.source !== id) {
-                        aSourceCreatures.delete(eff.source)
-                    }
-                })
-        }
-    }
-
-    /**
-     * Supprime du registre la créature spécifiée ainsi que tous les effets dont elle est la source.
-     * @param oCreature {Creature} Créature dont on veut que les effets soient purgé
-     * @param oSource {Creature} Créature qu'on veut voir disparaitre
-     */
-    removeCreatureFromRegistry (oCreature, oSource) {
-        const idSource = oSource.id
+    removeCreatureFromRegistry (oCreature, oLeavingCreature) {
+        const idSource = oLeavingCreature.id
         const aEffects = oCreature
             .store
             .getters
@@ -138,6 +118,7 @@ class EffectProcessor {
         aEffects.forEach(eff => {
             eff.duration = 0
         })
+        this.removeDeadEffects(oCreature)
         this.flushCreatureRegistry(oCreature)
     }
 

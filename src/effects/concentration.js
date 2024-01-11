@@ -8,8 +8,12 @@ const CONSTS = require('../consts')
  */
 function create (effects) {
     // La concentration peut affecter des effets placer sur d'autres créatures
-    const aEffects = effects.map(eff => eff.id)
-    return createEffect(CONSTS.EFFECT_CONCENTRATION, 0, { effects: aEffects })
+    effects.forEach(eff => {
+        eff.exportable = false
+    })
+    const eConcentration = createEffect(CONSTS.EFFECT_CONCENTRATION, 0, { effects })
+    eConcentration.exportable = false // Contient des références
+    return eConcentration
 }
 
 function attacked ({
@@ -26,10 +30,8 @@ function attacked ({
 }
 
 function dispose ({ effect, target: oCreature }) {
-    oCreature.store.getters.getEffects.forEach(eff => {
-        if (eff.data.spellmark.id === effect.data.spellmark.id) {
-            eff.duration = 0
-        }
+    effect.data.effects.forEach(eff => {
+        eff.duration = 0
     })
 }
 

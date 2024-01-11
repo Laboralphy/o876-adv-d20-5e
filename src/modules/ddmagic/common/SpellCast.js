@@ -432,13 +432,12 @@ module.exports = class SpellCast {
                     reason: 'CONCENTRATION_CHANGE'
                 })
             }
-            const duration = this
-                ._effects
-                .reduce((prev, curr) => Math.max(prev, curr.duration), 0)
+            const aEffectCopy = this._effects.slice(0)
+            const duration = aEffectCopy.reduce((prev, curr) => Math.max(prev, curr.duration), 0)
             const eConcentrationGroup = this
                 .createSpellEffect(
                     CONSTS.EFFECT_CONCENTRATION,
-                    this._effects
+                    aEffectCopy
                 )
             this.caster.events.emit('spellcast-concentration', {
                 caster: this.caster,

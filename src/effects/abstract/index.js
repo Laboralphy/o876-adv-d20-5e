@@ -42,6 +42,7 @@ module.exports = function create (sType, amp = 0, data = {}, tag = '') {
         tag,
         subtype: CONSTS.EFFECT_SUBTYPE_MAGICAL,
         unicity: CONSTS.EFFECT_UNICITY_STACK,
-        mutable: false
+        mutable: false,
+        exportable: true
     }
 }
