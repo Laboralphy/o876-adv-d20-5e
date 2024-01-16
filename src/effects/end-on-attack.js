@@ -2,20 +2,22 @@ const createEffect = require('./abstract')
 const CONSTS = require('../consts')
 
 function create (oEffectToBreak) {
-    return createEffect(CONSTS.EFFECT_END_ON_ATTACK, 0, { effect: oEffectToBreak.id })
+    oEffectToBreak.exportable = false
+    const oEffect = createEffect(CONSTS.EFFECT_END_ON_ATTACK, 0, { effect: oEffectToBreak })
+    oEffect.exportable = false
+    return oEffect
 }
 
-function attack ({ effect, target }) {
-    effect.duration = 0
+function attack ({ processor, effect, target }) {
     const oEffectToBreak = getEffectToBreak(effect, target)
     if (oEffectToBreak) {
-        oEffectToBreak.duration = 0
+        processor.dispelEffect(oEffectToBreak)
     }
+    processor.dispelEffect(effect)
 }
 
-function getEffectToBreak (effect, target) {
-    const idEffectToBreak = effect.data.effect
-    return target.store.getEffects.find(eff => eff.id === idEffectToBreak)
+function getEffectToBreak (effect) {
+    return effect.data.effect
 }
 
 module.exports = {

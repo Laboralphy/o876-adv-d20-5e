@@ -7,7 +7,7 @@ const CONSTS = require('../consts')
  * @returns {D20Effect}
  */
 function create (effects) {
-    // La concentration peut affecter des effets placer sur d'autres créatures
+    // La concentration peut affecter des effets placés sur d'autres créatures
     effects.forEach(eff => {
         eff.exportable = false
     })
@@ -17,21 +17,21 @@ function create (effects) {
 }
 
 function attacked ({
-    effect, target, outcome
+    processor, effect, target, outcome
 }) {
     if (outcome.damages.amount > 0) {
         const dc = Math.max(10, outcome.damages.amount >> 1)
         const oCreature = target
         const st = oCreature.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [], dc, oCreature)
         if (!st.success) {
-            effect.duration = 0
+            processor.dispellEffect(effect)
         }
     }
 }
 
-function dispose ({ effect, target: oCreature }) {
+function dispose ({ processor, effect, target: oCreature }) {
     effect.data.effects.forEach(eff => {
-        eff.duration = 0
+        processor.dispelEffect(eff)
     })
 }
 

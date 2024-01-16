@@ -24,7 +24,7 @@ const SUPPORTED_ROLL_TYPES = [CONSTS.ROLL_TYPE_ATTACK]
  * @param oSpellCast {SpellCast}
  */
 module.exports = (oSpellCast) => {
-    const eTS = oSpellCast.createSpellEffect(
+    const eAdvantage = oSpellCast.createSpellEffect(
         CONSTS.EFFECT_ADVANTAGE,
         SUPPORTED_ABILITIES,
         SUPPORTED_ROLL_TYPES,
@@ -32,8 +32,8 @@ module.exports = (oSpellCast) => {
     )
     const eEndOnAttack = oSpellCast.createSpellEffect(
         CONSTS.EFFECT_END_ON_ATTACK,
-        eTS
+        eAdvantage
     )
-    oSpellCast.applyEffectToCaster(eTS, 2)
+    oSpellCast.applyEffectToCaster(eAdvantage, 2)
     oSpellCast.applyEffectToCaster(eEndOnAttack, 2)
 }

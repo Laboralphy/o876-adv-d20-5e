@@ -425,14 +425,14 @@ module.exports = class SpellCast {
                 .getEffects
                 .find(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
             if (oPreviousConcentrationEffect) {
-                oPreviousConcentrationEffect.duration = 0
                 this.caster.events.emit('spellcast-concentration-end', {
                     caster: this.caster,
                     spell: oPreviousConcentrationEffect.data.spellmark.spell,
                     reason: 'CONCENTRATION_CHANGE'
                 })
+                this.caster.effectProcessor.dispelEffect(oPreviousConcentrationEffect)
             }
-            const aEffectCopy = this._effects.slice(0)
+            const aEffectCopy = this._effects.filter(eff => eff.type !== CONSTS.EFFECT_CONCENTRATION)
             const duration = aEffectCopy.reduce((prev, curr) => Math.max(prev, curr.duration), 0)
             const eConcentrationGroup = this
                 .createSpellEffect(

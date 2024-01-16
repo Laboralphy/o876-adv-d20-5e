@@ -181,11 +181,9 @@ describe('true-strike', function () {
             cheat: true
         })
 
-        oWizard.processEffects()
-
         const aAdvEffects2 = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_ADVANTAGE)
         const aConEffects2 = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
-        expect(aAdvEffects2.length).toBe(1)
+        expect(aAdvEffects2.length).toBe(2) // adv + eoa
         expect(aConEffects2.length).toBe(1)
     })
 })

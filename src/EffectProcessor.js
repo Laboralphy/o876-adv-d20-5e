@@ -102,6 +102,10 @@ class EffectProcessor {
         return aDeadEffects
     }
 
+    dispelEffect (oEffect) {
+        oEffect.duration = 0
+    }
+
     /**
      * Une créature sortante va disparaitre du système : on souhaite la supprimer du registre de la créature spécifiée
      * Ceci va supprimer certains effets de la créature spécifiée : ceux qui ont pour source la créature sortante.
