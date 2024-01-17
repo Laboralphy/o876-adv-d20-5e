@@ -22,6 +22,7 @@ module.exports = class SpellCast {
      * @param power {number} nombre de niveau de slot supplémentaire
      * @param hostiles {Creature[]} liste des créatures hostiles présente aux alentours
      * @param friends {Creature[]} liste des créatures amies présente aux alentours
+     * @param extraTargets {Creature[]} davantage de cibles
      * @param cheat {boolean} si TRUE alors, on n'a pas besoin d'avoir le sort mémorisé, et on ne consomme pas le slot.
      */
     constructor ({
@@ -31,6 +32,7 @@ module.exports = class SpellCast {
         power = 0,
         hostiles = [],
         friends = [],
+        extraTargets = [],
         cheat = false
     }) {
         this._caster = caster
@@ -39,6 +41,10 @@ module.exports = class SpellCast {
         this._power = power
         this._hostiles = hostiles.filter(f => f !== target)
         this._friends = friends.filter(f => f !== target)
+        if (!this._friends.includes(this._caster)) {
+            this._friends.unshift(this._caster)
+        }
+        this._extraTargets = extraTargets.slice(0)
         this._spelldb = Creature.AssetManager.data['data-ddmagic-spell-database']
         this._spellMark = null
         this._effects = []
@@ -87,6 +93,10 @@ module.exports = class SpellCast {
 
     get friends () {
         return this._friends
+    }
+
+    get extraTargets () {
+        return this._extraTargets
     }
 
     /**

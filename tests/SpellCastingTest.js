@@ -317,3 +317,57 @@ describe('remove-curse', function () {
         expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toBeNull()
     })
 })
+
+
+describe('invisibility', function () {
+    it ('target should not be visible when casting invisibility', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oHiddenOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oAggressiveOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        oAggressiveOne.setTarget(oHiddenOne)
+        const v1 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v1.detectable.target).toBeTrue()
+        expect(v1.detectedBy.target).toBeTrue()
+
+        Creature.AssetManager.scripts['ddmagic-cast-spell']({
+            spell: 'invisibility',
+            caster: oWizard,
+            friends: [oHiddenOne],
+            target: oHiddenOne,
+            cheat: true
+        })
+
+        expect(oHiddenOne.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+
+        const v2 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v2.detectable.target).toBeFalse()
+        expect(v2.detectedBy.target).toBeTrue()
+    })
+
+    it ('', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oHiddenOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oAggressiveOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        oAggressiveOne.setTarget(oHiddenOne)
+        const v1 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v1.detectable.target).toBeTrue()
+        expect(v1.detectedBy.target).toBeTrue()
+
+        Creature.AssetManager.scripts['ddmagic-cast-spell']({
+            spell: 'invisibility',
+            caster: oWizard,
+            friends: [oHiddenOne],
+            target: oHiddenOne,
+            cheat: true
+        })
+
+        expect(oHiddenOne.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+
+        const v2 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v2.detectable.target).toBeFalse()
+        expect(v2.detectedBy.target).toBeTrue()
+    })
+
+})

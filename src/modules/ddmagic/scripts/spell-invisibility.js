@@ -16,12 +16,11 @@ function applyInvisibilityTo (target, oSpellCast) {
 
 module.exports = oSpellCast => {
     const nAdditionnalTargets = oSpellCast.power
-    applyInvisibilityTo(oSpellCast.target)
+    applyInvisibilityTo(oSpellCast.target, oSpellCast)
     oSpellCast
-        .friends
+        .extraTargets
         .slice(0, nAdditionnalTargets)
         .forEach(t => {
-            applyInvisibilityTo(oSpellCast.target)
+            applyInvisibilityTo(t, oSpellCast)
         })
-    oSpellCast.concentrate()
 }
