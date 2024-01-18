@@ -25,6 +25,7 @@ module.exports = (state, getters) => {
     const ac = getters.getAggressorConditions
     const tc = getters.getTargetConditions
     const c = getters.getConditions
+    console.log('need update getEntityVisibility')
     return {
         detectable: {
             target: canSee(c, tc),          // true : you can see your target ; false : you cannot see your target

@@ -244,7 +244,6 @@ module.exports = class SpellCast {
         const oEffect = EffectProcessor.createEffect(sEffect, ...args)
         oEffect.data.spellmark = this.spellMark
         this.empowerEvocationDamageEffect(oEffect)
-        this._effects.push(oEffect)
         return oEffect
     }
 
@@ -256,7 +255,8 @@ module.exports = class SpellCast {
      */
     applyEffectToTarget (oEffect, duration = 0, target = null) {
         const oTarget = target || this.target
-        oTarget.applyEffect(oEffect, duration, this.caster)
+        const oAppliedEffect = oTarget.applyEffect(oEffect, duration, this.caster)
+        this._effects.push(oAppliedEffect)
     }
 
     /**

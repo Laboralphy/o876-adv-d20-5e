@@ -7,6 +7,7 @@ const CONSTS = require('../../../consts')
  * @returns {Set<string>}
  */
 module.exports = (state, getters) => {
+    console.log('update getter getConditions')
     return new Set(Object
         .entries(getters.getConditionSources)
         .filter(([key, value]) => value.size > 0)
