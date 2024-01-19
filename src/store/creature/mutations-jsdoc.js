@@ -11,8 +11,8 @@
  * @property clearTarget {function}
  * @property damage {function({ amount: number })}
  * @property decrementEffectDuration {function({ effect: D20Effect, value: number })}
- * @property dispellEffect {function({ effect })}
- * @property dispellEffectFromCreature {function({ creature })}
+ * @property dispelEffect {function({ effect })}
+ * @property dispelEffectFromCreature {function({ creature })}
  * @property equipItem {function({ item: object, slot: string })}
  * @property heal {function({ amount })}
  * @property importCreatureState {function({ state })}

@@ -17,21 +17,21 @@ function create (effects) {
 }
 
 function attacked ({
-    processor, effect, target, outcome
+    effect, target, outcome
 }) {
     if (outcome.damages.amount > 0) {
         const dc = Math.max(10, outcome.damages.amount >> 1)
         const oCreature = target
         const st = oCreature.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [], dc, oCreature)
         if (!st.success) {
-            processor.dispellEffect(effect)
+            oCreature.store.mutations.dispelEffect(effect)
         }
     }
 }
 
-function dispose ({ processor, effect, target: oCreature }) {
+function dispose ({ effect, target: oCreature }) {
     effect.data.effects.forEach(eff => {
-        processor.dispelEffect(eff)
+        oCreature.store.mutations.dispelEffect(eff)
     })
 }
 

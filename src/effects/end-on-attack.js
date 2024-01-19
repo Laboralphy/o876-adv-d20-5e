@@ -8,12 +8,12 @@ function create (oEffectToBreak) {
     return oEffect
 }
 
-function attack ({ processor, effect, target }) {
+function attack ({ effect, target }) {
     const oEffectToBreak = getEffectToBreak(effect, target)
     if (oEffectToBreak) {
-        processor.dispelEffect(oEffectToBreak)
+        target.store.mutations.dispelEffect(oEffectToBreak)
     }
-    processor.dispelEffect(effect)
+    target.store.mutations.dispelEffect(effect)
 }
 
 function getEffectToBreak (effect) {

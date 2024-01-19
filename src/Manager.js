@@ -82,7 +82,6 @@ class Manager {
                     })
                 }
             })
-
     }
 
     /**
@@ -111,7 +110,7 @@ class Manager {
     }
 
     /**
-     * Sauvegarde des donnée d'une créature en vue d'une ré-importation ultérieure
+     * Sauvegarde des données d'une créature en vue d'une ré-importation ultérieure
      * @param oCreature
      * @returns {*}
      */

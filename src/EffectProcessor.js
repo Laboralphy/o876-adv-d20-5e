@@ -7,6 +7,11 @@ const CONSTS = require('./consts')
  */
 class EffectProcessor {
     constructor () {
+        /**
+         * Ce registre sert à retrouver la référence de la creature source d'un effet
+         * @type {Object<string, Creature>}
+         * @private
+         */
         this._creatures = {}
         this._events = new Events()
     }
@@ -102,10 +107,6 @@ class EffectProcessor {
         return aDeadEffects
     }
 
-    dispelEffect (oEffect) {
-        oEffect.duration = 0
-    }
-
     /**
      * Une créature sortante va disparaitre du système : on souhaite la supprimer du registre de la créature spécifiée
      * Ceci va supprimer certains effets de la créature spécifiée : ceux qui ont pour source la créature sortante.
@@ -127,11 +128,19 @@ class EffectProcessor {
     }
 
     /**
-     * Supprime du registre de la créature spécifiée, les creatures qui ne font plus effet sur elle
-     * @param oCreature {Creature} Créature dont on veut faire un vaccuum sur les effets
+     * La créature C spécifiée en paramètre peut subir des effets venant d'autres créatures influentes.
+     * On garde trace de ces créatures influentes dans un registre mais ces traces sont temporaire, le registre
+     * n'a pas vocation à garder trace de toutes les créatures du jeu.
+     * Lorsque des effets se dissipent, on vérifie dans le registre quelles sont les créatures qui n'ont plus aucune
+     * influence sur C, c'est-à-dire celles qui ne sont plus source d'aucun effet appliqué à C.
+     * Ces créatures n'ayant plus d'influence sont retirées du registre par cette fonction.
+     * @param oCreature {Creature}
      */
     flushCreatureRegistry (oCreature) {
+        // ensemble des créatures
+        // Ce Set permettra d'obtenir la liste des créatures à virer (par différence)
         const aCreatureToDelete = new Set(Object.keys(this._creatures))
+        // On se supprime soi-même du Set
         aCreatureToDelete.delete(oCreature.id)
         oCreature
             .store
@@ -139,8 +148,10 @@ class EffectProcessor {
             .getEffects
             .filter(eff => eff.duration > 0)
             .forEach(eff => {
+                // on supprime du Set toute créature étant la source d'au moin un effet sur C
                 aCreatureToDelete.delete(eff.source)
             })
+        // On déréférence toutes les crature qui restent dans le Set
         aCreatureToDelete.forEach(id => {
             this.unrefCreature(this._creatures[id])
         })
@@ -148,7 +159,7 @@ class EffectProcessor {
 
     /**
      *
-     * @param oEffect
+     * @param oEffect {D20Effect}
      * @param target {Creature}
      * @param duration {number}
      * @param source {Creature}
