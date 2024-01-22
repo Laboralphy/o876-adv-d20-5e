@@ -171,9 +171,15 @@ describe('true-strike', function () {
         })
 
         const aAdvEffects = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_ADVANTAGE)
+        const aEOAEffects = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_END_ON_ATTACK)
         const aConEffects = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
         expect(aAdvEffects.length).toBe(1)
+        expect(aEOAEffects.length).toBe(1) // end on attack
         expect(aConEffects.length).toBe(1)
+        const sEffectId = aAdvEffects[0].id
+        const sEffectEOAId = aEOAEffects[0].id
+        expect(aConEffects[0].data.spellmark.spell).toBe('true-strike')
+        const sConspellId = aConEffects[0].data.spellmark.id
 
         pCast({
             caster: oWizard,
@@ -182,9 +188,14 @@ describe('true-strike', function () {
         })
 
         const aAdvEffects2 = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_ADVANTAGE)
+        const aEOAEffects2 = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_END_ON_ATTACK)
         const aConEffects2 = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
-        expect(aAdvEffects2.length).toBe(2) // adv + eoa
-        expect(aConEffects2.length).toBe(1)
+        expect(aAdvEffects2.length).toBe(1) // adv
+        expect(aEOAEffects2.length).toBe(1) // end on attack
+        expect(aConEffects2.length).toBe(1) // end on attack
+        expect(aAdvEffects2[0].id).not.toBe(sEffectId)
+        expect(aEOAEffects2[0].id).not.toBe(sEffectEOAId)
+        expect(aConEffects2[0].data.spellmark.id).not.toBe(sConspellId)
     })
 })
 
@@ -345,11 +356,16 @@ describe('invisibility', function () {
         expect(v2.detectedBy.target).toBeTrue()
     })
 
-    fit('hiddenOne should become visible again when concentration is broken or changed', function () {
+    it('hiddenOne should become visible again when concentration is broken or changed', function () {
         const { manager, evolution } = buildStuff()
         const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
         const oHidden1 = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
         const oHidden2 = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oAggressiveOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        oAggressiveOne.setTarget(oHidden1)
+        const v0 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v0.detectable.target).toBeTrue()
+        expect(v0.detectedBy.target).toBeTrue()
 
         Creature.AssetManager.scripts['ddmagic-cast-spell']({
             spell: 'invisibility',
@@ -368,6 +384,9 @@ describe('invisibility', function () {
         expect(eInvis0.duration).toBe(600)
 
         expect(oHidden1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        const v1 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v1.detectable.target).toBeFalse()
+        expect(v1.detectedBy.target).toBeTrue()
 
         Creature.AssetManager.scripts['ddmagic-cast-spell']({
             spell: 'invisibility',
@@ -386,5 +405,8 @@ describe('invisibility', function () {
         expect(eInvis0).toBeDefined()
         expect(eInvis0.duration).toBe(0)
         expect(oHidden1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
+        const v2 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v2.detectable.target).toBeTrue()
+        expect(v2.detectedBy.target).toBeTrue()
     })
 })

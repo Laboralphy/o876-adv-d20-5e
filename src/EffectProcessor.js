@@ -13,6 +13,17 @@ class EffectProcessor {
          * @private
          */
         this._creatures = {}
+        /**
+         *
+         * @type {{duration: number, effects: { target: Creature, effect: D20Effect }[], active: boolean, data:any }}
+         * @private
+         */
+        this._concentration = {
+            effects: [],
+            duration: 0,
+            active: false,
+            data: {}
+        }
         this._events = new Events()
     }
 
@@ -22,6 +33,14 @@ class EffectProcessor {
 
     get creatures () {
         return this._creatures
+    }
+
+    /**
+     *
+     * @returns {{duration: number, effects: {target: Creature, effect: D20Effect}[], active: boolean}}
+     */
+    get concentration () {
+        return this._concentration
     }
 
     /**
@@ -38,10 +57,6 @@ class EffectProcessor {
         if (oCreature) {
             delete this._creatures[oCreature.id]
         }
-    }
-
-    getCreatureFromId (id) {
-
     }
 
     static createEffect (sEffect, ...aArgs) {
@@ -77,6 +92,7 @@ class EffectProcessor {
         this.invokeEffectMethod(oEffect, 'mutate', oCreature, oSource)
     }
 
+
     getEffectSource (oEffect) {
         return oEffect.source
             ? this._creatures[oEffect.source]
@@ -91,6 +107,7 @@ class EffectProcessor {
             this.runEffect(eff, oCreature, oSource)
             oCreature.store.mutations.decrementEffectDuration({ effect: eff })
         })
+        this.updateConcentration(oCreature)
         const deff = this.removeDeadEffects(oCreature)
         if (deff.length > 0) {
             this.flushCreatureRegistry(oCreature)
@@ -133,7 +150,7 @@ class EffectProcessor {
 
     /**
      * La créature C spécifiée en paramètre peut subir des effets venant d'autres créatures influentes.
-     * On garde trace de ces créatures influentes dans un registre mais ces traces sont temporaire, le registre
+     * On garde trace de ces créatures influentes dans un registre, mais ces traces sont temporaires, le registre
      * n'a pas vocation à garder trace de toutes les créatures du jeu.
      * Lorsque des effets se dissipent, on vérifie dans le registre quelles sont les créatures qui n'ont plus aucune
      * influence sur C, c'est-à-dire celles qui ne sont plus source d'aucun effet appliqué à C.
@@ -146,25 +163,71 @@ class EffectProcessor {
         const aCreatureToDelete = new Set(Object.keys(this._creatures))
         // On se supprime soi-même du Set
         aCreatureToDelete.delete(oCreature.id)
-        const aAllEffects =         oCreature
-            .store
-            .getters
-            .getEffects
-        const aInfluentCreatures = aAllEffects.map(eff => eff.source)
-        const aConcentratedCreatures = aAllEffects
-            .filter(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
-            .map(eff => eff.data.effects.map(eff2 => eff2.target))
-            .flatten()
+        // On obtient la liste les creatures qui sont la source d'au moins un effet
+        const aInfluentCreatures = oCreature.store.getters.getEffectSources
+        // On obtient la liste les creatures qui sont la cible d'un effet concentré
         aInfluentCreatures
-            .concat(aConcentratedCreatures)
-            .forEach(eff => {
-                // on supprime du Set toute créature étant la source d'au moin un effet sur C
-                aCreatureToDelete.delete(eff.source)
+            .forEach(id => {
+                // On vire de la liste les créature qui ne doivent pas être flushées,
+                // C'est-à-dire les créatures éléments de l'union des deux listes.
+                aCreatureToDelete.delete(id)
             })
-        // On déréférence toutes les crature qui restent dans le Set
+        // On déréférence toutes les cratures qui restent dans le Set
         aCreatureToDelete.forEach(id => {
             this.unrefCreature(this._creatures[id])
         })
+    }
+
+    // ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ******
+    // ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ******
+    // ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ******
+    // ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ******
+    // ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ******
+    // ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ****** CONCENTRATION ******
+
+    /**
+     * Applique un effet concentré sur une créature
+     * @param oEffect {D20Effect}
+     * @param oSource {Creature}
+     * @param oTarget {Creature}
+     * @param duration {number}
+     */
+    applyConcentrationEffect(oEffect, duration, oTarget, oSource = null) {
+        oEffect.exportable = false
+        const oAppliedEffect = oTarget.applyEffect(oEffect, duration, oSource)
+        const c = this._concentration
+        c.active = true
+        c.duration = Math.max(duration, this._concentration.duration)
+        c.effects.push({
+            target: oTarget,
+            effect: oAppliedEffect
+        })
+        return oAppliedEffect
+    }
+
+    /**
+     * La concentration est brisée : supprimer les effets associés
+     */
+    breakConcentration (oCreature) {
+        const c = this._concentration
+        if (c.active) {
+            c.effects.forEach(({ target, effect }) => {
+                target.store.mutations.dispelEffect({ effect })
+            })
+            c.active = false
+            c.duration = 0
+            c.effects = []
+        }
+    }
+
+    updateConcentration (oCreature) {
+        const c = this._concentration
+        if (c.active) {
+            --c.duration
+            if (c.duration <= 0) {
+                this.breakConcentration(oCreature)
+            }
+        }
     }
 
     /**

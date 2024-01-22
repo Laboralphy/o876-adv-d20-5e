@@ -103,6 +103,10 @@ class Creature {
         this._dice = value
     }
 
+    /**
+     *
+     * @returns {EffectProcessor}
+     */
     get effectProcessor () {
         return this._effectProcessor
     }

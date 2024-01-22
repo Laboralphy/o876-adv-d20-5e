@@ -26,6 +26,7 @@
  * @property getBreakableEffects {D20Effect[]}
  * @property getCarryingCapacity {number}
  * @property getClassList {string[]}
+ * @property getConcentrationTargets {string[]}
  * @property getConditionImmunities {Set<string>}
  * @property getConditionSources {D20ConditionBooleanRegistry}
  * @property getConditions {Set<string>}
@@ -79,7 +80,7 @@
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getSuitableOffensiveSlot {string}
- * @property getTarget {{ condition: Object.<string, boolean>}}
+ * @property getTarget {*|null}
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property getTargetDistance {number}

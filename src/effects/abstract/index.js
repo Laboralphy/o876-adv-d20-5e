@@ -12,6 +12,7 @@ const CONSTS = require('../../consts')
  * @property subtype {string} sous type de l'effet
  * @property unicity {boolean} l'effet est unique. Lorsqu'on l'applique, il
  * @property mutable {boolean} vrai si l'effet dispose d'une méthode mutable
+ * @property exportable {boolean} si vrai alors l'effet n'est jamais sauvegardé
  *
  *
  * EFFECT_SUBTYPE_MAGICAL : L'effet peut être dissipé
