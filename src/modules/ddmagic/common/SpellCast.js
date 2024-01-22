@@ -440,10 +440,14 @@ module.exports = class SpellCast {
                     spell: oPreviousConcentrationEffect.data.spellmark.spell,
                     reason: 'CONCENTRATION_CHANGE'
                 })
-                this.caster.store.mutations.dispelEffect(oPreviousConcentrationEffect)
+                this.caster.store.mutations.dispelEffect({effect: oPreviousConcentrationEffect})
             }
             const aEffectCopy = this._effects.filter(eff => eff.type !== CONSTS.EFFECT_CONCENTRATION)
             const duration = aEffectCopy.reduce((prev, curr) => Math.max(prev, curr.duration), 0)
+            aEffectCopy.forEach(eff => {
+                // trouver le moyen de ref les creatures touché par les effet de concentration
+                // this.caster.effectProcessor.refCreature()
+            })
             const eConcentrationGroup = this
                 .createSpellEffect(
                     CONSTS.EFFECT_CONCENTRATION,

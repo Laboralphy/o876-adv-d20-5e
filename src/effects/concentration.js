@@ -24,14 +24,15 @@ function attacked ({
         const oCreature = target
         const st = oCreature.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [], dc, oCreature)
         if (!st.success) {
-            oCreature.store.mutations.dispelEffect(effect)
+            oCreature.store.mutations.dispelEffect({ effect })
         }
     }
 }
 
-function dispose ({ effect, target: oCreature }) {
+function dispose ({ processor, effect, target: oCreature }) {
     effect.data.effects.forEach(eff => {
-        oCreature.store.mutations.dispelEffect(eff)
+        const oTarget = processor.creatures[eff.target]
+        oTarget.store.mutations.dispelEffect({ effect: eff })
     })
 }
 

@@ -116,6 +116,7 @@ class Creature {
     }
 
     set id (value) {
+        this._events.emit('change-id', { creature: this, newId: value, oldId: this._id })
         this._id = value
         this.store.mutations.setId({ value })
     }
@@ -315,11 +316,13 @@ class Creature {
  */
 
     clearTarget () {
-        if (this._target.creature && this._target.handler) {
-            this._target.creature.store.events.off('mutation', this._target.handler)
+        if (this._target.creature) {
+            if (this._target.handler) {
+                this._target.creature.store.events.off('mutation', this._target.handler)
+                this._target.handler = null
+            }
             this._target.creature.endAggression(this)
             this._target.creature = null
-            this._target.handler = null
             this.store.mutations.clearTarget()
         }
     }
@@ -413,10 +416,12 @@ class Creature {
 
 
     clearAggressor () {
-        if (this._aggressor.creature && this._aggressor.handler) {
-            this._aggressor.creature.store.events.off('mutation', this._aggressor.handler)
+        if (this._aggressor.creature) {
+            if (this._aggressor.handler) {
+                this._aggressor.creature.store.events.off('mutation', this._aggressor.handler)
+                this._aggressor.handler = null
+            }
             this._aggressor.creature = null
-            this._aggressor.handler = null
             this.store.mutations.clearAggressor()
         }
     }
@@ -471,6 +476,21 @@ class Creature {
         if (this.getAggressor() === oCreature) {
             this.clearAggressor()
         }
+    }
+
+    /**
+     * La créature spécifiée est supprimée du système, retire toute trace de cette instance dans
+     * le store ou les registres.
+     * @param oCreature {Creature}
+     */
+    removeCreatureInfluence (oCreature) {
+        if (this.getTarget() === oCreature) {
+            this.clearTarget()
+        }
+        if (this.getAggressor() === oCreature) {
+            this.clearAggressor()
+        }
+        this.effectProcessor.removeCreatureFromRegistry(this, oCreature)
     }
 
     /*

@@ -35,7 +35,7 @@ class EmbeddedEffect {
      * Termine l'effet imbriqué
      */
     dispose () {
-        this._target.store.mutations.dispelEffect(this._effect)
+        this._target.store.mutations.dispelEffect({ effect: this._effect })
     }
 }
 

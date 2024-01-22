@@ -1,6 +1,6 @@
 /**
  *
  * @param state
- * @returns {{ condition: Object.<string, boolean>}}
+ * @returns {*|null}
  */
 module.exports = state => state.target.active && !!state.target.id ? state.target : null

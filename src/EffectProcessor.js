@@ -40,6 +40,10 @@ class EffectProcessor {
         }
     }
 
+    getCreatureFromId (id) {
+
+    }
+
     static createEffect (sEffect, ...aArgs) {
         const EffectBuilder = Effects[sEffect]
         const oEffect = Effects[sEffect].create(...aArgs)
@@ -121,7 +125,7 @@ class EffectProcessor {
             .getEffects
             .filter(eff => eff.duration > 0 && eff.source === idSource)
         aEffects.forEach(eff => {
-            eff.duration = 0
+            oCreature.store.mutations.dispelEffect({ effect: eff })
         })
         this.removeDeadEffects(oCreature)
         this.flushCreatureRegistry(oCreature)
@@ -142,11 +146,17 @@ class EffectProcessor {
         const aCreatureToDelete = new Set(Object.keys(this._creatures))
         // On se supprime soi-même du Set
         aCreatureToDelete.delete(oCreature.id)
-        oCreature
+        const aAllEffects =         oCreature
             .store
             .getters
             .getEffects
-            .filter(eff => eff.duration > 0)
+        const aInfluentCreatures = aAllEffects.map(eff => eff.source)
+        const aConcentratedCreatures = aAllEffects
+            .filter(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
+            .map(eff => eff.data.effects.map(eff2 => eff2.target))
+            .flatten()
+        aInfluentCreatures
+            .concat(aConcentratedCreatures)
             .forEach(eff => {
                 // on supprime du Set toute créature étant la source d'au moin un effet sur C
                 aCreatureToDelete.delete(eff.source)

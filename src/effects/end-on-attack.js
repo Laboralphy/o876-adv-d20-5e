@@ -11,9 +11,9 @@ function create (oEffectToBreak) {
 function attack ({ effect, target }) {
     const oEffectToBreak = getEffectToBreak(effect, target)
     if (oEffectToBreak) {
-        target.store.mutations.dispelEffect(oEffectToBreak)
+        target.store.mutations.dispelEffect({ effect: oEffectToBreak })
     }
-    target.store.mutations.dispelEffect(effect)
+    target.store.mutations.dispelEffect({ effect })
 }
 
 function getEffectToBreak (effect) {
