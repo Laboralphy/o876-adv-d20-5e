@@ -2,22 +2,25 @@ const createEffect = require('./abstract')
 const CONSTS = require('../consts')
 
 function create (oEffectToBreak) {
-    return createEffect(CONSTS.EFFECT_END_ON_ATTACK, 0, { effect: oEffectToBreak })
+    oEffectToBreak.exportable = false
+    const oEffect = createEffect(CONSTS.EFFECT_END_ON_ATTACK, 0, { effect: oEffectToBreak })
+    oEffect.exportable = false
+    return oEffect
 }
 
-function attack ({ effect }) {
-    effect.duration = 0
-    effect.data.effect.duration = 0
-}
-
-function mutate ({ effect }) {
-    if (effect.data.effect.duration <= 0) {
-        effect.duration = 0
+function attack ({ effect, target }) {
+    const oEffectToBreak = getEffectToBreak(effect, target)
+    if (oEffectToBreak) {
+        target.store.mutations.dispelEffect({ effect: oEffectToBreak })
     }
+    target.store.mutations.dispelEffect({ effect })
+}
+
+function getEffectToBreak (effect) {
+    return effect.data.effect
 }
 
 module.exports = {
     create,
-    attack,
-    mutate
+    attack
 }

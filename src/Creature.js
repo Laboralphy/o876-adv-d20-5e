@@ -12,78 +12,6 @@ const { deepClone } = require("@laboralphy/object-fusion");
 
 
 /**
- * @typedef D20AbilityNumberRegistry {object}
- * @property ABILITY_STRENGTH {number}
- * @property ABILITY_DEXTERITY {number}
- * @property ABILITY_CONSTITUTION {number}
- * @property ABILITY_INTELLIGENCE {number}
- * @property ABILITY_WISDOM {number}
- * @property ABILITY_CHARISMA {number}
- */
-
-/**
- * @typedef D20RuleValue {object}
- * @property rules {object.<string, boolean>}
- * @property value {boolean}
- *
- * @typedef D20RuleValueRegistry {object}
- * @property ABILITY_STRENGTH {D20RuleValue}
- * @property ABILITY_DEXTERITY {D20RuleValue}
- * @property ABILITY_CONSTITUTION {D20RuleValue}
- * @property ABILITY_INTELLIGENCE {D20RuleValue}
- * @property ABILITY_WISDOM {D20RuleValue}
- * @property ABILITY_CHARISMA {D20RuleValue}
- *
- * @typedef D20AdvantagesOrDisadvantages {object}
- * @property ROLL_TYPE_ATTACK {D20RuleValueRegistry}
- * @property ROLL_TYPE_SAVE {D20RuleValueRegistry}
- * @property ROLL_TYPE_CHECK {D20RuleValueRegistry}
- *
- * @typedef D20ConditionBooleanRegistry {{[p: string]: boolean}}
- *
- * @typedef D20ArmorData {object}
- * @property proficiency {string}
- * @property ac {number}
- * @property maxDexterityModifier {false|number}
- * @property minStrengthRequired {number}
- * @property disadvantageStealth {boolean}
- * @property weight {number}
- * @property equipmentSlots {string}
- *
- * @typedef D20WeaponData {object}
- * @property damage {string}
- * @property damageType {string}
- * @property versatileDamage {string}
- * @property attributes {string[]}
- * @property proficiency {string}
- * @property weight {number}
- * @property equipmentSlots {string}
- *
- * @typedef D20Item {object}
- * @property ref {string} blueprint reference
- * @property entityType {string}
- * @property itemType {string}
- * @property [armorType] {string}
- * @property [weaponType] {string}
- * @property [shieldType] {string}
- * @property [ammoType] {string}
- * @property properties {[]}
- * @property data {D20ArmorData|D20WeaponData|D20AmmoData|D20ShieldData}
- * @property equipmentSlots {string[]}
- * @property material {string}
- *
- * @property D20AmmoData {object}
- * @property weight {number}
- * @property weaponTypes {string[]}
- * @property equipmentSlots {string}
- *
- * @property D20ShieldData {object}
- * @property weight {number}
- * @property equipmentSlots {string}
- */
-
-
-/**
  * @class Creature
  */
 class Creature {
@@ -175,6 +103,10 @@ class Creature {
         this._dice = value
     }
 
+    /**
+     *
+     * @returns {EffectProcessor}
+     */
     get effectProcessor () {
         return this._effectProcessor
     }
@@ -188,6 +120,7 @@ class Creature {
     }
 
     set id (value) {
+        this._events.emit('change-id', { creature: this, newId: value, oldId: this._id })
         this._id = value
         this.store.mutations.setId({ value })
     }
@@ -387,23 +320,24 @@ class Creature {
  */
 
     clearTarget () {
-        if (this._target.creature && this._target.handler) {
-            this._target.creature.store.events.off('mutation', this._target.handler)
+        if (this._target.creature) {
+            if (this._target.handler) {
+                this._target.creature.store.events.off('mutation', this._target.handler)
+                this._target.handler = null
+            }
             this._target.creature.endAggression(this)
             this._target.creature = null
-            this._target.handler = null
             this.store.mutations.clearTarget()
         }
     }
 
     updateTarget (name) {
         switch (name) {
-            case 'removeEffect':
+            case 'dispelEffect':
             case 'addEffect': {
-                this.store.mutations.updateTargetConditions({
-                    conditions: this._target.creature.store.getters.getConditionSources,
-                    effects: this._target.creature.store.getters.getEffectList
-                })
+                const conditions = this._target.creature.store.getters.getConditionSources
+                const effects = this._target.creature.store.getters.getEffectList
+                this.store.mutations.updateTargetConditions({ conditions, effects })
                 break
             }
         }
@@ -485,22 +419,23 @@ class Creature {
 
 
     clearAggressor () {
-        if (this._aggressor.creature && this._aggressor.handler) {
-            this._aggressor.creature.store.events.off('mutation', this._aggressor.handler)
+        if (this._aggressor.creature) {
+            if (this._aggressor.handler) {
+                this._aggressor.creature.store.events.off('mutation', this._aggressor.handler)
+                this._aggressor.handler = null
+            }
             this._aggressor.creature = null
-            this._aggressor.handler = null
             this.store.mutations.clearAggressor()
         }
     }
 
     updateAggressor (name) {
         switch (name) {
-            case 'removeEffect':
+            case 'dispelEffect':
             case 'addEffect': {
-                this.store.mutations.updateAggressorConditions({
-                    conditions: this._aggressor.creature.store.getters.getConditionSources,
-                    effects: this._aggressor.creature.store.getters.getEffectList
-                })
+                const conditions = this._aggressor.creature.store.getters.getConditionSources
+                const effects = this._aggressor.creature.store.getters.getEffectList
+                this.store.mutations.updateAggressorConditions({ conditions, effects })
                 break
             }
         }
@@ -543,6 +478,21 @@ class Creature {
         if (this.getAggressor() === oCreature) {
             this.clearAggressor()
         }
+    }
+
+    /**
+     * La créature spécifiée est supprimée du système, retire toute trace de cette instance dans
+     * le store ou les registres.
+     * @param oCreature {Creature}
+     */
+    removeCreatureInfluence (oCreature) {
+        if (this.getTarget() === oCreature) {
+            this.clearTarget()
+        }
+        if (this.getAggressor() === oCreature) {
+            this.clearAggressor()
+        }
+        this.effectProcessor.removeCreatureFromRegistry(this, oCreature)
     }
 
     /*

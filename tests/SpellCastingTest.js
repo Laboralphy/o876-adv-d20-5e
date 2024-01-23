@@ -171,9 +171,15 @@ describe('true-strike', function () {
         })
 
         const aAdvEffects = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_ADVANTAGE)
+        const aEOAEffects = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_END_ON_ATTACK)
         const aConEffects = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
         expect(aAdvEffects.length).toBe(1)
+        expect(aEOAEffects.length).toBe(1) // end on attack
         expect(aConEffects.length).toBe(1)
+        const sEffectId = aAdvEffects[0].id
+        const sEffectEOAId = aEOAEffects[0].id
+        expect(aConEffects[0].data.spellmark.spell).toBe('true-strike')
+        const sConspellId = aConEffects[0].data.spellmark.id
 
         pCast({
             caster: oWizard,
@@ -181,12 +187,15 @@ describe('true-strike', function () {
             cheat: true
         })
 
-        oWizard.processEffects()
-
         const aAdvEffects2 = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_ADVANTAGE)
+        const aEOAEffects2 = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_END_ON_ATTACK)
         const aConEffects2 = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
-        expect(aAdvEffects2.length).toBe(1)
-        expect(aConEffects2.length).toBe(1)
+        expect(aAdvEffects2.length).toBe(1) // adv
+        expect(aEOAEffects2.length).toBe(1) // end on attack
+        expect(aConEffects2.length).toBe(1) // end on attack
+        expect(aAdvEffects2[0].id).not.toBe(sEffectId)
+        expect(aEOAEffects2[0].id).not.toBe(sEffectEOAId)
+        expect(aConEffects2[0].data.spellmark.id).not.toBe(sConspellId)
     })
 })
 
@@ -317,5 +326,94 @@ describe('remove-curse', function () {
         })
 
         expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toBeNull()
+    })
+})
+
+
+describe('invisibility', function () {
+    it ('target should not be visible when casting invisibility', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oHiddenOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oAggressiveOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        oAggressiveOne.setTarget(oHiddenOne)
+        const v1 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v1.detectable.target).toBeTrue()
+        expect(v1.detectedBy.target).toBeTrue()
+
+        Creature.AssetManager.scripts['ddmagic-cast-spell']({
+            spell: 'invisibility',
+            caster: oWizard,
+            friends: [oHiddenOne],
+            target: oHiddenOne,
+            cheat: true
+        })
+
+        expect(oHiddenOne.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+
+        const v2 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v2.detectable.target).toBeFalse()
+        expect(v2.detectedBy.target).toBeTrue()
+    })
+
+    it('hiddenOne should become visible again when concentration is broken or changed', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oHidden1 = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oHidden2 = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oAggressiveOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        oAggressiveOne.setTarget(oHidden1)
+        oWizard.name = 'wizard'
+        oHidden1.name = 'hidden 1'
+        oHidden2.name = 'hidden 2'
+        oAggressiveOne.name = 'Aggressor'
+        const v0 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v0.detectable.target).toBeTrue()
+        expect(v0.detectedBy.target).toBeTrue()
+
+        Creature.AssetManager.scripts['ddmagic-cast-spell']({
+            spell: 'invisibility',
+            caster: oWizard,
+            friends: [oHidden1, oHidden2],
+            target: oHidden1,
+            cheat: true
+        })
+        const eInvis0 = oHidden1
+            .store
+            .getters
+            .getEffects
+            .find(eff =>eff.type === CONSTS.EFFECT_INVISIBILITY)
+        // On retrouve l'effet qui a été pushé dans le registre d'effet du SpellCast
+        expect(eInvis0).toBeDefined()
+        expect(eInvis0.duration).toBe(600)
+
+        expect(oHidden1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        const v1 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v1.detectable.target).toBeFalse()
+        expect(v1.detectedBy.target).toBeTrue()
+
+        Creature.AssetManager.scripts['ddmagic-cast-spell']({
+            spell: 'invisibility',
+            caster: oWizard,
+            friends: [oHidden1, oHidden2],
+            target: oHidden2,
+            cheat: true
+        })
+
+        oWizard.processEffects()
+        oHidden1.processEffects()
+        oHidden2.processEffects()
+        oAggressiveOne.processEffects()
+
+        // j'ai beau faire, avec mon effet concentration, je ne pourrai jamais éteindre les
+        // effets stockés chez d'autres créatures.
+
+        expect(oHidden2.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(eInvis0).toBeDefined()
+        expect(eInvis0.duration).toBe(0)
+        expect(oHidden1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
+        const v2 = oAggressiveOne.store.getters.getEntityVisibility
+        expect(v2.detectable.target).toBeTrue()
+        expect(v2.detectedBy.target).toBeTrue()
     })
 })

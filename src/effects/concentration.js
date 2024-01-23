@@ -2,12 +2,13 @@ const createEffect = require('./abstract')
 const CONSTS = require('../consts')
 
 /**
- * Groups several effects into a concentration effect
- * @param effects {D20Effect[]}
+ * Cet effet sert à casser la concentration lorsqu'on est attaqué
  * @returns {D20Effect}
  */
-function create (effects) {
-    return createEffect(CONSTS.EFFECT_CONCENTRATION)
+function create () {
+    const eConcentration = createEffect(CONSTS.EFFECT_CONCENTRATION)
+    eConcentration.exportable = false
+    return eConcentration
 }
 
 function attacked ({
@@ -18,21 +19,18 @@ function attacked ({
         const oCreature = target
         const st = oCreature.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [], dc, oCreature)
         if (!st.success) {
-            effect.duration = 0
+            oCreature.store.mutations.dispelEffect({ effect })
+            oCreature.effectProcessor.breakConcentration()
+            target.events.emit('spellcast-concentration-end', {
+                caster: target,
+                spell: target.effectProcessor.concentration.data.spell,
+                reason: 'CONCENTRATION_BROKEN'
+            })
         }
     }
 }
 
-function dispose ({ effect, target: oCreature }) {
-    oCreature.store.getters.getEffects.forEach(eff => {
-        if (eff.data.spellmark.id === effect.data.spellmark.id) {
-            eff.duration = 0
-        }
-    })
-}
-
 module.exports = {
     create,
-    dispose,
     attacked
 }

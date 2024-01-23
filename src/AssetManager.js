@@ -162,13 +162,19 @@ class AssetManager {
     }
 
     get publicAssets () {
-        const filterData = f => {
+        /**
+         *
+         * @param f
+         * @param m {function}
+         * @returns {{}}
+         */
+        const filterData = (f, m = x => x) => {
             const o = {}
             Object
                 .entries(this.data)
                 .filter(([k]) => k.startsWith(f))
                 .forEach(([k, v]) => {
-                    o[k] = deepClone(v)
+                    o[k] = deepClone(m(v))
                 })
             return o
         }

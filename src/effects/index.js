@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 03/01/2024 03:12:48 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 23/01/2024, 11:12:53 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
@@ -25,7 +25,6 @@ module.exports = {
   [CONSTS.EFFECT_EXTRA_ATTACKS]: require('./extra-attacks'),
   [CONSTS.EFFECT_EXTRA_PROFICIENCY]: require('./extra-proficiency'),
   [CONSTS.EFFECT_GRIM_REAPER]: require('./grim-reaper'),
-  [CONSTS.EFFECT_GROUP]: require('./group'),
   [CONSTS.EFFECT_HEAL]: require('./heal'),
   [CONSTS.EFFECT_HP_BONUS_BLOCKER]: require('./hp-bonus-blocker'),
   [CONSTS.EFFECT_HP_BONUS]: require('./hp-bonus'),

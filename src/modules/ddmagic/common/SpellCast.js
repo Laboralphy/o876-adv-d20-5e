@@ -1,4 +1,4 @@
-const Creature = require("../../../Creature");
+const Creature = require('../../../Creature');
 const CONSTS = require("../../../consts");
 const EffectProcessor = require("../../../EffectProcessor");
 const SpellHelper = require("../../classic/common/spell-helper");
@@ -22,6 +22,7 @@ module.exports = class SpellCast {
      * @param power {number} nombre de niveau de slot supplémentaire
      * @param hostiles {Creature[]} liste des créatures hostiles présente aux alentours
      * @param friends {Creature[]} liste des créatures amies présente aux alentours
+     * @param extraTargets {Creature[]} davantage de cibles
      * @param cheat {boolean} si TRUE alors, on n'a pas besoin d'avoir le sort mémorisé, et on ne consomme pas le slot.
      */
     constructor ({
@@ -31,14 +32,24 @@ module.exports = class SpellCast {
         power = 0,
         hostiles = [],
         friends = [],
+        extraTargets = [],
         cheat = false
     }) {
+        /**
+         *
+         * @type {Creature}
+         * @private
+         */
         this._caster = caster
         this._target = target
         this._spell = spell
         this._power = power
         this._hostiles = hostiles.filter(f => f !== target)
         this._friends = friends.filter(f => f !== target)
+        if (!this._friends.includes(this._caster)) {
+            this._friends.unshift(this._caster)
+        }
+        this._extraTargets = extraTargets.slice(0)
         this._spelldb = Creature.AssetManager.data['data-ddmagic-spell-database']
         this._spellMark = null
         this._effects = []
@@ -87,6 +98,10 @@ module.exports = class SpellCast {
 
     get friends () {
         return this._friends
+    }
+
+    get extraTargets () {
+        return this._extraTargets
     }
 
     /**
@@ -230,11 +245,35 @@ module.exports = class SpellCast {
         }
     }
 
+    breakExistingConcentration () {
+        if (this.caster.effectProcessor.concentration.active) {
+            this.caster.events.emit('spellcast-concentration-end', {
+                caster: this.caster,
+                spell: this.caster.effectProcessor.concentration.data.spell,
+                reason: 'CONCENTRATION_CHANGE'
+            })
+            this.caster.effectProcessor.breakConcentration()
+        }
+    }
+
+    createConcentration () {
+        this.breakExistingConcentration()
+        if (this.spellData.concentration) {
+            const c = this.caster.effectProcessor.concentration
+            c.active = true
+            c.effects = []
+            c.data.spell = this.spellMark.spell
+            this.caster.events.emit('spellcast-concentration', {
+                caster: this.caster,
+                spell: this.spellMark.spell
+            })
+        }
+    }
+
     createSpellEffect (sEffect, ...args) {
         const oEffect = EffectProcessor.createEffect(sEffect, ...args)
         oEffect.data.spellmark = this.spellMark
         this.empowerEvocationDamageEffect(oEffect)
-        this._effects.push(oEffect)
         return oEffect
     }
 
@@ -246,7 +285,15 @@ module.exports = class SpellCast {
      */
     applyEffectToTarget (oEffect, duration = 0, target = null) {
         const oTarget = target || this.target
-        oTarget.applyEffect(oEffect, duration, this.caster)
+        const oSource = this.caster
+        let oAppliedEffect
+        if (this.spellData.concentration && duration > 0) {
+            oAppliedEffect = oSource.effectProcessor.applyConcentrationEffect(oEffect, duration, target, oSource)
+        } else {
+            oAppliedEffect = oTarget.applyEffect(oEffect, duration, this.caster)
+        }
+        this._effects.push(oAppliedEffect)
+        return oAppliedEffect
     }
 
     /**
@@ -339,10 +386,10 @@ module.exports = class SpellCast {
     getCheckTargetCompatibility () {
         switch (this.spellData.target) {
             case 'TARGET_TYPE_HOSTILE': {
-                return !!this.target && (this.hostiles.includes(this.target))
+                return !!this.target // TODO Check reputation
             }
             case 'TARGET_TYPE_FRIEND': {
-                return !!this.target && (this.friends.includes(this.target))
+                return !!this.target // TODO Check reputation
             }
             case 'TARGET_TYPE_SPECIAL': {
                 throw new Error('ERR_TARGET_TYPE_NOT_SUPPORTED_YET')
@@ -413,42 +460,6 @@ module.exports = class SpellCast {
     }
 
     /**
-     * Active la concentration du sort :
-     * Annule l'ancienne concentration
-     */
-    concentrate () {
-        if (this.spellData.concentration) {
-            const oPreviousConcentrationEffect = this
-                .caster
-                .store
-                .getters
-                .getEffects
-                .find(eff => eff.type === CONSTS.EFFECT_CONCENTRATION)
-            if (oPreviousConcentrationEffect) {
-                oPreviousConcentrationEffect.duration = 0
-                this.caster.events.emit('spellcast-concentration-end', {
-                    caster: this.caster,
-                    spell: oPreviousConcentrationEffect.data.spellmark.spell,
-                    reason: 'CONCENTRATION_CHANGE'
-                })
-            }
-            const duration = this
-                ._effects
-                .reduce((prev, curr) => Math.max(prev, curr.duration), 0)
-            const eConcentrationGroup = this
-                .createSpellEffect(
-                    CONSTS.EFFECT_CONCENTRATION,
-                    this._effects
-                )
-            this.caster.events.emit('spellcast-concentration', {
-                caster: this.caster,
-                spell: this.spellMark.spell
-            })
-            this.caster.applyEffect(eConcentrationGroup, duration)
-        }
-    }
-
-    /**
      * nom du script de sort
      * @returns {string}
      */
@@ -472,6 +483,7 @@ module.exports = class SpellCast {
     cast (parameters = undefined) {
         if (this.spellScript) {
             if (this.spellAvailability.usable) {
+                this.createConcentration()
                 if (!this.getCheckTargetCompatibility()) {
                     throw new Error('SPELLCAST_BAD_TARGET')
                 }
@@ -496,7 +508,16 @@ module.exports = class SpellCast {
                     this.consumeSpellSlot()
                 }
                 this.spellScript(this, parameters)
-                this.concentrate()
+                if (this.spellData.concentration) {
+                    const eConcentration = this.caster.applyEffect(
+                        this.createSpellEffect(CONSTS.EFFECT_CONCENTRATION),
+                        this.caster.effectProcessor.concentration.duration
+                    )
+                    this.caster.effectProcessor.concentration.effects.push({
+                        target: this.caster,
+                        effect: eConcentration
+                    })
+                }
                 return true
             } else {
                 return false

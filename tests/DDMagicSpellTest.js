@@ -4,6 +4,7 @@ const Creature = require('../src/Creature')
 const AssetManager = require('../src/AssetManager')
 const { CONFIG } = require('../src/config')
 const jsonschema = require('jsonschema')
+const {CONSTS} = require("../index");
 
 CONFIG.setModuleActive('classic', true)
 CONFIG.setModuleActive('ddmagic', true)
@@ -80,6 +81,34 @@ describe('spell data base check', function () {
         expect(x.valid).toBeTrue()
     })
 })
+
+describe('masteredSpells', function () {
+    it('should not have mastered spell defined when creating creature', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        const oTarget = manager.createEntity('c-soldier')
+        oWizard.setTarget(oTarget)
+        oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
+        oWizard.store.mutations.prepareSpell({ spell: 'burning-hands' })
+    })
+})
+
+describe('Spell names', function () {
+    it('should be able to enumerate spell names', function () {
+        const { manager } = buildStuff()
+        expect(manager.assetManager.publicAssets.strings.spells['acid-splash']).toBeDefined()
+    })
+})
+
+
+
+// ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ******
+// ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ******
+// ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ******
+// ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ******
+// ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ******
+// ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ****** SPELLS ******
+
 describe('acid-splash', function () {
     it('should do acid 4 damage when at level 2', function () {
         const { manager, evolution } = buildStuff()
@@ -96,13 +125,6 @@ describe('acid-splash', function () {
                 hostiles: [oTarget]
             })
         }).not.toThrow()
-    })
-})
-
-describe('Spell names', function () {
-    it('should be able to enumerate spell names', function () {
-        const { manager } = buildStuff()
-        expect(manager.assetManager.publicAssets.strings.spells['acid-splash']).toBeDefined()
     })
 })
 
@@ -147,16 +169,5 @@ describe('Burning hands', function () {
             .toEqual([1, 0, 0, 0, 0, 0, 0, 0, 0])
         expect(oWizard.store.state.data.spellbook.slots[0]).toBe(1)
         expect(oWizard.store.getters.getSpellSlotStatus[0]).toEqual({ count: 3, used: 1 })
-    })
-})
-
-describe('masteredSpells', function () {
-    it('should not have mastered spell defined when creating creature', function () {
-        const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
-        const oTarget = manager.createEntity('c-soldier')
-        oWizard.setTarget(oTarget)
-        oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
-        oWizard.store.mutations.prepareSpell({ spell: 'burning-hands' })
     })
 })

@@ -79,7 +79,7 @@
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getSuitableOffensiveSlot {string}
- * @property getTarget {{ condition: Object.<string, boolean>}}
+ * @property getTarget {*|null}
  * @property getTargetConditionSources {{}}
  * @property getTargetConditions {Set}
  * @property getTargetDistance {number}

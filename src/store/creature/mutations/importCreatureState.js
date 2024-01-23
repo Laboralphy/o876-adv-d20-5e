@@ -1,6 +1,4 @@
-function updateArray(a, a2) {
-    a.splice(0, a.length, ...a2)
-}
+const { update: updateArray } = require('../../../libs/array-mutations')
 
 module.exports = ({ state }, { state: importState }) => {
     const {
