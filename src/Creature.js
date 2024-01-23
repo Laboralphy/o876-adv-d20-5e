@@ -333,12 +333,11 @@ class Creature {
 
     updateTarget (name) {
         switch (name) {
-            case 'removeEffect':
+            case 'dispelEffect':
             case 'addEffect': {
-                this.store.mutations.updateTargetConditions({
-                    conditions: this._target.creature.store.getters.getConditionSources,
-                    effects: this._target.creature.store.getters.getEffectList
-                })
+                const conditions = this._target.creature.store.getters.getConditionSources
+                const effects = this._target.creature.store.getters.getEffectList
+                this.store.mutations.updateTargetConditions({ conditions, effects })
                 break
             }
         }
@@ -432,12 +431,11 @@ class Creature {
 
     updateAggressor (name) {
         switch (name) {
-            case 'removeEffect':
+            case 'dispelEffect':
             case 'addEffect': {
-                this.store.mutations.updateAggressorConditions({
-                    conditions: this._aggressor.creature.store.getters.getConditionSources,
-                    effects: this._aggressor.creature.store.getters.getEffectList
-                })
+                const conditions = this._aggressor.creature.store.getters.getConditionSources
+                const effects = this._aggressor.creature.store.getters.getEffectList
+                this.store.mutations.updateAggressorConditions({ conditions, effects })
                 break
             }
         }

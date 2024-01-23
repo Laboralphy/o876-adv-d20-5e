@@ -363,6 +363,10 @@ describe('invisibility', function () {
         const oHidden2 = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
         const oAggressiveOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
         oAggressiveOne.setTarget(oHidden1)
+        oWizard.name = 'wizard'
+        oHidden1.name = 'hidden 1'
+        oHidden2.name = 'hidden 2'
+        oAggressiveOne.name = 'Aggressor'
         const v0 = oAggressiveOne.store.getters.getEntityVisibility
         expect(v0.detectable.target).toBeTrue()
         expect(v0.detectedBy.target).toBeTrue()
@@ -397,6 +401,9 @@ describe('invisibility', function () {
         })
 
         oWizard.processEffects()
+        oHidden1.processEffects()
+        oHidden2.processEffects()
+        oAggressiveOne.processEffects()
 
         // j'ai beau faire, avec mon effet concentration, je ne pourrai jamais éteindre les
         // effets stockés chez d'autres créatures.
