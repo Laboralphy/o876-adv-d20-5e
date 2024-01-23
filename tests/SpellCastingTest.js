@@ -398,7 +398,7 @@ describe('invisibility', function () {
 
         oWizard.processEffects()
 
-        // j'ai beau faire, avec mon effet concentration je ne pourrai jamais éteindre les
+        // j'ai beau faire, avec mon effet concentration, je ne pourrai jamais éteindre les
         // effets stockés chez d'autres créatures.
 
         expect(oHidden2.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
