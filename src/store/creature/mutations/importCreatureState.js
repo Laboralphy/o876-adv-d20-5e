@@ -30,7 +30,7 @@ module.exports = ({ state }, { state: importState }) => {
     updateArray(state.classes, classes)
     state.gauges = gauges
     state.recentDamageTypes = recentDamageTypes
-    state.feats = feats
+    updateArray(state.feats, feats)
     state.equipment = equipment
     state.counters = counters
     state.encumbrance = encumbrance
