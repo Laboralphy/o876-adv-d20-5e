@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 23/01/2024, 15:36:46 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 27/01/2024 16:03:51 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
@@ -16,6 +16,7 @@ module.exports = {
   [CONSTS.EFFECT_DAMAGE_RESISTANCE]: require('./damage-resistance'),
   [CONSTS.EFFECT_DAMAGE_VULNERABILITY]: require('./damage-vulnerability'),
   [CONSTS.EFFECT_DAMAGE]: require('./damage'),
+  [CONSTS.EFFECT_DARKVISION]: require('./darkvision'),
   [CONSTS.EFFECT_DISADVANTAGE]: require('./disadvantage'),
   [CONSTS.EFFECT_DUMMY]: require('./dummy'),
   [CONSTS.EFFECT_ELUSIVE]: require('./elusive'),
@@ -40,6 +41,7 @@ module.exports = {
   [CONSTS.EFFECT_RANGED_ATTACK_BONUS]: require('./ranged-attack-bonus'),
   [CONSTS.EFFECT_REROLL]: require('./reroll'),
   [CONSTS.EFFECT_SAVING_THROW_BONUS]: require('./saving-throw-bonus'),
+  [CONSTS.EFFECT_SEE_INVISIBILITY]: require('./see-invisibility'),
   [CONSTS.EFFECT_SKILL_BONUS]: require('./skill-bonus'),
   [CONSTS.EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL]: require('./skill-expertise-minimum-roll'),
   [CONSTS.EFFECT_SKILL_EXPERTISE]: require('./skill-expertise'),

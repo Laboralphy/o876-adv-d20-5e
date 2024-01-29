@@ -1,11 +1,9 @@
 const CONSTS = require('../../../consts')
 
-function canSee (oWatcherConditions, oWatchedConditions) {
-    const bBlinded = oWatcherConditions.has(CONSTS.CONDITION_BLINDED)
+function canSee (getters, oWatcherConditions, oWatchedConditions) {
     const bTargetInvisible = oWatchedConditions.has(CONSTS.CONDITION_INVISIBLE)
-    const bHaveTrueSight = oWatcherConditions.has(CONSTS.CONDITION_TRUE_SIGHT)
-    const bTargetDetectable = !bTargetInvisible || bHaveTrueSight
-    return !bBlinded && bTargetDetectable
+    const bCanSeeInvis = getters.canSeeInvisibility
+    return !bTargetInvisible || bCanSeeInvis
 }
 
 /**
@@ -27,12 +25,12 @@ module.exports = (state, getters) => {
     const c = getters.getConditions
     return {
         detectable: {
-            target: canSee(c, tc),          // true : you can see your target ; false : you cannot see your target
-            aggressor: canSee(c, tc)        // true : you can see your aggressor ; false : you cannot see your aggressor
+            target: canSee(getters, c, tc),          // true : you can see your target ; false : you cannot see your target
+            aggressor: canSee(getters, c, tc)        // true : you can see your aggressor ; false : you cannot see your aggressor
         },
         detectedBy: {
-            target: canSee(tc, c),          // true : your target can see you ; false : your target cannot see you
-            aggressor: canSee(ac, c)        // true : your aggressor can see you , false : your aggressor cannot see you
+            target: canSee(getters, tc, c),          // true : your target can see you ; false : your target cannot see you
+            aggressor: canSee(getters, ac, c)        // true : your aggressor can see you , false : your aggressor cannot see you
         }
     }
 }

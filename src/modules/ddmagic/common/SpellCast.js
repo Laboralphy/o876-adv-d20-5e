@@ -490,6 +490,9 @@ module.exports = class SpellCast {
                 if (parameters.overchannel) {
                     this._hasOverchannel = true
                 }
+                if (!this._cheat) {
+                    this.consumeSpellSlot()
+                }
                 this.caster.events.emit('spellcast', {
                     caster: this.caster,
                     target: this.target,
@@ -504,9 +507,6 @@ module.exports = class SpellCast {
                     level: this.spellCastingLevel,
                     parameters
                 })
-                if (!this._cheat) {
-                    this.consumeSpellSlot()
-                }
                 this.spellScript(this, parameters)
                 if (this.spellData.concentration) {
                     const eConcentration = this.caster.applyEffect(
