@@ -314,7 +314,7 @@ describe('rogue reliable talent', function () {
         oRogue.processEffects()
         const s2 = oRogue.rollSkill('skill-sleight-of-hand', 0)
         expect(oRogue.store.getters.getProficiencyBonus).toBe(4)
-        expect(oRogue.store.getters.getEffectList.has('EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL')).toBeTrue()
+        expect(oRogue.store.getters.getEffectSet.has('EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL')).toBeTrue()
         expect(s2).toEqual({
             bonus: 8, // dex 4 + prof 4
             roll: 10,
@@ -326,7 +326,7 @@ describe('rogue reliable talent', function () {
         })
         const s3 = oRogue.rollSkill('skill-arcana', 0)
         expect(oRogue.store.getters.getProficiencyBonus).toBe(4)
-        expect(oRogue.store.getters.getEffectList.has('EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL')).toBeTrue()
+        expect(oRogue.store.getters.getEffectSet.has('EFFECT_SKILL_EXPERTISE_MINIMUM_ROLL')).toBeTrue()
         expect(s3).toEqual({
             bonus: 2,
             roll: 3,
@@ -345,7 +345,7 @@ describe('supreme sneak', function () {
         const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
         oRogue.processEffects()
         oRogue.dice.cheat(0.5)
-        expect(oRogue.store.getters.getEffectList.has('EFFECT_ADVANTAGE')).toBeTrue()
+        expect(oRogue.store.getters.getEffectSet.has('EFFECT_ADVANTAGE')).toBeTrue()
         expect(oRogue.getCircumstances('ROLL_TYPE_CHECK', ['skill-stealth'])).toEqual({
           advantage: true,
           disadvantage: false,
@@ -411,13 +411,13 @@ describe('use magic device', function () {
         const { manager, evolution } = buildStuff()
         const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 13)
         oRogue.processEffects()
-        expect(oRogue.store.getters.getFeats.has('feat-use-magic-device')).toBeTrue()
+        expect(oRogue.store.getters.getFeatSet.has('feat-use-magic-device')).toBeTrue()
     })
     it('should not have feat use magic device when not reaching level 13', function () {
         const { manager, evolution } = buildStuff()
         const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
         oRogue.processEffects()
-        expect(oRogue.store.getters.getFeats.has('feat-use-magic-device')).toBeFalse()
+        expect(oRogue.store.getters.getFeatSet.has('feat-use-magic-device')).toBeFalse()
     })
 })
 
@@ -434,8 +434,8 @@ describe('blindsight', function () {
         oRogue.setTarget(oWizard)
         oWizard.processEffects()
         oRogue.processEffects()
-        expect(oWizard.store.getters.getEffectList.has('EFFECT_INVISIBILITY')).toBeTrue()
-        expect(oWizard.store.getters.getConditions.has('CONDITION_INVISIBLE')).toBeTrue()
+        expect(oWizard.store.getters.getEffectSet.has('EFFECT_INVISIBILITY')).toBeTrue()
+        expect(oWizard.store.getters.getConditionSet.has('CONDITION_INVISIBLE')).toBeTrue()
         expect(oRogue.store.getters.getEntityVisibility).toEqual({
             detectable: { target: false, aggressor: false },
             detectedBy: { target: true, aggressor: true }
@@ -455,7 +455,7 @@ describe('elusive', function () {
         oRogue.processEffects()
         oFighter.processEffects()
         oFighter.setTarget(oRogue)
-        expect(oRogue.store.getters.getEffectList.has('EFFECT_ELUSIVE')).toBeFalse()
+        expect(oRogue.store.getters.getEffectSet.has('EFFECT_ELUSIVE')).toBeFalse()
         expect(oFighter.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
         expect(oFighter.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED'))
             .toBeTrue()
@@ -471,7 +471,7 @@ describe('elusive', function () {
         oRogue.processEffects()
         oFighter.processEffects()
         oFighter.setTarget(oRogue)
-        expect(oRogue.store.getters.getEffectList.has('EFFECT_ELUSIVE')).toBeTrue()
+        expect(oRogue.store.getters.getEffectSet.has('EFFECT_ELUSIVE')).toBeTrue()
         expect(oFighter.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
         expect(oFighter.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED'))
             .toBeFalse()
@@ -499,7 +499,7 @@ describe('stroke-of-luck', function () {
         oRogue.setDistanceToTarget(5)
         oRogue.processEffects()
         oFighter.processEffects()
-        expect(oRogue.store.getters.getEffectList.has('EFFECT_LUCKY')).toBeTrue()
+        expect(oRogue.store.getters.getEffectSet.has('EFFECT_LUCKY')).toBeTrue()
         const eStroke = oRogue.store.getters.getEffects.find(({ type }) => type === 'EFFECT_LUCKY')
         expect(eStroke.amp).toBe(0)
         oRogue.dice.cheat(0.1)
@@ -605,7 +605,7 @@ describe('sneak attacks', function () {
         expect(oRogue.store.getters.getSelectedWeapon.attributes.includes('WEAPON_ATTRIBUTE_FINESSE')).toBeTrue()
         expect(oRogue.store.getters.getSuitableOffensiveSlot).toEqual('EQUIPMENT_SLOT_WEAPON_MELEE')
         expect(oRogue.store.getters.isWieldingFinesseWeapon).toBeTrue()
-        expect(oRogue.store.getters.getEffectList.has('EFFECT_SNEAK_ATTACK')).toBeTrue()
+        expect(oRogue.store.getters.getEffectSet.has('EFFECT_SNEAK_ATTACK')).toBeTrue()
         expect(oRogue.store.getters.getEffects.find(({ type }) => type === 'EFFECT_SNEAK_ATTACK').amp).toBe(1)
         const outcome = oRogue.attack(oFighter)
         // 3 de dégat pour la dague

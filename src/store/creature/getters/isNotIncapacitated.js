@@ -6,4 +6,4 @@ const CONSTS = require('../../../consts')
  * @param getters
  * @returns {boolean}
  */
-module.exports = (state, getters) => !getters.getConditions.has(CONSTS.CONDITION_INCAPACITATED)
+module.exports = (state, getters) => !getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)

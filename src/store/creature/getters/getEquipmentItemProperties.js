@@ -1,5 +1,5 @@
 /**
- * Liste des propriétés des équippement défensif (armure, bouclier etc...)
+ * Liste des propriétés des équippement défensif (armure, bouclier etc...) et offensif (armes)
  * @param state
  * @param getters {D20CreatureStoreGetters}
  * @returns {[]}

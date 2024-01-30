@@ -8,7 +8,7 @@ CONSTS = require('../../../consts')
  * @return {boolean}
  */
 module.exports = (state, getters) => {
-    const cond = getters.getConditions
+    const cond = getters.getConditionSet
     const target = getters.getTarget
     if (cond.has(CONSTS.CONDITION_INCAPACITATED)) {
         return false

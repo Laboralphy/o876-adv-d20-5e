@@ -6,7 +6,7 @@
  * @param spell {string}
  */
 module.exports = ({ state, getters, externals }, { spell }) => {
-    if (getters.getFeats.has('feat-spell-mastery')) {
+    if (getters.getFeatSet.has('feat-spell-mastery')) {
         const aStateMasteredSpells = state.data.spellbook.masteredSpells
         const aCurrentMasteredSpells = new Set(aStateMasteredSpells)
         if (!aCurrentMasteredSpells.has(spell)) {

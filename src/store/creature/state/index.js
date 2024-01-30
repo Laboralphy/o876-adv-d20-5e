@@ -50,13 +50,15 @@ module.exports = function () {
             active: false,
             conditions: {},
             effects: [],
+            itemProperties: [],
             distance: 0
         },
         aggressor: {
             id: '',
             active: false,
             conditions: {},
-            effects: []
+            effects: [],
+            itemProperties: []
         },
         action: '',
         encumbrance: 0,

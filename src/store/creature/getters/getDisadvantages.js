@@ -14,8 +14,8 @@ const CONSTS = require("../../../consts");
  * @return {D20AdvantagesOrDisadvantages}
  */
 module.exports = (state, getters, externals) => {
-    const myConditions = getters.getConditions
-    const targetConditions = getters.getTargetConditions
+    const myConditions = getters.getConditionSet
+    const targetConditions = getters.getTargetConditionSet
 
     const oDisadvantageEffectRegistry = getters.getDisadvantagePropEffects
 
@@ -56,7 +56,7 @@ module.exports = (state, getters, externals) => {
     const HEAVILY_ENCUMBERED = getters.getEncumbranceLevel >= 2
 
     // La créature est sous l'eau et n'a pas de capacité sous-marine
-    const af = getters.getAreaFlags
+    const af = getters.getAreaFlagSet
     const AREA_UNDERWATER = af.has(CONSTS.AREA_FLAG_UNDERWATER)
 
     // La créature est dans une pièce obscure sans capacité de vision nocturne

@@ -242,7 +242,7 @@ class EffectProcessor {
         oEffect.duration = duration || 0
         this.runEffect(oEffect, target, source || target)
         const sUnicity = oEffect.unicity
-        if (target.store.getters.getEffectList.has(oEffect.type) && sUnicity !== CONSTS.EFFECT_UNICITY_STACK) {
+        if (target.store.getters.getEffectSet.has(oEffect.type) && sUnicity !== CONSTS.EFFECT_UNICITY_STACK) {
             const oAlreadyHaveEffect = target
                 .store
                 .getters

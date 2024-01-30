@@ -336,7 +336,7 @@ class Creature {
             case 'dispelEffect':
             case 'addEffect': {
                 const conditions = this._target.creature.store.getters.getConditionSources
-                const effects = this._target.creature.store.getters.getEffectList
+                const effects = this._target.creature.store.getters.getEffectSet
                 this.store.mutations.updateTargetConditions({ conditions, effects })
                 break
             }
@@ -388,7 +388,7 @@ class Creature {
             this.store.mutations.updateTargetConditions({
                 id: oCreature.id,
                 conditions: this._target.creature.store.getters.getConditionSources,
-                effects: this._target.creature.store.getters.getEffectList
+                effects: this._target.creature.store.getters.getEffectSet
             })
             oCreature.store.events.on('mutation', this._target.handler)
             this.initializeDistanceToTarget(Creature.AssetManager.data.variables.DEFAULT_TARGET_DISTANCE)
@@ -431,10 +431,12 @@ class Creature {
 
     updateAggressor (name) {
         switch (name) {
+            case 'equipItem':
             case 'dispelEffect':
             case 'addEffect': {
                 const conditions = this._aggressor.creature.store.getters.getConditionSources
-                const effects = this._aggressor.creature.store.getters.getEffectList
+                const effects = this._aggressor.creature.store.getters.getEffectSet
+                const itemProperties = this._aggressor.creature.store.getters.getOffensiveEquipmentList
                 this.store.mutations.updateAggressorConditions({ conditions, effects })
                 break
             }
@@ -449,7 +451,7 @@ class Creature {
             this.store.mutations.updateAggressorConditions({
                 id: oCreature.id,
                 conditions: this._aggressor.creature.store.getters.getConditionSources,
-                effects: this._aggressor.creature.store.getters.getEffectList
+                effects: this._aggressor.creature.store.getters.getEffectSet
             })
             oCreature.store.events.on('mutation', this._aggressor.handler)
         }
@@ -756,7 +758,7 @@ class Creature {
      * @return {boolean}
      */
     checkLuck () {
-        if (!this.store.getters.getEffectList.has(CONSTS.EFFECT_LUCKY)) {
+        if (!this.store.getters.getEffectSet.has(CONSTS.EFFECT_LUCKY)) {
             return false
         }
         const eLucky = this.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_LUCKY)
@@ -1290,7 +1292,7 @@ class Creature {
                 .entries(oDamages)
                 .forEach(([sType, nValue]) => {
                     const aDamageEffectMaterials = PHYSICAL_DAMAGE_TYPES.includes(sType)
-                        ? [...this.store.getters.getSelectedWeaponMaterial]
+                        ? [...this.store.getters.getSelectedWeaponMaterialSet]
                         : undefined
 
                     const eDam = EffectProcessor.createEffect(

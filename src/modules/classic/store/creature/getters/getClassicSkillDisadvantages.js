@@ -9,11 +9,11 @@ const {getDisAndAdvEffectRegistry, getThoseProvidedByEffects} = require("../../.
  * @return {D20AdvantagesOrDisadvantages}
  */
 module.exports = (state, getters) => {
-    // const myConditions = getters.getConditions
+    // const myConditions = getters.getConditionSet
     // const myConditionSources = getters.getConditionSources
-    const targetConditions = getters.getTargetConditions
+    const targetConditions = getters.getTargetConditionSet
     const targetConditionSources = getters.getTargetConditionSources
-    // const aggressorConditions = getters.getAggressorConditions
+    // const aggressorConditions = getters.getAggressorConditionSet
     // const aggressorConditionSources = getters.getAggressorConditionSources
     const myID = getters.getId
     const oRelevantEffects = getters

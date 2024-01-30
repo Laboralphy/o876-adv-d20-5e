@@ -20,13 +20,19 @@ function canSee (getters, oWatcherConditions, oWatchedConditions) {
  * @returns {D20EntityVisibilityResult}
  */
 module.exports = (state, getters) => {
-    const c = getters.getConditions
-    const bIamInvisible = c.
+    const conditions = getters.getConditionSet
+    const effects = getters.getEffectSet
+    const targetConditions = getters.getTargetConditionSet
+    const targetEffects = getters.getTargetEffectSet
+    const bIAmInvisible = conditions.has(CONSTS.CONDITION_INVISIBLE)
+    const bICanSeeInvisibility = effects.has(CONSTS.EFFECT_SEE_INVISIBILITY)
+    const bTargetInvisible = targetConditions.has(CONSTS.CONDITION_INVISIBLE)
+    const bTargetCanSeeInvisibility = targetEffects.has(CONSTS.EFFECT_SEE_INVISIBILITY)
 
 
 
-    const ac = getters.getAggressorConditions
-    const tc = getters.getTargetConditions
+    const ac = getters.getAggressorConditionSet
+    const tc = getters.getTargetConditionSet
     return {
         detectable: {
             target: canSee(getters, c, tc),          // true : you can see your target ; false : you cannot see your target

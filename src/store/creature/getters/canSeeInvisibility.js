@@ -12,6 +12,6 @@ module.exports = (state, getters) => {
         CONSTS.EFFECT_SEE_INVISIBILITY,
         CONSTS.EFFECT_TRUE_SIGHT
     ]).count > 0
-    const bBlind = getters.getConditions.has(CONSTS.CONDITION_BLINDED)
+    const bBlind = getters.getConditionSet.has(CONSTS.CONDITION_BLINDED)
     return !bBlind && bSeeInvis
 }

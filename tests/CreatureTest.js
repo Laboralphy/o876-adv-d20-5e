@@ -363,9 +363,9 @@ describe('getTarget', function () {
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
         ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), c2, 10)
         expect(c1.store.state.target.id).toBe(c2.id)
-        expect([...c2.store.getters.getConditions]).toEqual(['CONDITION_INVISIBLE'])
-        expect([...c1.getTarget().store.getters.getConditions]).toEqual(['CONDITION_INVISIBLE'])
-        expect([...c1.store.getters.getTargetConditions]).toEqual(['CONDITION_INVISIBLE'])
+        expect([...c2.store.getters.getConditionSet]).toEqual(['CONDITION_INVISIBLE'])
+        expect([...c1.getTarget().store.getters.getConditionSet]).toEqual(['CONDITION_INVISIBLE'])
+        expect([...c1.store.getters.getTargetConditionSet]).toEqual(['CONDITION_INVISIBLE'])
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
     })
     it('should update canSeeTarget WHEN invisible effect is added/remove on target', function () {
@@ -483,8 +483,8 @@ describe('getAdvantages/getDisadvantages', function () {
         c1.setTarget(c2)
         const ep = new EffectProcessor()
         ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), c2, 10, c1)
-        expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-        expect(c1.store.getters.getTargetConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c1.store.getters.getTargetConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(c2.store.getters.getConditionSources[CONSTS.CONDITION_INVISIBLE]).toEqual(new Set([c1.id]))
     })
     it ('should have no advantage/disadvantage WHEN  creature is fresh new', function () {
@@ -508,7 +508,7 @@ describe('getAdvantages/getDisadvantages', function () {
             // c1 vois toujours c2
             expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
             // c1 n'est pas visible par c2
-            expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+            expect(c1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
             expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalse()
             // c1 a donc bien un avantage d'attaque en force sur c2
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
@@ -531,7 +531,7 @@ describe('getAdvantages/getDisadvantages', function () {
             expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
             expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
             // c1 n'est pas visible par c2
-            expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+            expect(c1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
             expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
             // c1 et c2 se voient
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
@@ -565,7 +565,7 @@ describe('getAdvantages/getDisadvantages', function () {
         // c1 vois toujours c2
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
         // c1 n'est pas visible par c2
-        expect(c1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         // c2 ne vois plus c1
         expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalse()
         expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
@@ -921,9 +921,9 @@ describe('getMaterial armor and weapon and shield', function () {
         const oSword = r.createEntity('wpn-shortsword')
         oSword.material = CONSTS.MATERIAL_METAL
         c1.store.mutations.equipItem({ item: oSword })
-        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_METAL)).toBeTrue()
-        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_SILVER)).toBeFalse()
-        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_METAL)).toBeTrue()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_SILVER)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
     })
     it('should return material_silver and material_metal when setting material to silver on sword', function () {
         const r = new Manager()
@@ -932,9 +932,9 @@ describe('getMaterial armor and weapon and shield', function () {
         const oSword = r.createEntity('wpn-shortsword')
         oSword.material = CONSTS.MATERIAL_SILVER
         c1.store.mutations.equipItem({ item: oSword })
-        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_METAL)).toBeTrue()
-        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_SILVER)).toBeTrue()
-        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_METAL)).toBeTrue()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_SILVER)).toBeTrue()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
     })
     it('should return material_wood and not metal when setting material to wood on sword', function () {
         const r = new Manager()
@@ -943,9 +943,9 @@ describe('getMaterial armor and weapon and shield', function () {
         const oSword = r.createEntity('wpn-shortsword')
         oSword.material = CONSTS.MATERIAL_WOOD
         c1.store.mutations.equipItem({ item: oSword })
-        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_METAL)).toBeFalse()
-        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_SILVER)).toBeFalse()
-        expect(c1.store.getters.getSelectedWeaponMaterial.has(CONSTS.MATERIAL_WOOD)).toBeTrue()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_METAL)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_SILVER)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_WOOD)).toBeTrue()
     })
 })
 
@@ -963,7 +963,7 @@ describe('prone condition test', function () {
         c1.setTarget(c2)
         c1.setDistanceToTarget(DISTANCE_RANGED)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
-        expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_PRONE)).toBeTrue()
+        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_PRONE)).toBeTrue()
         const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY])
         const circ2 = c2.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY])
         expect(circ1.disadvantage).toBe(true)
@@ -984,7 +984,7 @@ describe('prone condition test', function () {
         c1.setTarget(c2)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
-        expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_PRONE)).toBeTrue()
+        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_PRONE)).toBeTrue()
         const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY])
         expect(circ1.disadvantage).toBe(false)
         c1.setDistanceToTarget(DISTANCE_REACH)
@@ -1007,7 +1007,7 @@ describe('prone condition test', function () {
         c1.setTarget(c2)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
-        expect(c2.store.getters.getConditions.has(CONSTS.CONDITION_PRONE)).toBeTrue()
+        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_PRONE)).toBeTrue()
         // proche d'une cible prone avec une arme de mélée
         expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTrue()
         c1.setDistanceToTarget(DISTANCE_REACH)

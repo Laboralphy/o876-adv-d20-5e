@@ -12,6 +12,6 @@ module.exports = (state, getters) => {
         CONSTS.EFFECT_DARKVISION,
         CONSTS.ITEM_PROPERTY_DARKVISION
     ]).count > 0
-    const bBlind = getters.getConditions.has(CONSTS.CONDITION_BLINDED)
+    const bBlind = getters.getConditionSet.has(CONSTS.CONDITION_BLINDED)
     return !bBlind && bSeeInvis
 }

@@ -14,7 +14,7 @@ function create (damage, dot = "", dc, saveCount = 0) {
 
 function mutate ({ effect, target, source }, oEffectProcessor) {
     // Ne subit pas l'effet de poison si
-    if (target.store.getConditionImmunities.has(CONSTS.CONDITION_POISONED)) {
+    if (target.store.getConditionImmunitySet.has(CONSTS.CONDITION_POISONED)) {
         return
     }
     if (effect.data.turns > 0) {
