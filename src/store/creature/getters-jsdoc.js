@@ -55,6 +55,7 @@
  * @property getHealMitigation {{pharma: boolean, negateheal: boolean, factor: number}}
  * @property getHitPoints {number}
  * @property getId {number}
+ * @property getInteractorReport {{aggressor: D20CreatureGetterInteractorReport, target: D20CreatureGetterInteractorReport}}
  * @property getLevel {number}
  * @property getLevelByClass {{[c: string]: number}}
  * @property getMaxHitPoints {number}

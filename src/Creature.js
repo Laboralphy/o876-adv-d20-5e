@@ -333,11 +333,13 @@ class Creature {
 
     updateTarget (name) {
         switch (name) {
+            case 'equipItem':
             case 'dispelEffect':
             case 'addEffect': {
                 const conditions = this._target.creature.store.getters.getConditionSources
                 const effects = this._target.creature.store.getters.getEffectSet
-                this.store.mutations.updateTargetConditions({ conditions, effects })
+                const itemProperties = this._target.creature.store.getters.getEquipmentItemPropertySet
+                this.store.mutations.updateTargetConditions({ conditions, effects, itemProperties })
                 break
             }
         }
@@ -429,6 +431,16 @@ class Creature {
         }
     }
 
+    /**
+     * Récupération des
+     * @param itemList {D20Item[]}
+     */
+    getItemPropertyFromItemList (itemList) {
+        itemList
+            .map(item => item.itemProperties.map(ip => ip.type))
+            .flat()
+    }
+
     updateAggressor (name) {
         switch (name) {
             case 'equipItem':
@@ -436,8 +448,8 @@ class Creature {
             case 'addEffect': {
                 const conditions = this._aggressor.creature.store.getters.getConditionSources
                 const effects = this._aggressor.creature.store.getters.getEffectSet
-                const itemProperties = this._aggressor.creature.store.getters.getOffensiveEquipmentList
-                this.store.mutations.updateAggressorConditions({ conditions, effects })
+                const itemProperties = this._aggressor.creature.store.getters.getEquipmentItemPropertySet
+                this.store.mutations.updateAggressorConditions({ conditions, effects, itemProperties })
                 break
             }
         }
@@ -451,7 +463,8 @@ class Creature {
             this.store.mutations.updateAggressorConditions({
                 id: oCreature.id,
                 conditions: this._aggressor.creature.store.getters.getConditionSources,
-                effects: this._aggressor.creature.store.getters.getEffectSet
+                effects: this._aggressor.creature.store.getters.getEffectSet,
+                itemProperties: this._aggressor.creature.store.getters.getOffensiveEquipmentList
             })
             oCreature.store.events.on('mutation', this._aggressor.handler)
         }
