@@ -39,6 +39,10 @@ class Creature {
          * @private
          */
         this._store = Creature.AssetManager.createStore('creature')
+        /**
+         * @type {EffectProcessor}
+         * @private
+         */
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
         this._store.mutations.setId({ value: this._id })
@@ -390,7 +394,8 @@ class Creature {
             this.store.mutations.updateTargetConditions({
                 id: oCreature.id,
                 conditions: this._target.creature.store.getters.getConditionSources,
-                effects: this._target.creature.store.getters.getEffectSet
+                effects: this._target.creature.store.getters.getEffectSet,
+                itemProperties: this._target.creature.store.getters.getEquipmentItemPropertySet
             })
             oCreature.store.events.on('mutation', this._target.handler)
             this.initializeDistanceToTarget(Creature.AssetManager.data.variables.DEFAULT_TARGET_DISTANCE)
@@ -429,16 +434,6 @@ class Creature {
             this._aggressor.creature = null
             this.store.mutations.clearAggressor()
         }
-    }
-
-    /**
-     * Récupération des
-     * @param itemList {D20Item[]}
-     */
-    getItemPropertyFromItemList (itemList) {
-        itemList
-            .map(item => item.itemProperties.map(ip => ip.type))
-            .flat()
     }
 
     updateAggressor (name) {
@@ -1337,6 +1332,12 @@ class Creature {
         return oAtk
     }
 
+    /**
+     * Calcule quelle partie de la défense a permis d'esquiver le coup.
+     * Permet d'enrichir la description de l'esquive d'un coup
+     * @param nAttackRoll
+     * @returns {*|{min: *, max: number, type: (*|string), value: number}}
+     */
     getDeflectingArmorPart (nAttackRoll) {
         const acr = this
             .store
@@ -1348,6 +1349,28 @@ class Creature {
         } else {
             return { type: CONSTS.ARMOR_DEFLECTOR_HIT, min: acr[acr.length - 1].max + 1, max: Infinity, value: Infinity }
         }
+    }
+
+    /**
+     * Renvoie la capcité de la créature à voir une autre créature
+     * @param oTarget {Creature}
+     * @return {string}
+     */
+    canSee (oTarget) {
+        const csg = this.store.getters
+        const tsg = oTarget.store.getters
+        const bMeBlind = csg.getConditionSet.has(CONSTS.CONDITION_BLINDED)
+        if (bMeBlind) {
+            return CONSTS.PERCEPTION_BLIND
+        }
+        const bTargetInvisible = tsg.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)
+        const bMeSeeInvisibility =
+            csg.getEffectSet.has(CONSTS.EFFECT_SEE_INVISIBILITY) ||
+            csg.getEffectSet.has(CONSTS.EFFECT_TRUE_SIGHT)
+        if (bTargetInvisible && !bMeSeeInvisibility) {
+            return CONSTS.PERCEPTION_INVISIBLE
+        }
+        return CONSTS.PERCEPTION_VISIBLE
     }
 }
 

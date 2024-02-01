@@ -38,6 +38,7 @@
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantagePropEffects {Object<string, string>}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
+ * @property getEffectConditionPropertySet {Set<string>}
  * @property getEffectSet {Set<string>}
  * @property getEffectSources {string[]}
  * @property getEffects {D20Effect[]}

@@ -518,6 +518,7 @@ describe('getAdvantages/getDisadvantages', function () {
             const c1 = new Creature()
             const c2 = new Creature()
             c1.setTarget(c2)
+            c2.setTarget(c1)
             // pas d'avantage sur les jets d'attaque en force
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
             // cible visible

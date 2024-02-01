@@ -431,14 +431,14 @@ describe('blindsight', function () {
         oWizard.applyEffect(eInvis, 10, oWizard)
         oWizard.processEffects()
         oRogue.processEffects()
-        oRogue.setTarget(oWizard)
+        oRogue.setTarget(oWizard) // Le rogue cible le wizard
         oWizard.processEffects()
         oRogue.processEffects()
         expect(oWizard.store.getters.getEffectSet.has('EFFECT_INVISIBILITY')).toBeTrue()
         expect(oWizard.store.getters.getConditionSet.has('CONDITION_INVISIBLE')).toBeTrue()
         expect(oRogue.store.getters.getEntityVisibility).toEqual({
-            detectable: { target: false, aggressor: false },
-            detectedBy: { target: true, aggressor: true }
+            detectable: { target: false, aggressor: false }, // Le rogue ne peut pas détecter sa cible, il ne peut pas détecter son aggressor (il n'en a pas)
+            detectedBy: { target: true, aggressor: false } // pas d'aggressor -> false
         })
     })
 })

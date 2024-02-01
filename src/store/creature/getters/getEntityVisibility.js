@@ -1,9 +1,14 @@
 const CONSTS = require('../../../consts')
 
-function canSee (getters, oWatcherConditions, oWatchedConditions) {
-    const bTargetInvisible = oWatchedConditions.has(CONSTS.CONDITION_INVISIBLE)
-    const bCanSeeInvis = getters.canSeeInvisibility
-    return !bTargetInvisible || bCanSeeInvis
+/**
+ *
+ * @param a {Object<string, string[]>}
+ * @returns {string[]}
+ */
+function extractConditions (a) {
+    return Object
+        .keys(a)
+        .filter(x => a[x].length > 0)
 }
 
 /**
@@ -20,19 +25,21 @@ function canSee (getters, oWatcherConditions, oWatchedConditions) {
  * @returns {D20EntityVisibilityResult}
  */
 module.exports = (state, getters) => {
-    const targetStuff = state.target.active
+    const bHasTarget = state.target.active
+    const bHasAggressor = state.aggressor.active
+    const targetStuff = bHasTarget
         ? new Set([
-            ...state.target.effect,
+            ...state.target.effects,
             ...state.target.itemProperties,
-            ...Object.keys(state.target.conditions)
+            ...extractConditions(state.target.conditions)
         ])
         : new Set()
 
-    const aggressorStuff = state.aggressor.active
+    const aggressorStuff = bHasAggressor
         ? new Set([
-            ...state.aggressor.effect,
-            ...state.target.itemProperties,
-            ...Object.keys(state.target.conditions)
+            ...state.aggressor.effects,
+            ...state.aggressor.itemProperties,
+            ...extractConditions(state.aggressor.conditions)
         ])
         : new Set()
     const myStuff = new Set([
@@ -49,19 +56,34 @@ module.exports = (state, getters) => {
     const bTargetSeeInvisibility = targetStuff.has(CONSTS.EFFECT_SEE_INVISIBILITY) || targetStuff.has(CONSTS.EFFECT_TRUE_SIGHT)
     const bTargetInvisible = targetStuff.has(CONSTS.CONDITION_INVISIBLE)
 
-
+    const bAggressorBlind = aggressorStuff.has(CONSTS.CONDITION_BLINDED)
+    const bAggressorSeeInvisibility = aggressorStuff.has(CONSTS.EFFECT_SEE_INVISIBILITY) || aggressorStuff.has(CONSTS.EFFECT_TRUE_SIGHT)
+    const bAggressorInvisible = aggressorStuff.has(CONSTS.CONDITION_INVISIBLE)
 
     return {
         detectable: { // ce qu'on peut détecter
             target:
-                (!bMeBlind && !bTargetInvisible) ||
-                (!bMeBlind && bTargetInvisible && bMeSeeInvisibility)
-
-            aggressor: canSee(getters, c, tc)        // true : you can see your aggressor ; false : you cannot see your aggressor
+                bHasTarget && (
+                    (!bMeBlind && !bTargetInvisible) || // on n'est pas aveugle et la cible n'est pas invisible
+                    (!bMeBlind && bTargetInvisible && bMeSeeInvisibility) // on n'est pas aveugle, la cible est invisible, mais on peut voir l'invisibilité
+                ),
+            aggressor:
+                bHasAggressor && (
+                    (!bMeBlind && !bAggressorInvisible) || // on n'est pas aveugle et l'agresseur n'est pas invisible
+                    (!bMeBlind && bAggressorInvisible && bMeSeeInvisibility) // on n'est pas aveugle, l'agresseur est invisible, mais on peut voir l'invisibilité
+                )
         },
         detectedBy: { // par qui on est détecté
-            target: canSee(getters, tc, c),          // true : your target can see you ; false : your target cannot see you
-            aggressor: canSee(getters, ac, c)        // true : your aggressor can see you , false : your aggressor cannot see you
+            target:
+                bHasTarget && (
+                    (!bTargetBlind && !bMeInvisible) ||
+                    (!bTargetBlind && bMeInvisible && bTargetSeeInvisibility)
+                ),
+            aggressor:
+                bHasAggressor && (
+                    (!bAggressorBlind && !bMeInvisible) ||
+                    (!bAggressorBlind && bMeInvisible && bAggressorSeeInvisibility)
+                )
         }
     }
 }
