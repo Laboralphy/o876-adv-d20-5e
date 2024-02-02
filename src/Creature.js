@@ -39,6 +39,10 @@ class Creature {
          * @private
          */
         this._store = Creature.AssetManager.createStore('creature')
+        /**
+         * @type {EffectProcessor}
+         * @private
+         */
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
         this._store.mutations.setId({ value: this._id })
@@ -333,11 +337,13 @@ class Creature {
 
     updateTarget (name) {
         switch (name) {
+            case 'equipItem':
             case 'dispelEffect':
             case 'addEffect': {
                 const conditions = this._target.creature.store.getters.getConditionSources
-                const effects = this._target.creature.store.getters.getEffectList
-                this.store.mutations.updateTargetConditions({ conditions, effects })
+                const effects = this._target.creature.store.getters.getEffectSet
+                const itemProperties = this._target.creature.store.getters.getEquipmentItemPropertySet
+                this.store.mutations.updateTargetConditions({ conditions, effects, itemProperties })
                 break
             }
         }
@@ -388,7 +394,8 @@ class Creature {
             this.store.mutations.updateTargetConditions({
                 id: oCreature.id,
                 conditions: this._target.creature.store.getters.getConditionSources,
-                effects: this._target.creature.store.getters.getEffectList
+                effects: this._target.creature.store.getters.getEffectSet,
+                itemProperties: this._target.creature.store.getters.getEquipmentItemPropertySet
             })
             oCreature.store.events.on('mutation', this._target.handler)
             this.initializeDistanceToTarget(Creature.AssetManager.data.variables.DEFAULT_TARGET_DISTANCE)
@@ -431,11 +438,13 @@ class Creature {
 
     updateAggressor (name) {
         switch (name) {
+            case 'equipItem':
             case 'dispelEffect':
             case 'addEffect': {
                 const conditions = this._aggressor.creature.store.getters.getConditionSources
-                const effects = this._aggressor.creature.store.getters.getEffectList
-                this.store.mutations.updateAggressorConditions({ conditions, effects })
+                const effects = this._aggressor.creature.store.getters.getEffectSet
+                const itemProperties = this._aggressor.creature.store.getters.getEquipmentItemPropertySet
+                this.store.mutations.updateAggressorConditions({ conditions, effects, itemProperties })
                 break
             }
         }
@@ -449,7 +458,8 @@ class Creature {
             this.store.mutations.updateAggressorConditions({
                 id: oCreature.id,
                 conditions: this._aggressor.creature.store.getters.getConditionSources,
-                effects: this._aggressor.creature.store.getters.getEffectList
+                effects: this._aggressor.creature.store.getters.getEffectSet,
+                itemProperties: this._aggressor.creature.store.getters.getOffensiveEquipmentList
             })
             oCreature.store.events.on('mutation', this._aggressor.handler)
         }
@@ -756,7 +766,7 @@ class Creature {
      * @return {boolean}
      */
     checkLuck () {
-        if (!this.store.getters.getEffectList.has(CONSTS.EFFECT_LUCKY)) {
+        if (!this.store.getters.getEffectSet.has(CONSTS.EFFECT_LUCKY)) {
             return false
         }
         const eLucky = this.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_LUCKY)
@@ -1290,7 +1300,7 @@ class Creature {
                 .entries(oDamages)
                 .forEach(([sType, nValue]) => {
                     const aDamageEffectMaterials = PHYSICAL_DAMAGE_TYPES.includes(sType)
-                        ? [...this.store.getters.getSelectedWeaponMaterial]
+                        ? [...this.store.getters.getSelectedWeaponMaterialSet]
                         : undefined
 
                     const eDam = EffectProcessor.createEffect(
@@ -1322,6 +1332,12 @@ class Creature {
         return oAtk
     }
 
+    /**
+     * Calcule quelle partie de la défense a permis d'esquiver le coup.
+     * Permet d'enrichir la description de l'esquive d'un coup
+     * @param nAttackRoll
+     * @returns {*|{min: *, max: number, type: (*|string), value: number}}
+     */
     getDeflectingArmorPart (nAttackRoll) {
         const acr = this
             .store
@@ -1333,6 +1349,35 @@ class Creature {
         } else {
             return { type: CONSTS.ARMOR_DEFLECTOR_HIT, min: acr[acr.length - 1].max + 1, max: Infinity, value: Infinity }
         }
+    }
+
+    /**
+     * Renvoie la capacité de la créature à voir une autre créature.
+     * Permet de déterminer
+     * - Si la créature est visible de notre point de vue
+     * - Si la créature est invisible (bénéficie d'un champ d'invisibilité) et qu'on n'a pas de moyen de voir l'invisible
+     * - Si la créature est plongée dans l'obscurité (pas encore implémentée)
+     * - Si nous sommes aveugles
+     * @param oTarget {Creature}
+     * @return {string} PERCEPTION_
+     */
+    canSee (oTarget) {
+        const csg = this.store.getters
+        const tsg = oTarget.store.getters
+        if (csg.getConditionSet.has(CONSTS.CONDITION_BLINDED)) {
+            return CONSTS.PERCEPTION_BLIND
+        }
+        const bTargetInvisible = tsg.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)
+        const bMeSeeInvisibility =
+            csg.getEffectSet.has(CONSTS.EFFECT_SEE_INVISIBILITY) ||
+            csg.getEffectSet.has(CONSTS.EFFECT_TRUE_SIGHT)
+        if (bTargetInvisible && !bMeSeeInvisibility) {
+            return CONSTS.PERCEPTION_INVISIBLE
+        }
+        if (tsg.getAreaFlagSet.has(CONSTS.AREA_FLAG_DARK) && !csg.getEffectSet.has(CONSTS.EFFECT_DARKVISION)) {
+            return CONSTS.PERCEPTION_DARKNESS
+        }
+        return CONSTS.PERCEPTION_VISIBLE
     }
 }
 

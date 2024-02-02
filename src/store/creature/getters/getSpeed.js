@@ -7,7 +7,7 @@ const {aggregateModifiers} = require("../common/aggregate-modifiers");
  * @returns {number}
  */
 module.exports = (state, getters) => {
-    const cond = getters.getConditions
+    const cond = getters.getConditionSet
     let nSpeed = state.speed
     const nExhaustionLevel = getters.getExhaustionLevel
     let nSpeedFactor = nExhaustionLevel >= 5

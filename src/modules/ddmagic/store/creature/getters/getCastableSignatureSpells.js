@@ -6,7 +6,7 @@
  * @returns {Set<string>}
  */
 module.exports = (state, getters, externals) => {
-    if (getters.getFeats.has('feat-spell-signature')) {
+    if (getters.getFeatSet.has('feat-spell-signature')) {
         // on a le feat
         // on va lister les sorts de prédilection qui ont des slots
         const sssps = externals.data['data-ddmagic-constants'].featSpellSignatureSlotPerSpell

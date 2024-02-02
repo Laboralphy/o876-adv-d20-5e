@@ -6,7 +6,7 @@ const { getMaterialSuite } = require('../common/get-material-suite')
  * @param state
  * @param getters
  * @param externals
- * @returns {string}
+ * @returns {Set<string>}
  */
 module.exports = (state, getters, externals) => {
     const { data } = externals

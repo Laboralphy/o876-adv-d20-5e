@@ -49,7 +49,7 @@ function mutate ({ effect, target, source }) {
         // no resistance no absorb no immunity
         effect.data.appliedAmount = amp
     }
-    if (target.store.getters.getEffectList.has(EFFECT_UNCANNY_DODGE)) {
+    if (target.store.getters.getEffectSet.has(EFFECT_UNCANNY_DODGE)) {
         const eUncannyDodge = target.store.getters.getEffects.find(eff => eff.type === EFFECT_UNCANNY_DODGE && eff.amp > 0)
         if (bSubTypeWeapon && !!eUncannyDodge && source === target.getTarget()) {
             const appliedAmount = Math.ceil(effect.data.appliedAmount / 2)

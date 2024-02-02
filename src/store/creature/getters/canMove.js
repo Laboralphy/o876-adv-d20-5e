@@ -6,6 +6,6 @@ CONSTS = require('../../../consts')
  * @return {boolean}
  */
 module.exports = (state, getters) => {
-    const cond = getters.getConditions
+    const cond = getters.getConditionSet
     return !cond.has(CONSTS.CONDITION_INCAPACITATED) && !cond.has(CONSTS.CONDITION_RESTRAINED)
 }

@@ -219,7 +219,7 @@ module.exports = class SpellCast {
     empowerEvocationDamageEffect (oDamageEffect) {
         const cg = this.caster.store.getters
         if (
-            cg.getFeats.has('feat-empowered-evocation') &&
+            cg.getFeatSet.has('feat-empowered-evocation') &&
             this.spellData.school === 'SPELL_SCHOOL_EVOCATION' &&
             !this._hasEmpowered &&
             oDamageEffect.type === CONSTS.EFFECT_DAMAGE
@@ -236,7 +236,7 @@ module.exports = class SpellCast {
     overchannelDamageEffect (oDamageEffect) {
         const cg = this.caster.store.getters
         if (
-            cg.getFeats.has('feat-overchannel') &&
+            cg.getFeatSet.has('feat-overchannel') &&
             !this._hasOverchannel &&
             oDamageEffect.type === CONSTS.EFFECT_DAMAGE
         ) {
@@ -330,7 +330,7 @@ module.exports = class SpellCast {
             damage,
             type,
             dc: dc < 0 ? this.dc : dc,
-            cantrip: this.isCantrip && !this.caster.store.getters.getFeats.has('feat-potent-cantrip'),
+            cantrip: this.isCantrip && !this.caster.store.getters.getFeatSet.has('feat-potent-cantrip'),
             ability,
             apply: false
         })

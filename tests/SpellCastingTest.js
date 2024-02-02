@@ -217,20 +217,20 @@ describe('zap', function () {
             hostiles: [oTarget]
         })
 
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_STUNNED)).toBeTrue()
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_INCAPACITATED)).toBeTrue()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeTrue()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeTrue()
 
         oTarget.processEffects()
         oWizard.processEffects()
 
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_STUNNED)).toBeTrue()
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_INCAPACITATED)).toBeTrue()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeTrue()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeTrue()
 
         oTarget.processEffects()
         oWizard.processEffects()
 
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_STUNNED)).toBeFalse()
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeFalse()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
     })
     it('should not stun target when success saving throw', function () {
         const { manager, evolution } = buildStuff()
@@ -249,8 +249,8 @@ describe('zap', function () {
             hostiles: [oTarget]
         })
 
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_STUNNED)).toBeFalse()
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeFalse()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
     })
     it('should not stun target when fail saving throw but have condition immunity', function () {
         const { manager, evolution } = buildStuff()
@@ -274,8 +274,8 @@ describe('zap', function () {
             hostiles: [oTarget]
         })
 
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_STUNNED)).toBeFalse()
-        expect(oTarget.store.getters.getConditions.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeFalse()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
     })
 })
 
@@ -349,7 +349,7 @@ describe('invisibility', function () {
             cheat: true
         })
 
-        expect(oHiddenOne.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(oHiddenOne.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
 
         const v2 = oAggressiveOne.store.getters.getEntityVisibility
         expect(v2.detectable.target).toBeFalse()
@@ -387,7 +387,7 @@ describe('invisibility', function () {
         expect(eInvis0).toBeDefined()
         expect(eInvis0.duration).toBe(600)
 
-        expect(oHidden1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(oHidden1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         const v1 = oAggressiveOne.store.getters.getEntityVisibility
         expect(v1.detectable.target).toBeFalse()
         expect(v1.detectedBy.target).toBeTrue()
@@ -408,10 +408,10 @@ describe('invisibility', function () {
         // j'ai beau faire, avec mon effet concentration, je ne pourrai jamais éteindre les
         // effets stockés chez d'autres créatures.
 
-        expect(oHidden2.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(oHidden2.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
         expect(eInvis0).toBeDefined()
         expect(eInvis0.duration).toBe(0)
-        expect(oHidden1.store.getters.getConditions.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
+        expect(oHidden1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
         const v2 = oAggressiveOne.store.getters.getEntityVisibility
         expect(v2.detectable.target).toBeTrue()
         expect(v2.detectedBy.target).toBeTrue()

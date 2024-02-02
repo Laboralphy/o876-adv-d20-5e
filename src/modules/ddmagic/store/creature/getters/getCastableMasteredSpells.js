@@ -6,7 +6,7 @@
  * @returns {Set<string>}
  */
 module.exports = (state, getters, externals) => {
-    if (getters.getFeats.has('feat-spell-mastery')) {
+    if (getters.getFeatSet.has('feat-spell-mastery')) {
         const ps = state.data.spellbook.preparedSpells
         return new Set(state
             .data
