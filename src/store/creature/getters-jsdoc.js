@@ -4,6 +4,7 @@
  * @property canAttackTarget {boolean}
  * @property canMove {boolean}
  * @property canSeeInDarkness {boolean}
+ * @property canSeeInRoom {boolean}
  * @property canSeeInvisibility {boolean}
  * @property getAbilityBaseValues {D20AbilityNumberRegistry}
  * @property getAbilityBonus {D20AbilityNumberRegistry}

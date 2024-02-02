@@ -1352,15 +1352,19 @@ class Creature {
     }
 
     /**
-     * Renvoie la capcité de la créature à voir une autre créature
+     * Renvoie la capacité de la créature à voir une autre créature.
+     * Permet de déterminer
+     * - Si la créature est visible de notre point de vue
+     * - Si la créature est invisible (bénéficie d'un champ d'invisibilité) et qu'on n'a pas de moyen de voir l'invisible
+     * - Si la créature est plongée dans l'obscurité (pas encore implémentée)
+     * - Si nous sommes aveugles
      * @param oTarget {Creature}
-     * @return {string}
+     * @return {string} PERCEPTION_
      */
     canSee (oTarget) {
         const csg = this.store.getters
         const tsg = oTarget.store.getters
-        const bMeBlind = csg.getConditionSet.has(CONSTS.CONDITION_BLINDED)
-        if (bMeBlind) {
+        if (csg.getConditionSet.has(CONSTS.CONDITION_BLINDED)) {
             return CONSTS.PERCEPTION_BLIND
         }
         const bTargetInvisible = tsg.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)
@@ -1369,6 +1373,9 @@ class Creature {
             csg.getEffectSet.has(CONSTS.EFFECT_TRUE_SIGHT)
         if (bTargetInvisible && !bMeSeeInvisibility) {
             return CONSTS.PERCEPTION_INVISIBLE
+        }
+        if (tsg.getAreaFlagSet.has(CONSTS.AREA_FLAG_DARK) && !csg.getEffectSet.has(CONSTS.EFFECT_DARKVISION)) {
+            return CONSTS.PERCEPTION_DARKNESS
         }
         return CONSTS.PERCEPTION_VISIBLE
     }

@@ -15,9 +15,15 @@ const CONSTS = require("../../../consts");
  */
 module.exports = (state, getters, externals) => {
     const myConditions = getters.getConditionSet
+    const myEffects = getters.getEffectSet
+    const myItemProperties = getters.getEquipmentItemPropertySet
     const targetConditions = getters.getTargetConditionSet
 
     const oDisadvantageEffectRegistry = getters.getDisadvantagePropEffects
+
+    // La créature est dans une pièce obscure sans capacité de vision nocturne
+    // const AREA_DARKNESS = af.has(CONSTS.AREA_FLAG_DARK)
+    // const HAS_DARKVISION = myEffects.has(CONSTS.EFFECT_DARKVISION) || myItemProperties.has(CONSTS.ITEM_PROPERTY_DARKVISION)
 
     // Créature très fatiguée
     const EXHAUSTION_LEVEL_3 = getters.getExhaustionLevel >= 3
@@ -58,8 +64,6 @@ module.exports = (state, getters, externals) => {
     // La créature est sous l'eau et n'a pas de capacité sous-marine
     const af = getters.getAreaFlagSet
     const AREA_UNDERWATER = af.has(CONSTS.AREA_FLAG_UNDERWATER)
-
-    // La créature est dans une pièce obscure sans capacité de vision nocturne
 
     // La cible de la créature est trop proche lorsque l'on possède une arme à distance
     const TARGET_TOO_CLOSE = getters.isWieldingRangedWeapon && getters.isTargetInMeleeWeaponRange

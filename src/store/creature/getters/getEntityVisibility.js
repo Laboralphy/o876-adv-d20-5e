@@ -60,29 +60,32 @@ module.exports = (state, getters) => {
     const bAggressorSeeInvisibility = aggressorStuff.has(CONSTS.EFFECT_SEE_INVISIBILITY) || aggressorStuff.has(CONSTS.EFFECT_TRUE_SIGHT)
     const bAggressorInvisible = aggressorStuff.has(CONSTS.CONDITION_INVISIBLE)
 
+    // Darkness
+    const bCanSeeInRoom = getters.canSeeInRoom
+
     return {
         detectable: { // ce qu'on peut détecter
             target:
-                bHasTarget && (
-                    (!bMeBlind && !bTargetInvisible) || // on n'est pas aveugle et la cible n'est pas invisible
-                    (!bMeBlind && bTargetInvisible && bMeSeeInvisibility) // on n'est pas aveugle, la cible est invisible, mais on peut voir l'invisibilité
+                bHasTarget && bCanSeeInRoom && !bMeBlind && (
+                    !bTargetInvisible ||
+                    (bTargetInvisible && bMeSeeInvisibility)
                 ),
             aggressor:
-                bHasAggressor && (
-                    (!bMeBlind && !bAggressorInvisible) || // on n'est pas aveugle et l'agresseur n'est pas invisible
-                    (!bMeBlind && bAggressorInvisible && bMeSeeInvisibility) // on n'est pas aveugle, l'agresseur est invisible, mais on peut voir l'invisibilité
+                bHasAggressor && bCanSeeInRoom && !bMeBlind && (
+                    !bAggressorInvisible ||
+                    bAggressorInvisible && bMeSeeInvisibility
                 )
         },
         detectedBy: { // par qui on est détecté
             target:
-                bHasTarget && (
-                    (!bTargetBlind && !bMeInvisible) ||
-                    (!bTargetBlind && bMeInvisible && bTargetSeeInvisibility)
+                bHasTarget && !bTargetBlind && (
+                    !bMeInvisible ||
+                    (bMeInvisible && bTargetSeeInvisibility)
                 ),
             aggressor:
-                bHasAggressor && (
-                    (!bAggressorBlind && !bMeInvisible) ||
-                    (!bAggressorBlind && bMeInvisible && bAggressorSeeInvisibility)
+                bHasAggressor && !bAggressorBlind && (
+                    !bMeInvisible ||
+                    (bMeInvisible && bAggressorSeeInvisibility)
                 )
         }
     }
