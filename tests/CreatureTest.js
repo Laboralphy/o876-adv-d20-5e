@@ -1043,7 +1043,7 @@ describe('getActions', function () {
     })
 })
 
-fdescribe('canSee', function () {
+describe('canSee', function () {
     it('should see target when having normal conditions', function () {
         const r = new Manager().init()
         const oSeer = r.createEntity('c-soldier')
@@ -1094,7 +1094,7 @@ fdescribe('canSee', function () {
             ] })
         expect(oSeer.getPerception(oTarget)).toBe(CONSTS.PERCEPTION_DARKNESS)
     })
-    fit('should have disadvantage when attacking someone in darkroom', function () {
+    it('should have disadvantage when attacking someone in darkroom', function () {
         const r = new Manager().init()
         const oSeer = r.createEntity('c-soldier')
         const oTarget = r.createEntity('c-soldier')
