@@ -1094,6 +1094,19 @@ fdescribe('canSee', function () {
             ] })
         expect(oSeer.getPerception(oTarget)).toBe(CONSTS.PERCEPTION_DARKNESS)
     })
+    fit('should have disadvantage when attacking someone in darkroom', function () {
+        const r = new Manager().init()
+        const oSeer = r.createEntity('c-soldier')
+        const oTarget = r.createEntity('c-soldier')
+        oSeer.store.mutations.setAreaFlags({ flags: [
+                CONSTS.AREA_FLAG_DARK
+            ] })
+        oTarget.store.mutations.setAreaFlags({ flags: [
+                CONSTS.AREA_FLAG_DARK
+            ] })
+        oSeer.setTarget(oTarget)
+        expect(oSeer.store.getters.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][CONSTS.ABILITY_STRENGTH].value).toBeTrue()
+    })
     it('should see target when in dark room with darkvision', function () {
         const r = new Manager().init()
         const oSeer = r.createEntity('c-soldier')
