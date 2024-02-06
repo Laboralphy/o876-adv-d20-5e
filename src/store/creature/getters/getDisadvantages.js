@@ -21,10 +21,6 @@ module.exports = (state, getters, externals) => {
 
     const oDisadvantageEffectRegistry = getters.getDisadvantagePropEffects
 
-    // La créature est dans une pièce obscure sans capacité de vision nocturne
-    // const AREA_DARKNESS = af.has(CONSTS.AREA_FLAG_DARK)
-    // const HAS_DARKVISION = myEffects.has(CONSTS.EFFECT_DARKVISION) || myItemProperties.has(CONSTS.ITEM_PROPERTY_DARKVISION)
-
     // Créature très fatiguée
     const EXHAUSTION_LEVEL_3 = getters.getExhaustionLevel >= 3
 

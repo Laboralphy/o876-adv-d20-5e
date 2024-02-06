@@ -16,7 +16,6 @@ module.exports = {
   [CONSTS.EFFECT_DAMAGE_RESISTANCE]: require('./damage-resistance'),
   [CONSTS.EFFECT_DAMAGE_VULNERABILITY]: require('./damage-vulnerability'),
   [CONSTS.EFFECT_DAMAGE]: require('./damage'),
-  [CONSTS.EFFECT_DARKVISION]: require('./darkvision'),
   [CONSTS.EFFECT_DISADVANTAGE]: require('./disadvantage'),
   [CONSTS.EFFECT_DUMMY]: require('./dummy'),
   [CONSTS.EFFECT_ELUSIVE]: require('./elusive'),
