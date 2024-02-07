@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 07/02/2024, 12:49:29 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 07/02/2024, 13:01:13 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.EFFECT_ABILITY_BONUS]: require('./ability-bonus'),
@@ -16,6 +16,7 @@ module.exports = {
   [CONSTS.EFFECT_DAMAGE_RESISTANCE]: require('./damage-resistance'),
   [CONSTS.EFFECT_DAMAGE_VULNERABILITY]: require('./damage-vulnerability'),
   [CONSTS.EFFECT_DAMAGE]: require('./damage'),
+  [CONSTS.EFFECT_DARKVISION]: require('./darkvision'),
   [CONSTS.EFFECT_DISADVANTAGE]: require('./disadvantage'),
   [CONSTS.EFFECT_DUMMY]: require('./dummy'),
   [CONSTS.EFFECT_ELUSIVE]: require('./elusive'),
@@ -29,6 +30,7 @@ module.exports = {
   [CONSTS.EFFECT_HP_BONUS_BLOCKER]: require('./hp-bonus-blocker'),
   [CONSTS.EFFECT_HP_BONUS]: require('./hp-bonus'),
   [CONSTS.EFFECT_INVISIBILITY]: require('./invisibility'),
+  [CONSTS.EFFECT_LIGHT]: require('./light'),
   [CONSTS.EFFECT_LUCKY]: require('./lucky'),
   [CONSTS.EFFECT_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.EFFECT_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),

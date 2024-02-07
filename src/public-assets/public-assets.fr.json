@@ -1506,6 +1506,7 @@
       "ITEM_PROPERTY_DAMAGE_VULNERABILITY": {
         "type": "damageType"
       },
+      "ITEM_PROPERTY_DARKVISION": {},
       "ITEM_PROPERTY_DISADVANTAGE": {
         "rollTypes": "rollType[]",
         "abilities": "ability[]",
