@@ -1379,7 +1379,16 @@ class Creature {
             !csg.getEffectSet.has(CONSTS.EFFECT_DARKVISION) &&
             !csg.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_DARKVISION)
         ) {
-            return CONSTS.PERCEPTION_DARKNESS
+            if (
+                csg.getEffectSet.has(CONSTS.EFFECT_LIGHT) ||
+                csg.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT) ||
+                tsg.getEffectSet.has(CONSTS.EFFECT_LIGHT) ||
+                tsg.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT)
+            ) {
+                return CONSTS.PERCEPTION_VISIBLE
+            } else {
+                return CONSTS.PERCEPTION_DARKNESS
+            }
         }
         return CONSTS.PERCEPTION_VISIBLE
     }

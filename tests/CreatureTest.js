@@ -1121,3 +1121,22 @@ describe('canSee', function () {
         expect(oSeer.getPerception(oTarget)).toBe(CONSTS.PERCEPTION_VISIBLE)
     })
 })
+
+fdescribe('torch-item', function () {
+    it('should NOT see in darkroom when using a torch', function () {
+        // Avoir une torche dans la mains ne suffit
+        const r = new Manager().init()
+        const oSeer = r.createEntity('c-soldier')
+        const oTarget = r.createEntity('c-soldier')
+        oSeer.store.mutations.setAreaFlags({ flags: [
+                CONSTS.AREA_FLAG_DARK
+            ] })
+        oTarget.store.mutations.setAreaFlags({ flags: [
+                CONSTS.AREA_FLAG_DARK
+            ] })
+        const oTorch = r.createEntity('torch-standard')
+        oSeer.store.mutations.equipItem({ item: oTorch })
+        expect(oSeer.store.getters.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT)).toBeTrue()
+        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.PERCEPTION_VISIBLE)
+    })
+})

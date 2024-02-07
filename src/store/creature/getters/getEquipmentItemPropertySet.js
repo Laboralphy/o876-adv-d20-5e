@@ -4,4 +4,4 @@
  * @param getters {D20CreatureStoreGetters}
  * @returns {Set<string>}
  */
-module.exports = (state, getters) => new Set(getters.getEquipmentItemProperties.map(ip => ip.type))
+module.exports = (state, getters) => new Set(getters.getEquipmentItemProperties.map(ip => ip.property))
