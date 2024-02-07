@@ -29,7 +29,6 @@ module.exports = {
   [CONSTS.EFFECT_HP_BONUS_BLOCKER]: require('./hp-bonus-blocker'),
   [CONSTS.EFFECT_HP_BONUS]: require('./hp-bonus'),
   [CONSTS.EFFECT_INVISIBILITY]: require('./invisibility'),
-  [CONSTS.EFFECT_LIGHT]: require('./light'),
   [CONSTS.EFFECT_LUCKY]: require('./lucky'),
   [CONSTS.EFFECT_MASSIVE_CRITICAL]: require('./massive-critical'),
   [CONSTS.EFFECT_MATERIAL_VULNERABILITY]: require('./material-vulnerability'),
