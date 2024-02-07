@@ -40,6 +40,8 @@ module.exports = (state, getters) => {
         }
     }
 
+
+
     return {
         [CONSTS.CONDITION_BLINDED]: getSources(CONSTS.CONDITION_BLINDED),
         [CONSTS.CONDITION_CHARMED]: getSources(CONSTS.CONDITION_CHARMED),

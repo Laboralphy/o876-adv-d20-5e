@@ -61,7 +61,10 @@ class EffectProcessor {
 
     static createEffect (sEffect, ...aArgs) {
         const EffectBuilder = Effects[sEffect]
-        const oEffect = Effects[sEffect].create(...aArgs)
+        if (!EffectBuilder) {
+            throw new Error('This effect does not exist: ' + sEffect)
+        }
+        const oEffect = EffectBuilder.create(...aArgs)
         oEffect.mutable = 'mutate' in EffectBuilder
         return oEffect
     }

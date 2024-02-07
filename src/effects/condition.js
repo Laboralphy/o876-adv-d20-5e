@@ -7,6 +7,9 @@ const CONSTS = require('../consts')
  * @returns {D20Effect}
  */
 function create (condition) {
+    if (typeof condition !== 'string') {
+        throw new TypeError('Effect condition type error')
+    }
     return createEffect(CONSTS.EFFECT_CONDITION, 0, {
         condition
     })

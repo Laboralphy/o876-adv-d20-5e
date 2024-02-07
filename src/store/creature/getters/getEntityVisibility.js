@@ -60,18 +60,15 @@ module.exports = (state, getters) => {
     const bAggressorSeeInvisibility = aggressorStuff.has(CONSTS.EFFECT_SEE_INVISIBILITY) || aggressorStuff.has(CONSTS.EFFECT_TRUE_SIGHT)
     const bAggressorInvisible = aggressorStuff.has(CONSTS.CONDITION_INVISIBLE)
 
-    // Darkness
-    const bCanSeeInRoom = getters.canSeeInRoom
-
     return {
         detectable: { // ce qu'on peut détecter
             target:
-                bHasTarget && bCanSeeInRoom && !bMeBlind && (
+                bHasTarget && !bMeBlind && (
                     !bTargetInvisible ||
                     (bTargetInvisible && bMeSeeInvisibility)
                 ),
             aggressor:
-                bHasAggressor && bCanSeeInRoom && !bMeBlind && (
+                bHasAggressor && !bMeBlind && (
                     !bAggressorInvisible ||
                     bAggressorInvisible && bMeSeeInvisibility
                 )
