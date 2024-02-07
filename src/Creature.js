@@ -1374,13 +1374,6 @@ class Creature {
         if (bTargetInvisible && !bMeSeeInvisibility) {
             return CONSTS.PERCEPTION_INVISIBLE
         }
-        if (
-            tsg.getAreaFlagSet.has(CONSTS.AREA_FLAG_DARK) &&
-            !csg.getEffectSet.has(CONSTS.EFFECT_DARKVISION) &&
-            !csg.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_DARKVISION)
-        ) {
-            return CONSTS.PERCEPTION_DARKNESS
-        }
         return CONSTS.PERCEPTION_VISIBLE
     }
 }
