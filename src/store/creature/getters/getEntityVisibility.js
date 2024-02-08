@@ -61,7 +61,11 @@ module.exports = (state, getters) => {
     const bAggressorInvisible = aggressorStuff.has(CONSTS.CONDITION_INVISIBLE)
 
     // Darkness
-    const bCanSeeInRoom = getters.canSeeInRoom
+    const bHasDarkVision =
+        getters.getEffectSet.has(CONSTS.EFFECT_DARKVISION) ||
+        getters.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_DARKVISION)
+    const bInDarkRoom = getters.getAreaFlagSet.has(CONSTS.AREA_FLAG_DARK)
+    const bCanSeeInRoom = !bInDarkRoom || (bInDarkRoom && bHasDarkVision)
 
     return {
         detectable: { // ce qu'on peut détecter

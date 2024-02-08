@@ -3,7 +3,6 @@
  * @property canApproachTarget {boolean}
  * @property canAttackTarget {boolean}
  * @property canMove {boolean}
- * @property canSeeInRoom {boolean}
  * @property getAbilityBaseValues {D20AbilityNumberRegistry}
  * @property getAbilityBonus {D20AbilityNumberRegistry}
  * @property getAbilityList {string[]}
