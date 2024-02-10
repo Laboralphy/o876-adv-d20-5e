@@ -61,7 +61,10 @@ class EffectProcessor {
 
     static createEffect (sEffect, ...aArgs) {
         const EffectBuilder = Effects[sEffect]
-        const oEffect = Effects[sEffect].create(...aArgs)
+        if (!EffectBuilder) {
+            throw new Error('This effect does not exist: ' + sEffect)
+        }
+        const oEffect = EffectBuilder.create(...aArgs)
         oEffect.mutable = 'mutate' in EffectBuilder
         return oEffect
     }
@@ -242,7 +245,7 @@ class EffectProcessor {
         oEffect.duration = duration || 0
         this.runEffect(oEffect, target, source || target)
         const sUnicity = oEffect.unicity
-        if (target.store.getters.getEffectList.has(oEffect.type) && sUnicity !== CONSTS.EFFECT_UNICITY_STACK) {
+        if (target.store.getters.getEffectSet.has(oEffect.type) && sUnicity !== CONSTS.EFFECT_UNICITY_STACK) {
             const oAlreadyHaveEffect = target
                 .store
                 .getters

@@ -1,5 +1,7 @@
 /**
  * Transforme une sortie de getter getConditionSources en structure que l'on peut stocker dans un store (sans Set())
+ * @param conditions {Object<string, Set<string>>}
+ * @return {Object<string, string[]>}
  */
 function convertConditionsToArray (conditions) {
     const oNewConditions = {}

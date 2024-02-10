@@ -3,8 +3,7 @@
  * @property canApproachTarget {boolean}
  * @property canAttackTarget {boolean}
  * @property canMove {boolean}
- * @property canSeeInDarkness {boolean}
- * @property canSeeInvisibility {boolean}
+ * @property canSeeInRoom {boolean}
  * @property getAbilityBaseValues {D20AbilityNumberRegistry}
  * @property getAbilityBonus {D20AbilityNumberRegistry}
  * @property getAbilityList {string[]}
@@ -14,11 +13,10 @@
  * @property getAdvantagePropEffects {Object<string, Object<string, string>>}
  * @property getAdvantages {D20AdvantagesOrDisadvantages}
  * @property getAggressor {{ condition: Object.<string, boolean>}}
+ * @property getAggressorConditionSet {Set}
  * @property getAggressorConditionSources {{}}
- * @property getAggressorConditions {Set}
- * @property getAggressorEffectList {Set}
  * @property getApproachToTargetTurns {number}
- * @property getAreaFlags {Set<string>}
+ * @property getAreaFlagSet {Set<string>}
  * @property getArmorClass {number}
  * @property getArmorClassDetails {{armor: number, dexterity: number, shield: number, effects: number, props: number}}
  * @property getArmorClassRanges {{type: string, min: number, max: number}[]}
@@ -28,9 +26,9 @@
  * @property getBreakableEffects {D20Effect[]}
  * @property getCarryingCapacity {number}
  * @property getClassList {string[]}
- * @property getConditionImmunities {Set<string>}
+ * @property getConditionImmunitySet {Set<string>}
+ * @property getConditionSet {Set<string>}
  * @property getConditionSources {D20ConditionBooleanRegistry}
- * @property getConditions {Set<string>}
  * @property getCounters {Object<string, { value: number, max: value }>}
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
  * @property getDamageRerollThreshold {number}
@@ -39,22 +37,25 @@
  * @property getDefensiveEquipmentList {D20Item[]}
  * @property getDisadvantagePropEffects {Object<string, string>}
  * @property getDisadvantages {D20AdvantagesOrDisadvantages}
- * @property getEffectList {Set<string>}
+ * @property getEffectConditionPropertySet {Set<string>}
+ * @property getEffectSet {Set<string>}
  * @property getEffectSources {string[]}
  * @property getEffects {D20Effect[]}
  * @property getEncumbranceLevel {number}
  * @property getEntityVisibility {D20EntityVisibilityResult}
  * @property getEntropyType {string}
  * @property getEquipmentItemProperties {[]}
+ * @property getEquipmentItemPropertySet {Set<string>}
  * @property getEquipmentList {D20Item[]}
  * @property getEquippedItems {{[slot: string]: D20Item}}
  * @property getEquippedWeapons {{ ranged: D20Item, melee: D20Item, natural: D20Item, ammo: D20Item }}
  * @property getExhaustionLevel {number}
  * @property getFeatReport {FeatReport[]}
- * @property getFeats {Set<string>}
+ * @property getFeatSet {Set<string>}
  * @property getHealMitigation {{pharma: boolean, negateheal: boolean, factor: number}}
  * @property getHitPoints {number}
  * @property getId {number}
+ * @property getInteractorReport {{aggressor: D20CreatureGetterInteractorReport, target: D20CreatureGetterInteractorReport}}
  * @property getLevel {number}
  * @property getLevelByClass {{[c: string]: number}}
  * @property getMaxHitPoints {number}
@@ -71,7 +72,7 @@
  * @property getSelectedWeaponApplicableConditions {{condition: string, dc: number, saveAbility: number, duration: number}[]}
  * @property getSelectedWeaponApplicablePoisons {{condition: string, dc: number, saveAbility: number, duration: number}[]}
  * @property getSelectedWeaponCriticalThreat {number}
- * @property getSelectedWeaponMaterial {string}
+ * @property getSelectedWeaponMaterialSet {Set<string>}
  * @property getSelectedWeaponOnHitProperties {{condition: string, dc: number, saveAbility: number, duration: number}[]}
  * @property getSelectedWeaponProperties {array}
  * @property getSelectedWeaponRange {number}
@@ -82,10 +83,10 @@
  * @property getSpeed {number}
  * @property getSuitableOffensiveSlot {string}
  * @property getTarget {*|null}
+ * @property getTargetConditionSet {Set}
  * @property getTargetConditionSources {{}}
- * @property getTargetConditions {Set}
  * @property getTargetDistance {number}
- * @property getTargetEffectList {Set}
+ * @property getTargetEffectSet {Set}
  * @property isNotIncapacitated {boolean}
  * @property isProficientArmorAndShield {boolean}
  * @property isProficientSelectedWeapon {boolean}

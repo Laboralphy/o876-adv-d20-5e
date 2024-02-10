@@ -1,4 +1,4 @@
-/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 27/01/2024 16:03:51 */
+/* THIS FILE IS AUTO-GENERATED ! DO NOT MODIFY ! Date: 07/02/2024, 13:01:13 */
 const CONSTS = require('../consts')
 module.exports = {
   [CONSTS.ITEM_PROPERTY_ABILITY_BONUS]: require('./ability-bonus'),
@@ -14,6 +14,7 @@ module.exports = {
   [CONSTS.ITEM_PROPERTY_DAMAGE_REDUCTION]: require('./damage-reduction'),
   [CONSTS.ITEM_PROPERTY_DAMAGE_RESISTANCE]: require('./damage-resistance'),
   [CONSTS.ITEM_PROPERTY_DAMAGE_VULNERABILITY]: require('./damage-vulnerability'),
+  [CONSTS.ITEM_PROPERTY_DARKVISION]: require('./darkvision'),
   [CONSTS.ITEM_PROPERTY_DISADVANTAGE]: require('./disadvantage'),
   [CONSTS.ITEM_PROPERTY_ENHANCEMENT]: require('./enhancement'),
   [CONSTS.ITEM_PROPERTY_EXTRA_ATTACKS]: require('./extra-attacks'),

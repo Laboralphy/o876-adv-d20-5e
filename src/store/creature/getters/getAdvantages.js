@@ -9,9 +9,9 @@ const { targetAffectedByMe, getDisAndAdvEffectRegistry, getThoseProvidedByEffect
  * @return {D20AdvantagesOrDisadvantages}
  */
 module.exports = (state, getters) => {
-    const targetConditions = getters.getTargetConditions
+    const targetConditions = getters.getTargetConditionSet
     const oAdvantageEffectRegistry = getters.getAdvantagePropEffects
-    const targetEffects = getters.getTargetEffectList
+    const targetEffects = getters.getTargetEffectSet
 
     /*
     Commencer par définir les règles.

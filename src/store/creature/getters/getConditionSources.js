@@ -9,7 +9,7 @@ const {aggregateModifiers} = require("../common/aggregate-modifiers");
  */
 module.exports = (state, getters) => {
     const aEffects = getters.getEffects
-    const oImmunitySet = getters.getConditionImmunities
+    const oImmunitySet = getters.getConditionImmunitySet
     const aTags = aEffects.map(eff => eff.type === CONSTS.EFFECT_CONDITION
         ? ({ type: eff.data.condition, source: eff.source })
         : ({ type: eff.type, source: eff.source }))
@@ -39,6 +39,8 @@ module.exports = (state, getters) => {
             return effects in oRegistry ? oRegistry[effects].sources : new Set()
         }
     }
+
+
 
     return {
         [CONSTS.CONDITION_BLINDED]: getSources(CONSTS.CONDITION_BLINDED),

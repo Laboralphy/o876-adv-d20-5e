@@ -6,7 +6,7 @@ CONSTS = require('../../../consts')
  * @return {boolean}
  */
 module.exports = (state, getters) => {
-    const cond = getters.getConditions
+    const cond = getters.getConditionSet
     if (!getters.canMove) {
         return false
     }

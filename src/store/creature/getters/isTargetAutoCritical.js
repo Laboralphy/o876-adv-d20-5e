@@ -10,7 +10,7 @@ const CONSTS = require('../../../consts')
  */
 module.exports = (state, getters) => {
     const bInMeleeWeaponRange = getters.isTargetInMeleeWeaponRange
-    const cond = getters.getTargetConditions
+    const cond = getters.getTargetConditionSet
     const bDefenseLess = cond.has(CONSTS.CONDITION_PARALYZED) || cond.has(CONSTS.CONDITION_UNCONSCIOUS)
     return bInMeleeWeaponRange && bDefenseLess
 }

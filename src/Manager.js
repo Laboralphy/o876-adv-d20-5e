@@ -82,6 +82,7 @@ class Manager {
                     })
                 }
             })
+        return this
     }
 
     /**

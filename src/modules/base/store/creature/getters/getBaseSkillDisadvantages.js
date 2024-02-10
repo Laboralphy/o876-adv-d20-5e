@@ -11,7 +11,7 @@ module.exports = (state, getters) => {
     const oDisadvantageRegistry = getters.getDisadvantagePropEffects
 
     // La créature se trouve dans une pièce sombre, sa perception est à la rue
-    const af = getters.getAreaFlags
+    const af = getters.getAreaFlagSet
     const AREA_DARK = af.has(CONSTS.AREA_FLAG_DARK)
 
     return {

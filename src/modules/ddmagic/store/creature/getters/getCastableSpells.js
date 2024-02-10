@@ -18,7 +18,7 @@ module.exports = (state, getters, externals) => {
     const oPrepared = getters.getPreparedSpells
     const aPrepCantrips = new Set(oPrepared.cantrips)
     const aPrepSpells = new Set(oPrepared.spells)
-    const bFeatSpellMastery = getters.getFeats.has('feat-spell-mastery')
+    const bFeatSpellMastery = getters.getFeatSet.has('feat-spell-mastery')
     const aCastableSignatureSpells = getters.getCastableSignatureSpells
     aKnownSpells.forEach(spell => {
         if (spell in oSpellDB) {

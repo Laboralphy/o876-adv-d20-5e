@@ -64,7 +64,7 @@ function getThoseProvidedByEffects (oRegistry, sRollType, sAbility) {
  * @returns {*}
  */
 function targetAffectedByMe (sCondition, getters) {
-    const targetConditions = getters.getTargetConditions
+    const targetConditions = getters.getTargetConditionSet
     const targetConditionSources = getters.getTargetConditionSources
     const myID = getters.getId
 
