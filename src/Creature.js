@@ -530,7 +530,7 @@ class Creature {
             this.processOnDamaged(oEffect, source)
         }
         const eEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
-        this._events.emit('effect-applied', { effect: eEffect })
+        this._events.emit('effect-applied', { effect: eEffect, target: this })
 
         if (bDamageEffect && !bWeaponEffect) {
             // Damaged by non-weapon source
