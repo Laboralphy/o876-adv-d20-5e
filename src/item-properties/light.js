@@ -2,13 +2,12 @@ const CONSTS = require('../consts')
 
 /**
  * ITEM_PROPERTY_LIGHT
- * @param amp {number} intensité lumineuse
  * @returns {{data: {}, amp, property: (string|*)}}
  */
-module.exports = function ({ amp }) {
+module.exports = function () {
     return {
         property: CONSTS.ITEM_PROPERTY_LIGHT,
-        amp,
+        amp: 100,
         data: {}
     }
 }
