@@ -1295,7 +1295,6 @@ class Creature {
             oAtk.damages.resisted = oResisted
             oAtk.damages.types = oDamages
             oAtk.damages.amount = 0
-            this.notifyAttack(oAtk)
             Object
                 .entries(oDamages)
                 .forEach(([sType, nValue]) => {
@@ -1322,6 +1321,7 @@ class Creature {
                     oDamages[sType] -= n
                     return eMitigDam
                 })
+            this.notifyAttack(oAtk)
             // application d'effets on hit
             if (oAtk.damages.amount > 0) {
                 this.processOnHit(oTarget, oAtk)
