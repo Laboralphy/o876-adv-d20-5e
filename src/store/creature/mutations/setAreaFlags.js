@@ -7,6 +7,7 @@ const CONSTS = require('../../../consts')
  */
 module.exports = ({ state }, { flags }) => {
     const saf = state.areaFlags
+    saf.splice(0, saf.length)
     flags.forEach(flag => {
         if (!(flag.startsWith('AREA_FLAG_') && (flag in CONSTS))) {
             throw new Error('ERR_INVALID_AREA_FLAG: ' + flag)
