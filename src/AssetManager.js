@@ -33,6 +33,7 @@ class AssetManager {
                 }
             })
         }
+        this._loadedModules = new Set()
     }
 
     get initialized () {
@@ -113,6 +114,9 @@ class AssetManager {
     }
 
     loadModule (sPath) {
+        if (this._loadedModules.has(sPath)) {
+            return
+        }
         this.loadPath(path.join(sPath, 'blueprints'), 'blueprint')
         this.loadPath(path.join(sPath, 'data'), 'data')
         this.loadPath(path.join(sPath, 'store', 'creature', 'getters'), 'getters/creature')
@@ -120,6 +124,7 @@ class AssetManager {
         this.loadPath(path.join(sPath, 'store', 'creature', 'mutations'), 'mutations/creature')
         this.loadPath(path.join(sPath, 'scripts'), 'script')
         this.loadPath(path.join(sPath, 'strings'), 'strings')
+        this._loadedModules.add(sPath)
     }
 
     init () {
