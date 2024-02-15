@@ -1,10 +1,13 @@
-const { CONFIG } = require('../src/config')
-CONFIG.setModuleActive('classic', true)
-
-const Manager = require("../src/Manager");
+const ManagerProto = require("../src/Manager");
 const EffectProcessor = require("../src/EffectProcessor");
 const CONSTS = require("../src/consts");
 
+class Manager extends ManagerProto {
+    constructor() {
+        super()
+        this.config.setModuleActive('classic', true)
+    }
+}
 
 describe('Troll regeneration', function () {
     it('should regain 10 hp when wounded by non acid weapon', function () {
@@ -45,6 +48,7 @@ describe('Troll regeneration', function () {
 describe('Ogre', function () {
     it('should have a max damage of 2d8+4 instead of 1d8+4 when having greatclub', function () {
         const r = new Manager()
+        r.config.setModuleActive('classic', true)
         r.init()
         const ogre = r.createEntity('c-ogre')
         ogre.dice.cheat(0)

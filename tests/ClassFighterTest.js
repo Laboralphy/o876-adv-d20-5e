@@ -2,16 +2,12 @@ const Evolution = require('../src/Evolution')
 const Manager = require('../src/Manager')
 const Creature = require('../src/Creature')
 const AssetManager = require('../src/AssetManager')
-const { Config, CONFIG } = require('../src/config')
-const CONSTS = require("../src/consts");
-
-CONFIG.setModuleActive('classic', true)
 
 function buildStuff () {
     const r = new Manager()
+    r.config.setModuleActive('classic', true)
     r.init()
-    const am = new AssetManager()
-    am.init()
+    const am = r.assetManager
     const ev = new Evolution()
     ev.data = am.data
     return {

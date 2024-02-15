@@ -1,17 +1,20 @@
-const { CONFIG } = require('../src/config')
-CONFIG.setModuleActive('classic', true)
-
 const Creature = require('../src/Creature')
-const Manager = require('../src/Manager')
+const ManagerProto = require('../src/Manager')
 const EffectProcessor = require('../src/EffectProcessor')
 const ItemProperties = require('../src/item-properties')
 const CONSTS = require('../src/consts')
-const AssetManager = require('../src/AssetManager')
 const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
 
 const DISTANCE_MELEE = 4
 const DISTANCE_REACH = 9
 const DISTANCE_RANGED = 30
+
+class Manager extends ManagerProto {
+    constructor() {
+        super()
+        this.config.setModuleActive('classic', true)
+    }
+}
 
 describe('basic instanciation', function () {
     it('should not throw error WHEN instanciated', function () {

@@ -12,8 +12,8 @@ class EntityFactory {
         return this._am
     }
 
-    init () {
-        const assetManager = new AssetManager()
+    init (config) {
+        const assetManager = new AssetManager({ config })
         assetManager.init()
         this._am = assetManager
     }

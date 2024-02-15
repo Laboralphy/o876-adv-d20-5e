@@ -1,21 +1,16 @@
-const Creature = require("../src/Creature");
 const Evolution = require('../src/Evolution')
 const Manager = require('../src/Manager')
 const AssetManager = require('../src/AssetManager')
-const { Config, CONFIG } = require('../src/config')
 const CONSTS = require("../src/consts");
 const itemProperties = require('../src/item-properties')
 
-CONFIG.setModuleActive('classic', true)
-CONFIG.setModuleActive('ddmagic', true)
-
 function buildStuff () {
     const r = new Manager()
+    r.config.setModuleActive('classic', true)
+    r.config.setModuleActive('ddmagic', true)
     r.init()
-    const am = new AssetManager()
-    am.init()
     const ev = new Evolution()
-    ev.data = am.data
+    ev.data = r.assetManager.data
     return {
         manager: r,
         evolution: ev

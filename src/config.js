@@ -92,6 +92,9 @@ class Config {
      * @param value {boolean}
      */
     setModuleActive(id, value) {
+        if (typeof value !== 'boolean') {
+            throw TypeError('setModuleActive accept is and boolean value')
+        }
         if (id === '*') {
             this._modules.forEach(m => m.active = value)
         } else {
@@ -117,6 +120,5 @@ class Config {
 }
 
 module.exports = {
-    Config,
-    CONFIG: new Config()
+    Config
 }

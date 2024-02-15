@@ -75,7 +75,7 @@ class Manager {
      */
     init () {
         const ef = new EntityFactory()
-        ef.init()
+        ef.init(this.config)
         this._ef = ef
         // Lancement des inits de chaque module
         this

@@ -1,19 +1,14 @@
 const Evolution = require('../src/Evolution')
 const Manager = require('../src/Manager')
-const Creature = require('../src/Creature')
 const AssetManager = require('../src/AssetManager')
-const { CONFIG } = require('../src/config')
 const jsonschema = require('jsonschema')
-const {CONSTS} = require("../index");
-
-CONFIG.setModuleActive('classic', true)
-CONFIG.setModuleActive('ddmagic', true)
 
 function buildStuff () {
     const r = new Manager()
+    r.config.setModuleActive('classic', true)
+    r.config.setModuleActive('ddmagic', true)
     r.init()
-    const am = new AssetManager()
-    am.init()
+    const am = r.assetManager
     const ev = new Evolution()
     ev.data = am.data
     return {

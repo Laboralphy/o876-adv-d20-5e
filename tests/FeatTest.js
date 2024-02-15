@@ -1,9 +1,14 @@
-const { CONFIG } = require('../src/config')
-CONFIG.setModuleActive('classic', true)
-
 const Creature = require('../src/Creature')
-const Manager = require('../src/Manager')
+const ManagerProto = require('../src/Manager')
 const CONSTS = require('../src/consts')
+
+
+class Manager extends ManagerProto {
+    constructor() {
+        super()
+        this.config.setModuleActive('classic', true)
+    }
+}
 
 beforeAll(function () {
     Error.stackTraceLimit = Infinity

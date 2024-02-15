@@ -4,14 +4,16 @@ const path = require('path')
 const SchemaValidator = require("./SchemaValidator")
 const StoreManager = require('./StoreManager')
 const { deepMerge, deepClone } = require('@laboralphy/object-fusion')
-const { CONFIG } = require('./config')
 const STRINGS = {
     fr: require('./strings/fr.json'),
     en: require('./strings/en.json')
 }
 
 class AssetManager {
-    constructor ({ config = CONFIG } = {}) {
+    constructor ({ config } = {}) {
+        if (!config) {
+            throw new Error('config object mandatory')
+        }
         this._initialized = false
         this._config = config
         this._lang = 'fr'

@@ -1,10 +1,14 @@
-const { CONFIG } = require('../src/config')
-CONFIG.setModuleActive('classic', true)
-
-const Manager = require('../src/Manager')
+const ManagerProto = require('../src/Manager')
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
 const EffectProcessor = require('../src/EffectProcessor')
+
+class Manager extends ManagerProto {
+    constructor() {
+        super()
+        this.config.setModuleActive('classic', true)
+    }
+}
 
 describe('instanciation', function () {
     it('should instanciate with no error', function () {
