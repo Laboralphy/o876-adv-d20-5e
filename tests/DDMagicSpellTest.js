@@ -85,7 +85,7 @@ describe('spell data base check', function () {
 describe('masteredSpells', function () {
     it('should not have mastered spell defined when creating creature', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 2)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.setTarget(oTarget)
         oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
@@ -112,14 +112,14 @@ describe('Spell names', function () {
 describe('acid-splash', function () {
     it('should do acid 4 damage when at level 2', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 2)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.setTarget(oTarget)
         oWizard.store.mutations.learnSpell({ spell: 'acid-splash' })
         oWizard.store.mutations.prepareSpell({ spell: 'acid-splash' })
-        expect(typeof Creature.AssetManager.scripts['ddmagic-cast-spell']).toBe('function')
+        expect(typeof manager.assetManager.scripts['ddmagic-cast-spell']).toBe('function')
         expect(() => {
-            Creature.AssetManager.scripts['ddmagic-cast-spell']({
+            manager.assetManager.scripts['ddmagic-cast-spell']({
                 spell: 'acid-splash',
                 caster: oWizard,
                 hostiles: [oTarget]
@@ -131,7 +131,7 @@ describe('acid-splash', function () {
 describe('Burning hands', function () {
     it('should change exported state when changing slot consumed', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 2)
         oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
         oWizard.store.mutations.prepareSpell({ spell: 'burning-hands' })
         const a1 = oWizard.state
@@ -147,14 +147,14 @@ describe('Burning hands', function () {
     })
     it('should consume level 1 spell slot when casting spell', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 2)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.setTarget(oTarget)
         oWizard.store.mutations.learnSpell({ spell: 'burning-hands' })
         oWizard.store.mutations.prepareSpell({ spell: 'burning-hands' })
         expect(oWizard.store.getters.getSpellSlotStatus[0]).toEqual({ count: 3, used: 0 })
         expect(oWizard.store.state.data.spellbook.slots[0]).toBe(0)
-        expect(Creature.AssetManager.scripts['ddmagic-cast-spell']({
+        expect(manager.assetManager.scripts['ddmagic-cast-spell']({
                 spell: 'burning-hands',
                 caster: oWizard,
                 hostiles: [oTarget]
@@ -162,7 +162,7 @@ describe('Burning hands', function () {
         ).toBeTrue()
         const nWL = oWizard.store.getters.getSpellCasterLevel
         expect(nWL).toBe(2)
-        const ssc = Creature.AssetManager.data['data-ddmagic-spell-count'].find(dx => dx.wizardLevel === 2)
+        const ssc = manager.assetManager.data['data-ddmagic-spell-count'].find(dx => dx.wizardLevel === 2)
         expect(ssc.wizardLevel).toBe(2)
         expect(ssc.slotCountPerLevel).toEqual([3, 0, 0, 0, 0, 0, 0, 0, 0])
         expect(ssc.slotCountPerLevel.map((n, i) => oWizard.store.state.data.spellbook.slots[i]))

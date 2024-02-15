@@ -8,9 +8,6 @@ const AssetManager = require("../src/AssetManager");
 
 beforeAll(function () {
     Error.stackTraceLimit = Infinity
-    const am = new AssetManager()
-    am.init()
-    Creature.AssetManager = am
 })
 describe('necklace of greater health', function () {
     it ('should have advantage on saving throw against disease when whearing this amulet', function () {

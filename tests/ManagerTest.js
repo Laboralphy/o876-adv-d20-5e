@@ -40,9 +40,10 @@ describe('strike', function () {
     it ('should log an attack when using strike', function () {
         const r = new Manager()
         r.init()
-        const c1 = new Creature()
+        const c1 = r.entityFactory.createCreature()
         c1.name = 'Burnasse'
         const c2 = new Creature()
+        c2.assetManager = r.assetManager
         c2.name = 'Mr.X'
         r._defineCreatureEventHandlers(c1)
         const aLog = []
@@ -563,11 +564,13 @@ describe('EffectProcessor Garbage collector', function () {
     }
 
     function createBatch () {
-        const c1 = new Creature()
-        const c2 = new Creature()
-        const c3 = new Creature()
-        const c4 = new Creature()
-        const c5 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
+        const c3 = r.entityFactory.createCreature()
+        const c4 = r.entityFactory.createCreature()
+        const c5 = r.entityFactory.createCreature()
         c1.id = 'c1'
         c2.id = 'c2'
         c3.id = 'c3'

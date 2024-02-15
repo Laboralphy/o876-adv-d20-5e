@@ -22,6 +22,10 @@ class Manager {
         ])
     }
 
+    get entityFactory () {
+        return this._ef
+    }
+
     get creatureHandlers () {
         return this._creatureHandlers
     }

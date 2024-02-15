@@ -47,6 +47,9 @@ class Dice {
    * @returns {number} résultat
    */
   roll (nSides, nCount = 1, nModifier = 0) {
+    if (nSides === 0 || nCount === 0) {
+      return nModifier
+    }
     let nAcc = 0
     if (nSides === 0) {
       return nModifier

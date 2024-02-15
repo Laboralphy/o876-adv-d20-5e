@@ -16,7 +16,6 @@ class EntityFactory {
         const assetManager = new AssetManager()
         assetManager.init()
         this._am = assetManager
-        Creature.AssetManager = this._am
     }
 
     mixData(oBlueprint, oData, slots) {
@@ -162,11 +161,15 @@ class EntityFactory {
      * @property abilities {CreatureBlueprintAbilityDef}
      * @property equipment {string[]}
      *
-     * @param oBlueprint
+     * @param oBlueprint {{}|null}
      * @returns {Creature}
      */
-    createCreature (oBlueprint) {
+    createCreature (oBlueprint = null) {
         const oCreature = new Creature()
+        oCreature.assetManager = this.assetManager
+        if (!oBlueprint) {
+            return oCreature
+        }
         const csm = oCreature.store.mutations
         if ('class' in oBlueprint) {
             csm.addClass({ ref: oBlueprint.class, levels: oBlueprint.level })
@@ -277,6 +280,7 @@ class EntityFactory {
     importCreature (data) {
         this.assetManager.validateImportData(data)
         const creature = new Creature()
+        creature.assetManager = this.assetManager
         creature.id = data.id
         creature.ref = data.ref
         creature.name = data.name
