@@ -704,3 +704,24 @@ describe('sneak attacks', function () {
         expect(outcome2.damages.amount).toBe(6)
     })
 })
+
+describe('thief tools', function () {
+    it('should be proficient with unlock', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = manager.entityFactory.createCreature()
+        evolution.setupCreatureFromTemplate(oRogue, 'template-rogue-generic', 5)
+        oRogue.dice.cheat(0.5)
+        expect(oRogue.store.getters.getProficiencies.includes(CONSTS.PROFICIENCY_TOOL_THIEVES_TOOLS)).toBeTrue()
+        expect(oRogue.store.getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]).toBe(3)
+        const outcome = oRogue.rollSkill(CONSTS.ABILITY_DEXTERITY, 10, CONSTS.PROFICIENCY_TOOL_THIEVES_TOOLS)
+        expect(outcome).toEqual({
+          bonus: 6,
+          roll: 11,
+          value: 17,
+          dc: 10,
+          success: true,
+          ability: 'ABILITY_DEXTERITY',
+          circumstance: 0
+        })
+    })
+})

@@ -642,6 +642,7 @@ class Creature {
             if (sSkillDataProp.startsWith('skill-')) {
                 throw new Error(sSkill + ' is not in data')
             }
+            return null
         }
     }
 
@@ -929,7 +930,7 @@ class Creature {
         const sg = this.store.getters
         // données du skill
         const aSkills = sg.getProficiencies
-        const bSkillProficient = aSkills.includes(sSkill)
+        const bSkillProficient = aSkills.includes(sSkill) || aSkills.includes(sExtraStackingProficiency)
         // déterminer les bonus du skill
         const nSkillBonus = this
             .aggregateModifiers([
@@ -941,7 +942,10 @@ class Creature {
             }).sum
         // déterminer la carac du skill
         const oSkillData = this.getSkillData(sSkill)
-        const sSkillAbility = oSkillData.ability
+        const sSkillAbility = sSkill.startsWith('ABILITY_') ? sSkill : oSkillData.ability
+        if (sSkill === sSkillAbility) {
+            sSkill = ''
+        }
         // Ajouter un evéntuel bonus de proficiency (mais qui ne se stack pas)
         const nSkillProfBonus = (bSkillProficient ? sg.getProficiencyBonus : 0)
         const amExpertise = this
