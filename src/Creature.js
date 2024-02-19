@@ -1376,20 +1376,20 @@ class Creature {
      * - Si la créature est plongée dans l'obscurité (pas encore implémentée)
      * - Si nous sommes aveugles
      * @param oTarget {Creature}
-     * @return {string} PERCEPTION_
+     * @return {string} VISIBILITY_
      */
     getPerception (oTarget) {
         const csg = this.store.getters
         const tsg = oTarget.store.getters
         if (csg.getConditionSet.has(CONSTS.CONDITION_BLINDED)) {
-            return CONSTS.PERCEPTION_BLIND
+            return CONSTS.VISIBILITY_BLIND
         }
         const bTargetInvisible = tsg.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)
         const bMeSeeInvisibility =
             csg.getEffectSet.has(CONSTS.EFFECT_SEE_INVISIBILITY) ||
             csg.getEffectSet.has(CONSTS.EFFECT_TRUE_SIGHT)
         if (bTargetInvisible && !bMeSeeInvisibility) {
-            return CONSTS.PERCEPTION_INVISIBLE
+            return CONSTS.VISIBILITY_INVISIBLE
         }
         if (
             tsg.getAreaFlagSet.has(CONSTS.AREA_FLAG_DARK) &&
@@ -1402,12 +1402,12 @@ class Creature {
                 tsg.getEffectSet.has(CONSTS.EFFECT_LIGHT) ||
                 tsg.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT)
             ) {
-                return CONSTS.PERCEPTION_VISIBLE
+                return CONSTS.VISIBILITY_VISIBLE
             } else {
-                return CONSTS.PERCEPTION_DARKNESS
+                return CONSTS.VISIBILITY_DARKNESS
             }
         }
-        return CONSTS.PERCEPTION_VISIBLE
+        return CONSTS.VISIBILITY_VISIBLE
     }
 }
 
