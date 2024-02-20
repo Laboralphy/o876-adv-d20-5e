@@ -706,7 +706,7 @@ describe('sneak attacks', function () {
 })
 
 describe('thief tools', function () {
-    it('should be proficient with unlock', function () {
+    it('should have bonus when picking lock when having thief tools proficiency', function () {
         const { manager, evolution } = buildStuff()
         const oRogue = manager.entityFactory.createCreature()
         evolution.setupCreatureFromTemplate(oRogue, 'template-rogue-generic', 5)
@@ -715,13 +715,31 @@ describe('thief tools', function () {
         expect(oRogue.store.getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]).toBe(3)
         const outcome = oRogue.rollSkill(CONSTS.ABILITY_DEXTERITY, 10, CONSTS.PROFICIENCY_TOOL_THIEVES_TOOLS)
         expect(outcome).toEqual({
-          bonus: 6,
-          roll: 11,
-          value: 17,
-          dc: 10,
-          success: true,
-          ability: 'ABILITY_DEXTERITY',
-          circumstance: 0
+            bonus: 6,
+            roll: 11,
+            value: 17,
+            dc: 10,
+            success: true,
+            ability: 'ABILITY_DEXTERITY',
+            circumstance: 0
+        })
+    })
+    it('should not have bonus when picking when not having thief tools proficiency', function () {
+        const { manager, evolution } = buildStuff()
+        const oTourist = manager.entityFactory.createCreature()
+        evolution.setupCreatureFromTemplate(oTourist, 'template-tourist-generic', 5)
+        oTourist.dice.cheat(0.5)
+        expect(oTourist.store.getters.getProficiencies.includes(CONSTS.PROFICIENCY_TOOL_THIEVES_TOOLS)).toBeFalse()
+        expect(oTourist.store.getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]).toBe(0)
+        const outcome = oTourist.rollSkill(CONSTS.ABILITY_DEXTERITY, 10, CONSTS.PROFICIENCY_TOOL_THIEVES_TOOLS)
+        expect(outcome).toEqual({
+            bonus: 0,
+            roll: 11,
+            value: 11,
+            dc: 10,
+            success: true,
+            ability: 'ABILITY_DEXTERITY',
+            circumstance: 0
         })
     })
 })
