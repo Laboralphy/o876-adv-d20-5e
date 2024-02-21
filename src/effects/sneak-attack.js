@@ -2,7 +2,8 @@ const createEffect = require('./abstract')
 const CONSTS = require('../consts')
 
 /**
- * This effect do nothing
+ * This effect increase weapon damage output when the attack is sneakable
+ * The "sneakability" is computed by main engine.
  * @returns {D20Effect}
  */
 function create (value) {

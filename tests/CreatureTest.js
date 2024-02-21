@@ -1137,14 +1137,14 @@ describe('canSee', function () {
         const r = new Manager().init()
         const oSeer = r.createEntity('c-soldier')
         const oTarget = r.createEntity('c-soldier')
-        expect(oSeer.getPerception(oTarget)).toBe('VISIBILITY_VISIBLE')
+        expect(oSeer.getCreatureVisibility(oTarget)).toBe('VISIBILITY_VISIBLE')
     })
     it('should not see target when target is invisible and we dont have see_invis', function () {
         const r = new Manager().init()
         const oSeer = r.createEntity('c-soldier')
         const oTarget = r.createEntity('c-soldier')
         oTarget.applyEffect(oTarget.EffectProcessor.createEffect('EFFECT_INVISIBILITY'), 10)
-        expect(oSeer.getPerception(oTarget)).toBe('VISIBILITY_INVISIBLE')
+        expect(oSeer.getCreatureVisibility(oTarget)).toBe('VISIBILITY_INVISIBLE')
     })
     it('should see target when target is invisible and we have see_invis', function () {
         const r = new Manager().init()
@@ -1152,7 +1152,7 @@ describe('canSee', function () {
         const oTarget = r.createEntity('c-soldier')
         oTarget.applyEffect(oTarget.EffectProcessor.createEffect('EFFECT_INVISIBILITY'), 10)
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect('EFFECT_SEE_INVISIBILITY'), 10)
-        expect(oSeer.getPerception(oTarget)).toBe('VISIBILITY_VISIBLE')
+        expect(oSeer.getCreatureVisibility(oTarget)).toBe('VISIBILITY_VISIBLE')
     })
     it('should not see target when blind', function () {
         const r = new Manager().init()
@@ -1160,7 +1160,7 @@ describe('canSee', function () {
         const oTarget = r.createEntity('c-soldier')
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_BLINDED), 10)
         expect(oSeer.store.getters.getConditionSet.has(CONSTS.CONDITION_BLINDED)).toBeTrue()
-        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_BLIND)
+        expect(oSeer.getCreatureVisibility(oTarget)).toBe(CONSTS.VISIBILITY_BLIND)
     })
     it('should not see target when blind and true sight and see_invis', function () {
         const r = new Manager().init()
@@ -1169,7 +1169,7 @@ describe('canSee', function () {
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_BLINDED), 10)
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_SEE_INVISIBILITY), 10)
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT), 10)
-        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_BLIND)
+        expect(oSeer.getCreatureVisibility(oTarget)).toBe(CONSTS.VISIBILITY_BLIND)
     })
     it('should not see target when in dark room', function () {
         const r = new Manager().init()
@@ -1181,7 +1181,7 @@ describe('canSee', function () {
         oTarget.store.mutations.setAreaFlags({ flags: [
                 CONSTS.AREA_FLAG_DARK
             ] })
-        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_DARKNESS)
+        expect(oSeer.getCreatureVisibility(oTarget)).toBe(CONSTS.VISIBILITY_DARKNESS)
     })
     it('should have disadvantage when attacking someone in darkroom', function () {
         const r = new Manager().init()
@@ -1207,7 +1207,7 @@ describe('canSee', function () {
                 CONSTS.AREA_FLAG_DARK
             ] })
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_DARKVISION), 10)
-        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_VISIBLE)
+        expect(oSeer.getCreatureVisibility(oTarget)).toBe(CONSTS.VISIBILITY_VISIBLE)
     })
 })
 
@@ -1226,6 +1226,6 @@ describe('torch-item', function () {
         const oTorch = r.createEntity('torch')
         oSeer.store.mutations.equipItem({ item: oTorch })
         expect(oSeer.store.getters.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT)).toBeTrue()
-        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_VISIBLE)
+        expect(oSeer.getCreatureVisibility(oTarget)).toBe(CONSTS.VISIBILITY_VISIBLE)
     })
 })

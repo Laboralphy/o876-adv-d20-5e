@@ -1,10 +1,11 @@
 const AssetManager = require('../src/AssetManager')
-const { CONFIG } = require('../src/config')
+const { Config } = require('../src/config')
 
+const CONFIG = new Config()
 CONFIG.setModuleActive('*', true)
 
 function generatePublicAssets (sLang) {
-    const a = new AssetManager()
+    const a = new AssetManager({ config: CONFIG })
     a.init()
     a.lang = sLang || 'en'
     return a.publicAssets

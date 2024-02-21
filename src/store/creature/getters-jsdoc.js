@@ -80,6 +80,7 @@
  * @property getSizeProperties {{value: number, hitDice: number, space: number, carryingCapacity: number, extraMeleeDamageDice: number }}
  * @property getSpecie {string}
  * @property getSpeed {number}
+ * @property getStealthDetectionSet {Set<string>}
  * @property getSuitableOffensiveSlot {string}
  * @property getTarget {*|null}
  * @property getTargetConditionSet {Set}

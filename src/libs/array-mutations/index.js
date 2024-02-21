@@ -60,6 +60,31 @@ function mutateItem (a, i, f) {
 }
 
 /**
+ * Remplace tous les éléments
+ * @param a
+ * @param fsearch
+ * @param fmut
+ */
+function mutateItems (a, fsearch, fmut) {
+    const amut = []
+    for (let i = 0, l = a.length; i < l; ++i) {
+        const ai = a[i]
+        if (fsearch(ai, i, a)) {
+            amut.push(i)
+        }
+    }
+    amut.forEach(index => mutateItem(a, index, fmut))
+}
+
+function refreshItem (a, item) {
+    const i = a.indexOf(item)
+    if (i < 0) {
+        throw new Error('Item not in array')
+    }
+    setItem(a, i, item)
+}
+
+/**
  * Remplace le contenu (tous les items) d'un tableau
  * @param a {[]}
  * @param a2 {[]}
@@ -77,5 +102,7 @@ module.exports = {
     removeItem,
     clone,
     mutateItem,
-    update
+    mutateItems,
+    update,
+    refreshItem
 }
