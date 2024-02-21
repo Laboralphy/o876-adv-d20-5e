@@ -12,7 +12,7 @@ module.exports = (state, getters) => {
     const bArmorProficient = (oArmor && oArmor.proficiency)
         ? (getters.getProficiencies.includes(oArmor.proficiency) || getters.getProficiencies.includes(oArmor.armorType))
         : true
-    const bShieldProficient = oShield
+    const bShieldProficient = (oShield && oShield.itemType === CONSTS.ITEM_TYPE_SHIELD)
         ? getters.getProficiencies.includes(CONSTS.PROFICIENCY_SHIELD)
         : true
     return bArmorProficient && bShieldProficient

@@ -1,0 +1,9 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_TORCH",
+  "properties": [
+    {
+      "property": "ITEM_PROPERTY_LIGHT"
+    }
+  ]
+}

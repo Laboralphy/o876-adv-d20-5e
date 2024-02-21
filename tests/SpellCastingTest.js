@@ -1,21 +1,16 @@
-const Creature = require("../src/Creature");
 const Evolution = require('../src/Evolution')
 const Manager = require('../src/Manager')
 const AssetManager = require('../src/AssetManager')
-const { Config, CONFIG } = require('../src/config')
 const CONSTS = require("../src/consts");
 const itemProperties = require('../src/item-properties')
 
-CONFIG.setModuleActive('classic', true)
-CONFIG.setModuleActive('ddmagic', true)
-
 function buildStuff () {
     const r = new Manager()
+    r.config.setModuleActive('classic', true)
+    r.config.setModuleActive('ddmagic', true)
     r.init()
-    const am = new AssetManager()
-    am.init()
     const ev = new Evolution()
-    ev.data = am.data
+    ev.data = r.assetManager.data
     return {
         manager: r,
         evolution: ev
@@ -25,14 +20,14 @@ function buildStuff () {
 describe('acid-splash', function () {
     it('should run cast script', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         const oTarget = manager.createEntity('c-soldier')
-        expect(Creature.AssetManager).toBeDefined()
+        oWizard.assetManager = oTarget.assetManager = manager.assetManager
         oWizard.dice.cheat(0.5)
         oTarget.dice.cheat(0.1)
         oWizard.setTarget(oTarget)
-        expect(typeof Creature.AssetManager.scripts['ddmagic-cast-spell']).toBe('function')
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        expect(typeof manager.assetManager.scripts['ddmagic-cast-spell']).toBe('function')
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
         expect(typeof pCast).toBe('function')
         expect(oTarget.store.getters.getRecentDamageTypes).toEqual({})
         pCast({
@@ -46,17 +41,17 @@ describe('acid-splash', function () {
     })
     it('should splash acid on two creatures when having several hostiles', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         const oTarget1 = manager.createEntity('c-soldier')
         const oTarget2 = manager.createEntity('c-soldier')
         const oTarget3 = manager.createEntity('c-soldier')
-        expect(Creature.AssetManager).toBeDefined()
+        expect(manager.assetManager).toBeDefined()
         oWizard.dice.cheat(0.5)
         oTarget1.dice.cheat(0.1)
         oTarget2.dice.cheat(0.1)
         oTarget3.dice.cheat(0.1)
         oWizard.setTarget(oTarget1)
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
         expect(oTarget1.store.getters.getRecentDamageTypes).toEqual({})
         expect(oTarget2.store.getters.getRecentDamageTypes).toEqual({})
         const aHostiles = [oTarget1, oTarget2, oTarget3]
@@ -76,11 +71,11 @@ describe('acid-splash', function () {
 describe('chill-touch', function () {
     it('should deal necrotic damage', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.dice.cheat(0.5)
         oWizard.setTarget(oTarget)
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
         const aHostiles = [oTarget]
         pCast({
             caster: oWizard,
@@ -95,11 +90,11 @@ describe('chill-touch', function () {
 describe('fire-bolt', function () {
     it('should deal fire damage', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.dice.cheat(0.5)
         oWizard.setTarget(oTarget)
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
         const aHostiles = [oTarget]
         pCast({
             caster: oWizard,
@@ -115,12 +110,12 @@ describe('fire-bolt', function () {
 describe('poison-spray', function () {
     it('should deal 0 poison damage when success saving throw', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.dice.cheat(0.5)
         oWizard.setTarget(oTarget)
         oTarget.dice.cheat(0.9999)
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
         const aHostiles = [oTarget]
         const nTargetHP = oTarget.store.getters.getHitPoints
         pCast({
@@ -135,12 +130,12 @@ describe('poison-spray', function () {
     })
     it('should deal full poison damage when failing saving throw', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.dice.cheat(0.5)
         oWizard.setTarget(oTarget)
         oTarget.dice.cheat(0.0)
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
         const aHostiles = [oTarget]
         const nTargetHP = oTarget.store.getters.getHitPoints
         pCast({
@@ -158,8 +153,8 @@ describe('poison-spray', function () {
 describe('true-strike', function () {
     it('should change concentration when casting spell two times', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
 
         const aAdvEffects0 = oWizard.store.getters.getEffects.filter(eff => eff.type === CONSTS.EFFECT_ADVANTAGE)
         expect(aAdvEffects0.length).toBe(0)
@@ -202,13 +197,13 @@ describe('true-strike', function () {
 describe('zap', function () {
     it('should zap and stun target when fail saving throw', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.dice.cheat(0.5)
         oTarget.dice.cheat(0.1)
         oWizard.setTarget(oTarget)
 
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
 
         pCast({
             caster: oWizard,
@@ -234,13 +229,13 @@ describe('zap', function () {
     })
     it('should not stun target when success saving throw', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.dice.cheat(0.5)
         oTarget.dice.cheat(0.999)
         oWizard.setTarget(oTarget)
 
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
 
         pCast({
             caster: oWizard,
@@ -254,7 +249,7 @@ describe('zap', function () {
     })
     it('should not stun target when fail saving throw but have condition immunity', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         const oTarget = manager.createEntity('c-soldier')
         oWizard.dice.cheat(0.5)
         oTarget.dice.cheat(0.1)
@@ -265,7 +260,7 @@ describe('zap', function () {
             CONSTS.CONDITION_STUNNED
         ), 10, oTarget)
 
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const pCast = oWizard.assetManager.scripts['ddmagic-cast-spell']
 
         pCast({
             caster: oWizard,
@@ -283,7 +278,7 @@ describe('remove-curse', function () {
     it ('should not be able to remove cursed item', function () {
         const {manager, evolution} = buildStuff()
         const oWizard = evolution
-            .setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+            .setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 6)
 
         const oCursedDagger = manager.createEntity('wpn-dagger')
         oCursedDagger.properties.push(itemProperties[CONSTS.ITEM_PROPERTY_CURSED]())
@@ -300,7 +295,7 @@ describe('remove-curse', function () {
     it('should be able to remove cursed item when remove curse is cast', function () {
         const {manager, evolution} = buildStuff()
         const oWizard = evolution
-            .setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+            .setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 6)
 
         const oCursedDagger = manager.createEntity('wpn-dagger')
         oCursedDagger.properties.push(itemProperties[CONSTS.ITEM_PROPERTY_CURSED]())
@@ -313,7 +308,7 @@ describe('remove-curse', function () {
         expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toEqual(oCursedDagger)
         expect(c1).toBeTrue()
 
-        const pCast = Creature.AssetManager.scripts['ddmagic-cast-spell']
+        const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
 
         oWizard.setTarget(oWizard)
 
@@ -333,15 +328,15 @@ describe('remove-curse', function () {
 describe('invisibility', function () {
     it ('target should not be visible when casting invisibility', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
-        const oHiddenOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
-        const oAggressiveOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
+        const oHiddenOne = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
+        const oAggressiveOne = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         oAggressiveOne.setTarget(oHiddenOne)
         const v1 = oAggressiveOne.store.getters.getEntityVisibility
         expect(v1.detectable.target).toBeTrue()
         expect(v1.detectedBy.target).toBeTrue()
 
-        Creature.AssetManager.scripts['ddmagic-cast-spell']({
+        manager.assetManager.scripts['ddmagic-cast-spell']({
             spell: 'invisibility',
             caster: oWizard,
             friends: [oHiddenOne],
@@ -358,10 +353,10 @@ describe('invisibility', function () {
 
     it('hiddenOne should become visible again when concentration is broken or changed', function () {
         const { manager, evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
-        const oHidden1 = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
-        const oHidden2 = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
-        const oAggressiveOne = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
+        const oHidden1 = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
+        const oHidden2 = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
+        const oAggressiveOne = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         oAggressiveOne.setTarget(oHidden1)
         oWizard.name = 'wizard'
         oHidden1.name = 'hidden 1'
@@ -371,7 +366,7 @@ describe('invisibility', function () {
         expect(v0.detectable.target).toBeTrue()
         expect(v0.detectedBy.target).toBeTrue()
 
-        Creature.AssetManager.scripts['ddmagic-cast-spell']({
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
             spell: 'invisibility',
             caster: oWizard,
             friends: [oHidden1, oHidden2],
@@ -392,7 +387,7 @@ describe('invisibility', function () {
         expect(v1.detectable.target).toBeFalse()
         expect(v1.detectedBy.target).toBeTrue()
 
-        Creature.AssetManager.scripts['ddmagic-cast-spell']({
+        manager.assetManager.scripts['ddmagic-cast-spell']({
             spell: 'invisibility',
             caster: oWizard,
             friends: [oHidden1, oHidden2],

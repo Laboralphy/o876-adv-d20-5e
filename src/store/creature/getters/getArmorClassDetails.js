@@ -23,7 +23,7 @@ module.exports = (state, getters) => {
         ? Math.min(nDexterityBonus, oArmor.maxDexterityModifier)
         : nDexterityBonus
     const oShield = getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_SHIELD]
-    const nShieldAC = oShield ?oShield.ac : 0
+    const nShieldAC = (oShield && oShield.itemType === CONSTS.ITEM_TYPE_SHIELD) ? (oShield.ac || 0) : 0
     const oItemACEffProps = aggregateModifiers([
         CONSTS.EFFECT_AC_BONUS,
         CONSTS.ITEM_PROPERTY_AC_BONUS

@@ -1,8 +1,10 @@
-const Manager = require('../src/Manager')
-const { CONFIG } = require('../src/config')
-const CONSTS = require('../src/consts')
-
-CONFIG.setModuleActive('classic', true)
+const ManagerProto = require("../src/Manager");
+class Manager extends ManagerProto {
+    constructor() {
+        super()
+        this.config.setModuleActive('classic', true)
+    }
+}
 
 describe('resetCharacter', function () {
     it('should reset character', function () {

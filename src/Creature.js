@@ -5,11 +5,11 @@ const { v4: uuidv4 } = require('uuid')
 const Events = require('events')
 const PHYSICAL_DAMAGE_TYPES = require('./data/physical-damage-types.json')
 const Comparator = require('./Comparator')
+const AssetManager = require('./AssetManager')
 
 // Store
 const { aggregateModifiers } = require("./store/creature/common/aggregate-modifiers");
 const { deepClone } = require("@laboralphy/object-fusion");
-
 
 /**
  * @class Creature
@@ -24,46 +24,58 @@ class Creature {
             handler: null,
             creature: null
         }
+        this.am = null
         this._aggressor = {
             handler: null,
             creature: null
-        }
-        if (!Creature.AssetManager) {
-            throw new Error('AssetManager not declared')
-        }
-        if (!Creature.AssetManager.initialized) {
-            throw new Error('AssetManager not initialized')
         }
         /**
          * @type {D20CreatureStore}
          * @private
          */
-        this._store = Creature.AssetManager.createStore('creature')
         /**
          * @type {EffectProcessor}
          * @private
          */
         this._effectProcessor = new EffectProcessor()
         this._events = new Events()
-        this._store.mutations.setId({ value: this._id })
-    }
-
-    static set AssetManager (value) {
-        Creature._AssetManager = value
-    }
-
-    /**
-     * @returns {AssetManager}
-     */
-    static get AssetManager () {
-        return Creature._AssetManager
     }
 
     /**
      * @returns {AssetManager}
      */
     get assetManager () {
-        return Creature.AssetManager
+        if (this._am) {
+            if (!this._am) {
+                throw new Error('AssetManager not declared')
+            }
+            if (!this._am.initialized) {
+                throw new Error('AssetManager not initialized')
+            }
+            return this._am
+        } else {
+            throw new Error('AssetManager is not defined')
+        }
+    }
+
+    static get AssetManager () {
+        throw new Error('ERR_DEPRECATED get AssetManager')
+    }
+
+    static set AssetManager (value) {
+        throw new Error('ERR_DEPRECATED set AssetManager')
+    }
+
+    /**
+     *
+     * @param am {AssetManager}
+     */
+    set assetManager (am) {
+        if (am instanceof AssetManager) {
+            this._am = am
+        } else {
+            throw new TypeError('ERR_ASSET_MANAGER_TYPE_MISMATCH')
+        }
     }
 
     get entityType () {
@@ -130,6 +142,10 @@ class Creature {
     }
 
     get store () {
+        if (!this._store) {
+            this._store = this.assetManager.createStore('creature')
+            this._store.mutations.setId({ value: this._id })
+        }
         return this._store
     }
 
@@ -398,7 +414,7 @@ class Creature {
                 itemProperties: this._target.creature.store.getters.getEquipmentItemPropertySet
             })
             oCreature.store.events.on('mutation', this._target.handler)
-            this.initializeDistanceToTarget(Creature.AssetManager.data.variables.DEFAULT_TARGET_DISTANCE)
+            this.initializeDistanceToTarget(this.assetManager.data.variables.DEFAULT_TARGET_DISTANCE)
         }
     }
 
@@ -530,7 +546,7 @@ class Creature {
             this.processOnDamaged(oEffect, source)
         }
         const eEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
-        this._events.emit('effect-applied', { effect: eEffect })
+        this._events.emit('effect-applied', { effect: eEffect, target: this })
 
         if (bDamageEffect && !bWeaponEffect) {
             // Damaged by non-weapon source
@@ -577,7 +593,7 @@ class Creature {
             property: null,
             data: {}
         }
-        const oScripts = Creature.AssetManager.scripts
+        const oScripts = this.assetManager.scripts
         const d = this.store.getters.getTargetDistance
         oTarget.aggregateModifiers([
             CONSTS.ITEM_PROPERTY_AURA
@@ -620,12 +636,13 @@ class Creature {
 
     getSkillData (sSkill) {
         const sSkillDataProp = sSkill.toLowerCase().replace(/_/g, '-')
-        if (sSkillDataProp in Creature.AssetManager.data) {
-            return Creature.AssetManager.data[sSkillDataProp]
+        if (sSkillDataProp in this.assetManager.data) {
+            return this.assetManager.data[sSkillDataProp]
         } else {
             if (sSkillDataProp.startsWith('skill-')) {
                 throw new Error(sSkill + ' is not in data')
             }
+            return null
         }
     }
 
@@ -817,8 +834,8 @@ class Creature {
         const ammo = sg.isRangedWeaponProperlyLoaded ? sg.getEquippedItems[CONSTS.EQUIPMENT_SLOT_AMMO] : null
         const advantages = sg.getAdvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
         const disadvantages = sg.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][sOffensiveAbility]
-        const bCriticalHit = dice >= Creature.AssetManager.data.variables.ROLL_AUTO_SUCCESS
-        const bCriticalFail = dice <= Creature.AssetManager.data.variables.ROLL_AUTO_FAIL
+        const bCriticalHit = dice >= this.assetManager.data.variables.ROLL_AUTO_SUCCESS
+        const bCriticalFail = dice <= this.assetManager.data.variables.ROLL_AUTO_FAIL
         const bFinesseWeapon = sg.isWieldingFinesseWeapon
         const bRangedWeapon = sg.isWieldingRangedWeapon && sg.isRangedWeaponProperlyLoaded
         const bAdvantaged = advantages.value
@@ -913,7 +930,7 @@ class Creature {
         const sg = this.store.getters
         // données du skill
         const aSkills = sg.getProficiencies
-        const bSkillProficient = aSkills.includes(sSkill)
+        const bSkillProficient = aSkills.includes(sSkill) || aSkills.includes(sExtraStackingProficiency)
         // déterminer les bonus du skill
         const nSkillBonus = this
             .aggregateModifiers([
@@ -925,7 +942,10 @@ class Creature {
             }).sum
         // déterminer la carac du skill
         const oSkillData = this.getSkillData(sSkill)
-        const sSkillAbility = oSkillData.ability
+        const sSkillAbility = sSkill.startsWith('ABILITY_') ? sSkill : oSkillData.ability
+        if (sSkill === sSkillAbility) {
+            sSkill = ''
+        }
         // Ajouter un evéntuel bonus de proficiency (mais qui ne se stack pas)
         const nSkillProfBonus = (bSkillProficient ? sg.getProficiencyBonus : 0)
         const amExpertise = this
@@ -982,7 +1002,7 @@ class Creature {
         const nExtraDamageDice = this.store.getters.isWieldingHeavyMeleeWeapon
             ? this.store.getters.getSizeProperties.extraMeleeDamageDice
             : 0
-        const n = (critical ? Creature.AssetManager.data.variables.CRITICAL_FACTOR : 1) + nExtraDamageDice
+        const n = (critical ? this.assetManager.data.variables.CRITICAL_FACTOR : 1) + nExtraDamageDice
         let nDamage = 0
         const nRerollThreshold = this.store.getters.getDamageRerollThreshold
         let bRerolled = false
@@ -1089,7 +1109,7 @@ class Creature {
             attackOutcome: oAttackOutcome,
             data: {}
         }
-        const oScripts = Creature.AssetManager.scripts
+        const oScripts = this.assetManager.scripts
         aHitProps.forEach(prop => {
             const sScript = prop.data.script
             oContext.property = prop
@@ -1109,7 +1129,7 @@ class Creature {
             property: null,
             data: {}
         }
-        const oScripts = Creature.AssetManager.scripts
+        const oScripts = this.assetManager.scripts
         this.aggregateModifiers([
             CONSTS.ITEM_PROPERTY_ON_DAMAGED
         ], {
@@ -1142,7 +1162,7 @@ class Creature {
         this._events.emit('action', {
             action: sAction
         })
-        const scriptFunction = Creature.AssetManager.scripts[sAction]
+        const scriptFunction = this.assetManager.scripts[sAction]
         if (!scriptFunction) {
             throw new Error('ERR_SCRIPT_ACTION_NOT_FOUND: ' + sAction)
         } else {
@@ -1152,8 +1172,8 @@ class Creature {
 
     featAction (sFeat) {
         const oCounters = this.store.getters.getCounters
-        if (sFeat in Creature.AssetManager.data) {
-            const oFeatData = Creature.AssetManager.data[sFeat]
+        if (sFeat in this.assetManager.data) {
+            const oFeatData = this.assetManager.data[sFeat]
             if ('when' in oFeatData) {
                 if (!this.store.getters[oFeatData.when]) {
                     throw new Error('ERR_FEAT_ACTION_NOT_AVAILABLE')
@@ -1214,6 +1234,7 @@ class Creature {
         this.effectProcessor.invokeAllEffectsMethod(this, 'attack', outcome.target, this, { outcome })
         outcome.target.effectProcessor.invokeAllEffectsMethod(outcome.target, 'attacked', outcome.target, this, { outcome })
         this._events.emit('attack', { outcome })
+
     }
 
     /**
@@ -1287,7 +1308,7 @@ class Creature {
         // si ça touche, calculer les dégâts
         if (oAtk.hit) {
             const oDamages = this.rollWeaponDamage({
-                critical: oAtk.critical
+                critical: oAtk.critical,
             })
             // générer les effets de dégâts
             const oResisted = {}
@@ -1295,7 +1316,6 @@ class Creature {
             oAtk.damages.resisted = oResisted
             oAtk.damages.types = oDamages
             oAtk.damages.amount = 0
-            this.notifyAttack(oAtk)
             Object
                 .entries(oDamages)
                 .forEach(([sType, nValue]) => {
@@ -1322,6 +1342,7 @@ class Creature {
                     oDamages[sType] -= n
                     return eMitigDam
                 })
+            this.notifyAttack(oAtk)
             // application d'effets on hit
             if (oAtk.damages.amount > 0) {
                 this.processOnHit(oTarget, oAtk)
@@ -1359,29 +1380,38 @@ class Creature {
      * - Si la créature est plongée dans l'obscurité (pas encore implémentée)
      * - Si nous sommes aveugles
      * @param oTarget {Creature}
-     * @return {string} PERCEPTION_
+     * @return {string} VISIBILITY_
      */
     getPerception (oTarget) {
         const csg = this.store.getters
         const tsg = oTarget.store.getters
         if (csg.getConditionSet.has(CONSTS.CONDITION_BLINDED)) {
-            return CONSTS.PERCEPTION_BLIND
+            return CONSTS.VISIBILITY_BLIND
         }
         const bTargetInvisible = tsg.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)
         const bMeSeeInvisibility =
             csg.getEffectSet.has(CONSTS.EFFECT_SEE_INVISIBILITY) ||
             csg.getEffectSet.has(CONSTS.EFFECT_TRUE_SIGHT)
         if (bTargetInvisible && !bMeSeeInvisibility) {
-            return CONSTS.PERCEPTION_INVISIBLE
+            return CONSTS.VISIBILITY_INVISIBLE
         }
         if (
             tsg.getAreaFlagSet.has(CONSTS.AREA_FLAG_DARK) &&
             !csg.getEffectSet.has(CONSTS.EFFECT_DARKVISION) &&
             !csg.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_DARKVISION)
         ) {
-            return CONSTS.PERCEPTION_DARKNESS
+            if (
+                csg.getEffectSet.has(CONSTS.EFFECT_LIGHT) ||
+                csg.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT) ||
+                tsg.getEffectSet.has(CONSTS.EFFECT_LIGHT) ||
+                tsg.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT)
+            ) {
+                return CONSTS.VISIBILITY_VISIBLE
+            } else {
+                return CONSTS.VISIBILITY_DARKNESS
+            }
         }
-        return CONSTS.PERCEPTION_VISIBLE
+        return CONSTS.VISIBILITY_VISIBLE
     }
 }
 

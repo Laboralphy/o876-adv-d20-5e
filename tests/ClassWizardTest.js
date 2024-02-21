@@ -2,16 +2,13 @@ const Evolution = require('../src/Evolution')
 const Manager = require('../src/Manager')
 const Creature = require('../src/Creature')
 const AssetManager = require('../src/AssetManager')
-const { CONFIG } = require('../src/config')
-
-CONFIG.setModuleActive('classic', true)
-CONFIG.setModuleActive('ddmagic', true)
 
 function buildStuff () {
     const r = new Manager()
+    r.config.setModuleActive('classic', true)
+    r.config.setModuleActive('ddmagic', true)
     r.init()
-    const am = new AssetManager()
-    am.init()
+    const am = r.assetManager
     const ev = new Evolution()
     ev.data = am.data
     return {
@@ -22,15 +19,15 @@ function buildStuff () {
 
 describe('basic', function () {
     it('should create a level 2 wizard', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 2)
         expect(oWizard.store.getters.getLevelByClass).toEqual({
             wizard: 2
         })
     })
     it('should have the correct number of slot', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 1)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 1)
         const aSlots = oWizard.store.getters.getSpellSlotStatus
         expect(oWizard.store.getters.getSpellCasterLevel).toBe(1)
         expect(aSlots).toEqual([
@@ -46,8 +43,8 @@ describe('basic', function () {
         ])
     })
     it('should initialize spellbook', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 2)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 2)
         expect(oWizard.store.getters.getSpellSlotStatus).toEqual([
                 { count: 3, used: 0 },
                 { count: 0, used: 0 },
@@ -61,7 +58,7 @@ describe('basic', function () {
             ]
         )
         expect(oWizard.store.getters.getMaxPreparableCantrips).toBe(3)
-        const oWizard2 = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const oWizard2 = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         expect(oWizard2.store.getters.getSpellSlotStatus).toEqual([
                 { count: 4, used: 0 },
                 { count: 2, used: 0 },
@@ -79,20 +76,20 @@ describe('basic', function () {
 
 describe('spell preparing', function () {
     it('should memorize no more than 4 spell when at level 1', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 1)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 1)
         expect(oWizard.store.getters.getMaxPreparableCantrips).toBe(3)
         expect(oWizard.store.getters.getMaxPreparableSpells).toBe(4)
     })
     it('should memorize no more than 8 spell when at level 4', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 4)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 4)
         expect(oWizard.store.getters.getMaxPreparableCantrips).toBe(4)
         expect(oWizard.store.getters.getMaxPreparableSpells).toBe(8)
     })
     it('should not be able to memorize twice the same spell', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         expect(oWizard.store.getters.getMaxPreparableCantrips).toBe(3)
         expect(oWizard.store.getters.getMaxPreparableSpells).toBe(6)
         expect(oWizard.store.getters.getPreparedSpells.cantrips.length).toBe(0)
@@ -111,8 +108,8 @@ describe('spell preparing', function () {
             .toThrow(new Error('This character does not know the spell "invisibility"'))
     })
     it('should not be able to memorize more spell than allowed', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 3)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         expect(oWizard.store.getters.getMaxPreparableCantrips).toBe(3)
         expect(oWizard.store.getters.getMaxPreparableSpells).toBe(6)
         expect(oWizard.store.getters.getPreparedSpells.cantrips.length).toBe(0)
@@ -228,8 +225,8 @@ describe('spell preparing', function () {
 
 describe('arcane recovery', function () {
     it('should not restore spell slot when none is spent', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 6)
         let oSpellSlotRestoreEvent = {}
         oWizard.events.on('spell-slot-restore', ev => {
             oSpellSlotRestoreEvent = ev
@@ -238,8 +235,8 @@ describe('arcane recovery', function () {
         expect(oSpellSlotRestoreEvent).toEqual({ optimal: false, remain: 3, restored: [] })
     })
     it('should restore spell slot 1 when 1 is spent', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 6)
         expect(oWizard.store.state.data.spellbook.slots[0]).toBe(0)
         oWizard.store.mutations.consumeSpellSlot({ level: 1 })
         expect(oWizard.store.state.data.spellbook.slots[0]).toBe(1)
@@ -252,8 +249,8 @@ describe('arcane recovery', function () {
         expect(oSpellSlotRestoreEvent).toEqual({ optimal: false, remain: 2, restored: [{ level: 1, count: 1 }] })
     })
     it('should restore spell slots 3 2 1 when spent', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 6)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 6)
         oWizard.store.mutations.consumeSpellSlot({ level: 1 })
         oWizard.store.mutations.consumeSpellSlot({ level: 1 })
         oWizard.store.mutations.consumeSpellSlot({ level: 2 })
@@ -277,13 +274,13 @@ describe('arcane recovery', function () {
 
 describe('spell-mastery', function () {
     it('should have spell mastery when building wizard level 18', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 18)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 18)
         expect(oWizard.store.getters.getFeatSet.has('feat-spell-mastery')).toBeTrue()
     })
     it('have spell mastery when building wizard level 18', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 18)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 18)
         expect(oWizard.store.getters.getFeatSet.has('feat-spell-mastery')).toBeTrue()
         oWizard.store.mutations.learnSpell({ spell: 'acid-arrow' })
         oWizard.store.mutations.learnSpell({ spell: 'invisibility' })
@@ -294,8 +291,8 @@ describe('spell-mastery', function () {
         expect(oWizard.store.getters.getMaxPreparableSpells).toBe(23)
     })
     it('should return empty list when reaching level 18 and not define mastered spells', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 18)
+        const { evolution, manager } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 18)
         oWizard.store.mutations.learnSpell({ spell: 'acid-arrow' })
         oWizard.store.mutations.learnSpell({ spell: 'invisibility' })
         oWizard.store.mutations.learnSpell({ spell: 'magic-missile' })
@@ -307,8 +304,8 @@ describe('spell-mastery', function () {
         expect([...oWizard.store.getters.getCastableMasteredSpells]).toEqual([])
     })
     it('should return non-empty list when reaching level 18 not define one or two mastered spells', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 18)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 18)
         oWizard.store.mutations.learnSpell({ spell: 'acid-arrow' })
         oWizard.store.mutations.learnSpell({ spell: 'invisibility' })
         oWizard.store.mutations.learnSpell({ spell: 'magic-missile' })
@@ -325,8 +322,8 @@ describe('spell-mastery', function () {
         expect([...oWizard.store.getters.getCastableMasteredSpells]).toEqual(['magic-missile', 'acid-arrow'])
     })
     it('should not master spell when level is neither 1 nor 2', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 18)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 18)
         oWizard.store.mutations.learnSpell({ spell: 'acid-arrow' })
         oWizard.store.mutations.learnSpell({ spell: 'invisibility' })
         oWizard.store.mutations.learnSpell({ spell: 'magic-missile' })
@@ -337,8 +334,8 @@ describe('spell-mastery', function () {
             .toThrowError('Spell light is level 0, thus cannot be mastered (only level 1 and level 2)')
     })
     it('should consume spell slot when level 18 wizard cast nonmastered 2nd level spells', function () {
-        const { evolution } = buildStuff()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-wizard-generic', 18)
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 18)
         oWizard.store.mutations.learnSpell({ spell: 'acid-arrow' })
         oWizard.store.mutations.learnSpell({ spell: 'invisibility' })
         oWizard.store.mutations.learnSpell({ spell: 'magic-missile' })

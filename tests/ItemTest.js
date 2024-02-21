@@ -1,16 +1,14 @@
-const { CONFIG } = require('../src/config')
-CONFIG.setModuleActive('classic', true)
+const ManagerProto = require('../src/Manager')
 
-const Creature = require('../src/Creature')
-const Manager = require('../src/Manager')
-const CONSTS = require('../src/consts')
-const AssetManager = require("../src/AssetManager");
+class Manager extends ManagerProto {
+    constructor() {
+        super()
+        this.config.setModuleActive('classic', true)
+    }
+}
 
 beforeAll(function () {
     Error.stackTraceLimit = Infinity
-    const am = new AssetManager()
-    am.init()
-    Creature.AssetManager = am
 })
 describe('necklace of greater health', function () {
     it ('should have advantage on saving throw against disease when whearing this amulet', function () {

@@ -2,17 +2,13 @@ const Evolution = require('../src/Evolution')
 const Manager = require('../src/Manager')
 const Creature = require('../src/Creature')
 const AssetManager = require('../src/AssetManager')
-const { Config, CONFIG } = require('../src/config')
-
-CONFIG.setModuleActive('classic', true)
+const { Config } = require('../src/config')
 
 function buildStuff () {
     const r = new Manager()
+    r.config.setModuleActive('classic', true)
     r.init()
-    const config = new Config()
-    config.setModuleActive('classic', true)
-    const am = new AssetManager()
-    am.init()
+    const am = r.assetManager
     const ev = new Evolution()
     ev.data = am.data
     return {
@@ -113,10 +109,10 @@ describe('first level up - define character class', function () {
     it('should not crash when submitting a fresh new player', function () {
         const config = new Config()
         config.setModuleActive('classic', true)
-        const am = new AssetManager()
+        const am = new AssetManager({ config })
         am.init()
-        Creature.AssetManager = am
         const c = new Creature()
+        c.assetManager = am
         const ev = new Evolution()
         ev.data = am.data
         expect(() =>
@@ -149,15 +145,13 @@ describe('first level up - define character class', function () {
 })
 
 describe('checkLevelUp', function () {
-    const config = new Config()
-    config.setModuleActive('classic', true)
-    const am = new AssetManager()
-    am.init()
-    Creature.AssetManager = am
+    const { manager } = buildStuff()
+    const am = manager.assetManager
     const ev = new Evolution()
     ev.data = am.data
     it('should show leveling requirement when submitting any creature', function () {
         const c = new Creature()
+        c.assetManager = am
         c.store.mutations.setAbility({ ability: 'ABILITY_STRENGTH', value: 10})
         const clur1 = ev.checkLevelUpRequirements(c, 'fighter')
         expect(clur1).toEqual({
@@ -296,16 +290,16 @@ describe('checkLevelUp', function () {
 
 describe('getClassLevelData with tourist evolution', function () {
     it('should not crash when asking for tourist', function () {
-        const { evolution: ev } = buildStuff()
-        const c = new Creature()
+        const { evolution: ev, manager } = buildStuff()
+        const c = manager.entityFactory.createCreature()
         ev.getClassLevelData(c, 'tourist', 1)
     })
 })
 
 describe('retrieve available actions for player and creatures', function () {
     it('should return [second wind] when leveling fighter to level 2', function () {
-        const { evolution: ev } = buildStuff()
-        const c = new Creature()
+        const { evolution: ev, manager } = buildStuff()
+        const c = manager.entityFactory.createCreature()
         c.store.mutations.resetCharacter()
         ev.creatureLevelUp(c, {
             selectedClass: 'fighter',
@@ -410,10 +404,9 @@ describe('retrieve available actions for player and creatures', function () {
     })
     it('should return innate actions when asking actions of a creature (magma mephit)', function () {
         const r = new Manager()
+        r.config.setModuleActive('classic', true)
         r.init()
-        const config = new Config()
-        config.setModuleActive('classic', true)
-        const am = new AssetManager()
+        const am = r.assetManager
         am.init()
         const c = r.createEntity('c-mephit-magma')
         expect(c.store.getters.getActions).toEqual([

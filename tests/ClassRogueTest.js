@@ -2,19 +2,18 @@ const Evolution = require('../src/Evolution')
 const Manager = require('../src/Manager')
 const Creature = require('../src/Creature')
 const AssetManager = require('../src/AssetManager')
-const { Config, CONFIG } = require('../src/config')
 const CONSTS = require("../src/consts");
 const SpellHelper = require('../src/modules/classic/common/spell-helper')
 
-CONFIG.setModuleActive('classic', true)
-
+/**
+ * @returns {{ manager: Manager, evolution: Evolution, assetManager: AssetManager }}
+ */
 function buildStuff () {
     const r = new Manager()
+    r.config.setModuleActive('classic', true)
     r.init()
-    const am = new AssetManager()
-    am.init()
     const ev = new Evolution()
-    ev.data = am.data
+    ev.data = r.assetManager.data
     return {
         manager: r,
         evolution: ev
@@ -24,7 +23,7 @@ function buildStuff () {
 describe('uncanny dodge', function () {
     it('should halves damage when reaching level 5', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = new Creature()
+        const oRogue = manager.entityFactory.createCreature()
         oRogue.store.mutations.setAbility({
             ability: 'ABILITY_CONSTITUTION', value: 14
         })
@@ -90,7 +89,7 @@ describe('uncanny dodge', function () {
 describe('build a rogue to levels with manager and templates', function () {
     it ('should reach level 1 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 1)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 1)
         expect(oRogue.store.getters.getLevel).toBe(1)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 1
@@ -98,7 +97,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 2 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 2)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 2)
         expect(oRogue.store.getters.getLevel).toBe(2)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 2
@@ -106,7 +105,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 3 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 3)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 3)
         expect(oRogue.store.getters.getLevel).toBe(3)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 3
@@ -115,7 +114,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 4 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 4)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 4)
         expect(oRogue.store.getters.getLevel).toBe(4)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 4
@@ -124,7 +123,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 5 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 5)
         expect(oRogue.store.getters.getLevel).toBe(5)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 5
@@ -132,7 +131,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 6 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 6)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 6)
         expect(oRogue.store.getters.getLevel).toBe(6)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 6
@@ -140,7 +139,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 7 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 7)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 7)
         expect(oRogue.store.getters.getLevel).toBe(7)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 7
@@ -148,7 +147,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 8 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 8)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 8)
         expect(oRogue.store.getters.getLevel).toBe(8)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 8
@@ -157,7 +156,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 9 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 9)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 9)
         expect(oRogue.store.getters.getLevel).toBe(9)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 9
@@ -165,7 +164,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 10 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 10)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 10)
         expect(oRogue.store.getters.getLevel).toBe(10)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 10
@@ -173,7 +172,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 11 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 11)
         expect(oRogue.store.getters.getLevel).toBe(11)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 11
@@ -181,7 +180,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 12 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 12)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 12)
         expect(oRogue.store.getters.getLevel).toBe(12)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 12
@@ -189,7 +188,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 13 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 13)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 13)
         expect(oRogue.store.getters.getLevel).toBe(13)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 13
@@ -197,7 +196,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 14 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 14)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 14)
         expect(oRogue.store.getters.getLevel).toBe(14)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 14
@@ -205,7 +204,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 15 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 15)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 15)
         expect(oRogue.store.getters.getLevel).toBe(15)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 15
@@ -213,7 +212,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 16 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 16)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 16)
         expect(oRogue.store.getters.getLevel).toBe(16)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 16
@@ -221,7 +220,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 17 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 17)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 17)
         expect(oRogue.store.getters.getLevel).toBe(17)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 17
@@ -229,7 +228,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 18 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 18)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 18)
         expect(oRogue.store.getters.getLevel).toBe(18)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 18
@@ -237,7 +236,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 19 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 19)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 19)
         expect(oRogue.store.getters.getLevel).toBe(19)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 19
@@ -245,7 +244,7 @@ describe('build a rogue to levels with manager and templates', function () {
     })
     it ('should reach level 20 without problem', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 20)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 20)
         expect(oRogue.store.getters.getLevel).toBe(20)
         expect(oRogue.store.getters.getLevelByClass).toEqual({
             'rogue': 20
@@ -256,8 +255,8 @@ describe('build a rogue to levels with manager and templates', function () {
 describe('use sleight of hand and thieves tool', function () {
     it ('should have a bonus of zero when creature is a fighter with dex 10', function () {
         const { manager, evolution } = buildStuff()
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 5)
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 5)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 5)
         oRogue.processEffects()
         oFighter.processEffects()
         oFighter.dice.cheat(0.5)
@@ -309,7 +308,7 @@ describe('use sleight of hand and thieves tool', function () {
 describe('rogue reliable talent', function () {
     it('should roll 10 when dice is cheated at 0.1', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 11)
         oRogue.dice.cheat(0.1)
         oRogue.processEffects()
         const s2 = oRogue.rollSkill('skill-sleight-of-hand', 0)
@@ -342,7 +341,7 @@ describe('rogue reliable talent', function () {
 describe('supreme sneak', function () {
     it('should have advantage on sneak when reachin level 9', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 11)
         oRogue.processEffects()
         oRogue.dice.cheat(0.5)
         expect(oRogue.store.getters.getEffectSet.has('EFFECT_ADVANTAGE')).toBeTrue()
@@ -367,10 +366,10 @@ describe('evasion', function () {
     describe('when having evasion', function () {
         it('should reduce damage when failing saving throw', function () {
             const { manager, evolution } = buildStuff()
-            const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+            const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 11)
             oRogue.processEffects()
             oRogue.dice.cheat(0.1)
-            const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+            const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 11)
             oWizard.processEffects()
             const nHP1 = oRogue.store.getters.getHitPoints
             SpellHelper.evocationAttack({
@@ -386,10 +385,10 @@ describe('evasion', function () {
         })
         it('should nullify damage when succeeding saving throw', function () {
             const { manager, evolution } = buildStuff()
-            const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+            const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 11)
             oRogue.processEffects()
             oRogue.dice.cheat(0.9)
-            const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+            const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 11)
             oWizard.processEffects()
             const nHP1 = oRogue.store.getters.getHitPoints
             SpellHelper.evocationAttack({
@@ -409,13 +408,13 @@ describe('evasion', function () {
 describe('use magic device', function () {
     it('should have feat use magic device when reaching level 13', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 13)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 13)
         oRogue.processEffects()
         expect(oRogue.store.getters.getFeatSet.has('feat-use-magic-device')).toBeTrue()
     })
     it('should not have feat use magic device when not reaching level 13', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 11)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 11)
         oRogue.processEffects()
         expect(oRogue.store.getters.getFeatSet.has('feat-use-magic-device')).toBeFalse()
     })
@@ -424,9 +423,9 @@ describe('use magic device', function () {
 describe('blindsight', function () {
     it('should not see target', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 14)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 14)
         oRogue.processEffects()
-        const oWizard = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 5)
         const eInvis = oWizard.EffectProcessor.createEffect('EFFECT_INVISIBILITY')
         oWizard.applyEffect(eInvis, 10, oWizard)
         oWizard.processEffects()
@@ -446,9 +445,9 @@ describe('blindsight', function () {
 describe('elusive', function () {
     it('should be advantaged when invisible and attacking non-elusive target', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 14)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 14)
         oRogue.processEffects()
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 14)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 14)
         oFighter.processEffects()
         const eInvis = oFighter.EffectProcessor.createEffect('EFFECT_INVISIBILITY')
         oFighter.applyEffect(eInvis, 100)
@@ -462,9 +461,9 @@ describe('elusive', function () {
     })
     it('should not be advantaged when invisible and attacking elusive target', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 18)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 18)
         oRogue.processEffects()
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 18)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 18)
         oFighter.processEffects()
         const eInvis = oFighter.EffectProcessor.createEffect('EFFECT_INVISIBILITY')
         oFighter.applyEffect(eInvis, 100)
@@ -481,8 +480,8 @@ describe('elusive', function () {
 describe('stroke-of-luck', function () {
     it('should miss attack always', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 19)
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 19)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 19)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 19)
         oRogue.setTarget(oFighter)
         oRogue.setDistanceToTarget(5)
         oRogue.processEffects()
@@ -493,8 +492,8 @@ describe('stroke-of-luck', function () {
     })
     it('should hit attack when having stroke of luck', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 20)
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 20)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 20)
         oRogue.setTarget(oFighter)
         oRogue.setDistanceToTarget(5)
         oRogue.processEffects()
@@ -514,7 +513,7 @@ describe('stroke-of-luck', function () {
     })
     it('should roll 20 when lucky', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 20)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 20)
         oRogue.processEffects()
         oRogue.dice.cheat(0.1)
         const o1 = oRogue.rollSkill('skill-arcana', 10)
@@ -534,7 +533,7 @@ describe('stroke-of-luck', function () {
 describe('sneak attacks', function () {
     it('should have sneak attack feat when having rogue class', function () {
         const { manager: r, evolution: ev } = buildStuff()
-        const c = new Creature()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.resetCharacter()
         ev.creatureLevelUp(c, {
             selectedClass: 'rogue',
@@ -574,8 +573,8 @@ describe('sneak attacks', function () {
     })
     it ('should not have sneak attack when having a non finesse weapon', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 1)
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 1)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 20)
         oRogue.equipItem(manager.createEntity('wpn-club'))
         oRogue.processEffects()
         oFighter.processEffects()
@@ -592,8 +591,8 @@ describe('sneak attacks', function () {
     })
     it ('should have sneak attack when having a dagger', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 1)
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 1)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 20)
         const oDagger = manager.createEntity('wpn-dagger')
         oRogue.equipItem(oDagger)
         oRogue.processEffects()
@@ -615,8 +614,8 @@ describe('sneak attacks', function () {
     })
     it ('should have sneak attack of +8 when being level 3', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 3)
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 3)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 20)
         const oDagger = manager.createEntity('wpn-dagger')
         oRogue.equipItem(oDagger)
         oRogue.processEffects()
@@ -632,8 +631,8 @@ describe('sneak attacks', function () {
     })
     it ('should have sneak attack of +12 when being level 5', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 5)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 20)
         const oDagger = manager.createEntity('wpn-dagger')
         oRogue.equipItem(oDagger)
         oRogue.processEffects()
@@ -649,8 +648,8 @@ describe('sneak attacks', function () {
     })
     it ('should not have sneak attack when attacking several times', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 5)
+        const oFighter = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-fighter-generic', 20)
         const oDagger = manager.createEntity('wpn-dagger')
         oRogue.equipItem(oDagger)
         oRogue.processEffects()
@@ -678,8 +677,10 @@ describe('sneak attacks', function () {
     })
     it ('should not have sneak attack of when target is unaware', function () {
         const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(new Creature(), 'template-rogue-generic', 5)
-        const oFighter = evolution.setupCreatureFromTemplate(new Creature(), 'template-fighter-generic', 20)
+        const oRogue = manager.entityFactory.createCreature()
+        const oFighter = manager.entityFactory.createCreature()
+        evolution.setupCreatureFromTemplate(oRogue, 'template-rogue-generic', 5)
+        evolution.setupCreatureFromTemplate(oFighter, 'template-fighter-generic', 20)
         const oDagger = manager.createEntity('wpn-dagger')
         oRogue.equipItem(oDagger)
         oRogue.processEffects()
@@ -691,6 +692,7 @@ describe('sneak attacks', function () {
         // 3 de dégat pour la dague
         // +3 pour la dex (arme de finesse)
         // +12 de sneak attack
+        expect(outcome.sneakable).toBeTrue()
         expect(outcome.damages.amount).toBe(18)
         oRogue.processEffects()
         oFighter.processEffects()
@@ -700,5 +702,44 @@ describe('sneak attacks', function () {
         // +3 pour la dex (arme de finesse)
         // +0 de sneak attack (cible non prise par surprise)
         expect(outcome2.damages.amount).toBe(6)
+    })
+})
+
+describe('thief tools', function () {
+    it('should have bonus when picking lock when having thief tools proficiency', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = manager.entityFactory.createCreature()
+        evolution.setupCreatureFromTemplate(oRogue, 'template-rogue-generic', 5)
+        oRogue.dice.cheat(0.5)
+        expect(oRogue.store.getters.getProficiencies.includes(CONSTS.PROFICIENCY_TOOL_THIEVES_TOOLS)).toBeTrue()
+        expect(oRogue.store.getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]).toBe(3)
+        const outcome = oRogue.rollSkill(CONSTS.ABILITY_DEXTERITY, 10, CONSTS.PROFICIENCY_TOOL_THIEVES_TOOLS)
+        expect(outcome).toEqual({
+            bonus: 6,
+            roll: 11,
+            value: 17,
+            dc: 10,
+            success: true,
+            ability: 'ABILITY_DEXTERITY',
+            circumstance: 0
+        })
+    })
+    it('should not have bonus when picking when not having thief tools proficiency', function () {
+        const { manager, evolution } = buildStuff()
+        const oTourist = manager.entityFactory.createCreature()
+        evolution.setupCreatureFromTemplate(oTourist, 'template-tourist-generic', 5)
+        oTourist.dice.cheat(0.5)
+        expect(oTourist.store.getters.getProficiencies.includes(CONSTS.PROFICIENCY_TOOL_THIEVES_TOOLS)).toBeFalse()
+        expect(oTourist.store.getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]).toBe(0)
+        const outcome = oTourist.rollSkill(CONSTS.ABILITY_DEXTERITY, 10, CONSTS.PROFICIENCY_TOOL_THIEVES_TOOLS)
+        expect(outcome).toEqual({
+            bonus: 0,
+            roll: 11,
+            value: 11,
+            dc: 10,
+            success: true,
+            ability: 'ABILITY_DEXTERITY',
+            circumstance: 0
+        })
     })
 })

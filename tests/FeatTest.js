@@ -1,25 +1,32 @@
-const { CONFIG } = require('../src/config')
-CONFIG.setModuleActive('classic', true)
-
 const Creature = require('../src/Creature')
-const Manager = require('../src/Manager')
+const ManagerProto = require('../src/Manager')
 const CONSTS = require('../src/consts')
-const AssetManager = require("../src/AssetManager");
+
+
+class Manager extends ManagerProto {
+    constructor() {
+        super()
+        this.config.setModuleActive('classic', true)
+    }
+}
 
 beforeAll(function () {
     Error.stackTraceLimit = Infinity
-    const am = new AssetManager()
-    am.init()
-    Creature.AssetManager = am
 })
 
 describe('feat-fighting-style-archery', function () {
     it ('should be declared in external data when instantiating new creature', function () {
         const c = new Creature()
+        const r = new Manager()
+        r.init()
+        c.assetManager = r.assetManager
         expect('feat-fighting-style-archery' in c.store.externals.data).toBeTrue()
     })
     it ('should give a report that shows a +2 attack bonus to be activated when having this feat', function () {
         const c = new Creature()
+        const r = new Manager()
+        r.init()
+        c.assetManager = r.assetManager
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-archery'})
         const aFeatReport = c.store.getters.getFeatReport
         expect(aFeatReport).toEqual([{
@@ -31,7 +38,10 @@ describe('feat-fighting-style-archery', function () {
         }])
     })
     it ('should activate a +2 ranged attack bonus when applying feat', function () {
+        const r = new Manager()
+        r.init()
         const c = new Creature()
+        c.assetManager = r.assetManager
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-archery'})
         c.store.mutations.updateFeatEffects()
         const aFeatReport = c.store.getters.getFeatReport
@@ -48,6 +58,9 @@ describe('feat-fighting-style-archery', function () {
 describe('feat-fighting-style-defense', function () {
     it ('should not have +1 AC when having feat and not wearing armor', function () {
         const c = new Creature()
+        const r = new Manager()
+        r.init()
+        c.assetManager = r.assetManager
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-defense'})
         c.store.mutations.updateFeatEffects()
         expect(c.store.getters.getFeatReport).toEqual([{
@@ -63,6 +76,7 @@ describe('feat-fighting-style-defense', function () {
         const c = new Creature()
         const r = new Manager()
         r.init()
+        c.assetManager = r.assetManager
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-defense'})
         c.store.mutations.updateFeatEffects()
         const oArmor = r.createEntity('arm-leather')
@@ -90,11 +104,12 @@ describe('feat-fighting-style-defense', function () {
 describe('feat-fighting-style-dueling', function () {
     it('should have a bonus damage +2 when wield one longsword and no shield', function () {
         const c = new Creature()
+        const r = new Manager()
+        r.init()
+        c.assetManager = r.assetManager
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
-        const r = new Manager()
-        r.init()
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-dueling'})
         const oSword = r.createEntity('wpn-shortsword')
         const oDagger = r.createEntity('wpn-dagger')
@@ -120,11 +135,12 @@ describe('feat-fighting-style-dueling', function () {
 describe('feat-fighting-style-great-weapon', function() {
     it('should have 5 attack bonus instead of 3 only when using great or versatile weapon', function () {
         const c = new Creature()
+        const r = new Manager()
+        r.init()
+        c.assetManager = r.assetManager
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 16 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
-        const r = new Manager()
-        r.init()
         c.store.mutations.addFeat({ feat: 'feat-fighting-style-great-weapon'})
         const oStaff = r.createEntity('wpn-quarterstaff')
         const oDagger = r.createEntity('wpn-dagger')
@@ -145,12 +161,12 @@ describe('feat-fighting-style-great-weapon', function() {
 
 describe('feat-second-wind', function () {
     it('should heal hp when used', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
-        const r = new Manager()
-        r.init()
         c.store.mutations.addFeat({ feat: 'feat-second-wind'})
         c.store.mutations.addClass({ ref: 'fighter', levels: 5 })
         c.store.mutations.updateFeatEffects()
@@ -167,12 +183,12 @@ describe('feat-second-wind', function () {
 
 describe('feat-survivor', function () {
     it ('should not heal when hp is over 50%', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 15 }) // modifier 2
-        const r = new Manager()
-        r.init()
         c.store.mutations.addFeat({ feat: 'feat-survivor'})
         c.store.mutations.addClass({ ref: 'fighter', levels: 5 })
         c.processEffects()
@@ -195,12 +211,12 @@ describe('feat-survivor', function () {
     })
 
     it ('should heal when hp is below 50%', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 15 }) // modifier 2
-        const r = new Manager()
-        r.init()
         c.store.mutations.addFeat({ feat: 'feat-survivor'})
         c.store.mutations.addClass({ ref: 'fighter', levels: 5 })
         c.processEffects()
@@ -228,30 +244,30 @@ describe('feat-survivor', function () {
 
 describe('feat-remarkable-athlete', function () {
     it('should have no bonus on skill check when checking non proficient skill', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
-        const r = new Manager()
-        r.init()
         c.store.mutations.addClass({ ref: 'fighter', levels: 5 })
         c.processEffects()
         const o = c.rollSkill('skill-history', 10)
         expect(o.bonus).toBe(0)
     })
     it('should have bonus on skill check when checking proficient skill', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 12 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 12 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 12 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
-        const r = new Manager()
-        r.init()
         c.store.mutations.addClass({ ref: 'fighter', levels: 5 })
         c.store.mutations.addProficiency({ proficiency: 'skill-athletics' })
         c.processEffects()
@@ -263,15 +279,15 @@ describe('feat-remarkable-athlete', function () {
         expect(o2.bonus).toBe(1)
     })
     it('should have bonus on non proficient skill check when checking non-proficient skill but havinf feat', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 12 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 12 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 12 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_WISDOM, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CHARISMA, value: 10 })
-        const r = new Manager()
-        r.init()
         c.store.mutations.addClass({ ref: 'fighter', levels: 5 })
         c.store.mutations.addProficiency({ proficiency: 'skill-athletics' })
         c.store.mutations.addFeat({ feat: 'feat-remarkable-athlete'})

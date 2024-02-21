@@ -9,7 +9,7 @@ function create (value) {
     return createEffect(CONSTS.EFFECT_SNEAK_ATTACK, value, { hasUsedSneakAttack: false })
 }
 
-function mutate ({ effect, target, source }, oEffectProcessor) {
+function mutate ({ effect, target, source }) {
     effect.data.hasUsedSneakAttack = false
 }
 
@@ -28,6 +28,7 @@ function attack ({ effect, source: oAttacker, data }) {
                 oDamageBonus[oWeapon.damageType] = 0
             }
             oDamageBonus[oWeapon.damageType] += nSneakDamage
+            outcome.damages.amount += nSneakDamage
             effect.data.hasUsedSneakAttack = true
             oAttacker.events.emit('sneak-attack', {
                 dice: sSneakDice,

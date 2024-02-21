@@ -1,9 +1,12 @@
 const Comparator = require('../src/Comparator')
-const Manager = require('../src/Manager')
-const { CONFIG } = require('../src/config')
-const CONSTS = require('../src/consts')
+const ManagerProto = require('../src/Manager')
 
-CONFIG.setModuleActive('classic', true)
+class Manager extends ManagerProto {
+    constructor() {
+        super()
+        this.config.setModuleActive('classic', true)
+    }
+}
 describe('Chances to hit', function () {
     it ('shoud compute chances to hit', function () {
         expect(Comparator.computeHitProbability(10, 9)).toBe(0.95)

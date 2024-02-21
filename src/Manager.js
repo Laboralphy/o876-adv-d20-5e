@@ -3,7 +3,7 @@ const CONSTS = require('./consts')
 const Events = require('events')
 const Creature = require('./Creature')
 const itemProperties = require('./item-properties')
-const { CONFIG } = require('./config')
+const { Config } = require('./config')
 
 class Manager {
     constructor () {
@@ -20,6 +20,11 @@ class Manager {
             'offensive-slot',
             'effect-applied'
         ])
+        this._config = null
+    }
+
+    get entityFactory () {
+        return this._ef
     }
 
     get creatureHandlers () {
@@ -27,7 +32,10 @@ class Manager {
     }
 
     get config () {
-        return CONFIG
+        if (this._config === null) {
+            this._config = new Config()
+        }
+        return this._config
     }
 
     /**
@@ -67,10 +75,11 @@ class Manager {
      */
     init () {
         const ef = new EntityFactory()
-        ef.init()
+        ef.init(this.config)
         this._ef = ef
         // Lancement des inits de chaque module
-        CONFIG
+        this
+            .config
             .modules
             .filter(m => m.active)
             .map(m => m.id)

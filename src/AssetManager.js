@@ -4,14 +4,16 @@ const path = require('path')
 const SchemaValidator = require("./SchemaValidator")
 const StoreManager = require('./StoreManager')
 const { deepMerge, deepClone } = require('@laboralphy/object-fusion')
-const { CONFIG } = require('./config')
 const STRINGS = {
     fr: require('./strings/fr.json'),
     en: require('./strings/en.json')
 }
 
 class AssetManager {
-    constructor ({ config = CONFIG } = {}) {
+    constructor ({ config } = {}) {
+        if (!config) {
+            throw new Error('config object mandatory')
+        }
         this._initialized = false
         this._config = config
         this._lang = 'fr'
@@ -33,6 +35,7 @@ class AssetManager {
                 }
             })
         }
+        this._loadedModules = new Set()
     }
 
     get initialized () {
@@ -113,6 +116,9 @@ class AssetManager {
     }
 
     loadModule (sPath) {
+        if (this._loadedModules.has(sPath)) {
+            return
+        }
         this.loadPath(path.join(sPath, 'blueprints'), 'blueprint')
         this.loadPath(path.join(sPath, 'data'), 'data')
         this.loadPath(path.join(sPath, 'store', 'creature', 'getters'), 'getters/creature')
@@ -120,6 +126,7 @@ class AssetManager {
         this.loadPath(path.join(sPath, 'store', 'creature', 'mutations'), 'mutations/creature')
         this.loadPath(path.join(sPath, 'scripts'), 'script')
         this.loadPath(path.join(sPath, 'strings'), 'strings')
+        this._loadedModules.add(sPath)
     }
 
     init () {

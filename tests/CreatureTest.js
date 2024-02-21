@@ -1,25 +1,20 @@
-const { CONFIG } = require('../src/config')
-CONFIG.setModuleActive('classic', true)
-
 const Creature = require('../src/Creature')
-const Manager = require('../src/Manager')
+const ManagerProto = require('../src/Manager')
 const EffectProcessor = require('../src/EffectProcessor')
 const ItemProperties = require('../src/item-properties')
 const CONSTS = require('../src/consts')
-const AssetManager = require('../src/AssetManager')
 const { getDisAndAdvEffectRegistry, getThoseProvidedByEffects } = require('../src/store/creature/common/get-disandadv-effect-registry')
 
 const DISTANCE_MELEE = 4
 const DISTANCE_REACH = 9
 const DISTANCE_RANGED = 30
 
-
-beforeAll(function () {
-    Error.stackTraceLimit = Infinity
-    const am = new AssetManager()
-    am.init()
-    Creature.AssetManager = am
-})
+class Manager extends ManagerProto {
+    constructor() {
+        super()
+        this.config.setModuleActive('classic', true)
+    }
+}
 
 describe('basic instanciation', function () {
     it('should not throw error WHEN instanciated', function () {
@@ -31,7 +26,9 @@ describe('basic instanciation', function () {
 
 describe('setAbility', function () {
     it('should get 10 strength WHEN setting 10', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_STRENGTH]).toBe(10)
     })
@@ -39,7 +36,9 @@ describe('setAbility', function () {
 
 describe('addEffect', function () {
     it('should get 15 strength WHEN base strength is 10 and ability bonus effect is 5 (on strength)', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10})
         // ajouter un ability modifier
         const ep = new EffectProcessor()
@@ -48,7 +47,9 @@ describe('addEffect', function () {
     })
 
     it('should get 10 strength WHEN base strength is 10 and dexterity bonus +5 is applied', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
         const ep = new EffectProcessor()
@@ -57,7 +58,9 @@ describe('addEffect', function () {
     })
 
     it('should get 18 strength WHEN to str bonus (+5 and +3) are applied', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         const ep = new EffectProcessor()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         // ajouter un ability modifier
@@ -76,7 +79,9 @@ describe('addEffect', function () {
     })
 
     it('should have an intelligence modifier of 3, -1, -5, -5 WHEN ability is 16, 9, 0, 1', function () {
-        const c1 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
         c1.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 16 })
         expect(c1.store.getters.getAbilityModifiers[CONSTS.ABILITY_INTELLIGENCE]).toBe(3)
         c1.store.mutations.setAbility({ ability: CONSTS.ABILITY_INTELLIGENCE, value: 9 })
@@ -90,17 +95,23 @@ describe('addEffect', function () {
 
 describe('addClass', function () {
     it('should be level 0 WHEN not adding classes', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         expect(c.store.getters.getLevel).toBe(0)
     })
     it('should be tourist level 1 WHEN a level of tourist is added to new creature', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.addClass({ ref: 'tourist' })
         expect(c.store.getters.getLevel).toBe(1)
         expect(c.store.getters.getLevelByClass['tourist']).toBe(1)
     })
     it('should be tourist lvl 3 and creature lvl 3 WHEN adding 3 levels of tourist to a new creature', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.addClass({ ref: 'tourist' })
         c.store.mutations.addClass({ ref: 'tourist' })
         c.store.mutations.addClass({ ref: 'tourist' })
@@ -108,7 +119,9 @@ describe('addClass', function () {
         expect(c.store.getters.getLevelByClass['tourist']).toBe(3)
     })
     it('should be tourist 2, barbarian 3 and creature 5 WHEN adding 2 levels of tourist and 3 of barbarian to a new creature', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.addClass({ ref: 'tourist' })
         c.store.mutations.addClass({ ref: 'barbarian' })
         c.store.mutations.addClass({ ref: 'barbarian' })
@@ -122,13 +135,17 @@ describe('addClass', function () {
 
 describe('getMaxHitPoints', function () {
     it('should have 10 hp on first level of fighter', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.addClass({ ref: 'fighter' })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
         expect(c.store.getters.getMaxHitPoints).toBe(10)
     })
     it('should have 16 hp on second level of fighter', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.addClass({ ref: 'fighter', levels: 2 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
         expect(c.store.getters.getAbilityValues[CONSTS.ABILITY_CONSTITUTION]).toBe(10)
@@ -139,7 +156,9 @@ describe('getMaxHitPoints', function () {
 
 describe('getAC', function () {
     it('should have AC 12 WHEN wearing a class 12 armor', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 12 })
         const oArmorLeather = {
             "entityType": "ENTITY_TYPE_ITEM",
@@ -158,7 +177,9 @@ describe('getAC', function () {
         expect(c.store.getters.getArmorClass).toBe(12)
     })
     it('should have AC 14 WHEN wearing magical (+2) armor', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 12 })
         const oArmorLeather = {
             "entityType": "ENTITY_TYPE_ITEM",
@@ -183,7 +204,9 @@ describe('getAC', function () {
 
 describe('getAttackBonus', function () {
     it('should have a higher attack bonus WHEN gaining a level and/or adding a bonus effect on primary stat', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         const oUnarmedStrike = {
             "entityType": "ENTITY_TYPE_ITEM",
@@ -207,7 +230,9 @@ describe('getAttackBonus', function () {
         expect(c.store.getters.getAttackBonus).toBe(4)
     })
     it ('should update attack bonus WHEN switching from weapon melee to ranged', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         const oSword = {
             "entityType": "ENTITY_TYPE_ITEM",
@@ -256,7 +281,9 @@ describe('getAttackBonus', function () {
         expect(c.store.getters.getAttackBonus).toBe(4)
     })
     it ('should update attack bonus WHEN switching from magical weapon melee to ranged', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         const oSword = {
             "entityType": "ENTITY_TYPE_ITEM",
             "itemType": "ITEM_TYPE_WEAPON",
@@ -335,29 +362,37 @@ describe('getAttackBonus', function () {
 
 describe('getTarget', function () {
     it('should not be null WHEN setting a target', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         expect(c1.store.getters.getTarget).toBeNull()
         c1.setTarget(c2)
         expect(c1.store.getters.getTarget).not.toBeNull()
     })
     it('should see the target WHEN selecting a visible target', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
     })
     it('la target est initialement invisible', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY);
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
     })
     it('should not see the target WHEN selecting an invisible target', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         const ep = new EffectProcessor()
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
@@ -369,8 +404,10 @@ describe('getTarget', function () {
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
     })
     it('should update canSeeTarget WHEN invisible effect is added/remove on target', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         c1.setTarget(c2)
         expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
         const eInvis = c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
@@ -381,11 +418,15 @@ describe('getTarget', function () {
 
 describe('getEffects', function () {
     it('should have no effect WHEN creature is fresh new', function() {
-        const c1 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
         expect(c1.store.getters.getEffects).toEqual([])
     })
     it('should have an effect WHEN adding an invisible effect', function() {
-        const c1 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
         expect(c1.store.getters.getEffects[0]).toBeDefined()
     })
@@ -393,11 +434,15 @@ describe('getEffects', function () {
 
 describe('dis and adv', function () {
     it('should not return anything when creature has no effect', function () {
-        const c1 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
         expect(getDisAndAdvEffectRegistry(c1.store.getters.getEffects, [])).toEqual({})
     })
     it('should return ADV1 when creature has one advantage effect with ADV1 tag', function () {
-        const c1 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
         const ep = new EffectProcessor()
         const eAdv = EffectProcessor.createEffect(
             CONSTS.EFFECT_ADVANTAGE,
@@ -411,7 +456,9 @@ describe('dis and adv', function () {
         })
     })
     it('should return many ADV1 (on each ability) when creature has one advantage effect with ADV1 tag and multiple ability', function () {
-        const c1 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
         const ep = new EffectProcessor()
         const eAdv = EffectProcessor.createEffect( CONSTS.EFFECT_ADVANTAGE,
             [CONSTS.ROLL_TYPE_ATTACK],
@@ -478,8 +525,10 @@ describe('dis and adv', function () {
 
 describe('getAdvantages/getDisadvantages', function () {
     it('should have a condition initiated by c2 WHEN c2 applies an effect on c1', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         c1.setTarget(c2)
         const ep = new EffectProcessor()
         ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), c2, 10, c1)
@@ -488,13 +537,17 @@ describe('getAdvantages/getDisadvantages', function () {
         expect(c2.store.getters.getConditionSources[CONSTS.CONDITION_INVISIBLE]).toEqual(new Set([c1.id]))
     })
     it ('should have no advantage/disadvantage WHEN  creature is fresh new', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         expect(c.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
     })
     describe('WHEN me is invisible', function () {
         it('should be an advantage on attack rolls when target cannot see attacker', function () {
-            const c1 = new Creature()
-            const c2 = new Creature()
+            const r = new Manager()
+            r.init()
+            const c1 = r.entityFactory.createCreature()
+            const c2 = r.entityFactory.createCreature()
             c1.setTarget(c2)
             c2.setTarget(c1)
             // pas d'avantage sur les jets d'attaque en force
@@ -515,8 +568,10 @@ describe('getAdvantages/getDisadvantages', function () {
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeTrue()
         })
         it('should not be an advantage on attack rolls when target has true sight', function () {
-            const c1 = new Creature()
-            const c2 = new Creature()
+            const r = new Manager()
+            r.init()
+            const c1 = r.entityFactory.createCreature()
+            const c2 = r.entityFactory.createCreature()
             c1.setTarget(c2)
             c2.setTarget(c1)
             // pas d'avantage sur les jets d'attaque en force
@@ -539,8 +594,10 @@ describe('getAdvantages/getDisadvantages', function () {
             expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeFalse()
         })
         it('should not be an advantage on attack rolls when target also invisible', function () {
-            const c1 = new Creature()
-            const c2 = new Creature()
+            const r = new Manager()
+            r.init()
+            const c1 = r.entityFactory.createCreature()
+            const c2 = r.entityFactory.createCreature()
             c1.setTarget(c2)
             c2.setTarget(c1)
             // pas d'avantage sur les jets d'attaque en force
@@ -556,8 +613,10 @@ describe('getAdvantages/getDisadvantages', function () {
         })
     })
     it ('should have disadvantage on attack when target is invisible and target can see me', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         c1.setTarget(c2)
         c2.setTarget(c1)
 
@@ -579,7 +638,8 @@ describe('getAdvantages/getDisadvantages', function () {
 describe('getDamageBonus', function () {
     it('should have damage bonus +1 slashing when equiping sword +1', function () {
         const r = new Manager()
-        const c = new Creature()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
@@ -595,7 +655,8 @@ describe('getDamageBonus', function () {
     })
     it('should have damage bonus +1 slashing +1 fire when equiping sword +1 of flame', function () {
         const r = new Manager()
-        const c = new Creature()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
@@ -612,7 +673,8 @@ describe('getDamageBonus', function () {
     })
     it('blade of angurvadal', function () {
         const r = new Manager()
-        const c = new Creature()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_DEXTERITY, value: 10 })
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_CONSTITUTION, value: 10 })
@@ -632,7 +694,9 @@ describe('getDamageBonus', function () {
 
 describe('aggregateModifier with randomn amp', function () {
     it('should return amp 1 when applying effect with amplitude 1d6 and random fixed to 0', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.dice.cheat(0.000001) // almost 0
         c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
@@ -641,7 +705,9 @@ describe('aggregateModifier with randomn amp', function () {
         expect(am).toEqual({ sum: 1, max: 1, min: Infinity, sorter: {}, count: 1, effects: 1, ip: 0 })
     })
     it('should return amp 6 when applying effect with amplitude 1d6 and random fixed to 1', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.dice.cheat(0.999999) // almost 1
         c.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_BONUS, '1d6'), 10)
         const am = c.aggregateModifiers([CONSTS.EFFECT_DAMAGE_BONUS], {
@@ -653,11 +719,15 @@ describe('aggregateModifier with randomn amp', function () {
 
 describe('damage mitigation', function () {
     it ('should not have damage mitigation when not effect is applied', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         expect(c.store.getters.getDamageMitigation).toEqual({})
     })
     it ('should have fire damage reduction 1 when one effect of DAMAGE_REDUCTION fire 1 is applied', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.applyEffect(
             EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_REDUCTION, 1, CONSTS.DAMAGE_TYPE_FIRE),
             10
@@ -666,7 +736,9 @@ describe('damage mitigation', function () {
             .toEqual({ DAMAGE_TYPE_FIRE: { immunity: false, reduction: 1, factor: 1, vulnerability: false, resistance: false }})
     })
     it ('should have fire damage resistance when one effect of DAMAGE_RESIST fire is applied', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.applyEffect(
             EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_RESISTANCE, CONSTS.DAMAGE_TYPE_FIRE),
             10
@@ -675,7 +747,9 @@ describe('damage mitigation', function () {
             .toEqual({ DAMAGE_TYPE_FIRE: { immunity: false, reduction: 0, factor: 0.5, vulnerability: false, resistance: true }})
     })
     it ('should have fire damage vulnerability when one effect of DAMAGE_VULNERABILITY fire is applied', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.applyEffect(
             EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, CONSTS.DAMAGE_TYPE_FIRE),
             10
@@ -684,7 +758,9 @@ describe('damage mitigation', function () {
             .toEqual({ DAMAGE_TYPE_FIRE: { immunity: false, reduction: 0, factor: 2, vulnerability: true, resistance: false }})
     })
     it ('should have fire damage mitig. factor 1 when both DAMAGE_VULNERABILITY fire  DAMAGE_RESISTANCE fire are applied', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.applyEffect(
             EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, CONSTS.DAMAGE_TYPE_FIRE),
             10
@@ -697,7 +773,9 @@ describe('damage mitigation', function () {
             .toEqual({ DAMAGE_TYPE_FIRE: { immunity: false, reduction: 0, factor: 1, vulnerability: true, resistance: true }})
     })
     it ('should have fire and cold damage mitig. factor 0.5 for fire, factor 2 for fire', function () {
-        const c = new Creature()
+        const r = new Manager()
+        r.init()
+        const c = r.entityFactory.createCreature()
         c.applyEffect(
             EffectProcessor.createEffect(CONSTS.EFFECT_DAMAGE_VULNERABILITY, CONSTS.DAMAGE_TYPE_COLD),
             10
@@ -716,10 +794,10 @@ describe('damage mitigation', function () {
 
 describe('attack logs', function () {
     it('should do at least 1 dmg when doing attack with a shortsword and a strength of 0', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
         const r = new Manager()
         r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         const oSword1 = r.createEntity('wpn-shortsword')
         const oSword2 = r.createEntity('wpn-shortsword')
         const oArmor1 = r.createEntity('arm-leather')
@@ -769,10 +847,10 @@ describe('attack logs', function () {
         })
     })
     it('should do 12 dmg when doing attack with a blade of angurvadal and a strength of 10', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
         const r = new Manager()
         r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         const oSword1 = r.createEntity('wpn-longsword')
         const oSword2 = r.createEntity('wpn-longsword')
         const oArmor1 = r.createEntity('arm-leather')
@@ -827,23 +905,23 @@ describe('attack logs', function () {
 
 describe('weapon ranges and target distance', function () {
     it('should have melee range when no weapon is equipped', function () {
-        const c1 = new Creature()
         const r = new Manager()
         r.init()
+        const c1 = r.entityFactory.createCreature()
         expect(c1.store.getters.getSelectedWeaponRange).toBe(5) // melee
     })
     it('should have melee range when a long sword is equipped', function () {
-        const c1 = new Creature()
         const r = new Manager()
         r.init()
+        const c1 = r.entityFactory.createCreature()
         const oSword1 = r.createEntity('wpn-longsword')
         c1.store.mutations.equipItem({ item: oSword1 })
         expect(c1.store.getters.getSelectedWeaponRange).toBe(5) // melee
     })
     it('should have long range when a bow is equipped', function () {
-        const c1 = new Creature()
         const r = new Manager()
         r.init()
+        const c1 = r.entityFactory.createCreature()
         const oBow1 = r.createEntity('wpn-longbow')
         c1.store.mutations.equipItem({ item: oBow1 })
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
@@ -854,18 +932,18 @@ describe('weapon ranges and target distance', function () {
         expect(c1.store.getters.getSelectedWeaponRange).toBe(100) // ranged
     })
     it('should have reach range when a halberd is equipped', function () {
-        const c1 = new Creature()
         const r = new Manager()
         r.init()
+        const c1 = r.entityFactory.createCreature()
         const oHalberd1 = r.createEntity('wpn-halberd')
         c1.store.mutations.equipItem({ item: oHalberd1 })
         expect(c1.store.getters.getSelectedWeaponRange).toBe(10) // reach
     })
     it('should return a valid range variation when target is moving', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
         const r = new Manager()
         r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         const oBow1 = r.createEntity('wpn-longbow')
         const oSword1 = r.createEntity('wpn-longsword')
         const oHalberd1 = r.createEntity('wpn-halberd')
@@ -888,21 +966,27 @@ describe('weapon ranges and target distance', function () {
 
 describe('multiple targets and distances', function () {
     it('should have a target-distance of NaN when no target is selected', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         expect(c1.store.getters.getTargetDistance).toBeNaN()
         expect(c2.store.getters.getTargetDistance).toBeNaN()
     })
     it('should have a target-distance of not NaN when target is selected', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         c1.setTarget(c2)
         expect(c2.store.getters.getTargetDistance).toBeNaN()
         expect(c1.store.getters.getTargetDistance).not.toBeNaN()
     })
     it('should have same distance when targetting a creature that target me', function () {
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const r = new Manager()
+        r.init()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         c1.setTarget(c2)
         expect(c1.store.getters.getTarget).toBeDefined()
         expect(c1.store.getters.getTarget).not.toBeNull()
@@ -917,8 +1001,9 @@ describe('multiple targets and distances', function () {
 describe('getMaterial armor and weapon and shield', function () {
     it('should return only material_metal when testing sword material', function () {
         const r = new Manager()
-        const c1 = new Creature()
         r.init()
+        const c1 = r.entityFactory.createCreature()
+        c1.assetManager = r.assetManager
         const oSword = r.createEntity('wpn-shortsword')
         oSword.material = CONSTS.MATERIAL_METAL
         c1.store.mutations.equipItem({ item: oSword })
@@ -928,8 +1013,10 @@ describe('getMaterial armor and weapon and shield', function () {
     })
     it('should return material_silver and material_metal when setting material to silver on sword', function () {
         const r = new Manager()
-        const c1 = new Creature()
         r.init()
+        const c1 = r.entityFactory.createCreature()
+
+        c1.assetManager = r.assetManager
         const oSword = r.createEntity('wpn-shortsword')
         oSword.material = CONSTS.MATERIAL_SILVER
         c1.store.mutations.equipItem({ item: oSword })
@@ -939,8 +1026,10 @@ describe('getMaterial armor and weapon and shield', function () {
     })
     it('should return material_wood and not metal when setting material to wood on sword', function () {
         const r = new Manager()
-        const c1 = new Creature()
         r.init()
+        const c1 = r.entityFactory.createCreature()
+
+        c1.assetManager = r.assetManager
         const oSword = r.createEntity('wpn-shortsword')
         oSword.material = CONSTS.MATERIAL_WOOD
         c1.store.mutations.equipItem({ item: oSword })
@@ -954,8 +1043,8 @@ describe('prone condition test', function () {
     it('should be disadvantaged when targetting a prone and far target with ranged weapon', function () {
         const r = new Manager()
         r.init()
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         const oBow1 = r.createEntity('wpn-longbow')
         r.createEntity('wpn-longsword');
         r.createEntity('wpn-halberd');
@@ -975,8 +1064,8 @@ describe('prone condition test', function () {
     it('should not be disadvantaged when targetting a prone and close target with melee weapon', function () {
         const r = new Manager()
         r.init()
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         const oBow1 = r.createEntity('wpn-longbow')
         const oSword1 = r.createEntity('wpn-longsword')
         const oHalberd1 = r.createEntity('wpn-halberd')
@@ -998,8 +1087,8 @@ describe('prone condition test', function () {
     it('should be advantaged when targetting a prone and close target with any weapon', function () {
         const r = new Manager()
         r.init()
-        const c1 = new Creature()
-        const c2 = new Creature()
+        const c1 = r.entityFactory.createCreature()
+        const c2 = r.entityFactory.createCreature()
         const oBow1 = r.createEntity('wpn-longbow')
         const oSword1 = r.createEntity('wpn-longsword')
         const oHalberd1 = r.createEntity('wpn-halberd')
@@ -1048,14 +1137,14 @@ describe('canSee', function () {
         const r = new Manager().init()
         const oSeer = r.createEntity('c-soldier')
         const oTarget = r.createEntity('c-soldier')
-        expect(oSeer.getPerception(oTarget)).toBe('PERCEPTION_VISIBLE')
+        expect(oSeer.getPerception(oTarget)).toBe('VISIBILITY_VISIBLE')
     })
     it('should not see target when target is invisible and we dont have see_invis', function () {
         const r = new Manager().init()
         const oSeer = r.createEntity('c-soldier')
         const oTarget = r.createEntity('c-soldier')
         oTarget.applyEffect(oTarget.EffectProcessor.createEffect('EFFECT_INVISIBILITY'), 10)
-        expect(oSeer.getPerception(oTarget)).toBe('PERCEPTION_INVISIBLE')
+        expect(oSeer.getPerception(oTarget)).toBe('VISIBILITY_INVISIBLE')
     })
     it('should see target when target is invisible and we have see_invis', function () {
         const r = new Manager().init()
@@ -1063,7 +1152,7 @@ describe('canSee', function () {
         const oTarget = r.createEntity('c-soldier')
         oTarget.applyEffect(oTarget.EffectProcessor.createEffect('EFFECT_INVISIBILITY'), 10)
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect('EFFECT_SEE_INVISIBILITY'), 10)
-        expect(oSeer.getPerception(oTarget)).toBe('PERCEPTION_VISIBLE')
+        expect(oSeer.getPerception(oTarget)).toBe('VISIBILITY_VISIBLE')
     })
     it('should not see target when blind', function () {
         const r = new Manager().init()
@@ -1071,7 +1160,7 @@ describe('canSee', function () {
         const oTarget = r.createEntity('c-soldier')
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_BLINDED), 10)
         expect(oSeer.store.getters.getConditionSet.has(CONSTS.CONDITION_BLINDED)).toBeTrue()
-        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.PERCEPTION_BLIND)
+        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_BLIND)
     })
     it('should not see target when blind and true sight and see_invis', function () {
         const r = new Manager().init()
@@ -1080,7 +1169,7 @@ describe('canSee', function () {
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_BLINDED), 10)
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_SEE_INVISIBILITY), 10)
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT), 10)
-        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.PERCEPTION_BLIND)
+        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_BLIND)
     })
     it('should not see target when in dark room', function () {
         const r = new Manager().init()
@@ -1092,7 +1181,7 @@ describe('canSee', function () {
         oTarget.store.mutations.setAreaFlags({ flags: [
                 CONSTS.AREA_FLAG_DARK
             ] })
-        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.PERCEPTION_DARKNESS)
+        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_DARKNESS)
     })
     it('should have disadvantage when attacking someone in darkroom', function () {
         const r = new Manager().init()
@@ -1118,6 +1207,25 @@ describe('canSee', function () {
                 CONSTS.AREA_FLAG_DARK
             ] })
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_DARKVISION), 10)
-        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.PERCEPTION_VISIBLE)
+        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_VISIBLE)
+    })
+})
+
+describe('torch-item', function () {
+    it('should NOT see in darkroom when using a torch', function () {
+        // Avoir une torche dans la mains ne suffit
+        const r = new Manager().init()
+        const oSeer = r.createEntity('c-soldier')
+        const oTarget = r.createEntity('c-soldier')
+        oSeer.store.mutations.setAreaFlags({ flags: [
+                CONSTS.AREA_FLAG_DARK
+            ] })
+        oTarget.store.mutations.setAreaFlags({ flags: [
+                CONSTS.AREA_FLAG_DARK
+            ] })
+        const oTorch = r.createEntity('torch')
+        oSeer.store.mutations.equipItem({ item: oTorch })
+        expect(oSeer.store.getters.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT)).toBeTrue()
+        expect(oSeer.getPerception(oTarget)).toBe(CONSTS.VISIBILITY_VISIBLE)
     })
 })

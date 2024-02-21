@@ -50,7 +50,7 @@ module.exports = class SpellCast {
             this._friends.unshift(this._caster)
         }
         this._extraTargets = extraTargets.slice(0)
-        this._spelldb = Creature.AssetManager.data['data-ddmagic-spell-database']
+        this._spelldb = caster.assetManager.data['data-ddmagic-spell-database']
         this._spellMark = null
         this._effects = []
         this._hasEmpowered = false
@@ -472,7 +472,7 @@ module.exports = class SpellCast {
      * @returns {function}
      */
     get spellScript () {
-        return Creature.AssetManager.scripts[this.spellScriptName]
+        return this.caster.assetManager.scripts[this.spellScriptName]
     }
 
     /**

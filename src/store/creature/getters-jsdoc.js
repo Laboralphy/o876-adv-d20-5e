@@ -3,7 +3,6 @@
  * @property canApproachTarget {boolean}
  * @property canAttackTarget {boolean}
  * @property canMove {boolean}
- * @property canSeeInRoom {boolean}
  * @property getAbilityBaseValues {D20AbilityNumberRegistry}
  * @property getAbilityBonus {D20AbilityNumberRegistry}
  * @property getAbilityList {string[]}
@@ -118,6 +117,7 @@
  * @property hasNoSneakAttack9 {boolean}
  * @property isHPBelow50Percent {boolean}
  * @property isWearingArmor {boolean}
+ * @property getAffectedSpellSet Set<string>
  * @property getCastableMasteredSpells {Set<string>}
  * @property getCastableSignatureSpells {Set<string>}
  * @property getCastableSpells {Object<string, boolean[]>}
