@@ -858,7 +858,24 @@ class Creature {
         // 3: ne pas être avantagé en attaque mais la cible est occupée avec une autre cible
         // 4: être en stealth ou invisible
         // resultat = 1 && (2 || 3)
-        const sneakable = bSneakableWeapon && (bAdvantaged || (!bDisadvantaged && bDistractedTarget))
+        const sTargetVisibility = oTarget.getCreatureVisibility(this)
+        let bTargetCanSeeMe = sTargetVisibility === CONSTS.VISIBILITY_VISIBLE
+        const perception = {
+            rolled: false,
+            perception: null,
+            stealth: null,
+            result: false
+        }
+        if (!bTargetCanSeeMe) {
+            const ocPerception = oTarget.computeCreatureDetection(this)
+            if (ocPerception) {
+                perception.rolled = true
+                perception.perception = ocPerception.perception
+                perception.stealth = ocPerception.stealth
+                bTargetCanSeeMe = perception.result = ocPerception.result
+            }
+        }
+        const sneakable = !bTargetCanSeeMe && bSneakableWeapon && (bAdvantaged || (!bDisadvantaged && bDistractedTarget))
         const hit = bCriticalHit
             ? true
             : bCriticalFail
@@ -882,6 +899,7 @@ class Creature {
             advantages,
             disadvantages,
             sneakable,
+            perception,
             damages: {
                 amount: 0,
                 resisted: {},
@@ -1448,6 +1466,33 @@ class Creature {
         aStealthEffects.forEach(effect => {
             this.store.mutations.dispelEffect({ effect })
         })
+    }
+
+    /**
+     * Effectue une détection de créature, si la détection réussi, on pourra tout le temps détecter cette créature
+     * @param oHiddenOne
+     */
+    computeCreatureDetection (oHiddenOne) {
+        if (!oHiddenOne.store.getters.getEffectSet.has(CONSTS.EFFECT_STEALTH)) {
+            return null
+        }
+        const ocPerceptionRoll = this.rollSkill('skill-perception', 0)
+        const ocStealthRoll = oHiddenOne.rollSkill('skill-stealth', 0)
+        const result = ocPerceptionRoll.value > ocStealthRoll.value
+        if (result) {
+            oHiddenOne.store.mutations.addStealthDetector({ creature: this.id })
+        }
+        return {
+            perception: {
+                value: ocPerceptionRoll.value,
+                circumstance: ocPerceptionRoll.circumstance
+            },
+            stealth: {
+                value: ocStealthRoll.value,
+                circumstance: ocStealthRoll.circumstance
+            },
+            result
+        }
     }
 }
 

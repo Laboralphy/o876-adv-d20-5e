@@ -6,8 +6,8 @@ const CONSTS = require('../../../consts')
  * @param getters
  * @returns {Set<string>}
  */
-module.exports = state => {
-    const oStealthEffect = state.effects.find(effect => effect.type === CONSTS.EFFECT_STEALTH)
+module.exports = (state, getters) => {
+    const oStealthEffect = getters.getEffects.find(effect => effect.type === CONSTS.EFFECT_STEALTH)
     if (oStealthEffect) {
         return new Set(oStealthEffect.data.detectedBy)
     } else {
