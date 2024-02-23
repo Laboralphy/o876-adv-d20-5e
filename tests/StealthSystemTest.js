@@ -57,7 +57,7 @@ describe('getEntityVisib with stealth creatures', function () {
     })
 })
 
-fdescribe('attacking while sneaking', function () {
+describe('attacking while sneaking', function () {
     it('attack should NOT be sneakable when NOT in stealth mode', function () {
         const { manager, evolution } = buildStuff()
         const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 4)
@@ -126,7 +126,7 @@ fdescribe('attacking while sneaking', function () {
         oTarget.dice.cheat(0.5)
         expect(oTarget.getCreatureVisibility(oRogue)).toBe(CONSTS.VISIBILITY_UNDETECTED)
         const outcome = oRogue.attack(oTarget)
-        expect(outcome.perception.perception.circumstance).toBe(-1) // perception disadvantaged in dark rooms
+        expect(outcome.perception.roll.circumstance).toBe(-1) // perception disadvantaged in dark rooms
     })
     it('should not stack effect_stealth when entering stealth mode several times', function () {
         const { manager, evolution } = buildStuff()
@@ -153,3 +153,4 @@ fdescribe('attacking while sneaking', function () {
         expect(oRogue.store.getters.getEffects.filter(effect => effect.type === CONSTS.EFFECT_STEALTH).length).toBe(0)
     })
 })
+

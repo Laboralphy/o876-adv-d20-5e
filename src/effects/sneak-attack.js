@@ -16,7 +16,7 @@ function mutate ({ effect, target, source }) {
 
 function attack ({ effect, source: oAttacker, data }) {
     const { outcome } = data
-    if (outcome.hit && !effect.data.hasUsedSneakAttack && oAttacker.getTargetTarget() !== oAttacker) {
+    if (outcome.hit && outcome.sneakable && !effect.data.hasUsedSneakAttack && oAttacker.getTargetTarget() !== oAttacker) {
         const bAdequateRangedWeapon = outcome.weapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED) && outcome.ammo !== null
         const bAdequateMeleeWeapon = outcome.weapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_FINESSE)
 

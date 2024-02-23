@@ -861,16 +861,14 @@ class Creature {
         const sTargetVisibility = oTarget.getCreatureVisibility(this)
         let bTargetCanSeeMe = sTargetVisibility === CONSTS.VISIBILITY_VISIBLE
         const perception = {
-            rolled: false,
-            perception: null,
+            roll: null,
             stealth: null,
             result: false
         }
         if (!bTargetCanSeeMe) {
             const ocPerception = oTarget.computeCreatureDetection(this)
             if (ocPerception) {
-                perception.rolled = true
-                perception.perception = ocPerception.perception
+                perception.roll = ocPerception.perception
                 perception.stealth = ocPerception.stealth
                 bTargetCanSeeMe = perception.result = ocPerception.result
             }

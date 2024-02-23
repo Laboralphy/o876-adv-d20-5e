@@ -598,6 +598,8 @@ describe('sneak attacks', function () {
         oRogue.processEffects()
         oFighter.processEffects()
         oRogue.dice.cheat(0.5)
+        oFighter.dice.cheat(0.5)
+        oRogue.enterStealthMode()
         oRogue.setTarget(oFighter)
         oRogue.setDistanceToTarget(5)
         expect(oRogue.store.getters.getSelectedWeapon).toEqual(oDagger)
@@ -621,6 +623,8 @@ describe('sneak attacks', function () {
         oRogue.processEffects()
         oFighter.processEffects()
         oRogue.dice.cheat(0.5)
+        oFighter.dice.cheat(0.5)
+        oRogue.enterStealthMode()
         oRogue.setTarget(oFighter)
         oRogue.setDistanceToTarget(5)
         const outcome = oRogue.attack(oFighter)
@@ -638,6 +642,8 @@ describe('sneak attacks', function () {
         oRogue.processEffects()
         oFighter.processEffects()
         oRogue.dice.cheat(0.5)
+        oFighter.dice.cheat(0.5)
+        oRogue.enterStealthMode()
         oRogue.setTarget(oFighter)
         oRogue.setDistanceToTarget(5)
         const outcome = oRogue.attack(oFighter)
@@ -655,6 +661,8 @@ describe('sneak attacks', function () {
         oRogue.processEffects()
         oFighter.processEffects()
         oRogue.dice.cheat(0.5)
+        oFighter.dice.cheat(0.5)
+        oRogue.enterStealthMode()
         oRogue.setTarget(oFighter)
         oRogue.setDistanceToTarget(5)
         const outcome = oRogue.attack(oFighter)
@@ -669,13 +677,23 @@ describe('sneak attacks', function () {
         expect(outcome2.damages.amount).toBe(6)
         oRogue.processEffects()
         oFighter.processEffects()
+        oRogue.enterStealthMode() // il est re-possible de sneaker
         const outcome3 = oRogue.attack(oFighter)
         // 3 de dégat pour la dague
         // +3 pour la dex (arme de finesse)
         // +12 de sneak attack
         expect(outcome3.damages.amount).toBe(18)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oFighter.setTarget(oRogue) // La non, re-sneak impossible
+        oRogue.enterStealthMode() // il est re-possible de sneaker
+        const outcome4 = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +0 de sneak attack (a cause déja spotté)
+        expect(outcome4.damages.amount).toBe(6)
     })
-    it ('should not have sneak attack of when target is unaware', function () {
+    it ('should not have sneak attack of when target is unaware but not in stealth mode', function () {
         const { manager, evolution } = buildStuff()
         const oRogue = manager.entityFactory.createCreature()
         const oFighter = manager.entityFactory.createCreature()
@@ -686,6 +704,29 @@ describe('sneak attacks', function () {
         oRogue.processEffects()
         oFighter.processEffects()
         oRogue.dice.cheat(0.5)
+        oFighter.dice.cheat(0.5)
+        oRogue.setTarget(oFighter)
+        oRogue.setDistanceToTarget(5)
+        const outcome = oRogue.attack(oFighter)
+        // 3 de dégat pour la dague
+        // +3 pour la dex (arme de finesse)
+        // +12 de sneak attack
+        expect(outcome.sneakable).toBeFalse() // Not in stealth mode
+        expect(outcome.damages.amount).toBe(6)
+    })
+    it ('should have sneak attack of when target is unaware and in stealth mode', function () {
+        const { manager, evolution } = buildStuff()
+        const oRogue = manager.entityFactory.createCreature()
+        const oFighter = manager.entityFactory.createCreature()
+        evolution.setupCreatureFromTemplate(oRogue, 'template-rogue-generic', 5)
+        evolution.setupCreatureFromTemplate(oFighter, 'template-fighter-generic', 20)
+        const oDagger = manager.createEntity('wpn-dagger')
+        oRogue.equipItem(oDagger)
+        oRogue.processEffects()
+        oFighter.processEffects()
+        oRogue.enterStealthMode()
+        oRogue.dice.cheat(0.5)
+        oFighter.dice.cheat(0.5)
         oRogue.setTarget(oFighter)
         oRogue.setDistanceToTarget(5)
         const outcome = oRogue.attack(oFighter)

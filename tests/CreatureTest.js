@@ -839,6 +839,11 @@ describe('attack logs', function () {
             weapon: c1.store.getters.getSelectedWeapon,
             ammo: null,
             sneakable: false,
+            perception: {
+                roll: null,
+                stealth: null,
+                result: false
+            },
             damages: {
                 amount: 1,
                 types: { DAMAGE_TYPE_SLASHING: 1 },
@@ -884,6 +889,7 @@ describe('attack logs', function () {
             dice: 16,
             deflector: '',
             target: c2,
+            perception: { roll: null, stealth: null, result: false },
             advantages: {
                 rules: [],
                 value: false
