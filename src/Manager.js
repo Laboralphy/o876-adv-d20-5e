@@ -18,7 +18,8 @@ class Manager {
             'check-skill',
             'damaged',
             'offensive-slot',
-            'effect-applied'
+            'effect-applied',
+            'sneak-attack'
         ])
         this._config = null
     }
