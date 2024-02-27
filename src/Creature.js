@@ -865,14 +865,6 @@ class Creature {
             stealth: null,
             result: false
         }
-        if (!bTargetCanSeeMe) {
-            const ocPerception = oTarget.computeCreatureDetection(this)
-            if (ocPerception) {
-                perception.roll = ocPerception.perception
-                perception.stealth = ocPerception.stealth
-                bTargetCanSeeMe = perception.result = ocPerception.result
-            }
-        }
         const sneakable = !bTargetCanSeeMe && bSneakableWeapon && (bAdvantaged || (!bDisadvantaged && bDistractedTarget))
         const hit = bCriticalHit
             ? true

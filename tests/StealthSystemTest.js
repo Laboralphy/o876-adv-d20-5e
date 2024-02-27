@@ -87,28 +87,6 @@ describe('attacking while sneaking', function () {
         expect(oTarget.getCreatureVisibility(oRogue)).toBe(CONSTS.VISIBILITY_VISIBLE)
         expect(outcome.sneakable).toBeTrue()
     })
-    it('attack should not be sneakable when enter perception detect stealth', function () {
-        const { manager, evolution } = buildStuff()
-        const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 4)
-        const oTarget = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-tourist-generic', 4)
-        const oDagger = manager.createEntity('wpn-dagger')
-        oRogue.store.mutations.equipItem({ item: oDagger })
-        oRogue.name = 'Rogue'
-        oTarget.name = 'Target'
-        oRogue.setTarget(oTarget)
-        oRogue.setDistanceToTarget(5)
-        oRogue.enterStealthMode()
-        oRogue.dice.cheat(0.01)
-        oTarget.dice.cheat(0.99)
-        expect(oTarget.getCreatureVisibility(oRogue)).toBe(CONSTS.VISIBILITY_UNDETECTED)
-        const outcome = oRogue.attack(oTarget)
-        expect(oTarget.getCreatureVisibility(oRogue)).toBe(CONSTS.VISIBILITY_VISIBLE)
-        expect(outcome.sneakable).toBeFalse()
-        expect(outcome.perception.result).toBeTrue()
-        expect(oTarget.store.getters.getAbilityModifiers[CONSTS.ABILITY_WISDOM]).toBe(2)
-        expect(oTarget.store.getters.getProficiencies.includes('skill-perception')).toBeTrue()
-        expect(oTarget.store.getters.getProficiencyBonus).toBe(2) // du coup le boinus de perception c'est 2 + 2 -> jet : 24
-    })
     it('perception against stealth should be disadvantaged when in dark room', function () {
         const { manager, evolution } = buildStuff()
         const oRogue = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-rogue-generic', 4)
@@ -125,8 +103,6 @@ describe('attacking while sneaking', function () {
         oRogue.dice.cheat(0.5)
         oTarget.dice.cheat(0.5)
         expect(oTarget.getCreatureVisibility(oRogue)).toBe(CONSTS.VISIBILITY_UNDETECTED)
-        const outcome = oRogue.attack(oTarget)
-        expect(outcome.perception.roll.circumstance).toBe(-1) // perception disadvantaged in dark rooms
     })
     it('should not stack effect_stealth when entering stealth mode several times', function () {
         const { manager, evolution } = buildStuff()
