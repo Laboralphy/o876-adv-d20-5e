@@ -11,8 +11,10 @@ function create () {
     return oEffect
 }
 
-function attack ({ effect, source }) {
-    source.store.mutations.dispelEffect({ effect })
+function attack ({ effect, source, data: { outcome } }) {
+    if (outcome.hit) {
+        source.store.mutations.dispelEffect({ effect })
+    }
 }
 
 module.exports = {
