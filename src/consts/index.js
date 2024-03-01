@@ -17,7 +17,7 @@ module.exports = {
     ...require('./index.js'),
     ...require('./item-types.json'),
     ...require('./item-properties.json'),
-    ...require('./perception.json'),
+    ...require('./visibility.json'),
     ...require('./proficiencies.json'),
     ...require('./roll-types.json'),
     ...require('./sizes.json'),

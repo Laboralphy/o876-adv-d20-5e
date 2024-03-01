@@ -254,12 +254,14 @@ class EffectProcessor {
             switch (sUnicity) {
                 case CONSTS.EFFECT_UNICITY_NO_REPLACE: {
                     // On ne remplace pas l'effet déja installé
+                    // On renvoie immédiatement l'effet (pour éviter un double push)
                     return oAlreadyHaveEffect
                 }
 
                 case CONSTS.EFFECT_UNICITY_REPLACE: {
                     // On remplace l'effet existant
                     oAlreadyHaveEffect.duration = 0
+                    break
                 }
             }
         }

@@ -24,7 +24,10 @@ class Creature {
             handler: null,
             creature: null
         }
-        this.am = null
+        /**
+         * @type {AssetManager}
+         */
+        this._am = null
         this._aggressor = {
             handler: null,
             creature: null
@@ -351,7 +354,7 @@ class Creature {
         }
     }
 
-    updateTarget (name) {
+    updateTarget (name, payload) {
         switch (name) {
             case 'equipItem':
             case 'dispelEffect':
@@ -361,6 +364,13 @@ class Creature {
                 const itemProperties = this._target.creature.store.getters.getEquipmentItemPropertySet
                 this.store.mutations.updateTargetConditions({ conditions, effects, itemProperties })
                 break
+            }
+        }
+        if (name === 'addEffect') {
+            const { effect } = payload
+            if (effect.type === CONSTS.EFFECT_STEALTH) {
+                // ajouter le détecteur
+                this._target.creature.store.mutations.addStealthDetector({ creature: this.id })
             }
         }
     }
@@ -846,8 +856,16 @@ class Creature {
         // 1: disposer d'une arme finesse ou ranged
         // 2: être avantagé en attaque
         // 3: ne pas être avantagé en attaque mais la cible est occupée avec une autre cible
+        // 4: être en stealth ou invisible
         // resultat = 1 && (2 || 3)
-        const sneakable = bSneakableWeapon && (bAdvantaged || (!bDisadvantaged && bDistractedTarget))
+        const sTargetVisibility = oTarget.getCreatureVisibility(this)
+        let bTargetCanSeeMe = sTargetVisibility === CONSTS.VISIBILITY_VISIBLE
+        const perception = {
+            roll: null,
+            stealth: null,
+            result: false
+        }
+        const sneakable = !bTargetCanSeeMe && bSneakableWeapon && (bAdvantaged || (!bDisadvantaged && bDistractedTarget))
         const hit = bCriticalHit
             ? true
             : bCriticalFail
@@ -871,6 +889,7 @@ class Creature {
             advantages,
             disadvantages,
             sneakable,
+            perception,
             damages: {
                 amount: 0,
                 resisted: {},
@@ -1382,18 +1401,24 @@ class Creature {
      * @param oTarget {Creature}
      * @return {string} VISIBILITY_
      */
-    getPerception (oTarget) {
+    getCreatureVisibility (oTarget) {
         const csg = this.store.getters
         const tsg = oTarget.store.getters
         if (csg.getConditionSet.has(CONSTS.CONDITION_BLINDED)) {
             return CONSTS.VISIBILITY_BLIND
         }
         const bTargetInvisible = tsg.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)
+        const bHasTrueSight = csg.getEffectSet.has(CONSTS.EFFECT_TRUE_SIGHT)
+
         const bMeSeeInvisibility =
             csg.getEffectSet.has(CONSTS.EFFECT_SEE_INVISIBILITY) ||
-            csg.getEffectSet.has(CONSTS.EFFECT_TRUE_SIGHT)
+            bHasTrueSight
         if (bTargetInvisible && !bMeSeeInvisibility) {
             return CONSTS.VISIBILITY_INVISIBLE
+        }
+        const aStealthDetectorSet = oTarget.store.getters.getStealthDetectionSet
+        if (tsg.getEffectSet.has(CONSTS.EFFECT_STEALTH) && !aStealthDetectorSet.has(this.id)) {
+            return CONSTS.VISIBILITY_UNDETECTED
         }
         if (
             tsg.getAreaFlagSet.has(CONSTS.AREA_FLAG_DARK) &&
@@ -1412,6 +1437,52 @@ class Creature {
             }
         }
         return CONSTS.VISIBILITY_VISIBLE
+    }
+
+    /**
+     * Le personnage se met en mode furtif
+     * Il devient indétectable
+     */
+    enterStealthMode () {
+        const eStealth = EffectProcessor.createEffect(CONSTS.EFFECT_STEALTH)
+        this.applyEffect(eStealth, Infinity)
+    }
+
+    /**
+     * Le personnage sort du mode furtif
+     */
+    exitStealthMode () {
+        const aStealthEffects = this.store.getters.getEffects.filter(effect => effect.type === CONSTS.EFFECT_STEALTH)
+        aStealthEffects.forEach(effect => {
+            this.store.mutations.dispelEffect({ effect })
+        })
+    }
+
+    /**
+     * Effectue une détection de créature, si la détection réussi, on pourra tout le temps détecter cette créature
+     * @param oHiddenOne
+     */
+    computeCreatureDetection (oHiddenOne) {
+        if (!oHiddenOne.store.getters.getEffectSet.has(CONSTS.EFFECT_STEALTH)) {
+            return null
+        }
+        const ocPerceptionRoll = this.rollSkill('skill-perception', 0)
+        const ocStealthRoll = oHiddenOne.rollSkill('skill-stealth', 0)
+        const result = ocPerceptionRoll.value > ocStealthRoll.value
+        if (result) {
+            oHiddenOne.store.mutations.addStealthDetector({ creature: this.id })
+        }
+        return {
+            perception: {
+                value: ocPerceptionRoll.value,
+                circumstance: ocPerceptionRoll.circumstance
+            },
+            stealth: {
+                value: ocStealthRoll.value,
+                circumstance: ocStealthRoll.circumstance
+            },
+            result
+        }
     }
 }
 
