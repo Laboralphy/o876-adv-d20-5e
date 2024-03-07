@@ -145,5 +145,12 @@
     "concentration": false,
     "target": "TARGET_TYPE_FRIEND",
     "school": "SPELL_SCHOOL_ABJURATION"
+  },
+  "animated-dead": {
+    "level": 3,
+    "ritual": false,
+    "concentration": false,
+    "target": "TARGET_TYPE_SELF",
+    "school": "SPELL_SCHOOL_NECROMANCY"
   }
 }

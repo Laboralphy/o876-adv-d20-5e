@@ -8,6 +8,7 @@ module.exports = {
     ...require('./armor-deflectors.json'),
     ...require('./conditions.json'),
     ...require('./damage-types.json'),
+    ...require('./despawn-reasons.json'),
     ...require('./effects.json'),
     ...require('./entity-types.json'),
     ...require('./equipment-slots.json'),
