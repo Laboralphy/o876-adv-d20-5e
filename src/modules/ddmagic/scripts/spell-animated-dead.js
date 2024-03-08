@@ -22,7 +22,12 @@ function getRef (nLevel) {
     const st = SUMMON_TABLE
         .find(sti => sti.levels.has(nLevel))
     if (st) {
-        return chooseRandomItems(st.refs, 1).shift()
+        const aRefs = chooseRandomItems(st.refs, 1)
+        const sRef = aRefs.shift()
+        if (sRef === undefined) {
+            throw new Error('Error in summon table, could not choose reference in ' + st.refs.join(', '))
+        }
+        return sRef
     } else {
         throw new Error('Error in summon table : level value not found: ' + nLevel)
     }
@@ -50,24 +55,26 @@ module.exports = function (oSpellCast) {
     if (creature) {
         const nGrade = Math.floor(nCasterLevel / 4)
         const oWeapons = creature.store.getters.getEquippedWeapons
-        const oRanged = oWeapons.ranged
-        const oMelee = oWeapons?.melee || oWeapons.natural
-        if (oMelee) {
-            // Augmentation des dégâts de mélée
-            oMelee.itemProperties.push(ITEM_PROPERTIES[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ amp: nProficiencyBonus, type: oMelee.damage.type }))
-        }
-        if (oRanged) {
-            // Augmentation de l'adresse des tirs à distance
-            oRanged.itemProperties.push(ITEM_PROPERTIES[CONSTS.ITEM_PROPERTY_ATTACK_BONUS]({ amp: nGrade }))
+        const bHasUndeadThrallFeat = caster.store.getters.getFeatSet.has('feat-undead-thralls')
+        if (bHasUndeadThrallFeat) {
+            const oMelee = oWeapons?.melee || oWeapons.natural
+            if (oMelee) {
+                // Augmentation des dégâts de mélée
+                oMelee.properties.push(ITEM_PROPERTIES[CONSTS.ITEM_PROPERTY_DAMAGE_BONUS]({ amp: nProficiencyBonus, type: oMelee.damage.type }))
+            }
+            // Augmenter les HP
+            const eHPBonus = creature.EffectProcessor.createEffect(CONSTS.EFFECT_HP_BONUS, nHPBonus)
+            eHPBonus.subtype = CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY
+            creature.applyEffect(eHPBonus, Infinity)
         }
         const oArmor = creature.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_CHEST] ||
             creature.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_NATURAL_ARMOR]
         if (oArmor) {
             // Augmentation de la classe d'armure
-            oArmor.itemProperties.push(ITEM_PROPERTIES[CONSTS.ITEM_PROPERTY_AC_BONUS]({ amp: nGrade }))
+            oArmor.properties.push(ITEM_PROPERTIES[CONSTS.ITEM_PROPERTY_AC_BONUS]({ amp: nGrade }))
         }
         // Appliquer TTL
-        const eTTL = creature.effectProcessor.createEffect(CONSTS.EFFECT_TIME_TO_LIVE)
+        const eTTL = creature.EffectProcessor.createEffect(CONSTS.EFFECT_TIME_TO_LIVE)
         creature.applyEffect(eTTL, oSpellCast.getDurationHours(24))
     }
 }

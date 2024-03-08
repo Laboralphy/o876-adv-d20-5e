@@ -23,7 +23,7 @@ function mutate ({ effect, target, source }, oEffectProcessor) {
                 --effect.data.saveCount
             } else {
                 target.applyEffect(
-                    oEffectProcessor.createEffect(
+                    target.EffectProcessor.createEffect(
                         CONSTS.EFFECT_DAMAGE,
                         target.roll(effect.data.dot),
                         CONSTS.DAMAGE_TYPE_POISON
@@ -41,7 +41,7 @@ function mutate ({ effect, target, source }, oEffectProcessor) {
         if (effect.amp > 0) {
             if (!target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, [CONSTS.THREAT_TYPE_POISON], effect.data.dc).success, source) {
                 target.applyEffect(
-                    oEffectProcessor.createEffect(
+                    target.EffectProcessor.createEffect(
                         CONSTS.EFFECT_DAMAGE,
                         effect.amp,
                         CONSTS.DAMAGE_TYPE_POISON

@@ -13,7 +13,7 @@ function create () {
 }
 
 function dispose ({ target }) {
-    target.requestDespawn(CONSTS.DESPAWN_REASON_EXPIRATION)
+    target.requestDespawn(CONSTS.DESPAWN_REASON_TTL_EXPIRATION)
 }
 
 module.exports = {
