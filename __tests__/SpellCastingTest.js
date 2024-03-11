@@ -413,7 +413,7 @@ describe('invisibility', function () {
     })
 })
 
-describe('animated dead', function () {
+describe('animate dead', function () {
     it('should trigger summon-creature when summoning creature', function () {
         const { manager, evolution } = buildStuff()
         const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 8)
@@ -422,7 +422,7 @@ describe('animated dead', function () {
             aLog.push({ ref: ev.ref, level: ev.level })
         })
         oWizard.assetManager.scripts['ddmagic-cast-spell']({
-            spell: 'animated-dead',
+            spell: 'animate-dead',
             caster: oWizard,
             friends: [],
             target: null,
@@ -442,7 +442,7 @@ describe('animated dead', function () {
             oSummonedCreature = ev.creature = manager.createEntity(ev.ref)
         })
         oWizard.assetManager.scripts['ddmagic-cast-spell']({
-            spell: 'animated-dead',
+            spell: 'animate-dead',
             caster: oWizard,
             friends: [],
             target: null,
@@ -462,7 +462,7 @@ describe('animated dead', function () {
             oSummonedCreature = ev.creature = manager.createEntity(ev.ref)
         })
         oWizard.assetManager.scripts['ddmagic-cast-spell']({
-            spell: 'animated-dead',
+            spell: 'animate-dead',
             caster: oWizard,
             friends: [],
             target: null,
