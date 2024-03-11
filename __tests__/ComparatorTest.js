@@ -142,11 +142,11 @@ describe('real combat', function () {
         expect(cx.melee.adv.hp.after).toBeCloseTo(11.4, 2)
         expect(cx.melee.adv.turns).toBe(4)
 
-        expect(cx.ranged.you.hasWeapon).toBeTrue()
+        expect(cx.ranged.you.hasWeapon).toBeTruthy()
         expect(cx.ranged.you.hp.after).toBeCloseTo(14, 2)
         expect(cx.ranged.you.turns).toBe(7)
 
-        expect(cx.ranged.adv.hasWeapon).toBeFalse()
+        expect(cx.ranged.adv.hasWeapon).toBeFalsy()
         expect(cx.ranged.adv.hp.after).toBe(-Infinity)
         expect(cx.ranged.adv.turns).toBe(Infinity)
     })

@@ -222,7 +222,7 @@ describe('getAttackBonus', function () {
         c.store.mutations.addClass({ ref: 'tourist', levels: 1 })
         expect(c.store.getters.getLevel).toBe(1)
         expect(c.store.getters.getProficiencyBonus).toBe(2)
-        expect(c.store.getters.isProficientSelectedWeapon).toBeTrue()
+        expect(c.store.getters.isProficientSelectedWeapon).toBeTruthy()
         expect(c.store.getters.getAttackBonus).toBe(2)
         c.store.mutations.setAbility({ ability: CONSTS.ABILITY_STRENGTH, value: 12 })
         expect(c.store.getters.getAttackBonus).toBe(3)
@@ -344,7 +344,7 @@ describe('getAttackBonus', function () {
         c.store.mutations.addClass({ ref: 'tourist', levels: 1 })
         expect(c.store.getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH]).toBe(2)
         expect(c.store.getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]).toBe(4)
-        expect(c.store.getters.isProficientSelectedWeapon).toBeTrue()
+        expect(c.store.getters.isProficientSelectedWeapon).toBeTruthy()
         expect(c.store.getters.getProficiencyBonus).toBe(2)
         // +2 prof, +1 weapon +2 ability
         expect(c.store.getters.getOffensiveEquipmentList.length).toBe(1)
@@ -376,7 +376,7 @@ describe('getTarget', function () {
         const c1 = r.entityFactory.createCreature()
         const c2 = r.entityFactory.createCreature()
         c1.setTarget(c2)
-        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTruthy()
     })
     it('la target est initialement invisible', function () {
         const r = new Manager()
@@ -386,7 +386,7 @@ describe('getTarget', function () {
         EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY);
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
         c1.setTarget(c2)
-        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalsy()
     })
     it('should not see the target WHEN selecting an invisible target', function () {
         const r = new Manager()
@@ -395,13 +395,13 @@ describe('getTarget', function () {
         const c2 = r.entityFactory.createCreature()
         const ep = new EffectProcessor()
         c1.setTarget(c2)
-        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTruthy()
         ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), c2, 10)
         expect(c1.store.state.target.id).toBe(c2.id)
         expect([...c2.store.getters.getConditionSet]).toEqual(['CONDITION_INVISIBLE'])
         expect([...c1.getTarget().store.getters.getConditionSet]).toEqual(['CONDITION_INVISIBLE'])
         expect([...c1.store.getters.getTargetConditionSet]).toEqual(['CONDITION_INVISIBLE'])
-        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalsy()
     })
     it('should update canSeeTarget WHEN invisible effect is added/remove on target', function () {
         const r = new Manager()
@@ -409,10 +409,10 @@ describe('getTarget', function () {
         const c1 = r.entityFactory.createCreature()
         const c2 = r.entityFactory.createCreature()
         c1.setTarget(c2)
-        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTruthy()
         const eInvis = c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
         expect(eInvis.type).toBe(CONSTS.EFFECT_INVISIBILITY)
-        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalsy()
     })
 })
 
@@ -532,15 +532,15 @@ describe('getAdvantages/getDisadvantages', function () {
         c1.setTarget(c2)
         const ep = new EffectProcessor()
         ep.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), c2, 10, c1)
-        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-        expect(c1.store.getters.getTargetConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTruthy()
+        expect(c1.store.getters.getTargetConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTruthy()
         expect(c2.store.getters.getConditionSources[CONSTS.CONDITION_INVISIBLE]).toEqual(new Set([c1.id]))
     })
     it ('should have no advantage/disadvantage WHEN  creature is fresh new', function () {
         const r = new Manager()
         r.init()
         const c = r.entityFactory.createCreature()
-        expect(c.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+        expect(c.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalsy()
     })
     describe('WHEN me is invisible', function () {
         it('should be an advantage on attack rolls when target cannot see attacker', function () {
@@ -551,21 +551,21 @@ describe('getAdvantages/getDisadvantages', function () {
             c1.setTarget(c2)
             c2.setTarget(c1)
             // pas d'avantage sur les jets d'attaque en force
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalsy()
             // cible visible
-            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTruthy()
             // cible peut me voir
-            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTruthy()
             // ajout d'effet invisible sur c1
             c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
             // c1 vois toujours c2
-            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTruthy()
             // c1 n'est pas visible par c2
-            expect(c1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalse()
+            expect(c1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTruthy()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalsy()
             // c1 a donc bien un avantage d'attaque en force sur c2
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeTrue()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTruthy()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeTruthy()
         })
         it('should not be an advantage on attack rolls when target has true sight', function () {
             const r = new Manager()
@@ -575,23 +575,23 @@ describe('getAdvantages/getDisadvantages', function () {
             c1.setTarget(c2)
             c2.setTarget(c1)
             // pas d'avantage sur les jets d'attaque en force
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalsy()
             // cible visible
-            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTruthy()
             // cible peut me voir
-            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTruthy()
             // ajout d'effet invisible sur c1
             c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
             c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_TRUE_SIGHT), 10)
             // c1 vois toujours c2
-            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
-            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTruthy()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeTruthy()
             // c1 n'est pas visible par c2
-            expect(c1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
-            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTrue()
+            expect(c1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTruthy()
+            expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeTruthy()
             // c1 et c2 se voient
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeFalse()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalsy()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('UNDETECTED')).toBeFalsy()
         })
         it('should not be an advantage on attack rolls when target also invisible', function () {
             const r = new Manager()
@@ -604,12 +604,12 @@ describe('getAdvantages/getDisadvantages', function () {
             c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
             c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
             // c1 vois toujours c2
-            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalse()
-            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+            expect(c1.store.getters.getEntityVisibility.detectable.target).toBeFalsy()
+            expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalsy()
             // c1 n'est pas visible par c2
             // c1 et c2 ne se voient pas
-            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
-            expect(c2.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalse()
+            expect(c1.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalsy()
+            expect(c2.store.getters.getAdvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeFalsy()
         })
     })
     it ('should have disadvantage on attack when target is invisible and target can see me', function () {
@@ -623,15 +623,15 @@ describe('getAdvantages/getDisadvantages', function () {
         // ajout d'effet invisible sur c1
         c1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_INVISIBILITY), 10)
         // c1 vois toujours c2
-        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTrue()
+        expect(c1.store.getters.getEntityVisibility.detectable.target).toBeTruthy()
         // c1 n'est pas visible par c2
-        expect(c1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(c1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTruthy()
         // c2 ne vois plus c1
-        expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalse()
-        expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalse()
+        expect(c1.store.getters.getEntityVisibility.detectedBy.target).toBeFalsy()
+        expect(c2.store.getters.getEntityVisibility.detectable.target).toBeFalsy()
         // c2 a donc bien un désavantage d'attaque en tout
-        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTrue()
-        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_UNSEEN')).toBeTrue()
+        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.value).toBeTruthy()
+        expect(c2.store.getters.getDisadvantages.ROLL_TYPE_ATTACK.ABILITY_STRENGTH.rules.includes('TARGET_UNSEEN')).toBeTruthy()
     })
 })
 
@@ -958,15 +958,15 @@ describe('weapon ranges and target distance', function () {
         c1.setTarget(c2)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
-        expect(c1.store.getters.isTargetInWeaponRange).toBeTrue()
+        expect(c1.store.getters.isTargetInWeaponRange).toBeTruthy()
         c1.setDistanceToTarget(DISTANCE_REACH)
-        expect(c1.store.getters.isTargetInWeaponRange).toBeFalse()
+        expect(c1.store.getters.isTargetInWeaponRange).toBeFalsy()
         c1.store.mutations.equipItem({ item: oHalberd1 })
-        expect(c1.store.getters.isTargetInWeaponRange).toBeTrue()
+        expect(c1.store.getters.isTargetInWeaponRange).toBeTruthy()
         c1.setDistanceToTarget(DISTANCE_RANGED)
-        expect(c1.store.getters.isTargetInWeaponRange).toBeFalse()
+        expect(c1.store.getters.isTargetInWeaponRange).toBeFalsy()
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
-        expect(c1.store.getters.isTargetInWeaponRange).toBeTrue()
+        expect(c1.store.getters.isTargetInWeaponRange).toBeTruthy()
     })
 })
 
@@ -1013,9 +1013,9 @@ describe('getMaterial armor and weapon and shield', function () {
         const oSword = r.createEntity('wpn-shortsword')
         oSword.material = CONSTS.MATERIAL_METAL
         c1.store.mutations.equipItem({ item: oSword })
-        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_METAL)).toBeTrue()
-        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_SILVER)).toBeFalse()
-        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_METAL)).toBeTruthy()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_SILVER)).toBeFalsy()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_WOOD)).toBeFalsy()
     })
     it('should return material_silver and material_metal when setting material to silver on sword', function () {
         const r = new Manager()
@@ -1026,9 +1026,9 @@ describe('getMaterial armor and weapon and shield', function () {
         const oSword = r.createEntity('wpn-shortsword')
         oSword.material = CONSTS.MATERIAL_SILVER
         c1.store.mutations.equipItem({ item: oSword })
-        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_METAL)).toBeTrue()
-        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_SILVER)).toBeTrue()
-        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_WOOD)).toBeFalse()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_METAL)).toBeTruthy()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_SILVER)).toBeTruthy()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_WOOD)).toBeFalsy()
     })
     it('should return material_wood and not metal when setting material to wood on sword', function () {
         const r = new Manager()
@@ -1039,9 +1039,9 @@ describe('getMaterial armor and weapon and shield', function () {
         const oSword = r.createEntity('wpn-shortsword')
         oSword.material = CONSTS.MATERIAL_WOOD
         c1.store.mutations.equipItem({ item: oSword })
-        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_METAL)).toBeFalse()
-        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_SILVER)).toBeFalse()
-        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_WOOD)).toBeTrue()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_METAL)).toBeFalsy()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_SILVER)).toBeFalsy()
+        expect(c1.store.getters.getSelectedWeaponMaterialSet.has(CONSTS.MATERIAL_WOOD)).toBeTruthy()
     })
 })
 
@@ -1059,7 +1059,7 @@ describe('prone condition test', function () {
         c1.setTarget(c2)
         c1.setDistanceToTarget(DISTANCE_RANGED)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
-        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_PRONE)).toBeTrue()
+        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_PRONE)).toBeTruthy()
         const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY])
         const circ2 = c2.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY])
         expect(circ1.disadvantage).toBe(true)
@@ -1080,13 +1080,13 @@ describe('prone condition test', function () {
         c1.setTarget(c2)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
-        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_PRONE)).toBeTrue()
+        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_PRONE)).toBeTruthy()
         const circ1 = c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY])
         expect(circ1.disadvantage).toBe(false)
         c1.setDistanceToTarget(DISTANCE_REACH)
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY]).disadvantage).toBeTrue()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY]).disadvantage).toBeTruthy()
         c1.store.mutations.equipItem({ item: oHalberd1 })
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY]).disadvantage).toBeFalse()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_DEXTERITY]).disadvantage).toBeFalsy()
         c1.store.mutations.equipItem({ item: oBow1 })
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
     })
@@ -1103,22 +1103,22 @@ describe('prone condition test', function () {
         c1.setTarget(c2)
         c1.setDistanceToTarget(DISTANCE_MELEE)
         c2.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_PRONE), 10)
-        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_PRONE)).toBeTrue()
+        expect(c2.store.getters.getConditionSet.has(CONSTS.CONDITION_PRONE)).toBeTruthy()
         // proche d'une cible prone avec une arme de mélée
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTrue()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTruthy()
         c1.setDistanceToTarget(DISTANCE_REACH)
         // pas si proche d'une cible prone avec une arme de mélée
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeFalse()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeFalsy()
         c1.store.mutations.equipItem({ item: oHalberd1 })
         // pas si proche d'une cible prone avec une arme de mélée possédant une bonne allonge
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTrue()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTruthy()
         c1.store.mutations.equipItem({ item: oBow1 })
         c1.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
         // pas si proche d'une cible prone avec une arme à distance
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeFalse()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeFalsy()
         c1.setDistanceToTarget(DISTANCE_MELEE)
         // proche d'une cible prone avec une arme à distance
-        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTrue()
+        expect(c1.getCircumstances(CONSTS.ROLL_TYPE_ATTACK, [CONSTS.ABILITY_STRENGTH]).advantage).toBeTruthy()
     })
 })
 
@@ -1165,7 +1165,7 @@ describe('canSee', function () {
         const oSeer = r.createEntity('c-soldier')
         const oTarget = r.createEntity('c-soldier')
         oSeer.applyEffect(oSeer.EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_BLINDED), 10)
-        expect(oSeer.store.getters.getConditionSet.has(CONSTS.CONDITION_BLINDED)).toBeTrue()
+        expect(oSeer.store.getters.getConditionSet.has(CONSTS.CONDITION_BLINDED)).toBeTruthy()
         expect(oSeer.getCreatureVisibility(oTarget)).toBe(CONSTS.VISIBILITY_BLIND)
     })
     it('should not see target when blind and true sight and see_invis', function () {
@@ -1200,7 +1200,7 @@ describe('canSee', function () {
                 CONSTS.AREA_FLAG_DARK
             ] })
         oSeer.setTarget(oTarget)
-        expect(oSeer.store.getters.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][CONSTS.ABILITY_STRENGTH].value).toBeTrue()
+        expect(oSeer.store.getters.getDisadvantages[CONSTS.ROLL_TYPE_ATTACK][CONSTS.ABILITY_STRENGTH].value).toBeTruthy()
     })
     it('should see target when in dark room with darkvision', function () {
         const r = new Manager().init()
@@ -1231,7 +1231,7 @@ describe('torch-item', function () {
             ] })
         const oTorch = r.createEntity('torch')
         oSeer.store.mutations.equipItem({ item: oTorch })
-        expect(oSeer.store.getters.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT)).toBeTrue()
+        expect(oSeer.store.getters.getEquipmentItemPropertySet.has(CONSTS.ITEM_PROPERTY_LIGHT)).toBeTruthy()
         expect(oSeer.getCreatureVisibility(oTarget)).toBe(CONSTS.VISIBILITY_VISIBLE)
     })
 })

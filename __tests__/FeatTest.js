@@ -20,7 +20,7 @@ describe('feat-fighting-style-archery', function () {
         const r = new Manager()
         r.init()
         c.assetManager = r.assetManager
-        expect('feat-fighting-style-archery' in c.store.externals.data).toBeTrue()
+        expect('feat-fighting-style-archery' in c.store.externals.data).toBeTruthy()
     })
     it ('should give a report that shows a +2 attack bonus to be activated when having this feat', function () {
         const c = new Creature()
@@ -118,7 +118,7 @@ describe('feat-fighting-style-dueling', function () {
         r.createEntity('arm-leather');
         c.store.mutations.equipItem({ item: oSword })
         c.store.mutations.setSelectedWeapon({ slot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
-        expect(c.store.getters.has1HWeaponNoShield).toBeTrue()
+        expect(c.store.getters.has1HWeaponNoShield).toBeTruthy()
         expect(c.store.getters.getSelectedWeapon).toBeDefined()
         c.store.mutations.updateFeatEffects()
         expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_SLASHING: 2 })
@@ -127,7 +127,7 @@ describe('feat-fighting-style-dueling', function () {
         expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_PIERCING: 2 })
         c.store.mutations.equipItem({ item: oStaff })
         c.store.mutations.updateFeatEffects()
-        expect(c.store.getters.has1HWeaponNoShield).toBeFalse()
+        expect(c.store.getters.has1HWeaponNoShield).toBeFalsy()
         expect(c.getDamageBonus()).toEqual({ DAMAGE_TYPE_CRUSHING: 0 })
     })
 })

@@ -6,7 +6,7 @@ class Dice {
   }
 
   /**
-   * Permet de forcer un valeur random, utile pour les tests
+   * Permet de forcer un valeur random, utile pour les __tests__
    * @param value {number|boolean} nombre flottant forçant la sortie de la fonction random, false pour désactiver
    */
   cheat (value = 0) {

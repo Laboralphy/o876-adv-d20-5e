@@ -1,10 +1,10 @@
 {
   "name": "@laboralphy/addv-srd",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "A set of rules based on the System Reference Document of OGL version Dungeons and Dragons 5e. ",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine ./tests/*Test.js",
+    "test": "jest",
     "generate-index": "./bin/generate-files",
     "generate-monster-data": "bin/generate-monster-data"
   },
@@ -25,7 +25,6 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "csv-parse": "^5.3.6",
-    "jasmine": "^5.1.0"
+    "csv-parse": "^5.3.6"
   }
 }

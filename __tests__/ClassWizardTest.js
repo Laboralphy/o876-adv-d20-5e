@@ -276,12 +276,12 @@ describe('spell-mastery', function () {
     it('should have spell mastery when building wizard level 18', function () {
         const { manager, evolution } = buildStuff()
         const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 18)
-        expect(oWizard.store.getters.getFeatSet.has('feat-spell-mastery')).toBeTrue()
+        expect(oWizard.store.getters.getFeatSet.has('feat-spell-mastery')).toBeTruthy()
     })
     it('have spell mastery when building wizard level 18', function () {
         const { manager, evolution } = buildStuff()
         const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 18)
-        expect(oWizard.store.getters.getFeatSet.has('feat-spell-mastery')).toBeTrue()
+        expect(oWizard.store.getters.getFeatSet.has('feat-spell-mastery')).toBeTruthy()
         oWizard.store.mutations.learnSpell({ spell: 'acid-arrow' })
         oWizard.store.mutations.learnSpell({ spell: 'invisibility' })
         oWizard.store.mutations.learnSpell({ spell: 'magic-missile' })

@@ -97,7 +97,7 @@ describe('isWeaponProperlyLoaded', function () {
         const oAmmo = r.createEntity('ammo-arrow')
         c.equipItem(oBow)
         c.equipItem(oAmmo)
-        expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeTrue()
+        expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeTruthy()
     })
     it('should return false when shortbow and bolts are equipped', function () {
         const r = new Manager()
@@ -107,7 +107,7 @@ describe('isWeaponProperlyLoaded', function () {
         const oAmmo = r.createEntity('ammo-bolt')
         c.equipItem(oBow)
         c.equipItem(oAmmo)
-        expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeFalse()
+        expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeFalsy()
     })
     it('should return false when short sword equipped with arrows', function () {
         const r = new Manager()
@@ -115,7 +115,7 @@ describe('isWeaponProperlyLoaded', function () {
         const c = r.createEntity('c-rogue')
         const oAmmo = r.createEntity('ammo-arrow')
         c.equipItem(oAmmo)
-        expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeFalse()
+        expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeFalsy()
     })
     it('should return false when shortbow equipped with no ammo', function () {
         const r = new Manager()
@@ -123,7 +123,7 @@ describe('isWeaponProperlyLoaded', function () {
         const c = r.createEntity('c-rogue')
         const oBow = r.createEntity('wpn-shortbow')
         c.equipItem(oBow)
-        expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeFalse()
+        expect(c.store.getters.isRangedWeaponProperlyLoaded).toBeFalsy()
     })
 })
 
@@ -645,9 +645,9 @@ describe('Effet de terreur', function () {
         gob1.setTarget(gob2)
         gob2.setTarget(gob1)
         gob1.setDistanceToTarget(50)
-        expect(gob1.store.getters.canApproachTarget).toBeTrue()
+        expect(gob1.store.getters.canApproachTarget).toBeTruthy()
         gob1.applyEffect(EffectProcessor.createEffect(CONSTS.EFFECT_CONDITION, CONSTS.CONDITION_FRIGHTENED), 10, gob2)
-        expect(gob1.store.getters.canApproachTarget).toBeFalse()
+        expect(gob1.store.getters.canApproachTarget).toBeFalsy()
     })
 })
 
@@ -972,8 +972,8 @@ describe('Bug: les évènements fonctionnent ils ?', function () {
 
         g1.attack(g2)
 
-        expect(aCreatureEvents).toHaveSize(1)
-        expect(aEvents).toHaveSize(1)
+        expect(aCreatureEvents).toHaveLength(1)
+        expect(aEvents).toHaveLength(1)
     })
     it('should fire event when custom blueprint creature attacks', function () {
         const PLAYER_BASE_BLUEPRINT = {
@@ -1010,8 +1010,8 @@ describe('Bug: les évènements fonctionnent ils ?', function () {
 
         p1.attack(g1)
 
-        expect(aCreatureEvents).toHaveSize(1)
-        expect(aEvents).toHaveSize(1)
+        expect(aCreatureEvents).toHaveLength(1)
+        expect(aEvents).toHaveLength(1)
 
     })
 })
