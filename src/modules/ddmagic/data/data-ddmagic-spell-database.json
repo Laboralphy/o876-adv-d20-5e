@@ -146,7 +146,7 @@
     "target": "TARGET_TYPE_FRIEND",
     "school": "SPELL_SCHOOL_ABJURATION"
   },
-  "animated-dead": {
+  "animate-dead": {
     "level": 3,
     "ritual": false,
     "concentration": false,
