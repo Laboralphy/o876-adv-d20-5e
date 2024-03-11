@@ -212,20 +212,20 @@ describe('zap', function () {
             hostiles: [oTarget]
         })
 
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeTrue()
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeTrue()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeTruthy()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeTruthy()
 
         oTarget.processEffects()
         oWizard.processEffects()
 
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeTrue()
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeTrue()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeTruthy()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeTruthy()
 
         oTarget.processEffects()
         oWizard.processEffects()
 
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeFalse()
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeFalsy()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalsy()
     })
     it('should not stun target when success saving throw', function () {
         const { manager, evolution } = buildStuff()
@@ -244,8 +244,8 @@ describe('zap', function () {
             hostiles: [oTarget]
         })
 
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeFalse()
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeFalsy()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalsy()
     })
     it('should not stun target when fail saving throw but have condition immunity', function () {
         const { manager, evolution } = buildStuff()
@@ -269,8 +269,8 @@ describe('zap', function () {
             hostiles: [oTarget]
         })
 
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeFalse()
-        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalse()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_STUNNED)).toBeFalsy()
+        expect(oTarget.store.getters.getConditionSet.has(CONSTS.CONDITION_INCAPACITATED)).toBeFalsy()
     })
 })
 
@@ -289,7 +289,7 @@ describe('remove-curse', function () {
         expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toEqual(oCursedDagger)
         const {cursed: c1} = oWizard.unequipItem(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
         expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toEqual(oCursedDagger)
-        expect(c1).toBeTrue()
+        expect(c1).toBeTruthy()
     })
 
     it('should be able to remove cursed item when remove curse is cast', function () {
@@ -306,7 +306,7 @@ describe('remove-curse', function () {
         expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toEqual(oCursedDagger)
         const {cursed: c1} = oWizard.unequipItem(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
         expect(oWizard.store.getters.getEquippedItems[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toEqual(oCursedDagger)
-        expect(c1).toBeTrue()
+        expect(c1).toBeTruthy()
 
         const pCast = manager.assetManager.scripts['ddmagic-cast-spell']
 
@@ -333,8 +333,8 @@ describe('invisibility', function () {
         const oAggressiveOne = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 3)
         oAggressiveOne.setTarget(oHiddenOne)
         const v1 = oAggressiveOne.store.getters.getEntityVisibility
-        expect(v1.detectable.target).toBeTrue()
-        expect(v1.detectedBy.target).toBeTrue()
+        expect(v1.detectable.target).toBeTruthy()
+        expect(v1.detectedBy.target).toBeTruthy()
 
         manager.assetManager.scripts['ddmagic-cast-spell']({
             spell: 'invisibility',
@@ -344,11 +344,11 @@ describe('invisibility', function () {
             cheat: true
         })
 
-        expect(oHiddenOne.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(oHiddenOne.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTruthy()
 
         const v2 = oAggressiveOne.store.getters.getEntityVisibility
-        expect(v2.detectable.target).toBeFalse()
-        expect(v2.detectedBy.target).toBeTrue()
+        expect(v2.detectable.target).toBeFalsy()
+        expect(v2.detectedBy.target).toBeTruthy()
     })
 
     it('hiddenOne should become visible again when concentration is broken or changed', function () {
@@ -363,8 +363,8 @@ describe('invisibility', function () {
         oHidden2.name = 'hidden 2'
         oAggressiveOne.name = 'Aggressor'
         const v0 = oAggressiveOne.store.getters.getEntityVisibility
-        expect(v0.detectable.target).toBeTrue()
-        expect(v0.detectedBy.target).toBeTrue()
+        expect(v0.detectable.target).toBeTruthy()
+        expect(v0.detectedBy.target).toBeTruthy()
 
         oWizard.assetManager.scripts['ddmagic-cast-spell']({
             spell: 'invisibility',
@@ -382,10 +382,10 @@ describe('invisibility', function () {
         expect(eInvis0).toBeDefined()
         expect(eInvis0.duration).toBe(600)
 
-        expect(oHidden1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(oHidden1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTruthy()
         const v1 = oAggressiveOne.store.getters.getEntityVisibility
-        expect(v1.detectable.target).toBeFalse()
-        expect(v1.detectedBy.target).toBeTrue()
+        expect(v1.detectable.target).toBeFalsy()
+        expect(v1.detectedBy.target).toBeTruthy()
 
         manager.assetManager.scripts['ddmagic-cast-spell']({
             spell: 'invisibility',
@@ -403,13 +403,13 @@ describe('invisibility', function () {
         // j'ai beau faire, avec mon effet concentration, je ne pourrai jamais éteindre les
         // effets stockés chez d'autres créatures.
 
-        expect(oHidden2.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTrue()
+        expect(oHidden2.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeTruthy()
         expect(eInvis0).toBeDefined()
         expect(eInvis0.duration).toBe(0)
-        expect(oHidden1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeFalse()
+        expect(oHidden1.store.getters.getConditionSet.has(CONSTS.CONDITION_INVISIBLE)).toBeFalsy()
         const v2 = oAggressiveOne.store.getters.getEntityVisibility
-        expect(v2.detectable.target).toBeTrue()
-        expect(v2.detectedBy.target).toBeTrue()
+        expect(v2.detectable.target).toBeTruthy()
+        expect(v2.detectedBy.target).toBeTruthy()
     })
 })
 

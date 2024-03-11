@@ -73,7 +73,7 @@ describe('spell data base check', function () {
         if (!x.valid) {
             console.error(x.errors.map(e => e.stack))
         }
-        expect(x.valid).toBeTrue()
+        expect(x.valid).toBeTruthy()
     })
 })
 
@@ -154,7 +154,7 @@ describe('Burning hands', function () {
                 caster: oWizard,
                 hostiles: [oTarget]
             })
-        ).toBeTrue()
+        ).toBeTruthy()
         const nWL = oWizard.store.getters.getSpellCasterLevel
         expect(nWL).toBe(2)
         const ssc = manager.assetManager.data['data-ddmagic-spell-count'].find(dx => dx.wizardLevel === 2)
