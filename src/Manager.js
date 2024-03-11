@@ -22,7 +22,6 @@ class Manager {
             'sneak-attack',
             'despawn'
         ])
-        this._listenedCreatureHandler = new Set()
         this._config = null
     }
 
@@ -50,15 +49,12 @@ class Manager {
         this
             .creatureHandlers
             .forEach(evName => {
-                if (!this._listenedCreatureHandler.add(evName)) {
-                    this._listenedCreatureHandler.add(evName)
-                    oCreature.events.on(evName, oPayload => {
-                        this._events.emit(evName, {
-                            ...oPayload,
-                            creature: oCreature
-                        })
+                oCreature.events.on(evName, oPayload => {
+                    this._events.emit(evName, {
+                        ...oPayload,
+                        creature: oCreature
                     })
-                }
+                })
             })
     }
 

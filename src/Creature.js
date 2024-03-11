@@ -1253,7 +1253,6 @@ class Creature {
         this.effectProcessor.invokeAllEffectsMethod(this, 'attack', outcome.target, this, { outcome })
         outcome.target.effectProcessor.invokeAllEffectsMethod(outcome.target, 'attacked', outcome.target, this, { outcome })
         this._events.emit('attack', { outcome })
-
     }
 
     /**

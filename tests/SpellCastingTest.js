@@ -413,7 +413,7 @@ describe('invisibility', function () {
     })
 })
 
-fdescribe('animated dead', function () {
+describe('animated dead', function () {
     it('should trigger summon-creature when summoning creature', function () {
         const { manager, evolution } = buildStuff()
         const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 8)
