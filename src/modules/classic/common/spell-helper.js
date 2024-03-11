@@ -198,7 +198,7 @@ function evocationAttack ({
  */
 function chooseRandomItems (aArray, nCount) {
     if (aArray.length === 0 || nCount >= aArray.length) {
-        return aArray
+        return aArray.slice(0)
     }
     if (nCount === 0) {
         return []

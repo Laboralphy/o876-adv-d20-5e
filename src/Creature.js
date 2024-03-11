@@ -556,7 +556,7 @@ class Creature {
             this.processOnDamaged(oEffect, source)
         }
         const eEffect = this._effectProcessor.applyEffect(oEffect, this, duration, source)
-        this._events.emit('effect-applied', { effect: eEffect, target: this })
+        this._events.emit('effect-applied', { effect: eEffect, target: this, source })
 
         if (bDamageEffect && !bWeaponEffect) {
             // Damaged by non-weapon source
@@ -1090,7 +1090,7 @@ class Creature {
         const bonus = sta + stt
         const r = this.rollD20(CONSTS.ROLL_TYPE_SAVE, sAbility, aThreats)
         const value = r.value + bonus
-        const output = {
+        const outcome = {
             roll: r.value,
             source,
             bonus,
@@ -1101,8 +1101,8 @@ class Creature {
             success: dc !== undefined ? value >= dc : undefined,
             circumstance: this.getCircumstanceNumValue(r.circumstances)
         }
-        this._events.emit('saving-throw', { output })
-        return output
+        this._events.emit('saving-throw', { outcome })
+        return outcome
     }
 
     /**
@@ -1253,7 +1253,6 @@ class Creature {
         this.effectProcessor.invokeAllEffectsMethod(this, 'attack', outcome.target, this, { outcome })
         outcome.target.effectProcessor.invokeAllEffectsMethod(outcome.target, 'attacked', outcome.target, this, { outcome })
         this._events.emit('attack', { outcome })
-
     }
 
     /**
@@ -1483,6 +1482,15 @@ class Creature {
             },
             result
         }
+    }
+
+    /**
+     * La créature va demande au client de ses évènements de la déspawner.
+     */
+    requestDespawn (sReason = 'DESPAWN_REASON_UNDEFINED') {
+        this._events.emit('despawn', {
+            reason: sReason
+        })
     }
 }
 

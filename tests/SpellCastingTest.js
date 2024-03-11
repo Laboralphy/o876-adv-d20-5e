@@ -412,3 +412,72 @@ describe('invisibility', function () {
         expect(v2.detectedBy.target).toBeTrue()
     })
 })
+
+describe('animated dead', function () {
+    it('should trigger summon-creature when summoning creature', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 8)
+        const aLog = []
+        oWizard.events.on('summon-creature', function (ev) {
+            aLog.push({ ref: ev.ref, level: ev.level })
+        })
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animated-dead',
+            caster: oWizard,
+            friends: [],
+            target: null,
+            cheat: true
+        })
+        expect(aLog).toEqual([ { ref: 'c-skeleton', level: 8 } ])
+    })
+    it('should setup summoned creature as undead when casting spell', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 9)
+        /**
+         *
+         * @type {Creature}
+         */
+        let oSummonedCreature = null
+        oWizard.events.on('summon-creature', function (ev) {
+            oSummonedCreature = ev.creature = manager.createEntity(ev.ref)
+        })
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animated-dead',
+            caster: oWizard,
+            friends: [],
+            target: null,
+            cheat: true
+        })
+        expect(oSummonedCreature.store.getters.getSpecie).toBe(CONSTS.SPECIE_UNDEAD)
+    })
+    it('should create time limited creature', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.entityFactory.createCreature(), 'template-wizard-generic', 9)
+        /**
+         *
+         * @type {Creature}
+         */
+        let oSummonedCreature = null
+        oWizard.events.on('summon-creature', function (ev) {
+            oSummonedCreature = ev.creature = manager.createEntity(ev.ref)
+        })
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animated-dead',
+            caster: oWizard,
+            friends: [],
+            target: null,
+            cheat: true
+        })
+        const aLogDS = []
+        oSummonedCreature.events.on('despawn', ev => {
+            aLogDS.push(ev)
+        })
+        const eTTL = oSummonedCreature.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_TIME_TO_LIVE)
+        expect(eTTL.duration).toBe(24 * 60 * 10)
+        eTTL.duration = 1
+        const eTTL2 = oSummonedCreature.store.getters.getEffects.find(eff => eff.type === CONSTS.EFFECT_TIME_TO_LIVE)
+        expect(eTTL2.duration).toBe(1)
+        oSummonedCreature.processEffects()
+        expect(aLogDS).toEqual([{ reason: 'DESPAWN_REASON_TTL_EXPIRATION' }])
+    })
+})

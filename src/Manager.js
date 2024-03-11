@@ -19,7 +19,8 @@ class Manager {
             'damaged',
             'offensive-slot',
             'effect-applied',
-            'sneak-attack'
+            'sneak-attack',
+            'despawn'
         ])
         this._config = null
     }
@@ -45,14 +46,16 @@ class Manager {
      * @private
      */
     _defineCreatureEventHandlers (oCreature) {
-        this.creatureHandlers.forEach(evName => {
-            oCreature.events.on(evName, oPayload => {
-                this._events.emit(evName, {
-                    ...oPayload,
-                    creature: oCreature
+        this
+            .creatureHandlers
+            .forEach(evName => {
+                oCreature.events.on(evName, oPayload => {
+                    this._events.emit(evName, {
+                        ...oPayload,
+                        creature: oCreature
+                    })
                 })
             })
-        })
     }
 
     /**
