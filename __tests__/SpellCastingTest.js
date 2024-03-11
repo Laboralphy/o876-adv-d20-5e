@@ -480,4 +480,24 @@ describe('animate dead', function () {
         oSummonedCreature.processEffects()
         expect(aLogDS).toEqual([{ reason: 'DESPAWN_REASON_TTL_EXPIRATION' }])
     })
+    it('should create a skeleton', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.createEntity(), 'template-wizard-generic', 9)
+        /**
+         * @type {Creature}
+         */
+        let oSummonedCreature = null
+        manager.events.on('summon-creature', function (ev) {
+            oSummonedCreature = ev.creature = manager.createEntity(ev.ref)
+        })
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animate-dead',
+            caster: oWizard,
+            friends: [],
+            target: null,
+            cheat: true
+        })
+        expect(oSummonedCreature).not.toBeNull()
+        expect(oSummonedCreature.ref).toBe('c-skeleton')
+    })
 })

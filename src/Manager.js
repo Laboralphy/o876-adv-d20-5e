@@ -103,8 +103,8 @@ class Manager {
      * @param sResRef {string}
      * @returns {Creature|D20Item}
      */
-    createEntity (sResRef) {
-        const oEntity = this._ef.createEntity(sResRef)
+    createEntity (sResRef = '') {
+        const oEntity = !sResRef ? this._ef.createCreature(null) : this._ef.createEntity(sResRef)
         if (oEntity instanceof Creature) {
             this._defineCreatureEventHandlers(oEntity)
         }
