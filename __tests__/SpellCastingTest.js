@@ -500,4 +500,92 @@ describe('animate dead', function () {
         expect(oSummonedCreature).not.toBeNull()
         expect(oSummonedCreature.ref).toBe('c-skeleton')
     })
+    it('should not be able to cast spell 3 times when caster level is 5', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.createEntity(), 'template-wizard-generic', 5)
+        oWizard.store.mutations.learnSpell({ spell: 'animate-dead' })
+        expect(oWizard.store.getters.getSpellSlotStatus[2].count).toBe(2)
+        expect(oWizard.store.getters.getSpellSlotStatus[2].used).toBe(0)
+        oWizard.store.mutations.prepareSpell({ spell: 'animate-dead' })
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animate-dead',
+            caster: oWizard,
+            friends: [],
+            target: null
+        })
+        expect(oWizard.store.getters.getSpellSlotStatus[2].count).toBe(2)
+        expect(oWizard.store.getters.getSpellSlotStatus[2].used).toBe(1)
+        expect(oWizard.store.getters.getCastableSpells['animate-dead']).toEqual([
+            false, false, false, true, false, false, false, false, false, false
+        ])
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animate-dead',
+            caster: oWizard,
+            friends: [],
+            target: null
+        })
+        expect(oWizard.store.getters.getSpellSlotStatus[2].count).toBe(2)
+        expect(oWizard.store.getters.getSpellSlotStatus[2].used).toBe(2)
+        expect(oWizard.store.getters.getCastableSpells['animate-dead']).toEqual([
+            false, false, false, false, false, false, false, false, false, false
+        ])
+        const b1 = oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animate-dead',
+            caster: oWizard,
+            friends: [],
+            target: null
+        })
+        expect(b1).toBeFalsy()
+        expect(oWizard.store.getters.getSpellSlotStatus[2].count).toBe(2)
+        expect(oWizard.store.getters.getSpellSlotStatus[2].used).toBe(2)
+    })
+    it('should reset spell usage when resting', function () {
+        const { manager, evolution } = buildStuff()
+        const oWizard = evolution.setupCreatureFromTemplate(manager.createEntity(), 'template-wizard-generic', 5)
+        oWizard.store.mutations.learnSpell({ spell: 'animate-dead' })
+        expect(oWizard.store.getters.getSpellSlotStatus[2].count).toBe(2)
+        expect(oWizard.store.getters.getSpellSlotStatus[2].used).toBe(0)
+        oWizard.store.mutations.prepareSpell({ spell: 'animate-dead' })
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animate-dead',
+            caster: oWizard,
+            friends: [],
+            target: null
+        })
+        expect(oWizard.store.getters.getSpellSlotStatus[2].count).toBe(2)
+        expect(oWizard.store.getters.getSpellSlotStatus[2].used).toBe(1)
+        expect(oWizard.store.getters.getCastableSpells['animate-dead']).toEqual([
+            false, false, false, true, false, false, false, false, false, false
+        ])
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animate-dead',
+            caster: oWizard,
+            friends: [],
+            target: null
+        })
+        expect(oWizard.store.getters.getSpellSlotStatus[2].count).toBe(2)
+        expect(oWizard.store.getters.getSpellSlotStatus[2].used).toBe(2)
+        expect(oWizard.store.getters.getCastableSpells['animate-dead']).toEqual([
+            false, false, false, false, false, false, false, false, false, false
+        ])
+        const b1 = oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animate-dead',
+            caster: oWizard,
+            friends: [],
+            target: null
+        })
+        expect(b1).toBeFalsy()
+        expect(oWizard.store.getters.getSpellSlotStatus[2].count).toBe(2)
+        expect(oWizard.store.getters.getSpellSlotStatus[2].used).toBe(2)
+
+        oWizard.store.mutations.restoreAllSpellSlots()
+        oWizard.assetManager.scripts['ddmagic-cast-spell']({
+            spell: 'animate-dead',
+            caster: oWizard,
+            friends: [],
+            target: null
+        })
+        expect(oWizard.store.getters.getSpellSlotStatus[2].count).toBe(2)
+        expect(oWizard.store.getters.getSpellSlotStatus[2].used).toBe(1)
+    })
 })

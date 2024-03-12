@@ -38,11 +38,13 @@ module.exports = (state, getters, externals) => {
                 oRegistry[spell] = [false, false, false, false, false, false, false, false, false, false]
                 oRegistry[spell][nSpellLevel] = true
             } else if (
-                aCastableSignatureSpells &&
+                aCastableSignatureSpells.has(spell) &&
                 nSpellLevel === 3
             ) {
+                const sssl = oSlotStatus[nSpellLevel - 1]
+                const bSlotDepleted = sssl.used >= sssl.count
                 oRegistry[spell] = [false, false, false, false, false, false, false, false, false, false]
-                oRegistry[spell][nSpellLevel] = true
+                oRegistry[spell][nSpellLevel] = !bSlotDepleted
             } else {
                 const a = [false]
                 for (let i = 1; i <= 9; ++i) {
