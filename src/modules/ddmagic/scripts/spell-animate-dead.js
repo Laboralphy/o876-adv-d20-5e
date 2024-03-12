@@ -45,13 +45,16 @@ module.exports = function (oSpellCast) {
     const nHPBonus = nCasterLevel * 2
     // prof bonus doit augmenter les damages rolls de l'arme du thrall
     const nProficiencyBonus = csg.getProficiencyBonus
+    let creature = null
     const oPayload = {
         ref: getRef(nSpellPower),
         level: nCasterLevel,
-        creature: null,
+        ttl: oSpellCast.getDurationHours(24),
+        summon: c => {
+            creature = c
+        }
     }
     caster.events.emit('summon-creature', oPayload)
-    const creature = oPayload.creature
     if (creature) {
         const nGrade = Math.floor(nCasterLevel / 4)
         const oWeapons = creature.store.getters.getEquippedWeapons
@@ -75,6 +78,6 @@ module.exports = function (oSpellCast) {
         }
         // Appliquer TTL
         const eTTL = creature.EffectProcessor.createEffect(CONSTS.EFFECT_TIME_TO_LIVE)
-        creature.applyEffect(eTTL, oSpellCast.getDurationHours(24))
+        creature.applyEffect(eTTL, oPayload.ttl)
     }
 }

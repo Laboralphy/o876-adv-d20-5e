@@ -439,7 +439,7 @@ describe('animate dead', function () {
          */
         let oSummonedCreature = null
         oWizard.events.on('summon-creature', function (ev) {
-            oSummonedCreature = ev.creature = manager.createEntity(ev.ref)
+            ev.summon(oSummonedCreature = manager.createEntity(ev.ref))
         })
         oWizard.assetManager.scripts['ddmagic-cast-spell']({
             spell: 'animate-dead',
@@ -459,7 +459,7 @@ describe('animate dead', function () {
          */
         let oSummonedCreature = null
         oWizard.events.on('summon-creature', function (ev) {
-            oSummonedCreature = ev.creature = manager.createEntity(ev.ref)
+            ev.summon(oSummonedCreature = manager.createEntity(ev.ref))
         })
         oWizard.assetManager.scripts['ddmagic-cast-spell']({
             spell: 'animate-dead',
@@ -488,7 +488,7 @@ describe('animate dead', function () {
          */
         let oSummonedCreature = null
         manager.events.on('summon-creature', function (ev) {
-            oSummonedCreature = ev.creature = manager.createEntity(ev.ref)
+            ev.summon(oSummonedCreature = manager.createEntity(ev.ref))
         })
         oWizard.assetManager.scripts['ddmagic-cast-spell']({
             spell: 'animate-dead',
