@@ -75,6 +75,19 @@ class Manager {
     }
 
     /**
+     * Lance le script init d'un module
+     * @param id {string} identifiant du module
+     */
+    runModuleInitScript (id) {
+        const sInitScript = id + '.init'
+        if (sInitScript in this.assetManager.scripts) {
+            this.assetManager.scripts[sInitScript]({
+                manager: this
+            })
+        }
+    }
+
+    /**
      * Initialisation de l'instance à faire dès l'instantiation
      */
     init () {
@@ -87,13 +100,8 @@ class Manager {
             .modules
             .filter(m => m.active)
             .map(m => m.id)
-            .forEach(m => {
-                const sInitScript = m + '.init'
-                if (sInitScript in this.assetManager.scripts) {
-                    this.assetManager.scripts[sInitScript]({
-                        manager: this
-                    })
-                }
+            .forEach(id => {
+                this.runModuleInitScript(id)
             })
         return this
     }
