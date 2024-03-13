@@ -1177,19 +1177,21 @@ class Creature {
         #     #   ####      #       #     ####   #    #   ####
      */
 
-    action (sAction) {
+    action (sAction, target = null) {
         this._events.emit('action', {
-            action: sAction
+            action: sAction,
+            target,
+            caster: this
         })
         const scriptFunction = this.assetManager.scripts[sAction]
         if (!scriptFunction) {
             throw new Error('ERR_SCRIPT_ACTION_NOT_FOUND: ' + sAction)
         } else {
-            scriptFunction(this)
+            return scriptFunction(this, target)
         }
     }
 
-    featAction (sFeat) {
+    featAction (sFeat, target = null) {
         const oCounters = this.store.getters.getCounters
         if (sFeat in this.assetManager.data) {
             const oFeatData = this.assetManager.data[sFeat]
@@ -1210,7 +1212,7 @@ class Creature {
                         throw new Error('ERR_FEAT_ACTION_DEPLETED_USE')
                     }
                 }
-                this.action(oFeatData.action)
+                return this.action(oFeatData.action, target)
             } else {
                 throw new Error('ERR_FEAT_HAS_NO_ACTION')
             }
