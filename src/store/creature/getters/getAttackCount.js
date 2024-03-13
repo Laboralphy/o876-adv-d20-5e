@@ -1,4 +1,4 @@
-const {aggregateModifiers} = require('../common/aggregate-modifiers')
+const { aggregateModifiers } = require('../common/aggregate-modifiers')
 const CONSTS = require('../../../consts')
 
 /**

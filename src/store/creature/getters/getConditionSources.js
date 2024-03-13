@@ -1,5 +1,5 @@
 const CONSTS = require('../../../consts')
-const {aggregateModifiers} = require("../common/aggregate-modifiers");
+const { aggregateModifiers } = require("../common/aggregate-modifiers");
 
 /**
  * Registre des altérations d'états, et de leurs sources
@@ -39,9 +39,6 @@ module.exports = (state, getters) => {
             return effects in oRegistry ? oRegistry[effects].sources : new Set()
         }
     }
-
-
-
     return {
         [CONSTS.CONDITION_BLINDED]: getSources(CONSTS.CONDITION_BLINDED),
         [CONSTS.CONDITION_CHARMED]: getSources(CONSTS.CONDITION_CHARMED),

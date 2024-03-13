@@ -21,6 +21,7 @@
  * @property setAbility {function({ ability: string, value: number })}
  * @property setAreaFlags {function({ flags: string[] })}
  * @property setCounterValue {function({ counter, value, max })}
+ * @property setDataValue {function({ key, value }}
  * @property setEncumbrance {function({ value: number })}
  * @property setGaugeDamage {function({ value })}
  * @property setId {function({ value })}

@@ -1,5 +1,4 @@
 const CONSTS = require('../../../consts')
-const { aggregateModifiers } = require('../common/aggregate-modifiers')
 
 /**
  * Classe d'armure complete de la créature

@@ -71,7 +71,7 @@ function evocationAttack ({
     const isDexterityBased = ability === CONSTS.ABILITY_DEXTERITY
     const bHasEvasion =
         isDexterityBased &&
-        target.aggregateModifiers([CONSTS.EFFECT_EVASION], {}).count > 0
+        target.store.getters.getEffectSet.has(CONSTS.EFFECT_EVASION)
     const nCase = (cantrip ? 1000 : 0) + (isDexterityBased ? 100 : 0) + (bHasEvasion ? 10 : 0) + (success ? 1 : 0)
     switch (nCase) {
         case 0: {

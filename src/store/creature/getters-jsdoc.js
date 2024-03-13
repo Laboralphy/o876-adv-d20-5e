@@ -31,6 +31,7 @@
  * @property getCounters {Object<string, { value: number, max: value }>}
  * @property getDamageMitigation {Object<string, D20OneDamageMitigation>}}
  * @property getDamageRerollThreshold {number}
+ * @property getData undefined
  * @property getDeadEffects {D20Effect[]}
  * @property getDefensiveApplicableConditions {{condition: string, dc: number, ability: number, duration: number}[]}
  * @property getDefensiveEquipmentList {D20Item[]}

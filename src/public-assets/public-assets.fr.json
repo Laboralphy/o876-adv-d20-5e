@@ -359,7 +359,8 @@
       "acid-arrow": "Flèche acide",
       "hold-person": "Immobilisation de personne",
       "ray-of-enfeeblement": "Rayon affaiblissant",
-      "remove-curse": "Délivrance des malédictions"
+      "remove-curse": "Délivrance des malédictions",
+      "animate-dead": "Animation des morts"
     }
   },
   "data": {
